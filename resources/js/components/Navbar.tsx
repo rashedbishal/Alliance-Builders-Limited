@@ -1,6 +1,7 @@
 import {Link} from '@inertiajs/react';
 import {ChevronDown, Menu, X, Phone, Heart} from 'lucide-react';
 import React, {useState, useRef, useEffect} from 'react';
+import logo from '@/assets/images/logo/alliance logo.webp'
 import {Button} from '@/components/ui/button';
 import {
     DropdownMenu,
@@ -8,11 +9,8 @@ import {
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {about, directors, home, services, managingDirector, contact, media, gallery, properties} from "@/routes";
 import {useFavorites} from '@/hooks/useFavorites';
-
-import logo from '@/assets/images/logo/alliance logo.webp'
-import Home from '@/Pages/Home';
+import {about, directors, home, services, managingDirector, contact, media, gallery, properties} from "@/routes";
 
 const Navbar = () => {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
