@@ -1,16 +1,27 @@
-import React, { useState } from 'react';
-import {Carousel} from "@/types/Carousel";
-import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
 import {usePage} from "@inertiajs/react";
+import React, { useEffect, useMemo, useState } from 'react';
+import type {Carousel} from "@/types/Carousel";
+import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
 
 const HeroImageCollage = () => {
     const [activeIndex, setActiveIndex] = useState<number>(NaN);
     const { carousels } = usePage<{ carousels: Carousel[] }>().props;
 
+    const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
+
+    useEffect(() => {
+        const handleResize = () => setIsMobile(window.innerWidth < 768);
+        window.addEventListener('resize', handleResize);
+        return () => window.removeEventListener('resize', handleResize);
+    }, []);
+
+    console.log(carousels);
+    const dynamicCarousels = isMobile ? carousels.slice(0,3) : carousels;
+
   return (
     <section className="relative w-full h-screen flex items-center justify-center overflow-hidden">
       <div className="relative w-full h-screen flex flex-row gap-0">
-        {carousels.map((carousel, index) => (
+        {dynamicCarousels.map((carousel, index) => (
           <div
             key={index}
             className={`relative overflow-hidden cursor-pointer transition-all duration-[1200ms] ease-in-out ${
