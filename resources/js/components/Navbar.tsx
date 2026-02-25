@@ -160,7 +160,7 @@ const Navbar = () => {
                            backdrop-blur-xl relative overflow-hidden
                            shadow-navbar transition-all duration-300"
                 style={{
-                    transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg) translateZ(2px)`,
+                    transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                     boxShadow: `
                         ${-rotation.y * 3}px ${rotation.x * 3 + 8}px 32px rgba(0,0,0,0.4),
                         0 0 0 1px rgba(59, 130, 246, 0.1),
