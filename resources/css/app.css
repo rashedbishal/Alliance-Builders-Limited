@@ -178,6 +178,10 @@
         border-color: var(--color-border);
     }
 
+    html {
+        /*scrollbar-gutter: stable both-edges;*/
+    }
+
     body {
         background-color: var(--color-background);
         color: var(--color-foreground);
