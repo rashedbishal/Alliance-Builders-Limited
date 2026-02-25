@@ -24,35 +24,35 @@ const Navbar = () => {
     const {favorites} = useFavorites();
 
     // 3D tilt effect on mouse move
-    // useEffect(() => {
-    //     const handleMouseMove = (e: MouseEvent) => {
-    //         if (!navRef.current) return;
-    //
-    //         const rect = navRef.current.getBoundingClientRect();
-    //         const cx = rect.left + rect.width / 2;
-    //         const cy = rect.top + rect.height / 2;
-    //         const dx = (e.clientX - cx) / (rect.width / 2);
-    //         const dy = (e.clientY - cy) / (rect.height / 2);
-    //
-    //         setRotation({
-    //             x: dy * -.5,
-    //             y: dx * .5
-    //         });
-    //     };
-    //
-    //     const handleMouseLeave = () => {
-    //         setRotation({x: 0, y: 0});
-    //     };
-    //
-    //     const wrapper = navRef.current?.parentElement;
-    //     wrapper?.addEventListener('mousemove', handleMouseMove);
-    //     wrapper?.addEventListener('mouseleave', handleMouseLeave);
-    //
-    //     return () => {
-    //         wrapper?.removeEventListener('mousemove', handleMouseMove);
-    //         wrapper?.removeEventListener('mouseleave', handleMouseLeave);
-    //     };
-    // }, []);
+    useEffect(() => {
+        const handleMouseMove = (e: MouseEvent) => {
+            if (!navRef.current) return;
+
+            const rect = navRef.current.getBoundingClientRect();
+            const cx = rect.left + rect.width / 2;
+            const cy = rect.top + rect.height / 2;
+            const dx = (e.clientX - cx) / (rect.width / 2);
+            const dy = (e.clientY - cy) / (rect.height / 2);
+
+            setRotation({
+                x: dy * -.5,
+                y: dx * .5
+            });
+        };
+
+        const handleMouseLeave = () => {
+            setRotation({x: 0, y: 0});
+        };
+
+        const wrapper = navRef.current?.parentElement;
+        wrapper?.addEventListener('mousemove', handleMouseMove);
+        wrapper?.addEventListener('mouseleave', handleMouseLeave);
+
+        return () => {
+            wrapper?.removeEventListener('mousemove', handleMouseMove);
+            wrapper?.removeEventListener('mouseleave', handleMouseLeave);
+        };
+    }, []);
 
     // Close mobile menu when clicking outside
     useEffect(() => {
