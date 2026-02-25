@@ -1,17 +1,14 @@
+import {usePage} from "@inertiajs/react";
+import {Search, MapPin, Home, Calendar} from "lucide-react";
 import React, {useState} from 'react';
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
 import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
-import {Search, MapPin, Home, Calendar} from "lucide-react";
-import ParallaxBackground from '../ParallaxBackground';
-import ScrollAnimation from '../ScrollAnimation';
-import {Location} from "@/types/Location";
-import {ProjectTypes} from "@/types/ProjectTypes";
-import {Tag} from "@/types/Tag";
-import {usePage} from "@inertiajs/react";
+import type {Location} from "@/types/Location";
+import type {ProjectTypes} from "@/types/ProjectTypes";
+import type {Tag} from "@/types/Tag";
 
-import bg1 from '../assets/bg1.png';
-import bg2 from '../assets/bg2.png';
+import ScrollAnimation from '../ScrollAnimation';
 
 const SearchSection = () => {
     const [searchFilters, setSearchFilters] = useState({
