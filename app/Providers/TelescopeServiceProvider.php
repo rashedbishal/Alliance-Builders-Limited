@@ -16,6 +16,9 @@ class TelescopeServiceProvider extends TelescopeApplicationServiceProvider
     public function register(): void
     {
         // Telescope::night();
+        if (! class_exists(\Laravel\Telescope\TelescopeApplicationServiceProvider::class)) {
+            return;
+        }
 
         $this->hideSensitiveRequestDetails();
 
