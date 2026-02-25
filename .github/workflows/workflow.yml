@@ -1,0 +1,72 @@
+name: Alliance Builders Limited Production Deploy
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v4
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: '8.3'
+          extensions: mbstring, xml, ctype, iconv, intl, pdo_mysql, dom, filter, gd, json, zip
+          coverage: none
+
+      - name: Setup Node
+        uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+
+      - name: Composer install
+        run: composer install --no-dev --optimize-autoloader --prefer-dist
+
+      - name: Build React assets
+        run: |
+          npm ci
+          npm run build
+
+      - name: Prepare deployment folder
+        run: |
+          mkdir deployment
+          rsync -av \
+            --exclude='.env' \
+            --exclude='.htaccess' \
+            --exclude='node_modules' \
+            --exclude='.github' \
+            --exclude='deployment' \
+            ./ deployment/
+
+      - name: Setup SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.HOSTINGER_SSH_PRIVATE_KEY }}" > ~/.ssh/id_ed25519
+          chmod 600 ~/.ssh/id_ed25519
+
+      - name: Deploy to Hostinger
+        run: |
+          rsync -avz --delete \
+            -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" \
+            --exclude='.env' \
+            --exclude='.htaccess' \
+            --filter='P .env' \
+            --filter='P .htaccess' \
+            deployment/ \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
+
+      - name: Post-deploy Laravel commands
+        run: |
+          ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new \
+            ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'EOF'
+              cd ${{ secrets.HOSTINGER_PATH }}
+              chmod -R 775 storage bootstrap/cache
+              php artisan optimize:clear
+              ln -s ../storage/app/public public/storage
+          EOF
