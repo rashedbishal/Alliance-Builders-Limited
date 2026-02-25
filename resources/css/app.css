@@ -286,6 +286,11 @@
     100% { transform: scale(1); opacity: 1; }
 }
 
+@keyframes blur-in {
+    0% { backdrop-filter: blur(0px); -webkit-backdrop-filter: blur(0px); }
+    100% { backdrop-filter: blur(12px); -webkit-backdrop-filter: blur(12px); }
+}
+
 @keyframes float {
     0%, 100% { transform: translateY(0px); }
     50% { transform: translateY(-10px); }
@@ -316,9 +321,15 @@
 .animate-fade-in { animation: fade-in 0.6s ease-out; }
 .animate-slide-in-right { animation: slide-in-right 0.5s ease-out both; }
 .animate-slide-in-left { animation: slide-in-left 0.5s ease-out both; }
-.animate-scale-in { animation: scale-in 0.4s ease-out; }
+.animate-scale-in { animation: scale-in 0.4s ease-out forwards; }
+.animate-blur-in { animation: blur-in 0.7s ease-out forwards; }
 .animate-float { animation: float 3s ease-in-out infinite; }
 .animate-parallax-slow { animation: parallax-slow 20s linear infinite; }
 .animate-parallax-fast { animation: parallax-fast 15s linear infinite; }
 .animate-wave { animation: wave 4s ease-in-out infinite; }
 .animate-letter { animation: letter 0.5s ease-out forwards; }
+
+/* Combined version for when both are used together */
+.animate-scale-in.animate-blur-in {
+    animation: scale-in 0.4s ease-out forwards, blur-in 0.7s ease-out forwards;
+}

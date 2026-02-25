@@ -99,9 +99,9 @@ const TestimonialsSection = () => {
         </ScrollAnimation>
 
         {/* Main Testimonial Display */}
-        <ScrollAnimation delay={0.2}>
+        <>
           <div className="max-w-4xl mx-auto mb-12">
-          <Card className="bg-white/10 backdrop-blur-md border border-white/20 shadow-elegant-xl animate-scale-in">
+          <Card className="bg-white/10 border  border-white/20 shadow-elegant-xl animate-scale-in animate-blur-in">
             <CardContent className="p-8 lg:p-12">
               <div className="text-center mb-8">
                 <Quote className="h-16 w-16 text-accent mx-auto mb-6 opacity-50" />
@@ -139,7 +139,7 @@ const TestimonialsSection = () => {
             </CardContent>
           </Card>
         </div>
-        </ScrollAnimation>
+        </>
 
         {/* Navigation Controls */}
         <ScrollAnimation delay={0.3}>
