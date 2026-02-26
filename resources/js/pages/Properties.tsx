@@ -1,26 +1,23 @@
-import React, { useState, useMemo } from 'react';
 import { Link } from '@inertiajs/react';
-import { Card, CardContent } from "@/components/ui/card";
+import { usePage } from '@inertiajs/react';
+import { Search } from 'lucide-react';
+import React, { useState, useMemo } from 'react';
+import building from '@/assets/images/architecture/buildings.jpg';
+import golden from "@/assets/images/architecture/golden-building.jpg";
+import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
+import PropertyCard from '@/components/PropertyCard';
+import ScrollAnimation from '@/components/ScrollAnimation';
 import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { Search } from 'lucide-react';
-
 import { WritingText } from '@/components/ui/shadcn-io/writing-text';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
-import ScrollAnimation from '@/components/ScrollAnimation';
-import PropertyCard from '@/components/PropertyCard';
-
-import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
-import golden from "@/assets/images/architecture/golden-building.jpg";
-
-import building from '@/assets/images/architecture/buildings.jpg';
+import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import {propertyDetails} from "@/routes";
-import { usePage } from '@inertiajs/react';
-import { ProjectThumb } from '@/types/ProjectThumb';
-import { useFavorites } from '@/hooks/useFavorites';
+import type { ProjectThumb } from '@/types/ProjectThumb';
 
 const Properties = () => {
     const [searchTerm, setSearchTerm] = useState('');
@@ -35,7 +32,7 @@ const Properties = () => {
     // Handle case where projects is undefined
     const projectList = projects || [];
 
-    
+
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -65,7 +62,7 @@ const Properties = () => {
         if (searchTerm) {
             filtered = filtered.filter(p =>
                 p.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                p.location?.toLowerCase().includes(searchTerm.toLowerCase())
+                p.address?.toLowerCase().includes(searchTerm.toLowerCase())
             );
         }
 

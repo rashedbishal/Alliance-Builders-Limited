@@ -1,19 +1,19 @@
-import React, { useState } from 'react';
 import { usePage, Link } from '@inertiajs/react';
-import { Card, CardContent } from "@/components/ui/card";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { MapPin, Bed, Bath, Square, Car, Calendar, Home, Heart, Share2, ArrowLeft, Wifi, Shield, Bell, ParkingCircle, Wind, Waves, Phone, Camera, Dumbbell, Trees } from 'lucide-react';
 import { motion } from 'framer-motion';
-
-import { WritingText } from '@/components/ui/shadcn-io/writing-text';
-
-import ScrollAnimation from '@/components/ScrollAnimation';
+import { MapPin, Bed, Bath, Square, Car, Calendar, Home, Heart, Share2, ArrowLeft, Wifi, Shield, Bell, ParkingCircle, Wind, Waves, Phone, Camera, Dumbbell, Trees } from 'lucide-react';
+import React, { useState } from 'react';
 import MapComponent from '@/components/MapComponent';
+import ScrollAnimation from '@/components/ScrollAnimation';
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent } from "@/components/ui/card";
+import { WritingText } from '@/components/ui/shadcn-io/writing-text';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+
+
 import AppLayout from "@/layouts/AppLayout";
 import {properties} from "@/routes";
-import {Project} from "@/types/Project";
+import type {Project} from "@/types/Project";
 
 const PropertyDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
@@ -40,7 +40,7 @@ const PropertyDetail = () => {
 
     // Map backend data to property object
     const images = projectDetails.project_images?.map(img => img.image) || [];
-    
+
     // Map facilities to features with appropriate icons
     const mappedFeatures = projectDetails.facilities?.map(facility => ({
         name: facility.name,

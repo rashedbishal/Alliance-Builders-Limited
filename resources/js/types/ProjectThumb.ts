@@ -1,4 +1,4 @@
-import { ProjectTypes } from "./ProjectTypes";
+import type { ProjectTypes } from "./ProjectTypes";
 
 interface Tag {
     id: number;
@@ -26,7 +26,7 @@ export interface ProjectThumb
 {
     id: number;
     name: string;
-    location: string | null;
+    address: string | null;
     floors: string | null;
     size: string | null;
     slug: string;
