@@ -11,13 +11,12 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 class ProjectImage extends Model
 {
     use HasFactory;
-    protected function image() : Attribute
+
+    protected function image(): Attribute
     {
         $path = null;
-        if($this->project()->exists())
-        {
-            switch ($this->project->project_type_id)
-            {
+        if ($this->project()->exists()) {
+            switch ($this->project->project_type_id) {
                 case 1:
                     $path = 'storage/properties/handoverProject/';
                     break;
@@ -36,13 +35,13 @@ class ProjectImage extends Model
         }
 
         return Attribute::make(
-            get: fn($value) => $path.$value,
-            set: fn($value) => $value,
+            get: fn ($value) => $path.$value,
+            set: fn ($value) => $value,
         );
 
     }
 
-    public function project() : BelongsTo
+    public function project(): BelongsTo
     {
         return $this->belongsTo(Project::class, 'project_id', 'project_id');
     }
