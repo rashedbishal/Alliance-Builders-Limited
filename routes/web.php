@@ -1,14 +1,32 @@
 <?php
 
+use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
+use App\Models\Config\Location;
+use App\Models\Config\ProjectType;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
 Route::get('dashboard', function () {
-    return Inertia::render('Dashboard');
+//    return Inertia::render('Dashboard');
+    return view('test-dashboard');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
+Route::get('project-up', function () {
+    $types = ProjectType::select('id', 'name')->get();
+    $locations = Location::select('id', 'name')->get();
+    return view('test-project', compact('types', 'locations'));
+})->middleware(['auth', 'verified'])->name('project-up');
+
 require __DIR__.'/settings.php';
+
+
+
+Route::controller(CMSController::class)->middleware('web')->group(function () {
+    Route::post('/update-carousel', 'cImageUpdater')->name('update-carousel');
+    Route::post('/save-project', 'projectSaver')->name('add-project');
+});
+
 
 Route::controller(PageController::class)->middleware('web')->group(function () {
 

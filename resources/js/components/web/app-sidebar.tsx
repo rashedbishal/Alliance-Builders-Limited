@@ -22,6 +22,26 @@ const mainNavItems: NavItem[] = [
         href: dashboard(),
         icon: LayoutGrid,
     },
+    {
+        title: 'Carousel Image Management',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Project Management',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Gallery Management',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
+    {
+        title: 'Media Section Management',
+        href: dashboard(),
+        icon: LayoutGrid,
+    },
 ];
 
 const footerNavItems: NavItem[] = [

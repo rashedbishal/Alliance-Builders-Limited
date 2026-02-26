@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('projects', function (Blueprint $table) {
             $table->id();
             $table->string('name')->unique();
-            $table->string('location')->nullable();
+            $table->string('address')->nullable();
             $table->string('google_map_url', 1080)->nullable();
             $table->string('floors')->nullable();
             $table->string('size')->nullable();
