@@ -4,7 +4,7 @@ import type {Carousel} from "@/types/Carousel";
 import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
 
 const HeroImageCollage = () => {
-    const [activeIndex, setActiveIndex] = useState<number>(NaN);
+    const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isHovered, setIsHovered] = useState(false);
     const { carousels } = usePage<{ carousels: Carousel[] }>().props;
 
@@ -26,7 +26,7 @@ const HeroImageCollage = () => {
       >
           {/* Overlay */}
           {!isHovered && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-30">
+              <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-30 pointer-events-none">
                   <h2 className="text-5xl font-bold text-white text-blue-shadow">Welcome To Alliance Builders LTD.!</h2>
               </div>
           )}
@@ -34,15 +34,15 @@ const HeroImageCollage = () => {
               {dynamicCarousels.map((carousel, index) => (
                   <div
                       key={index}
-                      className={`relative cursor-pointer overflow-hidden transition-all duration-[1200ms] ease-in-out ${
+                      className={`relative cursor-pointer overflow-hidden transition-all duration-1200 ease-in-out ${
                           activeIndex === index
-                              ? 'flex-[6]'
+                              ? 'flex-6'
                               : activeIndex !== null
                                 ? 'flex-[0.8]'
                                 : 'flex-1'
                       }`}
                       onMouseEnter={() => setActiveIndex(index)}
-                      onMouseLeave={() => setActiveIndex(NaN)}
+                      onMouseLeave={() => setActiveIndex(null)}
                       style={{ transitionDuration: '1200ms' }}
                   >
                       {/* Gradient Overlay */}
