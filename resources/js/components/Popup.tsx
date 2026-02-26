@@ -44,7 +44,7 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
                 <Dialog.Content className="fixed top-1/2 right-1/2 z-50 w-72 sm:w-80 translate-x-1/2 -translate-y-1/2 overflow-hidden border-4 border-accent-foreground bg-white shadow-2xl md:top-26 md:right-4.5 md:w-96 md:translate-x-0 md:translate-y-0 lg:w-md">
                     {/* Close Button */}
                     <Dialog.Close asChild>
-                        <button className="group absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 transition-all hover:bg-white">
+                        <button className="group absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 transition-all hover:bg-white cursor-pointer">
                             <X className="h-5 w-5 text-gray-700 transition-colors group-hover:text-gray-900" />
                         </button>
                     </Dialog.Close>
