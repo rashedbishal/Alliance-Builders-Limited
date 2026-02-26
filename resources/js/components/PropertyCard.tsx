@@ -1,11 +1,11 @@
-import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
 import { MapPin, Bed, Bath, Square, Heart, Eye, Compass } from 'lucide-react';
-import { Button } from "@/components/ui/button";
+import React, { useState, useEffect } from 'react';
 import ScrollAnimation from '@/components/ScrollAnimation';
-import SavedAnimation from './SavedAnimation';
-import { ProjectThumb } from '@/types/ProjectThumb';
+import { Button } from "@/components/ui/button";
 import { useFavorites } from '@/hooks/useFavorites';
+import type { ProjectThumb } from '@/types/ProjectThumb';
+import SavedAnimation from './SavedAnimation';
 
 interface PropertyCardProps {
     property: ProjectThumb;
@@ -109,7 +109,7 @@ const PropertyCard = ({
                                     </h3>
                                     <div className="flex items-center text-white/70 mb-3">
                                         <MapPin className="h-4 w-4 mr-2 text-blue-400" />
-                                        <span className="text-sm">{property.location}</span>
+                                        <span className="text-sm">{property.address}</span>
                                     </div>
                                 </div>
 
