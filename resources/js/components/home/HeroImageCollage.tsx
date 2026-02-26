@@ -27,7 +27,7 @@ const HeroImageCollage = () => {
           {/* Overlay */}
           {!isHovered && (
               <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-30">
-                  <h2 className="text-5xl font-bold text-white">Welcome To Alliance Builders LTD.!</h2>
+                  <h2 className="text-5xl font-bold text-white text-blue-shadow">Welcome To Alliance Builders LTD.!</h2>
               </div>
           )}
           <div className="relative flex h-screen w-full flex-row gap-0">
