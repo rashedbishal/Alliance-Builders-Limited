@@ -41,7 +41,7 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
             <Dialog.Portal>
-                <Dialog.Content className="fixed top-22 right-4.5 z-50 w-72 overflow-hidden bg-white p-2 shadow-2xl md:top-26 md:w-96">
+                <Dialog.Content className="fixed top-1/2 right-1/2 z-50 w-72 sm:w-80 translate-x-1/2 -translate-y-1/2 overflow-hidden border-4 border-accent-foreground bg-white shadow-2xl md:top-26 md:right-4.5 md:w-96 md:translate-x-0 md:translate-y-0 lg:w-md">
                     {/* Close Button */}
                     <Dialog.Close asChild>
                         <button className="group absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 transition-all hover:bg-white">
@@ -50,7 +50,7 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
                     </Dialog.Close>
 
                     {/* Image Section */}
-                    <div className="relative h-64 overflow-hidden rounded-2xl bg-gray-200">
+                    <div className="relative h-72 overflow-hidden rounded-2xl bg-gray-200">
                         <Link href={FEATURED_PROPERTY.hyperlink}>
                             <img
                                 src={FEATURED_PROPERTY.image}
