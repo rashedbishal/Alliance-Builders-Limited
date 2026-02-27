@@ -76,6 +76,62 @@
                 </div>
             </div>
 
+            <!-- Apartment / Unit Details -->
+            <div class="border-t border-zinc-700 pt-10">
+                <h2 class="text-2xl font-semibold mb-6">Apartment / Unit Details</h2>
+                <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Apartment Size</label>
+                        <input type="text" name="apartment_size" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Bedroom</label>
+                        <input type="text" name="bedroom" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Bathroom</label>
+                        <input type="text" name="bathroom" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Balcony</label>
+                        <input type="text" name="balcony" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Kitchen</label>
+                        <input type="text" name="kitchen" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Living & Dining</label>
+                        <input type="text" name="living_dining" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Parking</label>
+                        <input type="text" name="parking" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Garage No</label>
+                        <input type="text" name="garage_no" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Garage Size</label>
+                        <input type="text" name="garage_size" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500">
+                    </div>
+                    <div>
+                        <label class="block text-sm font-medium text-zinc-400 mb-2">Apartment Direction</label>
+                        <input type="text" name="apartment_direction" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500" placeholder="North, South-East, etc.">
+                    </div>
+                </div>
+            </div>
+
+            <!-- YouTube Video -->
+            <div class="border-t border-zinc-700 pt-10">
+                <h2 class="text-2xl font-semibold mb-6">Media Links</h2>
+                <div>
+                    <label class="block text-sm font-medium text-zinc-400 mb-2">YouTube Video ID</label>
+                    <input type="text" name="youtube_video_id" class="w-full bg-zinc-800 border border-zinc-700 rounded-2xl px-5 py-4 focus:border-violet-500" placeholder="dQw4w9WgXcQ">
+                </div>
+            </div>
+
             <!-- Dates & Featured -->
             <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
                 <div>
@@ -101,6 +157,40 @@
                 <div>
                     <label class="block text-sm font-medium text-zinc-400 mb-2">Surroundings</label>
                     <textarea name="surroundings" rows="5" class="w-full bg-zinc-800 border border-zinc-700 rounded-3xl px-5 py-4"></textarea>
+                </div>
+            </div>
+
+            <!-- Facilities -->
+            <div class="border-t border-zinc-700 pt-10">
+                <h2 class="text-2xl font-semibold mb-6">Project Facilities</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    @foreach($facilities as $facility)
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="facilities[]" value="{{ $facility->id }}"
+                                   id="facility-{{ str_replace(' ', '-', strtolower($facility->id)) }}"
+                                   class="w-5 h-5 accent-violet-600 bg-zinc-800 border-zinc-700 rounded">
+                            <label for="facility-{{ str_replace(' ', '-', strtolower($facility->name)) }}" class="text-sm cursor-pointer">
+                                {{ $facility->name }}
+                            </label>
+                        </div>
+                    @endforeach
+                </div>
+            </div>
+
+            <!-- Tags -->
+            <div class="border-t border-zinc-700 pt-10">
+                <h2 class="text-2xl font-semibold mb-6">Project Tags</h2>
+                <div class="grid grid-cols-2 sm:grid-cols-3 md:grid-cols-4 gap-4">
+                    @foreach($tags as $tag)
+                        <div class="flex items-center gap-3">
+                            <input type="checkbox" name="tags[]" value="{{ $tag->id }}"
+                                   id="tag-{{ str_replace(' ', '-', strtolower($tag->id)) }}"
+                                   class="w-5 h-5 accent-violet-600 bg-zinc-800 border-zinc-700 rounded">
+                            <label for="tag-{{ str_replace(' ', '-', strtolower($tag->name)) }}" class="text-sm cursor-pointer">
+                                {{ $tag->name }}
+                            </label>
+                        </div>
+                    @endforeach
                 </div>
             </div>
 
@@ -150,6 +240,7 @@
 </div>
 
 <script>
+    // ... (your original JavaScript remains completely unchanged)
     // Thumbnail Preview
     const thumbDrop = document.getElementById('thumbnail-dropzone');
     const thumbInput = document.getElementById('thumbnail-input');

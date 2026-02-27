@@ -2,8 +2,10 @@
 
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
+use App\Models\Config\Facility;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
+use App\Models\Config\Tag;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -15,8 +17,15 @@ Route::get('dashboard', function () {
 Route::get('project-up', function () {
     $types = ProjectType::select('id', 'name')->get();
     $locations = Location::select('id', 'name')->get();
-    return view('test-project', compact('types', 'locations'));
+    $facilities = Facility::select('id', 'name')->get();
+    $tags = Tag::select('id', 'name')->get();
+    return view('test-project', compact('types', 'locations', 'facilities', 'tags'));
 })->middleware(['auth', 'verified'])->name('project-up');
+
+Route::get('media-up', function () {
+
+    return view('test-media');
+})->middleware(['auth', 'verified'])->name('media-up');
 
 require __DIR__.'/settings.php';
 
@@ -25,6 +34,7 @@ require __DIR__.'/settings.php';
 Route::controller(CMSController::class)->middleware('web')->group(function () {
     Route::post('/update-carousel', 'cImageUpdater')->name('update-carousel');
     Route::post('/save-project', 'projectSaver')->name('add-project');
+    Route::post('/save-media', 'mediaSaver')->name('add-media');
 });
 
 
