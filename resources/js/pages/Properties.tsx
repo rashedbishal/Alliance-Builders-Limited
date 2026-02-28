@@ -1,13 +1,9 @@
-import { Link } from '@inertiajs/react';
 import { usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
 import React, { useState, useMemo } from 'react';
-import building from '@/assets/images/architecture/buildings.jpg';
 import golden from "@/assets/images/architecture/golden-building.jpg";
 import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
 import PropertyCard from '@/components/PropertyCard';
-import ScrollAnimation from '@/components/ScrollAnimation';
-import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
@@ -16,7 +12,6 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
-import {propertyDetails} from "@/routes";
 import type { ProjectThumb } from '@/types/ProjectThumb';
 
 const Properties = () => {
@@ -149,7 +144,7 @@ const Properties = () => {
                         <div className="container mx-auto px-4">
                             <Tabs value={activeTab} onValueChange={setActiveTab} className="w-full">
                                 <div className="flex justify-center mb-12">
-                                    <TabsList className="grid w-full max-w-4xl grid-cols-5">
+                                    <TabsList className="h-auto grid w-full max-w-4xl grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                                         <TabsTrigger value="all">All ({projectList.length})</TabsTrigger>
                                         <TabsTrigger value="upcoming">Upcoming ({projectList.filter(p => (p as any).project_type?.name === 'Upcoming Project').length})</TabsTrigger>
                                         <TabsTrigger value="running">Running ({projectList.filter(p => (p as any).project_type?.name === 'Ongoing Project').length})</TabsTrigger>
