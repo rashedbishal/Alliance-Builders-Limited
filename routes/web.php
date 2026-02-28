@@ -6,6 +6,7 @@ use App\Models\Config\Facility;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
+use App\Models\Visual\Gallery;
 use Illuminate\Support\Facades\Route;
 use Inertia\Inertia;
 
@@ -27,6 +28,13 @@ Route::get('media-up', function () {
     return view('test-media');
 })->middleware(['auth', 'verified'])->name('media-up');
 
+Route::get('gallery-up', function () {
+
+    $types = Gallery::select('id', 'type')->get();
+    return view('test-gallery', compact('types'));
+})->middleware(['auth', 'verified'])->name('gallery-up');
+
+
 require __DIR__.'/settings.php';
 
 
@@ -35,6 +43,7 @@ Route::controller(CMSController::class)->middleware('web')->group(function () {
     Route::post('/update-carousel', 'cImageUpdater')->name('update-carousel');
     Route::post('/save-project', 'projectSaver')->name('add-project');
     Route::post('/save-media', 'mediaSaver')->name('add-media');
+    Route::post('/save-gallery', 'gallerySaver')->name('add-gallery');
 });
 
 

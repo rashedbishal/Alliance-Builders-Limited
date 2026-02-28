@@ -12,21 +12,19 @@ use Illuminate\Database\Eloquent\Relations\MorphTo;
 class Image extends Model
 {
     use HasFactory;
-    protected function path() : Attribute
+
+    protected function path(): Attribute
     {
-        if(!is_null($this->imageable_type))
-        {
-            $type =  match($this->imageable_type){
+        if (! is_null($this->imageable_type)) {
+            $type = match ($this->imageable_type) {
                 'App\Models\Visual\Gallery' => 'gallery',
                 'App\Models\Releases\MediaCoverage' => 'media',
                 'App\Models\Releases\Popup' => 'popup',
                 'App\Models\Properties\Project' => 'project',
             };
 
-            if($type == 'gallery')
-            {
-                switch ($this->imageable_id)
-                {
+            if ($type == 'gallery') {
+                switch ($this->imageable_id) {
                     case 1:
                         $path = 'storage/gallery/project-handover/';
                         break;
@@ -42,38 +40,32 @@ class Image extends Model
                     default:
                         abort(503);
                 }
-            }
-            else if($type == 'project')
-            {
+            } elseif ($type == 'project') {
                 $path = 'storage/properties/propertyThumbs/';
-            }
-            else if($type == 'media')
-            {
+            } elseif ($type == 'media') {
                 $path = 'storage/media/';
-            }
-            else if($type == 'popup')
-            {
+            } elseif ($type == 'popup') {
                 $path = 'images/popup/';
             }
         }
 
         return Attribute::make(
-            get: fn($value) => $path.$value,
-            set: fn($value) => $value,
+            get: fn ($value) => $path.$value,
+            set: fn ($value) => $value,
         );
     }
 
-    public function gallery() : MorphTo
+    public function gallery(): MorphTo
     {
         return $this->morphTo(Gallery::class, 'imageable_type', 'imageable_id', 'id');
     }
 
-    public function mediaCoverage() : MorphTo
+    public function mediaCoverage(): MorphTo
     {
         return $this->morphTo(MediaCoverage::class, 'imageable_type', 'imageable_id', 'id');
     }
 
-    public function project() : MorphTo
+    public function project(): MorphTo
     {
         return $this->morphTo(Project::class, 'imageable_type', 'imageable_id', 'project_id');
     }

@@ -6,8 +6,10 @@ use App\Models\Config\Details;
 use App\Models\Config\Location;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
+use App\Models\Visual\Gallery;
 use App\Models\Visual\Image;
 use App\Models\Visual\ProjectImage;
+use App\Models\Visual\Video;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
@@ -119,10 +121,10 @@ class CMSController extends Controller
                         $imageFile->getClientOriginalExtension();
 
                     $storagePath = match ($project->project_type_id) {
-                        "1" => 'properties/handoverProject',
-                        "2" => 'properties/ongoingProject',
-                        "3" => 'properties/upcomingProject',
-                        "4" => 'properties/hotelsResorts',
+                        '1' => 'properties/handoverProject',
+                        '2' => 'properties/ongoingProject',
+                        '3' => 'properties/upcomingProject',
+                        '4' => 'properties/hotelsResorts',
                         default => 'properties/projectImages',
                     };
                     // Store in a separate folder (recommended)
@@ -160,6 +162,53 @@ class CMSController extends Controller
             $image->path = $sanitizedName;
             $image->project()->associate($media);
             $image->save();
+        }
+
+        return redirect()->back();
+    }
+
+    public function gallerySaver(Request $request)
+    {
+        if ($request->hasFile('media_file')) {
+            $imageFile = $request->file('media_file');
+            $sanitizedName = uniqid().'.'.$imageFile->getClientOriginalExtension();
+
+            if ($request->input('media_type') == '1') {
+                $storagePath = match ($request->input('gallery_type')) {
+                    '1' => 'gallery/project-handover',
+                    '2' => 'gallery/project-inauguration',
+                    '3' => 'gallery/construction-images',
+                    '4' => 'gallery/event-activity',
+                    default => 'properties/projectImages',
+                };
+                $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+
+                $image = new Image;
+                $image->path = $sanitizedName;
+                $image->title = $request->input('title');
+                $image->description = $request->input('description');
+                $image->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
+                $image->save();
+            } else {
+
+                $storagePath = match ($request->input('gallery_type')) {
+                    '1' => 'video/project-handover',
+                    '2' => 'video/project-inauguration',
+                    '3' => 'video/construction-images',
+                    '4' => 'video/event-activity',
+                    default => 'properties/projectImages',
+                };
+                $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+
+                $video = new Video;
+                $video->path = $sanitizedName;
+                $video->title = $request->input('title');
+                $video->description = $request->input('description');
+                $video->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
+                $video->save();
+
+            }
+
         }
 
         return redirect()->back();
