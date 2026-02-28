@@ -55,14 +55,14 @@ const About = () => {
                     <div className="relative z-10 container mx-auto px-4">
                         <ScrollAnimation delay={0.1} className="md:w-[80%] lg:w-[75%]">
                             <SplittingText
-                                className="lg:9xl mb-6 text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
+                                className="lg:9xl mb-6 text-3xl sm:text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
                                 text="Building Dreams,"
                                 type="words"
                             />
                         </ScrollAnimation>
                         <ScrollAnimation delay={0.2} className="mb-6 md:w-[75%] lg:w-[55%]">
                             <SplittingText
-                                className="lg:9xl mb-6 text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
+                                className="lg:9xl mb-6 text-3xl sm:text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
                                 text="One Home At A Time"
                                 type="words"
                             />
@@ -70,7 +70,7 @@ const About = () => {
                         <ScrollAnimation delay={0.2} className="md:w-[80%] lg:w-[60%]">
                             <p>
                                 <WritingText
-                                    className="max-w-3xl text-xl text-black text-white-shadow   "
+                                    className="max-w-3xl text-lg sm:text-xl text-black text-white-shadow   "
                                     text="Founded in 2003, EstateElite began with a simple mission: to revolutionize the real estate experience by putting people first. What started as a small team of passionate realtors has grown into one of the most trusted names in luxury real estate."
                                     spacing={4}
                                 />
@@ -90,7 +90,7 @@ const About = () => {
                                   border border-white/5
                                   shadow-2xl shadow-black/70"
                     >
-                        <div className="grid grid-cols-2 gap-6 sm:gap-8 md:grid-cols-4">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
                             {stats.map((stat, index) => (
                                 <ScrollAnimation key={index} delay={index * 0.12}>
                                     <div
@@ -198,7 +198,7 @@ const About = () => {
                             <ScrollAnimation delay={0.2}>
                                 <div className="relative">
                                     <img src={collage6} alt="Our Office" className="shadow-elegant-xl h-[500px] w-full rounded-2xl object-cover" />
-                                    <div className="bg-gradient-elegant shadow-elegant-lg absolute -bottom-6 -left-6 rounded-2xl p-8 text-primary-foreground">
+                                    <div className="animate-float bg-gradient-elegant shadow-elegant-lg absolute -bottom-2 -left-2 md:-bottom-4 md:-left-4 rounded-2xl p-8 text-primary-foreground">
                                         <div className="mb-2 text-5xl font-bold">20+</div>
                                         <div className="text-lg">Years of Excellence</div>
                                     </div>
