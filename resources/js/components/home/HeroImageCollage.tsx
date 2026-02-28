@@ -1,4 +1,5 @@
 import {usePage} from "@inertiajs/react";
+import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
 import type {Carousel} from "@/types/Carousel";
 import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
@@ -26,9 +27,20 @@ const HeroImageCollage = () => {
       >
           {/* Overlay */}
           {!isHovered && (
-              <div className="absolute inset-0 flex items-center justify-center bg-black/20 z-30 pointer-events-none">
-                  <h2 className="text-5xl font-bold text-white text-blue-shadow">Welcome To Alliance Builders LTD.!</h2>
-              </div>
+              <motion.div
+                  initial={{ opacity: 0 }}
+                  animate={{ opacity: 1 }}
+                  transition={{
+                      duration: 3.0, // ← change this value (in seconds)
+                      ease: 'easeOut',
+                      delay: 0.5,
+                  }}
+                  className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/20"
+              >
+                  <h2 className="text-blue-shadow text-5xl font-bold text-white">
+                      Welcome To Alliance Builders LTD.!
+                  </h2>
+              </motion.div>
           )}
           <div className="relative flex h-screen w-full flex-row gap-0">
               {dynamicCarousels.map((carousel, index) => (
