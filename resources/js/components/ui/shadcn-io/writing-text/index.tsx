@@ -1,13 +1,13 @@
 'use client';
- 
-import * as React from 'react';
+
 import {
   motion,
   useInView,
   type Transition,
   type UseInViewOptions,
 } from 'motion/react';
- 
+import * as React from 'react';
+
 type WritingTextProps = Omit<React.ComponentProps<'span'>, 'children'> & {
   transition?: Transition;
   inView?: boolean;
@@ -16,7 +16,7 @@ type WritingTextProps = Omit<React.ComponentProps<'span'>, 'children'> & {
   spacing?: number | string;
   text: string;
 };
- 
+
 const WritingText = React.forwardRef<HTMLSpanElement, WritingTextProps>(({
   inView = false,
   inViewMargin = '0px',
@@ -28,15 +28,15 @@ const WritingText = React.forwardRef<HTMLSpanElement, WritingTextProps>(({
 }, ref) => {
   const localRef = React.useRef<HTMLSpanElement>(null);
   React.useImperativeHandle(ref, () => localRef.current as HTMLSpanElement);
- 
+
   const inViewResult = useInView(localRef, {
     once: inViewOnce,
     margin: inViewMargin,
   });
   const isInView = !inView || inViewResult;
- 
+
   const words = React.useMemo(() => text.split(' '), [text]);
- 
+
   return (
     <span ref={localRef} data-slot="writing-text" {...props}>
       {words.map((word, index) => (
@@ -59,5 +59,5 @@ const WritingText = React.forwardRef<HTMLSpanElement, WritingTextProps>(({
 });
 
 WritingText.displayName = 'WritingText';
- 
+
 export { WritingText, type WritingTextProps };

@@ -1,6 +1,5 @@
 'use client';
- 
-import * as React from 'react';
+
 import {
   motion,
   type Variants,
@@ -9,7 +8,8 @@ import {
   useInView,
   type UseInViewOptions,
 } from 'motion/react';
- 
+import * as React from 'react';
+
 type DefaultSplittingTextProps = {
   motionVariants?: {
     initial?: Record<string, any>;
@@ -22,21 +22,21 @@ type DefaultSplittingTextProps = {
   inViewOnce?: boolean;
   delay?: number;
 } & HTMLMotionProps<'div'>;
- 
+
 type CharsOrWordsSplittingTextProps = DefaultSplittingTextProps & {
   type?: 'chars' | 'words';
   text: string;
 };
- 
+
 type LinesSplittingTextProps = DefaultSplittingTextProps & {
   type: 'lines';
   text: string[];
 };
- 
+
 type SplittingTextProps =
   | CharsOrWordsSplittingTextProps
   | LinesSplittingTextProps;
- 
+
 const defaultItemVariant: Variants = {
   hidden: { x: 150, opacity: 0 },
   visible: {
@@ -45,7 +45,7 @@ const defaultItemVariant: Variants = {
     transition: { duration: 0.7, ease: 'easeOut' },
   },
 };
- 
+
 export const SplittingText: React.FC<SplittingTextProps> = ({
   text,
   type = 'chars',
@@ -63,19 +63,19 @@ export const SplittingText: React.FC<SplittingTextProps> = ({
         i < text.length - 1 ? <br key={`br-${i}`} /> : null,
       ]);
     }
- 
+
     if (type === 'words') {
       const tokens = text.match(/\S+\s*/g) || [];
       return tokens.map((token, i) => (
         <React.Fragment key={i}>{token}</React.Fragment>
       ));
     }
- 
+
     return text
       .split('')
       .map((char, i) => <React.Fragment key={i}>{char}</React.Fragment>);
   }, [text, type]);
- 
+
   const containerVariants: Variants = {
     hidden: {},
     visible: {
@@ -87,7 +87,7 @@ export const SplittingText: React.FC<SplittingTextProps> = ({
       },
     },
   };
- 
+
   const itemVariants: Variants = {
     hidden: {
       ...defaultItemVariant.hidden,
@@ -103,7 +103,7 @@ export const SplittingText: React.FC<SplittingTextProps> = ({
       },
     },
   };
- 
+
   const localRef = React.useRef<HTMLDivElement>(null);
 
   const inViewResult = useInView(localRef, {
@@ -111,7 +111,7 @@ export const SplittingText: React.FC<SplittingTextProps> = ({
     margin: inViewMargin,
   });
   const isInView = !inView || inViewResult;
- 
+
   return (
     <motion.span
       ref={localRef}
