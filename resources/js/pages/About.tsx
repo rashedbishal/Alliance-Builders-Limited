@@ -37,29 +37,6 @@ const About = () => {
         }
     ];
 
-    const team = [
-        {
-            name: "Sarah Johnson",
-            role: "CEO & Founder",
-            image: bg3
-        },
-        {
-            name: "Michael Chen",
-            role: "Chief Property Officer",
-            image: bg3
-        },
-        {
-            name: "Emily Rodriguez",
-            role: "Head of Sales",
-            image: bg3
-        },
-        {
-            name: "David Thompson",
-            role: "Marketing Director",
-            image: bg3
-        }
-    ];
-
     return (
         <AppLayout>
             <div className="min-h-screen bg-black">
@@ -76,19 +53,16 @@ const About = () => {
                 >
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
                     <div className="relative z-10 container mx-auto px-4">
-                        <ScrollAnimation>
-                            <Badge className="text-lg bg-gradient-accent mb-6 text-accent-foreground">About Us</Badge>
-                        </ScrollAnimation>
                         <ScrollAnimation delay={0.1} className="md:w-[80%] lg:w-[75%]">
                             <SplittingText
-                                className="lg:9xl mb-6 text-5xl font-semibold text-white md:text-7xl"
+                                className="lg:9xl mb-6 text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
                                 text="Building Dreams,"
                                 type="words"
                             />
                         </ScrollAnimation>
                         <ScrollAnimation delay={0.2} className="mb-6 md:w-[75%] lg:w-[55%]">
                             <SplittingText
-                                className="lg:9xl mb-6 text-5xl font-semibold text-white md:text-7xl"
+                                className="lg:9xl mb-6 text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
                                 text="One Home At A Time"
                                 type="words"
                             />
@@ -96,7 +70,7 @@ const About = () => {
                         <ScrollAnimation delay={0.2} className="md:w-[80%] lg:w-[60%]">
                             <p>
                                 <WritingText
-                                    className="max-w-3xl text-xl text-white"
+                                    className="max-w-3xl text-xl text-black text-white-shadow   "
                                     text="Founded in 2003, EstateElite began with a simple mission: to revolutionize the real estate experience by putting people first. What started as a small team of passionate realtors has grown into one of the most trusted names in luxury real estate."
                                     spacing={4}
                                 />

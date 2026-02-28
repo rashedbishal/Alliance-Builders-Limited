@@ -29,7 +29,7 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
     useEffect(() => {
         if (showOnLoad) {
             // TODO: The following line is only for testing. Remove it before production.
-            sessionStorage.removeItem(POPUP_STORAGE_KEY); // temporary: remove for production
+            // sessionStorage.removeItem(POPUP_STORAGE_KEY); // temporary: remove for production
             // Check if popup has already been shown in this session
             const hasShown = sessionStorage.getItem(POPUP_STORAGE_KEY);
             if (!hasShown) {
