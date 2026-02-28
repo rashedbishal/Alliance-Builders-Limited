@@ -74,11 +74,8 @@ const PropertyDetail = () => {
         parking: projectDetails.details?.garage_no ? parseInt(projectDetails.details.garage_no) : 0,
         yearBuilt: projectDetails.construction_start_date || "Not specified",
         description: projectDetails.description || "Beautiful property with premium features",
-        images: images.length > 0 ? images : [projectDetails.project_images?.[0]?.image || ""]
+        images: images.length > 0 ? images : [projectDetails.project_images?.[0]?.image || ""],
     };
-
-    console.log(projectDetails.project_images);
-    console.log(property.image);
 
     return (
         <AppLayout>
