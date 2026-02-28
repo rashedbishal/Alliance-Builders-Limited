@@ -1,7 +1,8 @@
-import * as Dialog from '@radix-ui/react-dialog';
-import { X, MapPin, Bed, Bath, Ruler, Star } from 'lucide-react';
-import { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';
+import * as Dialog from '@radix-ui/react-dialog';
+import { AnimatePresence, motion } from 'framer-motion';
+import { X } from 'lucide-react';
+import { useState, useEffect } from 'react';
 
 interface PopupProps {
     showOnLoad?: boolean;
@@ -40,26 +41,56 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
 
     return (
         <Dialog.Root open={open} onOpenChange={setOpen}>
-            <Dialog.Portal>
-                <Dialog.Content className="fixed top-1/2 right-1/2 z-50 w-72 sm:w-80 translate-x-1/2 -translate-y-1/2 overflow-hidden border-4 border-accent-foreground bg-white shadow-2xl md:top-95 md:left-4 md:w-96 md:translate-x-0 md:translate-y-0 lg:w-md">
-                    {/* Close Button */}
-                    <Dialog.Close asChild>
-                        <button className="group absolute top-4 right-4 z-10 rounded-full bg-white/80 p-2 transition-all hover:bg-white cursor-pointer">
-                            <X className="h-5 w-5 text-gray-700 transition-colors group-hover:text-gray-900" />
-                        </button>
-                    </Dialog.Close>
+            <Dialog.Portal forceMount>
+                <AnimatePresence>
+                    {open && (
+                        <>
+                            {/* Optional: animate overlay too */}
+                            {/*<Dialog.Overlay asChild forceMount>*/}
+                            {/*    <motion.div*/}
+                            {/*        className="fixed inset-0 z-40 bg-black/40 backdrop-blur-sm sm:"*/}
+                            {/*        initial={{ opacity: 0 }}*/}
+                            {/*        animate={{ opacity: 1 }}*/}
+                            {/*        exit={{ opacity: 0 }}*/}
+                            {/*        transition={{ duration: 0.4 }}*/}
+                            {/*    />*/}
+                            {/*</Dialog.Overlay>*/}
 
-                    {/* Image Section */}
-                    <div className="relative h-72 overflow-hidden rounded-2xl bg-gray-200">
-                        <Link href={FEATURED_PROPERTY.hyperlink}>
-                            <img
-                                src={FEATURED_PROPERTY.image}
-                                alt={FEATURED_PROPERTY.title}
-                                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
-                            />
-                        </Link>
-                    </div>
-                </Dialog.Content>
+                            <Dialog.Content asChild forceMount>
+                                <motion.div
+                                    initial={{ opacity: 0, scale: 0.85, y: 40 }}
+                                    animate={{ opacity: 1, scale: 1, y: 0 }}
+                                    exit={{ opacity: 0, scale: 0.85, y: 20 }}
+                                    transition={{
+                                        duration: 0.5,
+                                        ease: [0.16, 1, 0.3, 1], // nice modern ease
+                                    }}
+                                    className="fixed top-1/2 right-1/2 z-50 w-72 translate-x-1/2 -translate-y-1/2 overflow-hidden border-4 border-accent-foreground bg-white shadow-2xl sm:w-80 md:top-95 md:left-4 md:w-96 md:translate-x-0 md:translate-y-0 lg:w-md"
+                                >
+                                    {/* Close Button */}
+                                    <Dialog.Close asChild>
+                                        <button className="group absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-2 transition-all hover:bg-white">
+                                            <X className="h-5 w-5 text-gray-700 transition-colors group-hover:text-gray-900" />
+                                        </button>
+                                    </Dialog.Close>
+
+                                    {/* Image Section */}
+                                    <div className="relative h-72 overflow-hidden rounded-2xl bg-gray-200">
+                                        <Link
+                                            href={FEATURED_PROPERTY.hyperlink}
+                                        >
+                                            <img
+                                                src={FEATURED_PROPERTY.image}
+                                                alt={FEATURED_PROPERTY.title}
+                                                className="h-full w-full object-cover transition-transform duration-500 hover:scale-105"
+                                            />
+                                        </Link>
+                                    </div>
+                                </motion.div>
+                            </Dialog.Content>
+                        </>
+                    )}
+                </AnimatePresence>
             </Dialog.Portal>
         </Dialog.Root>
     );
