@@ -1,6 +1,6 @@
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import golden from "@/assets/images/architecture/golden-building.jpg";
 import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
 import PropertyCard from '@/components/PropertyCard';
@@ -13,12 +13,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import type { ProjectThumb } from '@/types/ProjectThumb';
+import { route } from 'ziggy-js';
 
 const Properties = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+    // const [searchTerm, setSearchTerm] = useState('');
     const [propertyType, setPropertyType] = useState('all');
     const [priceRange, setPriceRange] = useState('all');
-    const [activeTab, setActiveTab] = useState('all');
+    // const [activeTab, setActiveTab] = useState('all');
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
@@ -27,7 +28,33 @@ const Properties = () => {
     // Handle case where projects is undefined
     const projectList = projects || [];
 
+    const pageUrl = usePage().url;
 
+    const queryParams = new URLSearchParams(pageUrl.split('?')[1] || '');
+    const urlTab = queryParams.get('tab') || 'all';
+
+    const [activeTab, setActiveTab] = useState(urlTab);
+    const [searchTerm, setSearchTerm] = useState(queryParams.get('search') || '');
+
+    // sync back to URL when user changes tab (SPA feel, shareable links)
+    // useEffect(() => {
+    //     // Only push if tab actually changed (avoid initial loop)
+    //     const currentTabInUrl = queryParams.get('tab') || 'all';
+    //     if (activeTab !== currentTabInUrl) {
+    //         router.get(
+    //             route('properties.index'), // or whatever your route name is
+    //             {
+    //                 tab: activeTab,
+    //                 search: searchTerm /* add others if needed */,
+    //             },
+    //             {
+    //                 preserveState: true, // ← keeps scroll, form state, etc.
+    //                 preserveScroll: true,
+    //                 replace: true, // replace history entry (no new back-stack item)
+    //             },
+    //         );
+    //     }
+    // }, [activeTab, queryParams, searchTerm]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
