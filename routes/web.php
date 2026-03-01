@@ -59,6 +59,10 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
     Route::get('/media', 'media')->name('media');
     Route::get('/gallery', 'gallery')->name('gallery');
     Route::get('/properties', 'properties')->name('properties');
+    Route::get('/handover', 'handover')->name('handover-properties');
+    Route::get('/ongoing', 'ongoing')->name('ongoing-properties');
+    Route::get('/upcoming', 'upcoming')->name('upcoming-properties');
+    Route::get('/hotels-resorts', 'hotelsResorts')->name('hotels-resorts');
     Route::get('{project:slug}', 'propertyDetails')->name('propertyDetails');
 
 });
