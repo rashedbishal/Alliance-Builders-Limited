@@ -29,8 +29,6 @@ const PropertyCard = ({
     const [showSaved, setShowSaved] = useState(false);
     const { SAVED_EVENT } = useFavorites();
 
-    console.log(property.details);
-
     useEffect(() => {
         const handleSaved = (event: Event) => {
             const customEvent = event as CustomEvent;
