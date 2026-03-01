@@ -38,7 +38,7 @@ const HeroImageCollage = () => {
                   className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/20 p-4"
               >
                   <BlurText
-                      className="text-blue-shadow text-3xl sm:text-5xl md:text-7xl font-bold text-white justify-center"
+                      className="text-blue-shadow text-3xl sm:text-5xl md:text-6xl font-bold text-white justify-center"
                       text="Shape Your Dreams With Alliance Builders Ltd."
                   />
               </motion.div>
