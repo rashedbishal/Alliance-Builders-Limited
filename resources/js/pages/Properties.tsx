@@ -25,6 +25,8 @@ const Properties = () => {
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
     const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
+    console.log(projects);
+
     // Handle case where projects is undefined
     const projectList = projects || [];
 
