@@ -21,12 +21,10 @@ const SearchSection = () => {
     const {projectTypes} = usePage<{projectTypes: ProjectTypes[]}>().props;
     const {tags} = usePage<{tags: Tag[]}>().props;
 
-
-    const statuses = [
-        'For Sale', 'For Rent', 'Sold', 'Under Construction',
-        'Pre-Launch', 'Ready to Move'
-    ];
-
+    // const statuses = [
+    //     'For Sale', 'For Rent', 'Sold', 'Under Construction',
+    //     'Pre-Launch', 'Ready to Move'
+    // ];
 
     const handleSearch = () => {
         console.log('Search filters:', searchFilters);
@@ -59,7 +57,7 @@ const SearchSection = () => {
                 <ScrollAnimation delay={0.2}>
                     <Card className="max-w-6xl mx-auto shadow-elegant-xl bg-[rgba(255,255,255,0.1)] ">
                         <CardContent className="p-8">
-                            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-6">
+                            <div className="grid grid-cols-1 md:grid-cols-2 gap-6 mb-6">
                                 <div className="space-y-2">
                                     <label className="flex items-center text-sm font-medium text-white">
                                         <MapPin className="h-4 w-4 mr-2 text-white"/>
@@ -109,27 +107,27 @@ const SearchSection = () => {
                                     </Select>
                                 </div>
 
-                                <div className="space-y-2">
-                                    <label className="flex items-center text-sm font-medium text-white">
-                                        <Calendar className="h-4 w-4 mr-2 text-white"/>
-                                        Status
-                                    </label>
-                                    <Select
-                                        onValueChange={(value) => setSearchFilters(prev => ({...prev, status: value}))}>
-                                        <SelectTrigger
-                                            className="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300">
-                                            <SelectValue placeholder="Select status"/>
-                                        </SelectTrigger>
-                                        <SelectContent
-                                            className="bg-[rgba(255,255,255,0.5)] backdrop-blur-sm border border-border shadow-elegant">
-                                            {tags.map((tag) => (
-                                                <SelectItem key={tag.id} value={tag.id.toString()}>
-                                                    {tag.name.valueOf()}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
-                                </div>
+                                {/*<div className="space-y-2">*/}
+                                {/*    <label className="flex items-center text-sm font-medium text-white">*/}
+                                {/*        <Calendar className="h-4 w-4 mr-2 text-white"/>*/}
+                                {/*        Status*/}
+                                {/*    </label>*/}
+                                {/*    <Select*/}
+                                {/*        onValueChange={(value) => setSearchFilters(prev => ({...prev, status: value}))}>*/}
+                                {/*        <SelectTrigger*/}
+                                {/*            className="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300">*/}
+                                {/*            <SelectValue placeholder="Select status"/>*/}
+                                {/*        </SelectTrigger>*/}
+                                {/*        <SelectContent*/}
+                                {/*            className="bg-[rgba(255,255,255,0.5)] backdrop-blur-sm border border-border shadow-elegant">*/}
+                                {/*            {tags.map((tag) => (*/}
+                                {/*                <SelectItem key={tag.id} value={tag.id.toString()}>*/}
+                                {/*                    {tag.name.valueOf()}*/}
+                                {/*                </SelectItem>*/}
+                                {/*            ))}*/}
+                                {/*        </SelectContent>*/}
+                                {/*    </Select>*/}
+                                {/*</div>*/}
 
                             </div>
 
