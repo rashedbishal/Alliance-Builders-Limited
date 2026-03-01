@@ -20,21 +20,29 @@ const Properties = () => {
     const { url } = usePage();
     const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
-    // const getTabFromUrl = () => {
-    //     const path = new URL(url, window.location.origin).pathname;
-    //
-    //     if (path === '/properties' || path === '/') return 'all';
-    //     if (path === '/favorites') return 'favorites';
-    //     if (path === '/upcoming') return 'upcoming';
-    //     if (path === '/ongoing') return 'ongoing'; // or 'running' — match your naming
-    //     if (path === '/handover') return 'handover';
-    //
-    //     // fallback
-    //     return 'all';
-    // };
+    // Properties.tsx - on mount
+    const [locationFilter, setLocationFilter] = useState('');
+    const [propertyType, setPropertyType] = useState('');
+
+    const save = sessionStorage.getItem('propertyFilters');
+    console.log('saved data here!!!!!:', save);
+
+    // useEffect(() => {
+    //     const saved = sessionStorage.getItem('propertyFilters');
+    //     console.log('saved: ', saved);
+    //     if (saved) {
+    //         const filters = JSON.parse(saved);
+    //         setLocationFilter(filters.location || '');
+    //         setPropertyType(filters.propertyType || '');
+    //         sessionStorage.removeItem('propertyFilters'); // clear after reading
+    //     }
+    // }, []);
+
+    // console.log('Locations filters:', locationFilter);
+    // console.log('Properties type:', propertyType);
 
     // const [searchTerm, setSearchTerm] = useState('');
-    const [propertyType, setPropertyType] = useState('all');
+    // const [propertyType, setPropertyType] = useState('all');
     const [priceRange, setPriceRange] = useState('all');
     // const [activeTab, setActiveTab] = useState();
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -562,6 +570,6 @@ const Properties = () => {
             </div>
         </AppLayout>
     );
-};;;
+};;;;
 
 export default Properties;
