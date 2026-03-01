@@ -78,27 +78,6 @@ class PageController extends Controller
         return Inertia::render('Properties', ['projects' => $projects]);
     }
 
-    public function handover()
-    {
-        $projects = Project::with('projectType', 'tags', 'details', 'image')->where('project_type_id', 1)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
-
-        return Inertia::render('Properties', ['projects' => $projects]);
-    }
-
-    public function ongoing()
-    {
-        $projects = Project::with('projectType', 'tags', 'details', 'image')->where('project_type_id', 2)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
-
-        return Inertia::render('Properties', ['projects' => $projects]);
-    }
-
-    public function upcoming()
-    {
-        $projects = Project::with('projectType', 'tags', 'details', 'image')->where('project_type_id', 3)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
-
-        return Inertia::render('Properties', ['projects' => $projects]);
-    }
-
     public function hotelsResorts()
     {
         $projects = Project::with('projectType', 'tags', 'details', 'image')->where('project_type_id', 4)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
