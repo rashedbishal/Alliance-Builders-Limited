@@ -34,13 +34,12 @@ const HeroImageCollage = () => {
                   transition={{
                       duration: 3.0, // ← change this value (in seconds)
                       ease: 'easeOut',
-                      delay: 0.5,
                   }}
-                  className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/20"
+                  className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/20 p-4"
               >
                   <BlurText
-                      className="text-blue-shadow text-5xl font-bold text-white"
-                      text="Welcome To Alliance Builders LTD.!"
+                      className="text-blue-shadow text-3xl sm:text-5xl md:text-7xl font-bold text-white justify-center"
+                      text="Shape Your Dreams With Alliance Builders Ltd."
                   />
               </motion.div>
           )}
