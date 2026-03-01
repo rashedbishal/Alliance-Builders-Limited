@@ -1,6 +1,6 @@
-import { usePage } from '@inertiajs/react';
+import { router, usePage } from '@inertiajs/react';
 import { Search } from 'lucide-react';
-import React, { useState, useMemo } from 'react';
+import React, { useState, useMemo, useEffect } from 'react';
 import golden from "@/assets/images/architecture/golden-building.jpg";
 import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
 import PropertyCard from '@/components/PropertyCard';
@@ -13,12 +13,13 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import type { ProjectThumb } from '@/types/ProjectThumb';
+import { route } from 'ziggy-js';
 
 const Properties = () => {
-    const [searchTerm, setSearchTerm] = useState('');
+    // const [searchTerm, setSearchTerm] = useState('');
     const [propertyType, setPropertyType] = useState('all');
     const [priceRange, setPriceRange] = useState('all');
-    const [activeTab, setActiveTab] = useState('all');
+    // const [activeTab, setActiveTab] = useState('all');
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
@@ -27,7 +28,33 @@ const Properties = () => {
     // Handle case where projects is undefined
     const projectList = projects || [];
 
+    const pageUrl = usePage().url;
 
+    const queryParams = new URLSearchParams(pageUrl.split('?')[1] || '');
+    const urlTab = queryParams.get('tab') || 'all';
+
+    const [activeTab, setActiveTab] = useState(urlTab);
+    const [searchTerm, setSearchTerm] = useState(queryParams.get('search') || '');
+
+    // sync back to URL when user changes tab (SPA feel, shareable links)
+    // useEffect(() => {
+    //     // Only push if tab actually changed (avoid initial loop)
+    //     const currentTabInUrl = queryParams.get('tab') || 'all';
+    //     if (activeTab !== currentTabInUrl) {
+    //         router.get(
+    //             route('properties.index'), // or whatever your route name is
+    //             {
+    //                 tab: activeTab,
+    //                 search: searchTerm /* add others if needed */,
+    //             },
+    //             {
+    //                 preserveState: true, // ← keeps scroll, form state, etc.
+    //                 preserveScroll: true,
+    //                 replace: true, // replace history entry (no new back-stack item)
+    //             },
+    //         );
+    //     }
+    // }, [activeTab, queryParams, searchTerm]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -42,12 +69,12 @@ const Properties = () => {
     const filteredProperties = useMemo(() => {
         let filtered = projectList;
 
-        // Filter by tab (All, Favorites, Upcoming, Running, Handover)
+        // Filter by tab (All, Favorites, Upcoming, Ongoing, Handover)
         if (activeTab === 'favorites') {
             filtered = filtered.filter(p => favorites.includes(p.id));
         } else if (activeTab === 'upcoming') {
             filtered = filtered.filter(p => (p as any).project_type?.name === 'Upcoming Project');
-        } else if (activeTab === 'running') {
+        } else if (activeTab === 'ongoing') {
             filtered = filtered.filter(p => (p as any).project_type?.name === 'Ongoing Project');
         } else if (activeTab === 'handover') {
             filtered = filtered.filter(p => (p as any).project_type?.name === 'Handover Project');
@@ -147,7 +174,7 @@ const Properties = () => {
                                     <TabsList className="h-auto grid w-full max-w-4xl grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                                         <TabsTrigger value="all">All ({projectList.length})</TabsTrigger>
                                         <TabsTrigger value="upcoming">Upcoming ({projectList.filter(p => (p as any).project_type?.name === 'Upcoming Project').length})</TabsTrigger>
-                                        <TabsTrigger value="running">Running ({projectList.filter(p => (p as any).project_type?.name === 'Ongoing Project').length})</TabsTrigger>
+                                        <TabsTrigger value="ongoing">Ongoing ({projectList.filter(p => (p as any).project_type?.name === 'Ongoing Project').length})</TabsTrigger>
                                         <TabsTrigger value="handover">Handover ({projectList.filter(p => (p as any).project_type?.name === 'Handover Project').length})</TabsTrigger>
                                         <TabsTrigger value="favorites">Favorites ({favorites.length})</TabsTrigger>
                                     </TabsList>
@@ -197,7 +224,7 @@ const Properties = () => {
                                     )}
                                 </TabsContent>
 
-                                <TabsContent value="running" className="space-y-6">
+                                <TabsContent value="ongoing" className="space-y-6">
                                     {filteredProperties.length > 0 ? (
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                             {filteredProperties.map((property, index) => (
@@ -214,7 +241,7 @@ const Properties = () => {
                                         </div>
                                     ) : (
                                         <div className="text-center py-16">
-                                            <p className="text-white/70 text-lg">No running projects currently available.</p>
+                                            <p className="text-white/70 text-lg">No ongoing projects currently available.</p>
                                         </div>
                                     )}
                                 </TabsContent>
