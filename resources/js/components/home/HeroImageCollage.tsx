@@ -1,6 +1,7 @@
 import {usePage} from "@inertiajs/react";
 import { motion } from 'framer-motion';
 import React, { useEffect, useState } from 'react';
+import BlurText from '@/components/ui/shadcn-io/blur-text/index';
 import type {Carousel} from "@/types/Carousel";
 import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
 
@@ -37,9 +38,10 @@ const HeroImageCollage = () => {
                   }}
                   className="pointer-events-none absolute inset-0 z-30 flex items-center justify-center bg-black/20"
               >
-                  <h2 className="text-blue-shadow text-5xl font-bold text-white">
-                      Welcome To Alliance Builders LTD.!
-                  </h2>
+                  <BlurText
+                      className="text-blue-shadow text-5xl font-bold text-white"
+                      text="Welcome To Alliance Builders LTD.!"
+                  />
               </motion.div>
           )}
           <div className="relative flex h-screen w-full flex-row gap-0">
