@@ -1,4 +1,4 @@
-import {usePage} from "@inertiajs/react";
+import { router, usePage } from '@inertiajs/react';
 import {Search, MapPin, Home, Calendar} from "lucide-react";
 import React, {useState} from 'react';
 import {Button} from "@/components/ui/button";
@@ -14,7 +14,7 @@ const SearchSection = () => {
     const [searchFilters, setSearchFilters] = useState({
         location: '',
         propertyType: '',
-        status: ''
+        // status: ''
     });
 
     const {locations} = usePage<{locations: Location[]}>().props;
@@ -28,7 +28,11 @@ const SearchSection = () => {
 
     const handleSearch = () => {
         console.log('Search filters:', searchFilters);
-        // Implement search logic here
+        sessionStorage.setItem('propertyFilters', JSON.stringify({
+            location: searchFilters.location,
+            propertyType: searchFilters.propertyType,
+        }));
+        router.visit('/properties');
     };
 
     return (
@@ -106,29 +110,6 @@ const SearchSection = () => {
                                         </SelectContent>
                                     </Select>
                                 </div>
-
-                                {/*<div className="space-y-2">*/}
-                                {/*    <label className="flex items-center text-sm font-medium text-white">*/}
-                                {/*        <Calendar className="h-4 w-4 mr-2 text-white"/>*/}
-                                {/*        Status*/}
-                                {/*    </label>*/}
-                                {/*    <Select*/}
-                                {/*        onValueChange={(value) => setSearchFilters(prev => ({...prev, status: value}))}>*/}
-                                {/*        <SelectTrigger*/}
-                                {/*            className="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300">*/}
-                                {/*            <SelectValue placeholder="Select status"/>*/}
-                                {/*        </SelectTrigger>*/}
-                                {/*        <SelectContent*/}
-                                {/*            className="bg-[rgba(255,255,255,0.5)] backdrop-blur-sm border border-border shadow-elegant">*/}
-                                {/*            {tags.map((tag) => (*/}
-                                {/*                <SelectItem key={tag.id} value={tag.id.toString()}>*/}
-                                {/*                    {tag.name.valueOf()}*/}
-                                {/*                </SelectItem>*/}
-                                {/*            ))}*/}
-                                {/*        </SelectContent>*/}
-                                {/*    </Select>*/}
-                                {/*</div>*/}
-
                             </div>
 
                             <div className="flex justify-center">
