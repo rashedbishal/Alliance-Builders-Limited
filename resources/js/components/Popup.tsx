@@ -29,7 +29,7 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
     useEffect(() => {
         if (showOnLoad) {
             // TODO: The following line is only for testing. Remove it before production.
-            // sessionStorage.removeItem(POPUP_STORAGE_KEY); // temporary: remove for production
+            sessionStorage.removeItem(POPUP_STORAGE_KEY); // temporary: remove for production
             // Check if popup has already been shown in this session
             const hasShown = sessionStorage.getItem(POPUP_STORAGE_KEY);
             if (!hasShown) {
@@ -65,7 +65,9 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
                                         duration: 0.5,
                                         ease: [0.16, 1, 0.3, 1], // nice modern ease
                                     }}
-                                    className="fixed top-1/2 right-1/2 z-50 w-72 translate-x-1/2 -translate-y-1/2 overflow-hidden border-4 border-accent-foreground bg-white shadow-2xl sm:w-80 md:top-95 md:left-4 md:w-96 md:translate-x-0 md:translate-y-0 lg:w-md"
+                                    className="/* Mobile: centered */
+                                     /* Desktop: bottom-left corner, no translate */
+                                      fixed top-1/2 right-1/2 z-50 w-72 translate-x-1/2 -translate-y-1/2 overflow-hidden border-4 border-accent-foreground bg-white shadow-2xl sm:w-80 md:top-auto md:right-auto md:bottom-4 md:left-4 md:w-96 md:translate-x-0 md:translate-y-0 xl:w-md"
                                 >
                                     {/* Close Button */}
                                     <Dialog.Close asChild>
