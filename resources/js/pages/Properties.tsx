@@ -69,12 +69,12 @@ const Properties = () => {
     const filteredProperties = useMemo(() => {
         let filtered = projectList;
 
-        // Filter by tab (All, Favorites, Upcoming, Running, Handover)
+        // Filter by tab (All, Favorites, Upcoming, Ongoing, Handover)
         if (activeTab === 'favorites') {
             filtered = filtered.filter(p => favorites.includes(p.id));
         } else if (activeTab === 'upcoming') {
             filtered = filtered.filter(p => (p as any).project_type?.name === 'Upcoming Project');
-        } else if (activeTab === 'running') {
+        } else if (activeTab === 'ongoing') {
             filtered = filtered.filter(p => (p as any).project_type?.name === 'Ongoing Project');
         } else if (activeTab === 'handover') {
             filtered = filtered.filter(p => (p as any).project_type?.name === 'Handover Project');
@@ -174,7 +174,7 @@ const Properties = () => {
                                     <TabsList className="h-auto grid w-full max-w-4xl grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                                         <TabsTrigger value="all">All ({projectList.length})</TabsTrigger>
                                         <TabsTrigger value="upcoming">Upcoming ({projectList.filter(p => (p as any).project_type?.name === 'Upcoming Project').length})</TabsTrigger>
-                                        <TabsTrigger value="running">Running ({projectList.filter(p => (p as any).project_type?.name === 'Ongoing Project').length})</TabsTrigger>
+                                        <TabsTrigger value="ongoing">Ongoing ({projectList.filter(p => (p as any).project_type?.name === 'Ongoing Project').length})</TabsTrigger>
                                         <TabsTrigger value="handover">Handover ({projectList.filter(p => (p as any).project_type?.name === 'Handover Project').length})</TabsTrigger>
                                         <TabsTrigger value="favorites">Favorites ({favorites.length})</TabsTrigger>
                                     </TabsList>
@@ -224,7 +224,7 @@ const Properties = () => {
                                     )}
                                 </TabsContent>
 
-                                <TabsContent value="running" className="space-y-6">
+                                <TabsContent value="ongoing" className="space-y-6">
                                     {filteredProperties.length > 0 ? (
                                         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
                                             {filteredProperties.map((property, index) => (
@@ -241,7 +241,7 @@ const Properties = () => {
                                         </div>
                                     ) : (
                                         <div className="text-center py-16">
-                                            <p className="text-white/70 text-lg">No running projects currently available.</p>
+                                            <p className="text-white/70 text-lg">No ongoing projects currently available.</p>
                                         </div>
                                     )}
                                 </TabsContent>
