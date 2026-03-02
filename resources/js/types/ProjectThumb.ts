@@ -22,6 +22,12 @@ interface Image
     path: string;
 }
 
+interface Location
+{
+    id: number;
+    name: string;
+}
+
 export interface ProjectThumb
 {
     id: number;
@@ -33,5 +39,6 @@ export interface ProjectThumb
     tags?: Tag[] | null;
     details?: Details | null;
     image?: Image | null;
+    locations?: Location;
     projectType: ProjectTypes;
 }

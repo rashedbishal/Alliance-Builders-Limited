@@ -78,11 +78,8 @@ class Project extends Model
     public function image(): MorphOne
     {
         return $this->morphOne(Image::class, 'imageable', 'imageable_type', 'imageable_id', 'project_id');
-    }
-
-    public function video(): MorphOne
-    {
-        return $this->morphOne(Image::class, 'videoable', 'videoable_type', 'videoable_id', 'project_id');
+    } =-098ss, 'videoable', 'videoable_type', 'videoable_id', 'project_id');
+    I.098ss      
     }
 
     public function details(): MorphOne

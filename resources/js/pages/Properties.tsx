@@ -22,15 +22,78 @@ const Properties = () => {
     const { favorites, toggleFavorite, isFavorite } = useFavorites();
     const { projectTypes } = usePage<{ projectTypes: ProjectTypes[] }>().props;
 
-    console.log('projectTypes', projectTypes);
-
     // Properties.tsx - on mount
-    const [locationFilter, setLocationFilter] = useState('all');
+    const [locationFilter, setLocationFilter] = useState('');
     const [propertyType, setPropertyType] = useState('all');
 
     const save = sessionStorage.getItem('propertyFilters');
 
     console.log('saved data here!!!!!:', save);
+
+    // useEffect(() => {
+    //     const saved = sessionStorage.getItem('propertyFilters');
+    //     if (saved) {
+    //         const filters = JSON.parse(saved);
+    //         sessionStorage.removeItem('propertyFilters'); // clear after reading
+    //
+    //         // Apply location filter
+    //         if (filters.location) {
+    //             setLocationFilter(filters.location);
+    //         }
+    //
+    //         // Switch tab based on propertyType id
+    //         if (filters.propertyType) {
+    //             const tabMap: Record<string, string> = {
+    //                 '1': 'handover',  // id: 1 → Handover Project
+    //                 '2': 'ongoing',   // id: 2 → Ongoing Project
+    //                 '3': 'upcoming',  // id: 3 → Upcoming Project
+    //                 '4': 'all',       // id: 4 → Hotels & Resorts (no dedicated tab)
+    //             };
+    //             const targetTab = tabMap[filters.propertyType] ?? 'all';
+    //             router.get(
+    //                 targetTab === 'all' ? '/properties' : `/${targetTab}`,
+    //                 {},
+    //                 { preserveState: true, preserveScroll: true, replace: true }
+    //             );
+    //         }
+    //     }
+    // }, []);
+
+    useEffect(() => {
+        const saved = sessionStorage.getItem('propertyFilters');
+
+        // Not coming from home page search — do nothing
+        if (!saved) return;
+
+        sessionStorage.removeItem('propertyFilters'); // clear after reading
+
+        const filters = JSON.parse(saved);
+        const { location, propertyType } = filters;
+
+        // Handle location — only filter if provided
+        if (location) {
+            setLocationFilter(location);
+        }
+
+        // Handle propertyType — only switch tab if provided
+        if (propertyType) {
+            const typeObj = projectTypes.find(
+                (t) => t.id.toString() === propertyType,
+            );
+            const nameToTab: Record<string, string> = {
+                'Handover Project': 'handover',
+                'Ongoing Project': 'ongoing',
+                'Upcoming Project': 'upcoming',
+            };
+            const targetTab = nameToTab[typeObj?.name ?? ''] ?? 'all';
+            router.get(
+                targetTab === 'all' ? '/properties' : `/${targetTab}`,
+                {},
+                { preserveState: true, preserveScroll: true, replace: true },
+            );
+        }
+        // If propertyType is empty → stay on current tab (default 'all')
+    }, []);
 
     const [priceRange, setPriceRange] = useState('all');
     // const [activeTab, setActiveTab] = useState();
@@ -64,7 +127,7 @@ const Properties = () => {
     // Add a handler for tab changes:
     const handleTabChange = (newTab: string) => {
         const tabRoutes: Record<string, string> = {
-            properties: '/properties',
+            all: '/properties',
             upcoming: '/upcoming',
             ongoing: '/ongoing',
             handover: '/handover',
@@ -121,14 +184,21 @@ const Properties = () => {
         }
 
         // Filter by property type (you can extend this based on backend data)
-        if (propertyType && propertyType !== 'all') {
+        // if (propertyType && propertyType !== 'all') {
+        //     filtered = filtered.filter(
+        //         (p) => p.name?.toLowerCase() === propertyType.toLowerCase(),
+        //     );
+        // }
+
+        // Add location filter
+        if (locationFilter && locationFilter !== 'all') {
             filtered = filtered.filter(
-                (p) => p.name?.toLowerCase() === propertyType.toLowerCase(),
+                (p) => (p as any).location_id?.toString() === locationFilter,
             );
         }
 
         return filtered;
-    }, [projectList, activeTab, searchTerm, propertyType, favorites]);
+    }, [projectList, activeTab, searchTerm, propertyType, favorites, locationFilter]);
 
     return (
         <AppLayout>
@@ -177,24 +247,24 @@ const Properties = () => {
                                             className="pl-10 text-sm"
                                         />
                                     </div>
-                                    <Select
-                                        value={propertyType}
-                                        onValueChange={setPropertyType}
-                                    >
-                                        <SelectTrigger className="text-sm">
-                                            <SelectValue placeholder="Property Type" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">
-                                                All
-                                            </SelectItem>
-                                            {projectTypes.map((type) => (
-                                                <SelectItem key={type.id} value={type.id.toString()}>
-                                                    {type.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    {/*<Select*/}
+                                    {/*    value={propertyType}*/}
+                                    {/*    onValueChange={setPropertyType}*/}
+                                    {/*>*/}
+                                    {/*    <SelectTrigger className="text-sm">*/}
+                                    {/*        <SelectValue placeholder="Property Type" />*/}
+                                    {/*    </SelectTrigger>*/}
+                                    {/*    <SelectContent>*/}
+                                    {/*        <SelectItem value="all">*/}
+                                    {/*            All*/}
+                                    {/*        </SelectItem>*/}
+                                    {/*        {projectTypes.map((type) => (*/}
+                                    {/*            <SelectItem key={type.id} value={type.id.toString()}>*/}
+                                    {/*                {type.name}*/}
+                                    {/*            </SelectItem>*/}
+                                    {/*        ))}*/}
+                                    {/*    </SelectContent>*/}
+                                    {/*</Select>*/}
                                 </div>
                             </CardContent>
                         </Card>

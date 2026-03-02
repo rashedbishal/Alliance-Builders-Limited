@@ -107,7 +107,7 @@ const PropertyCard = ({
                                     </h3>
                                     <div className="flex items-center text-white/70 mb-3">
                                         <MapPin className="h-4 w-4 mr-2 text-blue-400" />
-                                        <span className="text-sm">{property.address}</span>
+                                        <span className="text-sm">{property.locations?.name}</span>
                                     </div>
                                 </div>
 
