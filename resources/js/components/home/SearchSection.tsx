@@ -19,12 +19,6 @@ const SearchSection = () => {
 
     const {locations} = usePage<{locations: Location[]}>().props;
     const {projectTypes} = usePage<{projectTypes: ProjectTypes[]}>().props;
-    const {tags} = usePage<{tags: Tag[]}>().props;
-
-    // const statuses = [
-    //     'For Sale', 'For Rent', 'Sold', 'Under Construction',
-    //     'Pre-Launch', 'Ready to Move'
-    // ];
 
     const handleSearch = () => {
         console.log('Search filters:', searchFilters);
