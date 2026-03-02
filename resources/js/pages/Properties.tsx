@@ -20,29 +20,15 @@ const Properties = () => {
     const { url } = usePage();
     const { favorites, toggleFavorite, isFavorite } = useFavorites();
 
+
     // Properties.tsx - on mount
-    const [locationFilter, setLocationFilter] = useState('');
-    const [propertyType, setPropertyType] = useState('');
+    const [locationFilter, setLocationFilter] = useState('all');
+    const [propertyType, setPropertyType] = useState('all');
 
     const save = sessionStorage.getItem('propertyFilters');
+
     console.log('saved data here!!!!!:', save);
 
-    // useEffect(() => {
-    //     const saved = sessionStorage.getItem('propertyFilters');
-    //     console.log('saved: ', saved);
-    //     if (saved) {
-    //         const filters = JSON.parse(saved);
-    //         setLocationFilter(filters.location || '');
-    //         setPropertyType(filters.propertyType || '');
-    //         sessionStorage.removeItem('propertyFilters'); // clear after reading
-    //     }
-    // }, []);
-
-    // console.log('Locations filters:', locationFilter);
-    // console.log('Properties type:', propertyType);
-
-    // const [searchTerm, setSearchTerm] = useState('');
-    // const [propertyType, setPropertyType] = useState('all');
     const [priceRange, setPriceRange] = useState('all');
     // const [activeTab, setActiveTab] = useState();
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -72,8 +58,6 @@ const Properties = () => {
                     ? 'favorites'
                     : 'all';
 
-    console.log(activeTab);
-
     // Add a handler for tab changes:
     const handleTabChange = (newTab: string) => {
         const tabRoutes: Record<string, string> = {
@@ -89,48 +73,6 @@ const Properties = () => {
             { preserveState: true, preserveScroll: true, replace: true },
         );
     };
-
-    // Sync local state whenever initialTab changes (different route → new prop)
-    // useEffect(() => {
-    //     setActiveTab(getTabFromUrl());
-    // }, [url]); // ← key line: re-run when prop updates
-
-    // Optional: When user changes tab manually, navigate to the clean URL
-    // const handleTabChange = (newTab: string) => {
-    //     setActiveTab(newTab);
-    //
-    //     const routeName =
-    //         newTab === 'all' ? 'properties.index' : `properties.${newTab}`;
-    //     router.get(
-    //         route(routeName),
-    //         {},
-    //         {
-    //             preserveState: true,
-    //             preserveScroll: true,
-    //             replace: true,
-    //         },
-    //     );
-    // };
-
-    // sync back to URL when user changes tab (SPA feel, shareable links)
-    // useEffect(() => {
-    //     // Only push if tab actually changed (avoid initial loop)
-    //     const currentTabInUrl = queryParams.get('tab') || 'all';
-    //     if (activeTab !== currentTabInUrl) {
-    //         router.get(
-    //             route('properties.index'), // or whatever your route name is
-    //             {
-    //                 tab: activeTab,
-    //                 search: searchTerm /* add others if needed */,
-    //             },
-    //             {
-    //                 preserveState: true, // ← keeps scroll, form state, etc.
-    //                 preserveScroll: true,
-    //                 replace: true, // replace history entry (no new back-stack item)
-    //             },
-    //         );
-    //     }
-    // }, [activeTab, queryParams, searchTerm]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -176,7 +118,7 @@ const Properties = () => {
         }
 
         // Filter by property type (you can extend this based on backend data)
-        if (propertyType !== 'all') {
+        if (propertyType && propertyType !== 'all') {
             filtered = filtered.filter(
                 (p) => p.name?.toLowerCase() === propertyType.toLowerCase(),
             );
