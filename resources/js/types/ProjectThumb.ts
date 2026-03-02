@@ -1,3 +1,4 @@
+import type { Location } from './Location';
 import type { ProjectTypes } from "./ProjectTypes";
 
 interface Tag {
@@ -41,4 +42,5 @@ export interface ProjectThumb
     image?: Image | null;
     locations?: Location;
     projectType: ProjectTypes;
+    location: Location;
 }

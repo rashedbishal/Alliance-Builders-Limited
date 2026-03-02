@@ -100,9 +100,9 @@ class Project extends Model
         return $this->morphToMany(Tag::class, 'taggable', 'taggable', 'taggable_id', 'tag_id', 'project_id', 'id');
     }
 
-    public function locations(): MorphToMany
+    public function location(): BelongsTo
     {
-        return $this->morphToMany(Location::class, 'locationable', 'locationable', 'locationable_id', 'location_id', 'project_id', 'id');
+        return $this->belongsTo(Location::class, 'location_id', 'id');
     }
 
     public function metadata(): MorphMany

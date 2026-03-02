@@ -24,10 +24,9 @@ const Properties = () => {
 
     // Properties.tsx - on mount
     const [locationFilter, setLocationFilter] = useState('');
-    const [propertyType, setPropertyType] = useState('all');
+    const [propertyType, setPropertyType] = useState('');
 
     const save = sessionStorage.getItem('propertyFilters');
-
     console.log('saved data here!!!!!:', save);
 
     // useEffect(() => {
@@ -550,6 +549,6 @@ const Properties = () => {
             </div>
         </AppLayout>
     );
-};;;;
+};
 
 export default Properties;

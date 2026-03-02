@@ -20,7 +20,7 @@ class PageController extends Controller
         $locations = Location::select('id', 'name')->get();
         $projectTypes = ProjectType::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
-        $projects = Project::with('projectType', 'tags', 'details', 'image', 'locations')->where('isFeatured', true)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
+        $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->where('isFeatured', true)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
 
         return Inertia::render('Home', ['carousels' => $carousels, 'locations' => $locations, 'projectTypes' => $projectTypes, 'tags' => $tags, 'projects' => $projects]);
     }
@@ -74,21 +74,21 @@ class PageController extends Controller
     public function properties()
     {
         $projectTypes = ProjectType::select('id', 'name')->get();
-        $projects = Project::with('projectType', 'tags', 'details', 'image', 'locations')->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
+        $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
 
         return Inertia::render('Properties', ['projects' => $projects, 'projectTypes' => $projectTypes]);
     }
 
     public function hotelsResorts()
     {
-        $projects = Project::with('projectType', 'tags', 'details', 'image')->where('project_type_id', 4)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'slug')->get();
+        $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->where('project_type_id', 4)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
 
         return Inertia::render('Properties', ['projects' => $projects]);
     }
 
     public function propertyDetails(Project $project)
     {
-        $projectDetails = Project::with('tags', 'details', 'projectImages', 'facilities', 'locations')->where('id', $project->id)->first();
+        $projectDetails = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->where('id', $project->id)->first();
 
         return Inertia::render('PropertyDetails', [
             'projectDetails' => $projectDetails,

@@ -27,6 +27,8 @@ return new class extends Migration
             $table->string('project_id', 255)->unique();
             $table->unsignedBigInteger('project_type_id');
             $table->foreign('project_type_id')->references('id')->on('project_types')->onDelete('cascade');
+            $table->unsignedBigInteger('location_id');
+            $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');
             $table->string('slug')->unique();
             $table->timestamps();
         });
