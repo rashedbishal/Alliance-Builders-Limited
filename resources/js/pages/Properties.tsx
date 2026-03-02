@@ -13,12 +13,14 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import type { ProjectThumb } from '@/types/ProjectThumb';
+import type { ProjectTypes } from '@/types/ProjectTypes';
 // import { route } from 'ziggy-js';
 
 const Properties = () => {
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
     const { url } = usePage();
     const { favorites, toggleFavorite, isFavorite } = useFavorites();
+    const { projectTypes } = usePage<{ projectTypes: ProjectTypes[] }>().props;
 
     // Properties.tsx - on mount
     const [locationFilter, setLocationFilter] = useState('');
@@ -29,20 +31,69 @@ const Properties = () => {
 
     // useEffect(() => {
     //     const saved = sessionStorage.getItem('propertyFilters');
-    //     console.log('saved: ', saved);
     //     if (saved) {
     //         const filters = JSON.parse(saved);
-    //         setLocationFilter(filters.location || '');
-    //         setPropertyType(filters.propertyType || '');
     //         sessionStorage.removeItem('propertyFilters'); // clear after reading
+    //
+    //         // Apply location filter
+    //         if (filters.location) {
+    //             setLocationFilter(filters.location);
+    //         }
+    //
+    //         // Switch tab based on propertyType id
+    //         if (filters.propertyType) {
+    //             const tabMap: Record<string, string> = {
+    //                 '1': 'handover',  // id: 1 → Handover Project
+    //                 '2': 'ongoing',   // id: 2 → Ongoing Project
+    //                 '3': 'upcoming',  // id: 3 → Upcoming Project
+    //                 '4': 'all',       // id: 4 → Hotels & Resorts (no dedicated tab)
+    //             };
+    //             const targetTab = tabMap[filters.propertyType] ?? 'all';
+    //             router.get(
+    //                 targetTab === 'all' ? '/properties' : `/${targetTab}`,
+    //                 {},
+    //                 { preserveState: true, preserveScroll: true, replace: true }
+    //             );
+    //         }
     //     }
     // }, []);
 
-    // console.log('Locations filters:', locationFilter);
-    // console.log('Properties type:', propertyType);
+    useEffect(() => {
+        const saved = sessionStorage.getItem('propertyFilters');
 
-    // const [searchTerm, setSearchTerm] = useState('');
-    // const [propertyType, setPropertyType] = useState('all');
+        // Not coming from home page search — do nothing
+        if (!saved) return;
+
+        sessionStorage.removeItem('propertyFilters'); // clear after reading
+
+        const filters = JSON.parse(saved);
+        const { location, propertyType } = filters;
+
+        // Handle location — only filter if provided
+        if (location) {
+            setLocationFilter(location);
+        }
+
+        // Handle propertyType — only switch tab if provided
+        if (propertyType) {
+            const typeObj = projectTypes.find(
+                (t) => t.id.toString() === propertyType,
+            );
+            const nameToTab: Record<string, string> = {
+                'Handover Project': 'handover',
+                'Ongoing Project': 'ongoing',
+                'Upcoming Project': 'upcoming',
+            };
+            const targetTab = nameToTab[typeObj?.name ?? ''] ?? 'all';
+            router.get(
+                targetTab === 'all' ? '/properties' : `/${targetTab}`,
+                {},
+                { preserveState: true, preserveScroll: true, replace: true },
+            );
+        }
+        // If propertyType is empty → stay on current tab (default 'all')
+    }, []);
+
     const [priceRange, setPriceRange] = useState('all');
     // const [activeTab, setActiveTab] = useState();
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
@@ -72,12 +123,10 @@ const Properties = () => {
                     ? 'favorites'
                     : 'all';
 
-    console.log(activeTab);
-
     // Add a handler for tab changes:
     const handleTabChange = (newTab: string) => {
         const tabRoutes: Record<string, string> = {
-            properties: '/properties',
+            all: '/properties',
             upcoming: '/upcoming',
             ongoing: '/ongoing',
             handover: '/handover',
@@ -89,48 +138,6 @@ const Properties = () => {
             { preserveState: true, preserveScroll: true, replace: true },
         );
     };
-
-    // Sync local state whenever initialTab changes (different route → new prop)
-    // useEffect(() => {
-    //     setActiveTab(getTabFromUrl());
-    // }, [url]); // ← key line: re-run when prop updates
-
-    // Optional: When user changes tab manually, navigate to the clean URL
-    // const handleTabChange = (newTab: string) => {
-    //     setActiveTab(newTab);
-    //
-    //     const routeName =
-    //         newTab === 'all' ? 'properties.index' : `properties.${newTab}`;
-    //     router.get(
-    //         route(routeName),
-    //         {},
-    //         {
-    //             preserveState: true,
-    //             preserveScroll: true,
-    //             replace: true,
-    //         },
-    //     );
-    // };
-
-    // sync back to URL when user changes tab (SPA feel, shareable links)
-    // useEffect(() => {
-    //     // Only push if tab actually changed (avoid initial loop)
-    //     const currentTabInUrl = queryParams.get('tab') || 'all';
-    //     if (activeTab !== currentTabInUrl) {
-    //         router.get(
-    //             route('properties.index'), // or whatever your route name is
-    //             {
-    //                 tab: activeTab,
-    //                 search: searchTerm /* add others if needed */,
-    //             },
-    //             {
-    //                 preserveState: true, // ← keeps scroll, form state, etc.
-    //                 preserveScroll: true,
-    //                 replace: true, // replace history entry (no new back-stack item)
-    //             },
-    //         );
-    //     }
-    // }, [activeTab, queryParams, searchTerm]);
 
     const getStatusColor = (status: string) => {
         switch (status) {
@@ -176,14 +183,21 @@ const Properties = () => {
         }
 
         // Filter by property type (you can extend this based on backend data)
-        if (propertyType !== 'all') {
+        // if (propertyType && propertyType !== 'all') {
+        //     filtered = filtered.filter(
+        //         (p) => p.name?.toLowerCase() === propertyType.toLowerCase(),
+        //     );
+        // }
+
+        // Add location filter
+        if (locationFilter && locationFilter !== 'all') {
             filtered = filtered.filter(
-                (p) => p.name?.toLowerCase() === propertyType.toLowerCase(),
+                (p) => (p as any).location_id?.toString() === locationFilter,
             );
         }
 
         return filtered;
-    }, [projectList, activeTab, searchTerm, propertyType, favorites]);
+    }, [projectList, activeTab, searchTerm, propertyType, favorites, locationFilter]);
 
     return (
         <AppLayout>
@@ -220,8 +234,8 @@ const Properties = () => {
                             style={{ animationDelay: '400ms' }}
                         >
                             <CardContent className="p-4 sm:p-5 md:p-6">
-                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4 md:grid-cols-4">
-                                    <div className="relative md:col-span-2">
+                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4 md:grid-cols-2">
+                                    <div className="relative">
                                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                                         <Input
                                             placeholder="Search location or property..."
@@ -232,59 +246,24 @@ const Properties = () => {
                                             className="pl-10 text-sm"
                                         />
                                     </div>
-                                    <Select
-                                        value={propertyType}
-                                        onValueChange={setPropertyType}
-                                    >
-                                        <SelectTrigger className="text-sm">
-                                            <SelectValue placeholder="Property Type" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">
-                                                All Types
-                                            </SelectItem>
-                                            <SelectItem value="villa">
-                                                Villa
-                                            </SelectItem>
-                                            <SelectItem value="apartment">
-                                                Apartment
-                                            </SelectItem>
-                                            <SelectItem value="house">
-                                                House
-                                            </SelectItem>
-                                            <SelectItem value="penthouse">
-                                                Penthouse
-                                            </SelectItem>
-                                            <SelectItem value="loft">
-                                                Loft
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <Select
-                                        value={priceRange}
-                                        onValueChange={setPriceRange}
-                                    >
-                                        <SelectTrigger className="text-sm">
-                                            <SelectValue placeholder="Price Range" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">
-                                                All Prices
-                                            </SelectItem>
-                                            <SelectItem value="under1m">
-                                                Under $1M
-                                            </SelectItem>
-                                            <SelectItem value="1m-2m">
-                                                $1M - $2M
-                                            </SelectItem>
-                                            <SelectItem value="2m-5m">
-                                                $2M - $5M
-                                            </SelectItem>
-                                            <SelectItem value="over5m">
-                                                Over $5M
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
+                                    {/*<Select*/}
+                                    {/*    value={propertyType}*/}
+                                    {/*    onValueChange={setPropertyType}*/}
+                                    {/*>*/}
+                                    {/*    <SelectTrigger className="text-sm">*/}
+                                    {/*        <SelectValue placeholder="Property Type" />*/}
+                                    {/*    </SelectTrigger>*/}
+                                    {/*    <SelectContent>*/}
+                                    {/*        <SelectItem value="all">*/}
+                                    {/*            All*/}
+                                    {/*        </SelectItem>*/}
+                                    {/*        {projectTypes.map((type) => (*/}
+                                    {/*            <SelectItem key={type.id} value={type.id.toString()}>*/}
+                                    {/*                {type.name}*/}
+                                    {/*            </SelectItem>*/}
+                                    {/*        ))}*/}
+                                    {/*    </SelectContent>*/}
+                                    {/*</Select>*/}
                                 </div>
                             </CardContent>
                         </Card>
@@ -570,6 +549,6 @@ const Properties = () => {
             </div>
         </AppLayout>
     );
-};;;;
+};
 
 export default Properties;

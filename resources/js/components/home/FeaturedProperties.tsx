@@ -24,6 +24,8 @@ const FeaturedProperties = () => {
     }
   };
 
+  console.log('projects loaded', projects);
+
   return (
     <section className="py-20 px-4 relative min-h-screen bg-black">
 

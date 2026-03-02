@@ -73,9 +73,10 @@ class PageController extends Controller
 
     public function properties()
     {
+        $projectTypes = ProjectType::select('id', 'name')->get();
         $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
 
-        return Inertia::render('Properties', ['projects' => $projects]);
+        return Inertia::render('Properties', ['projects' => $projects, 'projectTypes' => $projectTypes]);
     }
 
     public function hotelsResorts()
