@@ -52,9 +52,9 @@ const Properties = () => {
                 (t) => t.id.toString() === propertyType,
             );
             const nameToTab: Record<string, string> = {
-                'Handover Project': 'handover',
-                'Ongoing Project': 'ongoing',
-                'Upcoming Project': 'upcoming',
+                'Handover': 'handover',
+                'Ongoing': 'ongoing',
+                'Upcoming': 'upcoming',
             };
             const targetTab = nameToTab[typeObj?.name ?? ''] ?? 'all';
             router.get(
