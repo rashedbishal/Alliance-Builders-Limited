@@ -13,13 +13,16 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import type { ProjectThumb } from '@/types/ProjectThumb';
+import type { ProjectTypes } from '@/types/ProjectTypes';
 // import { route } from 'ziggy-js';
 
 const Properties = () => {
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
     const { url } = usePage();
     const { favorites, toggleFavorite, isFavorite } = useFavorites();
+    const { projectTypes } = usePage<{ projectTypes: ProjectTypes[] }>().props;
 
+    console.log('projectTypes', projectTypes);
 
     // Properties.tsx - on mount
     const [locationFilter, setLocationFilter] = useState('all');
@@ -162,8 +165,8 @@ const Properties = () => {
                             style={{ animationDelay: '400ms' }}
                         >
                             <CardContent className="p-4 sm:p-5 md:p-6">
-                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4 md:grid-cols-4">
-                                    <div className="relative md:col-span-2">
+                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4 md:grid-cols-2">
+                                    <div className="relative">
                                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                                         <Input
                                             placeholder="Search location or property..."
@@ -183,48 +186,13 @@ const Properties = () => {
                                         </SelectTrigger>
                                         <SelectContent>
                                             <SelectItem value="all">
-                                                All Types
+                                                All
                                             </SelectItem>
-                                            <SelectItem value="villa">
-                                                Villa
-                                            </SelectItem>
-                                            <SelectItem value="apartment">
-                                                Apartment
-                                            </SelectItem>
-                                            <SelectItem value="house">
-                                                House
-                                            </SelectItem>
-                                            <SelectItem value="penthouse">
-                                                Penthouse
-                                            </SelectItem>
-                                            <SelectItem value="loft">
-                                                Loft
-                                            </SelectItem>
-                                        </SelectContent>
-                                    </Select>
-                                    <Select
-                                        value={priceRange}
-                                        onValueChange={setPriceRange}
-                                    >
-                                        <SelectTrigger className="text-sm">
-                                            <SelectValue placeholder="Price Range" />
-                                        </SelectTrigger>
-                                        <SelectContent>
-                                            <SelectItem value="all">
-                                                All Prices
-                                            </SelectItem>
-                                            <SelectItem value="under1m">
-                                                Under $1M
-                                            </SelectItem>
-                                            <SelectItem value="1m-2m">
-                                                $1M - $2M
-                                            </SelectItem>
-                                            <SelectItem value="2m-5m">
-                                                $2M - $5M
-                                            </SelectItem>
-                                            <SelectItem value="over5m">
-                                                Over $5M
-                                            </SelectItem>
+                                            {projectTypes.map((type) => (
+                                                <SelectItem key={type.id} value={type.id.toString()}>
+                                                    {type.name}
+                                                </SelectItem>
+                                            ))}
                                         </SelectContent>
                                     </Select>
                                 </div>
