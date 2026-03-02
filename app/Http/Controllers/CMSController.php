@@ -74,11 +74,9 @@ class CMSController extends Controller
             $project->description = $request->input('description');
             $project->surroundings = $request->input('surroundings');
             $project->project_type_id = $request->input('project_type_id');
+            $project->location_id = $request->input('location');
             $project->project_id = $request->input('project_id');
             $project->save();
-
-            $location = Location::findOrFail($request->input('location'));
-            $location->projects()->save($project);
 
             $details = new Details;
             $details->apartment_size = $request->input('apartment_size');

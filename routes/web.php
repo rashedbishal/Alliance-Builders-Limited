@@ -12,7 +12,7 @@ use Inertia\Inertia;
 
 Route::get('dashboard', function () {
 //    return Inertia::render('Dashboard');
-    return view('test-dashboard');
+    return view('carousel.index');
 })->middleware(['auth', 'verified'])->name('dashboard');
 
 Route::get('project-up', function () {

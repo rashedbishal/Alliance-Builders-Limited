@@ -1,7 +1,8 @@
 import { Link } from '@inertiajs/react';
+import logo from '@/assets/images/logo/alliance logo.webp';
 import AppLogoIcon from '@/components/web/app-logo-icon';
-import type { AuthLayoutProps } from '@/types';
 import { home } from '@/routes';
+import type { AuthLayoutProps } from '@/types';
 
 export default function AuthSimpleLayout({
     children,
@@ -17,8 +18,13 @@ export default function AuthSimpleLayout({
                             href={home()}
                             className="flex flex-col items-center gap-2 font-medium"
                         >
-                            <div className="mb-1 flex h-9 w-9 items-center justify-center rounded-md">
-                                <AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />
+                            <div className="mb-1 flex items-center justify-center rounded-md">
+                                {/*<AppLogoIcon className="size-9 fill-current text-[var(--foreground)] dark:text-white" />*/}
+                                    <img
+                                        className="h-24 object-contain md:h-30"
+                                        src={logo}
+                                        alt="logo"
+                                    />
                             </div>
                             <span className="sr-only">{title}</span>
                         </Link>
