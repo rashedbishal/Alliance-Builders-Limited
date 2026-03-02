@@ -27,24 +27,18 @@
             {{-- Project Type --}}
             <div class="form-group">
                 <label for="del_project_type">Project Type <span style="color:#FF8080;">*</span></label>
-                <select id="del_project_type" onchange="fetchDeleteProjectNames(this.value)">
-                    <option value="">Select Project Type</option>
-                    <option value="residential">Residential</option>
-                    <option value="commercial">Commercial</option>
-                    <option value="mixed_use">Mixed Use</option>
-                    {{--
-                      Dynamic:
-                      @foreach($projectTypes as $type)
-                        <option value="{{ $type->id }}">{{ $type->name }}</option>
-                      @endforeach
-                    --}}
+                <select id="del_project_type" onchange="fetchDeleteProjectNames(this.value)" class="h-10">
+                    <option value="" selected>Select Project Type</option>
+                  @foreach($types as $type)
+                    <option value="{{ $type->id }}">{{ $type->name }}</option>
+                  @endforeach
                 </select>
             </div>
 
             {{-- Project Name --}}
             <div class="form-group">
                 <label for="del_project_name">Project Name <span style="color:#FF8080;">*</span></label>
-                <select id="del_project_name" onchange="onProjectSelected(this)" disabled>
+                <select id="del_project_name" onchange="onProjectSelected(this)" class="h-10" disabled>
                     <option value="">Select Project Name</option>
                 </select>
             </div>
@@ -62,7 +56,7 @@
             </p>
             <p style="font-size:0.8rem; color:var(--muted);">
                 All data associated with <strong id="selected-project-name" style="color:#FF8080;"></strong>
-                — including images, unit details, facilities and tags — will be permanently deleted.
+                — including images, project details — will be permanently deleted.
             </p>
         </div>
 
@@ -70,7 +64,6 @@
         <form action="#" method="POST" id="delete-project-form" {{-- replace # — JS sets action dynamically --}}
         onsubmit="return confirmProjectDelete(event)">
             @csrf
-            @method('DELETE')
             <input type="hidden" name="project_db_id" id="project_db_id" value="">
 
             <button type="submit"
@@ -178,7 +171,7 @@
 
             nameEl.textContent    = projectName;
             hiddenId.value        = projectId;
-            form.action           = `/cms/projects/${projectId}`; {{-- replace with actual route --}}
+            form.action           = `{{route('destroy-project')}}`;
                 warning.style.display = 'block';
             btn.disabled          = false;
             btn.style.opacity     = '1';

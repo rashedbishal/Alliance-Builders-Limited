@@ -56,7 +56,25 @@ class CMSController extends Controller
 
     public function projectData($id)
     {
-        return Project::findOrFail($id);
+        return Project::with('tags', 'details', 'projectImages', 'facilities', 'location', 'image')->where('id', $id)->first();
+    }
+
+    public function projectErase()
+    {
+        $types = ProjectType::select('id', 'name')->get();
+        $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
+        return view('project.remove', compact('types', 'projects'));
+    }
+
+    public function mediaAdd()
+    {
+        return view('media.add');
+    }
+
+    public function mediaErase()
+    {
+        $mediaItems = MediaCoverage::with('image')->paginate(7);
+        return view('media.remove', compact('mediaItems'));
     }
 
     public function updateCarousel(Request $request)
@@ -121,9 +139,9 @@ class CMSController extends Controller
                     $imageFile->storeAs('home/carousel', $sanitizedName, 'public');
                 });
 
-                return redirect()->back()->with('success', 'Operation Successful');
+                return redirect()->route('dashboard')->with('success', 'Operation Successful');
             } catch (\Exception $e) {
-                redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+                return redirect()->route('dashboard')->with('error', 'Operation Failed: '.$e->getMessage());
             }
         }
     }
@@ -131,108 +149,264 @@ class CMSController extends Controller
     public function saveProject(Request $request)
     {
         try {
-            $project = new Project;
-            $project->name = $request->input('name');
-            $project->address = $request->input('address');
-            $project->google_map_url = $request->input('google_map_url');
-            $project->price = $request->input('price');
-            $project->size = $request->input('size');
-            $project->floors = $request->input('floors');
-            $project->construction_start_date = $request->input('construction_start_date');
-            $project->handover_date = $request->input('handover_date');
-            $project->isFeatured = $request->input('isFeatured');
-            $project->description = $request->input('description');
-            $project->surroundings = $request->input('surroundings');
-            $project->project_type_id = $request->input('project_type_id');
-            $project->location_id = $request->input('location_id');
-            $project->project_id = $request->input('project_id');
-            $project->save();
 
-            $details = new Details;
-            $details->apartment_size = $request->input('apartment_size');
-            $details->bedroom = $request->input('bedroom');
-            $details->bathroom = $request->input('bathroom');
-            $details->balcony = $request->input('balcony');
-            $details->kitchen = $request->input('kitchen');
-            $details->living_dining = $request->input('living_dining');
-            $details->parking = $request->input('parking');
-            $details->garage_no = $request->input('garage_no');
-            $details->garage_size = $request->input('garage_size');
-            $details->apartment_direction = $request->input('apartment_direction');
-            $details->youtube_video_id = $request->input('youtube_video_id');
-            $project->details()->save($details);
+            DB::transaction(function () use ($request) {
+                $project = new Project;
+                $project->name = $request->input('name');
+                $project->address = $request->input('address');
+                $project->google_map_url = $request->input('google_map_url');
+                $project->price = $request->input('price');
+                $project->size = $request->input('size');
+                $project->floors = $request->input('floors');
+                $project->construction_start_date = $request->input('construction_start_date');
+                $project->handover_date = $request->input('handover_date');
+                $project->isFeatured = $request->input('isFeatured');
+                $project->description = $request->input('description');
+                $project->surroundings = $request->input('surroundings');
+                $project->project_type_id = $request->input('project_type_id');
+                $project->location_id = $request->input('location_id');
+                $project->project_id = $request->input('project_id');
+                $project->project_type_id = $request->input('project_type_id');
+                $project->save();
 
-            if ($request->has('facilities')) {
-                $project->facilities()->sync($request->facilities);
-            }
+                $details = new Details;
+                $details->apartment_size = $request->input('apartment_size');
+                $details->bedroom = $request->input('bedroom');
+                $details->bathroom = $request->input('bathroom');
+                $details->balcony = $request->input('balcony');
+                $details->kitchen = $request->input('kitchen');
+                $details->living_dining = $request->input('living_dining');
+                $details->parking = $request->input('parking');
+                $details->garage_no = $request->input('garage_no');
+                $details->garage_size = $request->input('garage_size');
+                $details->apartment_direction = $request->input('apartment_direction');
+                $details->youtube_video_id = $request->input('youtube_video_id');
+                $project->details()->save($details);
 
-            if ($request->has('tags')) {
-                $project->tags()->sync($request->tags);
-            }
+                if ($request->has('facilities')) {
+                    $project->facilities()->sync($request->facilities);
+                }
 
-            if ($request->hasFile('thumbnail')) {
-                $imageFile = $request->file('thumbnail');
-                $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                $imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public');
+                if ($request->has('tags')) {
+                    $project->tags()->sync($request->tags);
+                }
 
-                $image = new Image;
-                $image->path = $sanitizedName;
-                $image->project()->associate($project);
-                $image->save();
-            }
+                if ($request->hasFile('thumbnail')) {
+                    $imageFile = $request->file('thumbnail');
+                    $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
+                    $imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public');
 
-            if ($request->hasFile('project_images')) {
-                foreach ($request->file('project_images') as $imageFile) {
-
-                    // Unique name for each image to avoid conflicts
-                    $sanitizedName = $project->slug.'-'.time().'-'.uniqid().'.'.
-                        $imageFile->getClientOriginalExtension();
-
-                    $storagePath = match ($project->project_type_id) {
-                        '1' => 'properties/handoverProject',
-                        '2' => 'properties/ongoingProject',
-                        '3' => 'properties/upcomingProject',
-                        '4' => 'properties/hotelsResorts',
-                        default => 'properties/projectImages',
-                    };
-                    // Store in a separate folder (recommended)
-                    $imageFile->storeAs($storagePath, $sanitizedName, 'public');
-
-                    // Save each image to Image model
-                    $image = new ProjectImage;
-                    $image->image = $sanitizedName;
+                    $image = new Image;
+                    $image->path = $sanitizedName;
                     $image->project()->associate($project);
                     $image->save();
                 }
-            }
+
+                if ($request->hasFile('project_images')) {
+                    foreach ($request->file('project_images') as $imageFile) {
+
+                        // Unique name for each image to avoid conflicts
+                        $sanitizedName = $project->slug.'-'.time().'-'.uniqid().'.'.
+                            $imageFile->getClientOriginalExtension();
+
+                        $storagePath = match ($project->project_type_id) {
+                            '1' => 'properties/handoverProject',
+                            '2' => 'properties/ongoingProject',
+                            '3' => 'properties/upcomingProject',
+                            '4' => 'properties/hotelsResorts',
+                            default => 'properties/projectImages',
+                        };
+                        // Store in a separate folder (recommended)
+                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+
+                        // Save each image to Image model
+                        $image = new ProjectImage;
+                        $image->image = $sanitizedName;
+                        $image->project()->associate($project);
+                        $image->save();
+                    }
+                }
+            });
 
             return redirect()->back()->with('success', 'Operation Successful');
         } catch (\Exception $e) {
-            redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
 
-    public function mediaSaver(Request $request)
+    public function updateProject(Request $request)
     {
-        $media = new MediaCoverage;
-        $media->media_title = $request->input('media_title');
-        $media->media_type = $request->input('media_type');
-        $media->news_hyperlink = $request->input('news_hyperlink');
-        $media->isFeatured = $request->input('isFeatured') ?? 0;
-        $media->save();
+        try {
+            DB::transaction(function () use ($request) {
+                $project = Project::findOrFail($request->input('project_id_db'));
+                $project->name = $request->input('name');
+                $project->address = $request->input('address');
+                $project->google_map_url = $request->input('google_map_url');
+                $project->price = $request->input('price');
+                $project->size = $request->input('size');
+                $project->floors = $request->input('floors');
+                $project->construction_start_date = $request->input('construction_start_date');
+                $project->handover_date = $request->input('handover_date');
+                $project->isFeatured = $request->input('isFeatured') ?? false;
+                $project->description = $request->input('description');
+                $project->surroundings = $request->input('surroundings');
+                $project->project_type_id = $request->input('project_type_id');
+                $project->location_id = $request->input('location_id');
+                $project->project_id = $request->input('project_id');
+                $project->save();
+                $project->details->apartment_size = $request->input('apartment_size');
+                $project->details->bedroom = $request->input('bedroom');
+                $project->details->bathroom = $request->input('bathroom');
+                $project->details->balcony = $request->input('balcony');
+                $project->details->kitchen = $request->input('kitchen');
+                $project->details->living_dining = $request->input('living_dining');
+                $project->details->parking = $request->input('parking');
+                $project->details->garage_no = $request->input('garage_no');
+                $project->details->garage_size = $request->input('garage_size');
+                $project->details->apartment_direction = $request->input('apartment_direction');
+                $project->details->youtube_video_id = $request->input('youtube_video_id');
+                $project->details->save();
 
-        if ($request->hasFile('cover_image')) {
-            $imageFile = $request->file('cover_image');
-            $sanitizedName = Str::slug($media->media_title).'-thumbnail.'.$imageFile->getClientOriginalExtension();
-            $imageFile->storeAs('media', $sanitizedName, 'public');
+                if ($request->has('facilities')) {
+                    $project->facilities()->sync($request->facilities);
+                }
 
-            $image = new Image;
-            $image->path = $sanitizedName;
-            $image->project()->associate($media);
-            $image->save();
+                if ($request->has('tags')) {
+                    $project->tags()->sync($request->tags);
+                }
+
+                if ($request->hasFile('thumbnail')) {
+
+                    if (Storage::disk('public')->exists(path: 'properties/propertyThumbs'.'/'.$project->image->path)) {
+                        Storage::disk('public')->delete('properties/propertyThumbs'.'/'.$project->image->path);
+                    }
+
+                    $imageFile = $request->file('thumbnail');
+                    $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
+                    $imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public');
+
+                    $image = new Image;
+                    $image->path = $sanitizedName;
+                    $image->project()->associate($project);
+                    $image->save();
+                }
+
+                if ($request->hasFile('project_images')) {
+                    foreach ($request->file('project_images') as $imageFile) {
+
+                        // Unique name for each image to avoid conflicts
+                        $sanitizedName = $project->slug.'-'.time().'-'.uniqid().'.'.
+                            $imageFile->getClientOriginalExtension();
+
+                        $storagePath = match ($project->project_type_id) {
+                            '1' => 'properties/handoverProject',
+                            '2' => 'properties/ongoingProject',
+                            '3' => 'properties/upcomingProject',
+                            '4' => 'properties/hotelsResorts',
+                            default => 'properties/projectImages',
+                        };
+                        // Store in a separate folder (recommended)
+                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+
+                        // Save each image to Image model
+                        $image = new ProjectImage;
+                        $image->image = $sanitizedName;
+                        $image->project()->associate($project);
+                        $image->save();
+                    }
+                }
+            });
+            return redirect()->back()->with('success', 'Operation Successful');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
 
-        return redirect()->back();
+
+    }
+
+    public function destroyProject(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $project = Project::findOrFail($request->input('project_db_id'));
+                if (Storage::disk('public')->exists(path: 'properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'))) {
+                    Storage::disk('public')->delete('properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'));
+                }
+
+                $storagePath = match ($project->project_type_id) {
+                    1 => 'properties/handoverProject',
+                    2 => 'properties/ongoingProject',
+                    3 => 'properties/upcomingProject',
+                    4 => 'properties/hotelsResorts',
+                    default => 'properties/projectImages',
+                };
+
+                foreach($project->projectImages as $projectImage)
+                {
+                    if (Storage::disk('public')->exists(path:  $storagePath.'/'.$projectImage->getRawOriginal('image'))) {
+                        Storage::disk('public')->delete( $storagePath.'/'.$projectImage->getRawOriginal('image'));
+                    }
+                }
+
+                $project->delete();
+            });
+
+            return redirect()->back()->with('success', 'Operation Successful');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function saveMedia(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $media = new MediaCoverage;
+                $media->media_title = $request->input('media_title');
+                $media->media_type = $request->input('media_type');
+                $media->news_hyperlink = $request->input('news_hyperlink');
+                $media->isFeatured = $request->input('isFeatured') ?? false;
+                $media->save();
+
+                if ($request->hasFile('image')) {
+                    $imageFile = $request->file('image');
+                    $sanitizedName = Str::slug($media->media_title).'-thumbnail.'.$imageFile->getClientOriginalExtension();
+                    $imageFile->storeAs('media', $sanitizedName, 'public');
+
+                    $image = new Image;
+                    $image->path = $sanitizedName;
+                    $image->project()->associate($media);
+                    $image->save();
+                }
+            });
+
+            return redirect()->back()->with('success', 'Operation Successful');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function destroyMedia(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $item = MediaCoverage::findOrFail($request->input('media_item_id'));
+
+                if (Storage::disk('public')->exists(path: 'media'.'/'.$item->image->getRawOriginal('path'))) {
+                    Storage::disk('public')->delete('media'.'/'.$item->image->getRawOriginal('path'));
+                }
+
+                $item->delete();
+
+            });
+            return redirect()->back()->with('success', 'Operation Successful');
+        }
+        catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
     }
 
     public function gallerySaver(Request $request)

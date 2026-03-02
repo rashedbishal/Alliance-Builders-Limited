@@ -21,7 +21,7 @@
             Media Details
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data"> {{-- replace # with route('media.store') --}}
+        <form action="{{route('save-media')}}" method="POST" enctype="multipart/form-data"> {{-- replace # with route('media.store') --}}
             @csrf
 
             <div class="form-row cols-2">
@@ -32,7 +32,6 @@
                     <input type="text"
                            name="media_title"
                            id="media_title"
-                           value="{{ old('media_title') }}"
                            placeholder="Enter media title...">
                     @error('media_title')
                     <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
@@ -42,22 +41,10 @@
                 {{-- Media Type --}}
                 <div class="form-group">
                     <label for="media_type">Media Type <span style="color:#FF8080;">*</span></label>
-                    <select name="media_type" id="media_type">
-                        <option value="" disabled {{ old('media_type') ? '' : 'selected' }}>Select Media Type</option>
-                        <option value="newspaper"     {{ old('media_type') == 'newspaper'     ? 'selected' : '' }}>Newspaper</option>
-                        <option value="online_portal" {{ old('media_type') == 'online_portal' ? 'selected' : '' }}>Online Portal</option>
-                        <option value="television"    {{ old('media_type') == 'television'    ? 'selected' : '' }}>Television</option>
-                        <option value="magazine"      {{ old('media_type') == 'magazine'      ? 'selected' : '' }}>Magazine</option>
-                        <option value="blog"          {{ old('media_type') == 'blog'          ? 'selected' : '' }}>Blog</option>
-                        {{--
-                          Dynamic option:
-                          @foreach($mediaTypes as $type)
-                            <option value="{{ $type->id }}" {{ old('media_type') == $type->id ? 'selected' : '' }}>
-                              {{ $type->name }}
-                            </option>
-                          @endforeach
-                        --}}
-                    </select>
+                    <input type="text"
+                           name="media_type"
+                           id="media_type"
+                           placeholder="Enter media type...">
                     @error('media_type')
                     <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
                     @enderror
@@ -67,13 +54,12 @@
 
             {{-- Hyperlink --}}
             <div class="form-group">
-                <label for="hyperlink">Hyperlink</label>
+                <label for="news_hyperlink">Hyperlink</label>
                 <input type="url"
-                       name="hyperlink"
-                       id="hyperlink"
-                       value="{{ old('hyperlink') }}"
+                       name="news_hyperlink"
+                       id="news_hyperlink"
                        placeholder="https://example.com/article...">
-                @error('hyperlink')
+                @error('news_hyperlink')
                 <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
                 @enderror
             </div>
@@ -82,7 +68,7 @@
             <div class="form-group">
                 <label class="featured-check">
                     <input type="checkbox"
-                           name="is_featured"
+                           name="isFeatured"
                            value="1"
                             {{ old('is_featured') ? 'checked' : '' }}>
                     <span>Mark as Featured Media</span>
@@ -93,11 +79,11 @@
             <div class="form-row cols-2" style="align-items: start;">
 
                 <div class="form-group">
-                    <label for="media_image">Upload Image <span style="color:#FF8080;">*</span></label>
+                    <label for="image">Upload Image <span style="color:#FF8080;">*</span></label>
                     <div class="img-uploader">
                         <input type="file"
-                               name="media_image"
-                               id="media_image"
+                               name="image"
+                               id="image"
                                accept="image/*"
                                onchange="previewImage(this, 'media-add-preview')">
                         <div class="icon">📰</div>

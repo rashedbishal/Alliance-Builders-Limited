@@ -47,7 +47,7 @@
 
         {{-- Media Coverage Management --}}
         <div class="nav-item">
-            <div class="nav-link {{ Request::routeIs('media.*') ? 'active open' : '' }}"
+            <div class="nav-link {{ Request::routeIs('media-*') ? 'active open' : '' }}"
                  onclick="toggleMenu('media-menu', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path d="M4 6h16M4 10h16M4 14h10"/>
@@ -59,13 +59,13 @@
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
             </div>
-            <div class="submenu {{ Request::routeIs('media.*') ? 'open' : '' }}" id="media-menu">
-                <a href="#" {{-- replace # with route('media.add') --}}
-                class="submenu-link {{ Request::routeIs('media.add') ? 'active' : '' }}">
+            <div class="submenu {{ Request::routeIs('media-*') ? 'open' : '' }}" id="media-menu">
+                <a href="{{route('media-add')}}" {{-- replace # with route('media.add') --}}
+                class="submenu-link {{ Request::routeIs('media-add') ? 'active' : '' }}">
                     Add Image
                 </a>
-                <a href="#" {{-- replace # with route('media.remove') --}}
-                class="submenu-link {{ Request::routeIs('media.remove') ? 'active' : '' }}">
+                <a href="{{route('media-erase')}}" {{-- replace # with route('media.remove') --}}
+                class="submenu-link {{ Request::routeIs('media-erase') ? 'active' : '' }}">
                     Remove Image
                 </a>
             </div>
@@ -73,7 +73,7 @@
 
         {{-- Project Info Management --}}
         <div class="nav-item">
-            <div class="nav-link {{ Request::routeIs('project.*') ? 'active open' : '' }}"
+            <div class="nav-link {{ Request::routeIs('project-*') ? 'active open' : '' }}"
                  onclick="toggleMenu('project-menu', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <path d="M3 21h18M9 21V9l3-6 3 6v12M5 21V12l-2-2M19 21V12l2-2"/>
@@ -93,8 +93,8 @@
                 class="submenu-link {{ Request::routeIs('project-update') ? 'active' : '' }}">
                     Update Project
                 </a>
-                <a href="#" {{-- replace # with route('project.remove') --}}
-                class="submenu-link {{ Request::routeIs('project.remove') ? 'active' : '' }}">
+                <a href="{{route('project-erase')}}" {{-- replace # with route('project.remove') --}}
+                class="submenu-link {{ Request::routeIs('project-erase') ? 'active' : '' }}">
                     Remove Project
                 </a>
             </div>

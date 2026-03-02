@@ -24,7 +24,8 @@
         <div class="form-row cols-2">
             <div class="form-group">
                 <label for="filter_project_type">Project Type <span style="color:#FF8080;">*</span></label>
-                <select id="filter_project_type" onchange="fetchProjectNames(this.value)">
+                <select id="filter_project_type" onchange="fetchProjectNames(this.value)" class="h-10">
+                    <option value="" selected >Select Project Name</option>
                   @foreach($types as $type)
                     <option value="{{ $type->id }}" {{ request('project_type_id') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
                   @endforeach
@@ -33,7 +34,7 @@
 
             <div class="form-group">
                 <label for="filter_project_name">Project Name <span style="color:#FF8080;">*</span></label>
-                <select id="filter_project_name" onchange="loadProjectData(this.value)" disabled>
+                <select id="filter_project_name" onchange="loadProjectData(this.value)" class="h-10" disabled>
                     <option value="">Select Project Name</option>
                 </select>
             </div>
@@ -47,9 +48,8 @@
     {{-- ==================== Step 2: Update Form (hidden until project selected) ==================== --}}
     <div id="update-form-wrapper" style="display:none;">
 
-        <form action="#" method="POST" enctype="multipart/form-data" id="update-form"> {{-- replace # with route('project.update', ':id') — JS fills :id --}}
+        <form action="{{route('update-project')}}" method="POST" enctype="multipart/form-data" id="update-form"> {{-- replace # with route('project.update', ':id') — JS fills :id --}}
             @csrf
-            @method('PUT')
             <input type="hidden" name="project_id_db" id="project_id_db" value="">{{-- DB primary key --}}
 
             <div style="padding:10px 16px; background:rgba(201,168,76,0.05); border-left:3px solid var(--gold); border-radius:4px; margin-bottom:20px; font-size:0.82rem; color:var(--muted);">
@@ -68,7 +68,7 @@
                 <div class="form-row cols-2">
                     <div class="form-group">
                         <label>Project Type</label>
-                        <select name="project_type_id" id="upd_project_type">
+                        <select name="project_type_id" id="upd_project_type_id" class="h-10">
                             <option value="">Select Project Type</option>
                             @foreach($types as $type)
                                 <option value="{{ $type->id }}" >{{ $type->name }}</option>
@@ -78,8 +78,8 @@
                     </div>
                     <div class="form-group">
                         <label>Project Location</label>
-                        <select name="location_id" id="upd_project_location">
-                            <option value="" disabled selected>Select Location</option>
+                        <select name="location_id" id="upd_location_id" class="h-10">
+                            <option value="" disabled>Select Location</option>
                             @foreach($locations as $location)
                                 <option value="{{ $location->id }}">{{ $location->name }}</option>
                             @endforeach
@@ -145,7 +145,7 @@
 
                 <div class="form-group">
                     <label class="featured-check">
-                        <input type="checkbox" name="is_featured" id="upd_is_featured" value="1">
+                        <input type="checkbox" name="isFeatured" id="upd_is_featured" value="1">
                         <span>Mark as Feature Project</span>
                     </label>
                 </div>
@@ -200,22 +200,10 @@
                     Project Facilities
                 </div>
                 <div class="checkbox-group" id="upd-facilities-group">
-                    @php
-                        $facilities = [
-                          'swimming_pool'=>'Swimming Pool','gymnasium'=>'Gymnasium','community_hall'=>'Community Hall',
-                          'children_play_area'=>'Children Play Area','rooftop_garden'=>'Rooftop Garden',
-                          'generator_backup'=>'Generator Backup','solar_panel'=>'Solar Panel','cctv_security'=>'CCTV Security',
-                          'intercom_system'=>'Intercom System','fire_safety_system'=>'Fire Safety System',
-                          'earthquake_resistant'=>'Earthquake Resistant','passenger_lift'=>'Passenger Lift',
-                          'car_parking'=>'Car Parking','visitor_parking'=>'Visitor Parking','guard_house'=>'Guard House',
-                          'water_reservoir'=>'Water Reservoir','sewage_treatment'=>'Sewage Treatment',
-                          'waste_management'=>'Waste Management','landscaped_garden'=>'Landscaped Garden','jogging_track'=>'Jogging Track',
-                        ];
-                    @endphp
-                    @foreach($facilities as $value => $label)
-                        <label class="checkbox-item" data-facility="{{ $value }}">
-                            <input type="checkbox" name="facilities[]" value="{{ $value }}" onchange="toggleChecked(this)">
-                            {{ $label }}
+                    @foreach($facilities as $facility)
+                        <label class="checkbox-item" data-facility="{{ $facility->id }}">
+                            <input type="checkbox" name="facilities[]" value="{{ $facility->id }}" onchange="toggleChecked(this)">
+                            {{ $facility->name }}
                         </label>
                     @endforeach
                 </div>
@@ -231,20 +219,10 @@
                     Project Tags
                 </div>
                 <div class="checkbox-group" id="upd-tags-group">
-                    @php
-                        $tags = [
-                          'luxury'=>'Luxury','affordable'=>'Affordable','ready_to_move'=>'Ready to Move',
-                          'under_construction'=>'Under Construction','pre_launch'=>'Pre-Launch',
-                          'sea_view'=>'Sea View','lake_view'=>'Lake View','city_view'=>'City View',
-                          'eco_friendly'=>'Eco-Friendly','smart_home'=>'Smart Home','pet_friendly'=>'Pet Friendly',
-                          'gated_community'=>'Gated Community','corner_plot'=>'Corner Plot',
-                          'south_facing'=>'South Facing','north_facing'=>'North Facing',
-                        ];
-                    @endphp
-                    @foreach($tags as $value => $label)
-                        <label class="checkbox-item" data-tag="{{ $value }}">
-                            <input type="checkbox" name="tags[]" value="{{ $value }}" onchange="toggleChecked(this)">
-                            {{ $label }}
+                    @foreach($tags as $tag)
+                        <label class="checkbox-item" data-tag="{{ $tag->id }}">
+                            <input type="checkbox" name="tags[]" value="{{ $tag->id }}" onchange="toggleChecked(this)">
+                            {{ $tag->name }}
                         </label>
                     @endforeach
                 </div>
@@ -266,6 +244,7 @@
                 </p>
                 <div class="form-row cols-2" style="align-items:start; margin-bottom:24px;">
                     <div class="form-group">
+                        <label>Upload here</label>
                         <div class="img-uploader">
                             <input type="file" name="thumbnail" accept="image/*" onchange="previewImage(this, 'upd-thumb-preview')">
                             <div class="icon">🏗️</div>
@@ -388,54 +367,74 @@
             fetch(`/cms/projects/${id}/data`)
                 .then(res => res.json())
                 .then(p => {
+                    console.log(p);
                     // Update form action with correct project ID
-                    document.getElementById('update-form').action = `/cms/projects/${id}`;
+                    // document.getElementById('update-form').action = `/cms/projects/${id}`;
                     document.getElementById('project_id_db').value = id;
+                    const details = p.details ?? {};
 
                     // Fill text/number/date/url fields
-                    const fields = [
-                        'project_type','project_location','project_id','name','address',
-                        'google_map_url','youtube_video_id','price','size','floors',
+                    const projectFields = [
+                        'project_type_id','location_id','project_id','name','address','isFeatured',
+                        'google_map_url','price','size','floors',
                         'construction_start_date','handover_date','description','surroundings',
-                        'apartment_size','bedroom','bathroom','balcony','kitchen','living_dining',
-                        'parking','garage_no','garage_size','apartment_direction'
                     ];
-                    fields.forEach(field => {
+
+                    const detailsFields = [
+                        'apartment_size','bedroom','bathroom','balcony','kitchen','living_dining',
+                        'parking','garage_no','garage_size','apartment_direction','youtube_video_id'
+                    ];
+
+
+                    projectFields.forEach(field => {
                         const el = document.getElementById('upd_' + field);
                         if (!el) return;
                         if (el.tagName === 'SELECT') {
                             el.value = p[field] ?? '';
                         } else {
-                            el.value = p[field] ?? '';
+                            if (field === 'construction_start_date' || field === 'handover_date') {
+                                el.value = p[field] ? p[field].split('T')[0] : '';
+                            } else {
+                                el.value = p[field] ?? '';
+                            }
                         }
                     });
 
+                    detailsFields.forEach(field => {
+                        const el = document.getElementById('upd_' + field);
+                        if (!el) return;
+                        if (el.tagName === 'SELECT') {
+                            el.value = details[field] ?? '';
+                        } else {
+                            el.value = details[field] ?? '';
+                        }
+                    });
+
+
                     // Featured checkbox
                     const featuredCb = document.getElementById('upd_is_featured');
-                    featuredCb.checked = !!p.is_featured;
+                    featuredCb.checked = !!p.isFeatured;
 
                     // Facilities checkboxes
-                    const selectedFacilities = p.facilities ?? [];
-                    document.querySelectorAll('#upd-facilities-group .checkbox-item').forEach(label => {
-                        const cb    = label.querySelector('input[type=checkbox]');
-                        const match = selectedFacilities.includes(cb.value);
-                        cb.checked  = match;
-                        label.classList.toggle('checked', match);
-                    });
+                    const selectedFacilities = (p.facilities ?? []).map(f => f.id); // extract IDs
+                    document.querySelectorAll('#upd-facilities-group .checkbox-item input[type=checkbox]')
+                        .forEach(cb => {
+                            cb.checked = selectedFacilities.includes(Number(cb.value)); // compare as numbers
+                            cb.parentElement.classList.toggle('checked', cb.checked);
+                        });
 
                     // Tags checkboxes
-                    const selectedTags = p.tags ?? [];
-                    document.querySelectorAll('#upd-tags-group .checkbox-item').forEach(label => {
-                        const cb    = label.querySelector('input[type=checkbox]');
-                        const match = selectedTags.includes(cb.value);
-                        cb.checked  = match;
-                        label.classList.toggle('checked', match);
-                    });
+                    const selectedTags = (p.tags ?? []).map(t => t.id); // extract IDs
+                    document.querySelectorAll('#upd-tags-group .checkbox-item input[type=checkbox]')
+                        .forEach(cb => {
+                            cb.checked = selectedTags.includes(Number(cb.value));
+                            cb.parentElement.classList.toggle('checked', cb.checked);
+                        });
 
                     // Show existing thumbnail
-                    if (p.thumbnail_path) {
+                    if (p.image && p.image.path) {
                         document.getElementById('upd-thumb-preview').innerHTML =
-                            `<img src="${p.thumbnail_path}" style="width:100%;height:100%;object-fit:cover;display:block;">`;
+                            `<img src="/${p.image.path}" style="width:100%;height:100%;object-fit:cover;display:block;">`;
                     } else {
                         document.getElementById('upd-thumb-preview').innerHTML =
                             '<div class="placeholder">📷<br>No thumbnail</div>';

@@ -33,9 +33,9 @@
                     <div class="img-grid-card" id="media-card-{{ $item->id }}">
 
                         {{-- Thumbnail or Type Icon --}}
-                        @if($item->image_path)
+                        @if($item->image)
                             <img class="thumb"
-                                 src="{{ asset($item->image_path) }}"
+                                 src="{{ asset($item->image->path) }}"
                                  alt="{{ $item->media_title }}">
                         @else
                             <div class="thumb-placeholder" style="font-size:2.5rem;">
@@ -69,11 +69,11 @@
                                 </a>
                             @endif
                             <div class="card-actions">
-                                <form action="#" method="POST" {{-- replace # with route('media.destroy', $item->id) --}}
+                                <form action="{{route('destroy-media')}}" method="POST"
                                 id="delete-media-form-{{ $item->id }}"
                                       onsubmit="return confirmDelete(event, {{ $item->id }}, 'media-card-{{ $item->id }}')">
                                     @csrf
-                                    @method('DELETE')
+                                    <input type="hidden" name="media_item_id" value="{{$item->id}}">
                                     <button type="submit" class="btn-danger">🗑️ Delete</button>
                                 </form>
                             </div>

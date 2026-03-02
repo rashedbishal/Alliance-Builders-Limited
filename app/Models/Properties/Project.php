@@ -2,6 +2,12 @@
 
 namespace App\Models\Properties;
 
+use App\Concerns\HasDetails;
+use App\Concerns\HasFacilities;
+use App\Concerns\HasImage;
+use App\Concerns\HasMetadata;
+use App\Concerns\HasTags;
+use App\Concerns\HasVideo;
 use App\Models\Config\Details;
 use App\Models\Config\Facility;
 use App\Models\Config\Location;
@@ -10,6 +16,7 @@ use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
 use App\Models\Visual\Image;
 use App\Models\Visual\ProjectImage;
+use App\Models\Visual\Video;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -22,7 +29,7 @@ use Illuminate\Support\Str;
 
 class Project extends Model
 {
-    use HasFactory;
+    use HasFactory, HasImage, HasVideo, HasFacilities, HasDetails, HasTags, HasMetadata;
 
     protected $fillable = [
         'name',
@@ -36,6 +43,11 @@ class Project extends Model
         'handover_date',
         'isFeatured',
         'project_id',
+    ];
+
+    protected $casts = [
+        'construction_start_date' => 'date',
+        'handover_date' => 'date',
     ];
 
     public function getRouteKeyName()
@@ -82,7 +94,7 @@ class Project extends Model
 
     public function video(): MorphOne
     {
-        return $this->morphOne(Image::class, 'videoable', 'videoable_type', 'videoable_id', 'project_id');
+        return $this->morphOne(Video::class, 'videoable', 'videoable_type', 'videoable_id', 'project_id');
     }
 
     public function details(): MorphOne
