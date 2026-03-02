@@ -2,26 +2,9 @@
 
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
-use App\Models\Config\Facility;
-use App\Models\Config\Location;
-use App\Models\Config\ProjectType;
-use App\Models\Config\Tag;
 use App\Models\Visual\Gallery;
 use Illuminate\Support\Facades\Route;
-use Inertia\Inertia;
 
-Route::get('dashboard', function () {
-//    return Inertia::render('Dashboard');
-    return view('carousel.index');
-})->middleware(['auth', 'verified'])->name('dashboard');
-
-Route::get('project-up', function () {
-    $types = ProjectType::select('id', 'name')->get();
-    $locations = Location::select('id', 'name')->get();
-    $facilities = Facility::select('id', 'name')->get();
-    $tags = Tag::select('id', 'name')->get();
-    return view('test-project', compact('types', 'locations', 'facilities', 'tags'));
-})->middleware(['auth', 'verified'])->name('project-up');
 
 Route::get('media-up', function () {
 
@@ -31,21 +14,32 @@ Route::get('media-up', function () {
 Route::get('gallery-up', function () {
 
     $types = Gallery::select('id', 'type')->get();
+
     return view('test-gallery', compact('types'));
 })->middleware(['auth', 'verified'])->name('gallery-up');
 
-
 require __DIR__.'/settings.php';
 
+Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('dashboard', 'carousel')->name('dashboard');
+    Route::post('/update-carousel', 'updateCarousel')->name('update-carousel');
+
+    Route::get('project/add', 'projectAdd')->name('project-add');
+    Route::post('/save-project', 'saveProject')->name('save-project');
+
+    Route::get('project/update', 'projectUpdate')->name('project-update');
+    Route::get('/cms/projects/by-type', 'projectByType')->name('project-by-type');
+    Route::get('/cms/projects/{id}/data', 'projectData')->name('project-data');
 
 
-Route::controller(CMSController::class)->middleware('web')->group(function () {
-    Route::post('/update-carousel', 'cImageUpdater')->name('update-carousel');
-    Route::post('/save-project', 'projectSaver')->name('add-project');
+
     Route::post('/save-media', 'mediaSaver')->name('add-media');
     Route::post('/save-gallery', 'gallerySaver')->name('add-gallery');
-});
 
+
+
+});
 
 Route::controller(PageController::class)->middleware('web')->group(function () {
 

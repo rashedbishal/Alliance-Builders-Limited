@@ -9,8 +9,8 @@
 
         {{-- Carousel Banner --}}
         <div class="nav-item">
-            <a href="#" {{-- replace # with route('carousel.index') --}}
-            class="nav-link {{ Request::routeIs('carousel.*') ? 'active' : '' }}">
+            <a href="{{route('dashboard')}}" {{-- replace # with route('carousel.index') --}}
+            class="nav-link {{ Request::routeIs('dashboard') ? 'active' : '' }}">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <rect x="2" y="6" width="20" height="12" rx="2"/>
                     <path d="M17 12H7M12 7l5 5-5 5"/>
@@ -85,12 +85,12 @@
                 </svg>
             </div>
             <div class="submenu {{ Request::routeIs('project.*') ? 'open' : '' }}" id="project-menu">
-                <a href="#" {{-- replace # with route('project.add') --}}
-                class="submenu-link {{ Request::routeIs('project.add') ? 'active' : '' }}">
+                <a href="{{route('project-add')}}" {{-- replace # with route('project.add') --}}
+                class="submenu-link {{ Request::routeIs('project-add') ? 'active' : '' }}">
                     Add Project
                 </a>
-                <a href="#" {{-- replace # with route('project.update') --}}
-                class="submenu-link {{ Request::routeIs('project.update') ? 'active' : '' }}">
+                <a href="{{route('project-update')}}" {{-- replace # with route('project.update') --}}
+                class="submenu-link {{ Request::routeIs('project-update') ? 'active' : '' }}">
                     Update Project
                 </a>
                 <a href="#" {{-- replace # with route('project.remove') --}}

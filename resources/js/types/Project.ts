@@ -1,3 +1,4 @@
+import type { Location } from './Location';
 interface Tag {
     id: number;
     name: string;
@@ -36,7 +37,7 @@ export interface Project
 {
     id: number;
     name: string;
-    location: string | null;
+    address: string | null;
     google_map_url: string | null;
     floors: string | null;
     size: string | null;
@@ -47,6 +48,7 @@ export interface Project
     handover_date: string | null;
     isFeatured: boolean;
     project_id: string;
+    location: Location;
     tag?: Tag[] | null;
     details?: Details | null;
     facilities?: Facilities[] | null;

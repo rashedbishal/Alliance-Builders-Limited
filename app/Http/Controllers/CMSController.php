@@ -3,9 +3,13 @@
 namespace App\Http\Controllers;
 
 use App\Models\Config\Details;
+use App\Models\Config\Facility;
 use App\Models\Config\Location;
+use App\Models\Config\ProjectType;
+use App\Models\Config\Tag;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
+use App\Models\Visual\Carousel;
 use App\Models\Visual\Gallery;
 use App\Models\Visual\Image;
 use App\Models\Visual\ProjectImage;
@@ -17,10 +21,76 @@ use Illuminate\Support\Str;
 
 class CMSController extends Controller
 {
-    public function cImageUpdater(Request $request)
+    public function carousel()
     {
+        return view('carousel.index');
+    }
+
+    public function projectAdd()
+    {
+        $types = ProjectType::select('id', 'name')->get();
+        $locations = Location::select('id', 'name')->get();
+        $facilities = Facility::select('id', 'name')->get();
+        $tags = Tag::select('id', 'name')->get();
+
+        return view('project.add', compact('types', 'locations', 'facilities', 'tags'));
+    }
+
+    public function projectUpdate()
+    {
+        $types = ProjectType::select('id', 'name')->get();
+        $locations = Location::select('id', 'name')->get();
+        $facilities = Facility::select('id', 'name')->get();
+        $tags = Tag::select('id', 'name')->get();
+        $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
+
+        return view('project.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
+    }
+
+    public function projectByType(Request $request)
+    {
+        return Project::where('project_type_id', $request->type)
+            ->select('id', 'name')
+            ->get();
+    }
+
+    public function projectData($id)
+    {
+        return Project::findOrFail($id);
+    }
+
+    public function updateCarousel(Request $request)
+    {
+        $carouselData = '';
+        switch ($request->input('position')) {
+            case '1':
+                $carouselData = Carousel::findOrFail(1);
+                break;
+            case '2':
+                $carouselData = Carousel::findOrFail(2);
+                break;
+            case '3':
+                $carouselData = Carousel::findOrFail(3);
+                break;
+            case '4':
+                $carouselData = Carousel::findOrFail(4);
+                break;
+            case '5':
+                $carouselData = Carousel::findOrFail(5);
+                break;
+            default:
+                abort(500);
+        }
+
+        $carouselData->property_name = $request->input('property_name') ?? ' ';
+        $carouselData->description = $request->input('description') ?? ' ';
+        $carouselData->save();
+
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
+            $request->validate([
+                'image' => 'required|image|mimes:webp|max:250',
+            ]);
             try {
                 DB::transaction(function () use ($request, $imageFile) {
                     $sanitizedName = '';
@@ -51,14 +121,14 @@ class CMSController extends Controller
                     $imageFile->storeAs('home/carousel', $sanitizedName, 'public');
                 });
 
-                return redirect()->route('dashboard');
+                return redirect()->back()->with('success', 'Operation Successful');
             } catch (\Exception $e) {
-                dd($e);
+                redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
             }
         }
     }
 
-    public function projectSaver(Request $request)
+    public function saveProject(Request $request)
     {
         try {
             $project = new Project;
@@ -74,7 +144,7 @@ class CMSController extends Controller
             $project->description = $request->input('description');
             $project->surroundings = $request->input('surroundings');
             $project->project_type_id = $request->input('project_type_id');
-            $project->location_id = $request->input('location');
+            $project->location_id = $request->input('location_id');
             $project->project_id = $request->input('project_id');
             $project->save();
 
@@ -136,9 +206,9 @@ class CMSController extends Controller
                 }
             }
 
-            return redirect()->back();
+            return redirect()->back()->with('success', 'Operation Successful');
         } catch (\Exception $e) {
-            dd($e);
+            redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
 
@@ -204,9 +274,7 @@ class CMSController extends Controller
                 $video->description = $request->input('description');
                 $video->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
                 $video->save();
-
             }
-
         }
 
         return redirect()->back();

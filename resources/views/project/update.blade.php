@@ -25,16 +25,9 @@
             <div class="form-group">
                 <label for="filter_project_type">Project Type <span style="color:#FF8080;">*</span></label>
                 <select id="filter_project_type" onchange="fetchProjectNames(this.value)">
-                    <option value="">Select Project Type</option>
-                    <option value="residential" {{ request('project_type') == 'residential' ? 'selected' : '' }}>Residential</option>
-                    <option value="commercial"  {{ request('project_type') == 'commercial'  ? 'selected' : '' }}>Commercial</option>
-                    <option value="mixed_use"   {{ request('project_type') == 'mixed_use'   ? 'selected' : '' }}>Mixed Use</option>
-                    {{--
-                      Dynamic:
-                      @foreach($projectTypes as $type)
-                        <option value="{{ $type->id }}" {{ request('project_type') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
-                      @endforeach
-                    --}}
+                  @foreach($types as $type)
+                    <option value="{{ $type->id }}" {{ request('project_type_id') == $type->id ? 'selected' : '' }}>{{ $type->name }}</option>
+                  @endforeach
                 </select>
             </div>
 
@@ -42,11 +35,6 @@
                 <label for="filter_project_name">Project Name <span style="color:#FF8080;">*</span></label>
                 <select id="filter_project_name" onchange="loadProjectData(this.value)" disabled>
                     <option value="">Select Project Name</option>
-                    {{--
-                      Populated dynamically via JS/AJAX after type is selected.
-                      If you prefer server-side rendering, pass $projects from controller
-                      and use @foreach here, then show/hide the form directly.
-                    --}}
                 </select>
             </div>
         </div>
@@ -80,25 +68,23 @@
                 <div class="form-row cols-2">
                     <div class="form-group">
                         <label>Project Type</label>
-                        <select name="project_type" id="upd_project_type">
-                            <option value="residential">Residential</option>
-                            <option value="commercial">Commercial</option>
-                            <option value="mixed_use">Mixed Use</option>
+                        <select name="project_type_id" id="upd_project_type">
+                            <option value="">Select Project Type</option>
+                            @foreach($types as $type)
+                                <option value="{{ $type->id }}" >{{ $type->name }}</option>
+                            @endforeach
                         </select>
-                        @error('project_type') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
+                        @error('project_type_id') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
                     </div>
                     <div class="form-group">
                         <label>Project Location</label>
-                        <select name="project_location" id="upd_project_location">
-                            <option value="gulshan">Gulshan</option>
-                            <option value="banani">Banani</option>
-                            <option value="bashundhara">Bashundhara</option>
-                            <option value="dhanmondi">Dhanmondi</option>
-                            <option value="uttara">Uttara</option>
-                            <option value="mirpur">Mirpur</option>
-                            <option value="mohakhali">Mohakhali</option>
+                        <select name="location_id" id="upd_project_location">
+                            <option value="" disabled selected>Select Location</option>
+                            @foreach($locations as $location)
+                                <option value="{{ $location->id }}">{{ $location->name }}</option>
+                            @endforeach
                         </select>
-                        @error('project_location') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
+                        @error('location_id') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -110,13 +96,13 @@
                     </div>
                     <div class="form-group">
                         <label>Project Name</label>
-                        <input type="text" name="project_name" id="upd_project_name" placeholder="Project name">
-                        @error('project_name') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
+                        <input type="text" name="name" id="upd_name" placeholder="Project name">
+                        @error('name') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
                     </div>
                     <div class="form-group">
                         <label>Full Address</label>
-                        <input type="text" name="full_address" id="upd_full_address" placeholder="Address...">
-                        @error('full_address') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
+                        <input type="text" name="address" id="upd_address" placeholder="Address...">
+                        @error('address') <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p> @enderror
                     </div>
                 </div>
 
@@ -360,28 +346,32 @@
             const wrapper    = document.getElementById('update-form-wrapper');
 
             nameSelect.innerHTML = '<option value="">Select Project Name</option>';
-            nameSelect.disabled  = true;
+            nameSelect.disabled = true;
             wrapper.style.display = 'none';
 
             if (!type) return;
 
             loader.style.display = 'block';
 
-            fetch(`/cms/projects/by-type?type=${type}`) {{-- replace with actual route --}}
+            // replace with actual route
+            fetch(`/cms/projects/by-type?type=${type}`)
                 .then(res => res.json())
                 .then(projects => {
                     loader.style.display = 'none';
+
                     projects.forEach(p => {
                         const opt = document.createElement('option');
-                        opt.value       = p.id;
+                        opt.value = p.id;
                         opt.textContent = p.name;
                         nameSelect.appendChild(opt);
                     });
+
                     nameSelect.disabled = false;
                 })
-                .catch(() => {
+                .catch(err => {
+                    console.error(err);
                     loader.style.display = 'none';
-                    nameSelect.disabled  = false;
+                    nameSelect.disabled = false;
                 });
         }
 
@@ -395,16 +385,16 @@
             const wrapper = document.getElementById('update-form-wrapper');
             if (!id) { wrapper.style.display = 'none'; return; }
 
-            fetch(`/cms/projects/${id}/data`) {{-- replace with actual route --}}
+            fetch(`/cms/projects/${id}/data`)
                 .then(res => res.json())
                 .then(p => {
                     // Update form action with correct project ID
-                    document.getElementById('update-form').action = `/cms/projects/${id}`; {{-- replace with actual route --}}
+                    document.getElementById('update-form').action = `/cms/projects/${id}`;
                     document.getElementById('project_id_db').value = id;
 
                     // Fill text/number/date/url fields
                     const fields = [
-                        'project_type','project_location','project_id','project_name','full_address',
+                        'project_type','project_location','project_id','name','address',
                         'google_map_url','youtube_video_id','price','size','floors',
                         'construction_start_date','handover_date','description','surroundings',
                         'apartment_size','bedroom','bathroom','balcony','kitchen','living_dining',

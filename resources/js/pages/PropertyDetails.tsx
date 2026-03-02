@@ -1,13 +1,12 @@
 import { usePage, Link } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { MapPin, Bed, Bath, Square, Car, Calendar, Home, Heart, Share2, ArrowLeft, Wifi, Shield, Bell, ParkingCircle, Wind, Waves, Phone, Camera, Dumbbell, Trees } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, Car, Heart, Share2, ArrowLeft, Wifi, ParkingCircle, Wind } from 'lucide-react';
 import React, { useState } from 'react';
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
-import { WritingText } from '@/components/ui/shadcn-io/writing-text';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
 
@@ -18,6 +17,8 @@ import type {Project} from "@/types/Project";
 const PropertyDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
     const {projectDetails} = usePage<{projectDetails: Project}>().props;
+
+    console.log(projectDetails);
 
     // Handle property not found
     if (!projectDetails) {
@@ -61,6 +62,7 @@ const PropertyDetail = () => {
     const property = {
         id: projectDetails.id,
         title: projectDetails.name,
+        address: projectDetails.address,
         location: projectDetails.location || "Not specified",
         beds: projectDetails.details?.bedroom || "N/A",
         baths: projectDetails.details?.bathroom || "N/A",
@@ -147,7 +149,7 @@ const PropertyDetail = () => {
                                                 </h1>
                                                 <div className="flex items-center text-white/80 text-lg">
                                                     <MapPin className="h-5 w-5 mr-2 flex-shrink-0" />
-                                                    <span>{property.location}</span>
+                                                    <span>{property.location.name}</span>
                                                 </div>
                                             </div>
 
@@ -232,7 +234,7 @@ const PropertyDetail = () => {
                                             {property.description}
                                         </p>
                                         <div className="mt-4 space-y-2 text-black">
-                                            <p><strong>Location:</strong> {property.location}</p>
+                                            <p><strong>Address:</strong> {property.address}</p>
                                             <p><strong>Beds:</strong> {property.beds} | <strong>Baths:</strong> {property.baths}</p>
                                             <p><strong>Size:</strong> {property.sqft}</p>
                                         </div>

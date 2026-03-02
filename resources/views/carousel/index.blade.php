@@ -52,8 +52,8 @@
                 </div>
             </div>
 
-            @if($errors->has('banner_image.1'))
-                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('banner_image.1') }}</p>
+            @if($errors->has('image'))
+                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('image') }}</p>
             @endif
 
             <div style="display:flex; gap:10px; margin-top:12px;">
@@ -72,7 +72,7 @@
     {{-- ===================== 2nd Banner ===================== --}}
     <div class="banner-card">
         <span class="banner-num">2nd Banner</span>
-        <form action="#" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 2) --}}
+        <form action="{{ route('update-carousel') }}" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 2) --}}
             @csrf
             <input type="hidden" name="position" value="2">
 
@@ -80,7 +80,7 @@
                 <div class="form-group">
                     <label>Upload Banner Image</label>
                     <div class="img-uploader">
-                        <input type="file" name="banner_image" accept="image/*"
+                        <input type="file" name="image" accept="image/*"
                                onchange="previewImage(this, 'cb-prev-2')">
                         <div class="icon">🖼️</div>
                         <p>Drag & drop or <span>browse</span></p>
@@ -110,8 +110,8 @@
                 </div>
             </div>
 
-            @if($errors->has('banner_image.2'))
-                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('banner_image.2') }}</p>
+            @if($errors->has('image'))
+                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('image') }}</p>
             @endif
 
             <div style="display:flex; gap:10px; margin-top:12px;">
@@ -130,7 +130,7 @@
     {{-- ===================== 3rd Banner ===================== --}}
     <div class="banner-card">
         <span class="banner-num">3rd Banner</span>
-        <form action="#" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 3) --}}
+        <form action="{{ route('update-carousel') }}" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 3) --}}
             @csrf
             <input type="hidden" name="position" value="3">
 
@@ -138,7 +138,7 @@
                 <div class="form-group">
                     <label>Upload Banner Image</label>
                     <div class="img-uploader">
-                        <input type="file" name="banner_image" accept="image/*"
+                        <input type="file" name="image" accept="image/*"
                                onchange="previewImage(this, 'cb-prev-3')">
                         <div class="icon">🖼️</div>
                         <p>Drag & drop or <span>browse</span></p>
@@ -168,8 +168,8 @@
                 </div>
             </div>
 
-            @if($errors->has('banner_image.3'))
-                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('banner_image.3') }}</p>
+            @if($errors->has('image'))
+                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('image') }}</p>
             @endif
 
             <div style="display:flex; gap:10px; margin-top:12px;">
@@ -188,7 +188,7 @@
     {{-- ===================== 4th Banner ===================== --}}
     <div class="banner-card">
         <span class="banner-num">4th Banner</span>
-        <form action="#" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 4) --}}
+        <form action="{{ route('update-carousel') }}" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 4) --}}
             @csrf
             <input type="hidden" name="position" value="4">
 
@@ -196,7 +196,7 @@
                 <div class="form-group">
                     <label>Upload Banner Image</label>
                     <div class="img-uploader">
-                        <input type="file" name="banner_image" accept="image/*"
+                        <input type="file" name="image" accept="image/*"
                                onchange="previewImage(this, 'cb-prev-4')">
                         <div class="icon">🖼️</div>
                         <p>Drag & drop or <span>browse</span></p>
@@ -226,8 +226,8 @@
                 </div>
             </div>
 
-            @if($errors->has('banner_image.4'))
-                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('banner_image.4') }}</p>
+            @if($errors->has('image'))
+                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('image') }}</p>
             @endif
 
             <div style="display:flex; gap:10px; margin-top:12px;">
@@ -246,7 +246,7 @@
     {{-- ===================== 5th Banner ===================== --}}
     <div class="banner-card">
         <span class="banner-num">5th Banner</span>
-        <form action="#" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 5) --}}
+        <form action="{{ route('update-carousel') }}" method="POST" enctype="multipart/form-data"> {{-- replace # with route('carousel.update', 5) --}}
             @csrf
             <input type="hidden" name="position" value="5">
 
@@ -254,7 +254,7 @@
                 <div class="form-group">
                     <label>Upload Banner Image</label>
                     <div class="img-uploader">
-                        <input type="file" name="banner_image" accept="image/*"
+                        <input type="file" name="image" accept="image/*"
                                onchange="previewImage(this, 'cb-prev-5')">
                         <div class="icon">🖼️</div>
                         <p>Drag & drop or <span>browse</span></p>
@@ -284,8 +284,8 @@
                 </div>
             </div>
 
-            @if($errors->has('banner_image.5'))
-                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('banner_image.5') }}</p>
+            @if($errors->has('image'))
+                <p style="color:#FF8080; font-size:0.78rem; margin-top:6px;">{{ $errors->first('image') }}</p>
             @endif
 
             <div style="display:flex; gap:10px; margin-top:12px;">
