@@ -6,7 +6,7 @@ import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
 import PropertyCard from '@/components/PropertyCard';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
+// import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { WritingText } from '@/components/ui/shadcn-io/writing-text';
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 
@@ -14,7 +14,6 @@ import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import type { ProjectThumb } from '@/types/ProjectThumb';
 import type { ProjectTypes } from '@/types/ProjectTypes';
-// import { route } from 'ziggy-js';
 
 const Properties = () => {
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
@@ -27,36 +26,9 @@ const Properties = () => {
     const [propertyType, setPropertyType] = useState('');
 
     const save = sessionStorage.getItem('propertyFilters');
-    console.log('saved data here!!!!!:', save);
 
-    // useEffect(() => {
-    //     const saved = sessionStorage.getItem('propertyFilters');
-    //     if (saved) {
-    //         const filters = JSON.parse(saved);
-    //         sessionStorage.removeItem('propertyFilters'); // clear after reading
-    //
-    //         // Apply location filter
-    //         if (filters.location) {
-    //             setLocationFilter(filters.location);
-    //         }
-    //
-    //         // Switch tab based on propertyType id
-    //         if (filters.propertyType) {
-    //             const tabMap: Record<string, string> = {
-    //                 '1': 'handover',  // id: 1 → Handover Project
-    //                 '2': 'ongoing',   // id: 2 → Ongoing Project
-    //                 '3': 'upcoming',  // id: 3 → Upcoming Project
-    //                 '4': 'all',       // id: 4 → Hotels & Resorts (no dedicated tab)
-    //             };
-    //             const targetTab = tabMap[filters.propertyType] ?? 'all';
-    //             router.get(
-    //                 targetTab === 'all' ? '/properties' : `/${targetTab}`,
-    //                 {},
-    //                 { preserveState: true, preserveScroll: true, replace: true }
-    //             );
-    //         }
-    //     }
-    // }, []);
+    console.log('projects', projects);
+    console.log('saved data here!!!!!:', save);
 
     useEffect(() => {
         const saved = sessionStorage.getItem('propertyFilters');
@@ -94,8 +66,6 @@ const Properties = () => {
         // If propertyType is empty → stay on current tab (default 'all')
     }, []);
 
-    const [priceRange, setPriceRange] = useState('all');
-    // const [activeTab, setActiveTab] = useState();
     const [hoveredCard, setHoveredCard] = useState<number | null>(null);
 
     // Handle case where projects is undefined
@@ -104,7 +74,6 @@ const Properties = () => {
     const pageUrl = usePage().url;
     //
     const queryParams = new URLSearchParams(pageUrl.split('?')[1] || '');
-    // const urlTab = queryParams.get('tab') || 'all';
 
     const [searchTerm, setSearchTerm] = useState(
         queryParams.get('search') || '',
@@ -139,19 +108,6 @@ const Properties = () => {
         );
     };
 
-    const getStatusColor = (status: string) => {
-        switch (status) {
-            case 'For Sale':
-                return 'bg-emerald-500/20 text-emerald-300 border-emerald-500/30';
-            case 'Pre-Launch':
-                return 'bg-amber-500/20 text-amber-300 border-amber-500/30';
-            case 'Ready to Move':
-                return 'bg-blue-500/20 text-blue-300 border-blue-500/30';
-            default:
-                return 'bg-gray-500/20 text-gray-300 border-gray-500/30';
-        }
-    };
-
     // Filter properties based on active tab and search
     const filteredProperties = useMemo(() => {
         let filtered = projectList;
@@ -161,15 +117,15 @@ const Properties = () => {
             filtered = filtered.filter((p) => favorites.includes(p.id));
         } else if (activeTab === 'upcoming') {
             filtered = filtered.filter(
-                (p) => (p as any).project_type?.name === 'Upcoming Project',
+                (p) => (p as any).project_type?.name === 'Upcoming',
             );
         } else if (activeTab === 'ongoing') {
             filtered = filtered.filter(
-                (p) => (p as any).project_type?.name === 'Ongoing Project',
+                (p) => (p as any).project_type?.name === 'Ongoing',
             );
         } else if (activeTab === 'handover') {
             filtered = filtered.filter(
-                (p) => (p as any).project_type?.name === 'Handover Project',
+                (p) => (p as any).project_type?.name === 'Handover',
             );
         }
 
@@ -182,13 +138,6 @@ const Properties = () => {
             );
         }
 
-        // Filter by property type (you can extend this based on backend data)
-        // if (propertyType && propertyType !== 'all') {
-        //     filtered = filtered.filter(
-        //         (p) => p.name?.toLowerCase() === propertyType.toLowerCase(),
-        //     );
-        // }
-
         // Add location filter
         if (locationFilter && locationFilter !== 'all') {
             filtered = filtered.filter(
@@ -197,7 +146,7 @@ const Properties = () => {
         }
 
         return filtered;
-    }, [projectList, activeTab, searchTerm, propertyType, favorites, locationFilter]);
+    }, [projectList, activeTab, searchTerm, favorites, locationFilter]);
 
     return (
         <AppLayout>
@@ -246,24 +195,6 @@ const Properties = () => {
                                             className="pl-10 text-sm"
                                         />
                                     </div>
-                                    {/*<Select*/}
-                                    {/*    value={propertyType}*/}
-                                    {/*    onValueChange={setPropertyType}*/}
-                                    {/*>*/}
-                                    {/*    <SelectTrigger className="text-sm">*/}
-                                    {/*        <SelectValue placeholder="Property Type" />*/}
-                                    {/*    </SelectTrigger>*/}
-                                    {/*    <SelectContent>*/}
-                                    {/*        <SelectItem value="all">*/}
-                                    {/*            All*/}
-                                    {/*        </SelectItem>*/}
-                                    {/*        {projectTypes.map((type) => (*/}
-                                    {/*            <SelectItem key={type.id} value={type.id.toString()}>*/}
-                                    {/*                {type.name}*/}
-                                    {/*            </SelectItem>*/}
-                                    {/*        ))}*/}
-                                    {/*    </SelectContent>*/}
-                                    {/*</Select>*/}
                                 </div>
                             </CardContent>
                         </Card>
@@ -310,7 +241,7 @@ const Properties = () => {
                                                     (p) =>
                                                         (p as any).project_type
                                                             ?.name ===
-                                                        'Upcoming Project',
+                                                        'Upcoming',
                                                 ).length
                                             }
                                             )
@@ -322,7 +253,7 @@ const Properties = () => {
                                                     (p) =>
                                                         (p as any).project_type
                                                             ?.name ===
-                                                        'Ongoing Project',
+                                                        'Ongoing',
                                                 ).length
                                             }
                                             )
@@ -334,7 +265,7 @@ const Properties = () => {
                                                     (p) =>
                                                         (p as any).project_type
                                                             ?.name ===
-                                                        'Handover Project',
+                                                        'Handover',
                                                 ).length
                                             }
                                             )
@@ -374,7 +305,7 @@ const Properties = () => {
                                         </div>
                                     ) : (
                                         <div className="py-16 text-center">
-                                            <p className="text-lg text-white/70">
+                                            <p className="text-2xl text-primary/70">
                                                 No properties found matching
                                                 your filters.
                                             </p>
