@@ -2,17 +2,7 @@
 
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
-use App\Models\Visual\Gallery;
 use Illuminate\Support\Facades\Route;
-
-
-Route::get('gallery-up', function () {
-
-    $types = Gallery::select('id', 'type')->get();
-
-    return view('test-gallery', compact('types'));
-})->middleware(['auth', 'verified'])->name('gallery-up');
-
 
 Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group(function () {
 
@@ -36,10 +26,11 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('media/erase', 'mediaErase')->name('media-erase');
     Route::post('destroy/media', 'destroyMedia')->name('destroy-media');
 
+    Route::get('gallery/add', 'galleryAdd')->name('gallery-add');
+    Route::post('save/gallery', 'saveGallery')->name('save-gallery');
 
-    Route::post('save/gallery', 'gallerySaver')->name('add-gallery');
-
-
+    Route::get('gallery/erase', 'galleryErase')->name('gallery-erase');
+    Route::post('destroy/gallery', 'destroyGallery')->name('destroy-gallery');
 
 });
 

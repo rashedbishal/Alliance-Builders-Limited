@@ -63,6 +63,7 @@ class CMSController extends Controller
     {
         $types = ProjectType::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
+
         return view('project.remove', compact('types', 'projects'));
     }
 
@@ -74,7 +75,22 @@ class CMSController extends Controller
     public function mediaErase()
     {
         $mediaItems = MediaCoverage::with('image')->paginate(7);
+
         return view('media.remove', compact('mediaItems'));
+    }
+
+    public function galleryAdd()
+    {
+        $types = Gallery::select('id', 'type')->get();
+
+        return view('gallery.add', compact('types'));
+    }
+
+    public function galleryErase()
+    {
+        $types = Gallery::with('images', 'videos')->select('id', 'type')->get();
+
+        return view('gallery.remove', compact('types'));
     }
 
     public function updateCarousel(Request $request)
@@ -316,12 +332,11 @@ class CMSController extends Controller
                     }
                 }
             });
+
             return redirect()->back()->with('success', 'Operation Successful');
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
-
 
     }
 
@@ -342,10 +357,9 @@ class CMSController extends Controller
                     default => 'properties/projectImages',
                 };
 
-                foreach($project->projectImages as $projectImage)
-                {
-                    if (Storage::disk('public')->exists(path:  $storagePath.'/'.$projectImage->getRawOriginal('image'))) {
-                        Storage::disk('public')->delete( $storagePath.'/'.$projectImage->getRawOriginal('image'));
+                foreach ($project->projectImages as $projectImage) {
+                    if (Storage::disk('public')->exists(path: $storagePath.'/'.$projectImage->getRawOriginal('image'))) {
+                        Storage::disk('public')->delete($storagePath.'/'.$projectImage->getRawOriginal('image'));
                     }
                 }
 
@@ -353,8 +367,7 @@ class CMSController extends Controller
             });
 
             return redirect()->back()->with('success', 'Operation Successful');
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
@@ -383,8 +396,7 @@ class CMSController extends Controller
             });
 
             return redirect()->back()->with('success', 'Operation Successful');
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
@@ -402,55 +414,105 @@ class CMSController extends Controller
                 $item->delete();
 
             });
+
             return redirect()->back()->with('success', 'Operation Successful');
-        }
-        catch (\Exception $e) {
+        } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
 
-    public function gallerySaver(Request $request)
+    public function saveGallery(Request $request)
     {
-        if ($request->hasFile('media_file')) {
-            $imageFile = $request->file('media_file');
-            $sanitizedName = uniqid().'.'.$imageFile->getClientOriginalExtension();
+        try {
+            DB::transaction(function () use ($request) {
+                if ($request->hasFile('gallery_content')) {
+                    $imageFile = $request->file('gallery_content');
+                    $sanitizedName = uniqid().'.'.$imageFile->getClientOriginalExtension();
 
-            if ($request->input('media_type') == '1') {
-                $storagePath = match ($request->input('gallery_type')) {
-                    '1' => 'gallery/project-handover',
-                    '2' => 'gallery/project-inauguration',
-                    '3' => 'gallery/construction-images',
-                    '4' => 'gallery/event-activity',
-                    default => 'properties/projectImages',
-                };
-                $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+                    if ($request->input('media_type') == '1') {
+                        $storagePath = match ($request->input('gallery_type')) {
+                            '1' => 'gallery/project-handover',
+                            '2' => 'gallery/project-inauguration',
+                            '3' => 'gallery/construction-images',
+                            '4' => 'gallery/event-activity',
+                            default => 'properties/projectImages',
+                        };
+                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
 
-                $image = new Image;
-                $image->path = $sanitizedName;
-                $image->title = $request->input('title');
-                $image->description = $request->input('description');
-                $image->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
-                $image->save();
-            } else {
+                        $image = new Image;
+                        $image->path = $sanitizedName;
+                        $image->title = $request->input('title');
+                        $image->description = $request->input('description');
+                        $image->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
+                        $image->save();
+                    } else {
 
-                $storagePath = match ($request->input('gallery_type')) {
-                    '1' => 'video/project-handover',
-                    '2' => 'video/project-inauguration',
-                    '3' => 'video/construction-images',
-                    '4' => 'video/event-activity',
-                    default => 'properties/projectImages',
-                };
-                $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+                        $storagePath = match ($request->input('gallery_type')) {
+                            '1' => 'video/project-handover',
+                            '2' => 'video/project-inauguration',
+                            '3' => 'video/construction-images',
+                            '4' => 'video/event-activity',
+                            default => 'properties/projectImages',
+                        };
+                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
 
-                $video = new Video;
-                $video->path = $sanitizedName;
-                $video->title = $request->input('title');
-                $video->description = $request->input('description');
-                $video->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
-                $video->save();
-            }
+                        $video = new Video;
+                        $video->path = $sanitizedName;
+                        $video->title = $request->input('title');
+                        $video->description = $request->input('description');
+                        $video->gallery()->associate(Gallery::findOrFail($request->input('gallery_type')));
+                        $video->save();
+                    }
+                }
+            });
+
+            return redirect()->back()->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
+    }
 
-        return redirect()->back();
+    public function destroyGallery(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                if ($request->input('media_type') == '1') {
+                    $image = Image::findOrFail($request->input('gallery_item_id'));
+                    $storagePath = match ($image->gallery->id) {
+                        1 => 'gallery/project-handover',
+                        2 => 'gallery/project-inauguration',
+                        3 => 'gallery/construction-images',
+                        4 => 'gallery/event-activity',
+                        default => 'gallery/trash',
+                    };
+
+                    if (Storage::disk('public')->exists(path: $storagePath.'/'.$image->getRawOriginal('path'))) {
+                        Storage::disk('public')->delete($storagePath.'/'.$image->getRawOriginal('path'));
+                    }
+
+                    $image->delete();
+
+                } else {
+                    $video = Video::findOrFail($request->input('gallery_item_id'));
+                    $storagePath = match ($video->gallery->id) {
+                        1 => 'video/project-handover',
+                        2 => 'video/project-inauguration',
+                        3 => 'video/construction-images',
+                        4 => 'video/event-activity',
+                        default => 'video/trash',
+                    };
+
+                    if (Storage::disk('public')->exists(path: $storagePath.'/'.$video->getRawOriginal('path'))) {
+                        Storage::disk('public')->delete($storagePath.'/'.$video->getRawOriginal('path'));
+                    }
+
+                    $video->delete();
+                }
+            });
+
+            return redirect()->back()->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
     }
 }

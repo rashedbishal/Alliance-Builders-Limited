@@ -1,11 +1,12 @@
 import { Form, Head } from '@inertiajs/react';
+import {route} from "ziggy-js";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Spinner } from '@/components/ui/spinner';
 import InputError from '@/components/web/input-error';
 import AuthLayout from '@/layouts/web/auth-layout';
-import { store } from '@/routes/login';
+// import { store } from '@/routes/login';
 
 type Props = {
     status?: string;
@@ -24,7 +25,8 @@ export default function Login({
             <Head title="Log in" />
 
             <Form
-                {...store.form()}
+                method="post"
+                action={route('login.store')}
                 resetOnSuccess={['password']}
                 className="flex flex-col gap-6"
             >
@@ -61,7 +63,6 @@ export default function Login({
                                 />
                                 <InputError message={errors.password} />
                             </div>
-
 
                             <Button
                                 type="submit"

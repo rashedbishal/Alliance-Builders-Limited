@@ -19,64 +19,142 @@
                 <path d="M21 15l-5-5L5 21"/>
             </svg>
             Existing Gallery Images
-            <span class="badge" style="margin-left:auto;">{{ $images->count() }} {{ Str::plural('Image', $images->count()) }}</span>
+            @php
+                $totalImages = 0;
+                $totalVideos = 0;
+
+                foreach ($types as $type) {
+                    $totalImages += $type->images->count();
+                    $totalVideos += $type->videos->count();
+                }
+
+                $totalItems = $totalImages + $totalVideos;
+            @endphp
+
+            <span class="badge" style="margin-left:auto;">
+                {{ $totalItems }} {{ Str::plural('Item', $totalItems) }}
+            </span>
         </div>
 
-        @if($images->isEmpty())
+        <div style="display:flex; gap:12px; margin-bottom:20px; flex-wrap:wrap;">
+
+            {{-- Gallery Type Filter --}}
+            <select id="filter-gallery-type" class="h-10">
+                <option value="" selected disabled>All Gallery Types</option>
+                @foreach($types as $type)
+                    <option value="{{ strtolower($type->type) }}">
+                        {{ ucfirst($type->type) }}
+                    </option>
+                @endforeach
+            </select>
+
+            {{-- Media Type Filter --}}
+            <select id="filter-media-type" class="h-10">
+                <option value="" selected disabled>All Media Types</option>
+                <option value="image">Image</option>
+                <option value="video">Video</option>
+            </select>
+
+        </div>
+
+        @if($types->isEmpty())
             <div style="text-align:center; padding:48px 20px; color:var(--muted);">
                 <div style="font-size:2.5rem; margin-bottom:12px;">🖼️</div>
                 <p style="font-size:0.88rem;">No gallery images found.</p>
             </div>
         @else
             <div class="img-grid">
-                @foreach($images as $image)
-                    <div class="img-grid-card" id="gallery-card-{{ $image->id }}">
 
-                        {{-- Thumbnail --}}
-                        @if($image->image_path)
+                @foreach($types as $type)
+
+                    {{-- Images --}}
+                    @foreach($type->images as $image)
+                        <div class="img-grid-card"
+                             id="gallery-card-{{ $image->id }}"
+                             data-gallery-type="{{ strtolower($type->type) }}"
+                             data-media-type="image">
+
                             <img class="thumb"
                                  src="{{ asset($image->image_path) }}"
                                  alt="{{ $image->title }}">
-                        @else
-                            <div class="thumb-placeholder">
-                                <span style="font-size:1.8rem;">🖼️</span>
-                            </div>
-                        @endif
 
-                        {{-- Card Body --}}
-                        <div class="card-body">
-                            <div class="card-title" title="{{ $image->title }}">{{ $image->title }}</div>
-                            <div class="card-meta" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
-                                @if($image->gallery_type)
-                                    <span class="badge">{{ ucfirst($image->gallery_type) }}</span>
-                                @endif
-                                @if($image->media_type)
-                                    <span class="badge" style="background:rgba(100,150,255,0.1); border-color:rgba(100,150,255,0.25); color:#A0B8FF;">
-                  {{ ucfirst($image->media_type) }}
-                </span>
-                                @endif
-                            </div>
-                            <div class="card-actions">
-                                <form action="#" method="POST" {{-- replace # with route('gallery.destroy', $image->id) --}}
-                                id="delete-gallery-form-{{ $image->id }}"
-                                      onsubmit="return confirmDelete(event, {{ $image->id }}, 'gallery-card-{{ $image->id }}')">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit" class="btn-danger">🗑️ Delete</button>
-                                </form>
+                            <div class="card-body">
+                                <div class="card-title" title="{{ $image->title }}">
+                                    {{ $image->title }}
+                                </div>
+
+                                <div class="card-meta" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                        <span class="badge">
+                            {{ ucfirst($type->type) }}
+                        </span>
+
+                                    <span class="badge"
+                                          style="background:rgba(100,150,255,0.1); border-color:rgba(100,150,255,0.25); color:#A0B8FF;">
+                            Image
+                        </span>
+                                </div>
+
+                                <div class="card-actions">
+                                    <form action="{{route('destroy-gallery')}}" method="POST"
+                                          id="delete-gallery-form-{{ $image->id }}"
+                                          onsubmit="return confirmDelete(event, {{ $image->id }}, 'gallery-card-{{ $image->id }}')">
+                                        @csrf
+                                        <input type="hidden" name="gallery_item_id" value="{{$image->id}}">
+                                        <input type="hidden" name="gallery_type" value="{{$type->type}}">
+                                        <input type="hidden" name="media_type" value="1">
+                                        <button type="submit" class="btn-danger">🗑️ Delete</button>
+                                    </form>
+                                </div>
                             </div>
                         </div>
+                    @endforeach
 
-                    </div>
+
+                    {{-- Videos --}}
+                    @foreach($type->videos as $video)
+                        <div class="img-grid-card"
+                             id="gallery-card-{{ $video->id }}"
+                             data-gallery-type="{{ strtolower($type->type) }}"
+                             data-media-type="video">
+
+                            <video class="thumb" style="object-fit:cover;" muted>
+                                <source src="{{ asset($video->video_path) }}">
+                            </video>
+
+                            <div class="card-body">
+                                <div class="card-title" title="{{ $video->title }}">
+                                    {{ $video->title }}
+                                </div>
+
+                                <div class="card-meta" style="display:flex; gap:6px; flex-wrap:wrap; margin-bottom:10px;">
+                        <span class="badge">
+                            {{ ucfirst($type->type) }}
+                        </span>
+
+                                    <span class="badge"
+                                          style="background:rgba(100,150,255,0.1); border-color:rgba(100,150,255,0.25); color:#A0B8FF;">
+                            Video
+                        </span>
+                                </div>
+
+                                <div class="card-actions">
+                                    <form action="{{route('destroy-gallery')}}" method="POST"
+                                          id="delete-gallery-form-{{ $video->id }}"
+                                          onsubmit="return confirmDelete(event, {{ $video->id }}, 'gallery-card-{{ $video->id }}')">
+                                        @csrf
+                                        <input type="hidden" name="gallery_item_id" value="{{$video->id}}">
+                                        <input type="hidden" name="gallery_type" value="{{$type->type}}">
+                                        <input type="hidden" name="media_type" value="2">
+                                        <button type="submit" class="btn-danger">🗑️ Delete</button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                    @endforeach
+
                 @endforeach
-            </div>
 
-            {{-- Pagination --}}
-            @if($images->hasPages())
-                <div style="margin-top:28px;">
-                    {{ $images->links() }}
-                </div>
-            @endif
+            </div>
 
         @endif
     </div>
@@ -110,6 +188,14 @@
 
 @push('scripts')
     <script>
+
+        // Hide all cards on first load
+        document.addEventListener('DOMContentLoaded', function () {
+            document.querySelectorAll('.img-grid-card').forEach(card => {
+                card.style.display = 'none';
+            });
+        });
+
         function confirmDelete(e, id, cardId) {
             e.preventDefault();
             if (!confirm('Delete this image? This cannot be undone.')) return false;
@@ -124,6 +210,36 @@
             }
             return false;
         }
+
+        const galleryTypeFilter = document.getElementById('filter-gallery-type');
+        const mediaTypeFilter   = document.getElementById('filter-media-type');
+
+        function filterGallery() {
+
+            const selectedGalleryType = galleryTypeFilter.value.toLowerCase();
+            const selectedMediaType   = mediaTypeFilter.value.toLowerCase();
+
+            document.querySelectorAll('.img-grid-card').forEach(card => {
+
+                const cardGalleryType = card.dataset.galleryType || '';
+                const cardMediaType   = card.dataset.mediaType || '';
+
+                let show = true;
+
+                if (selectedGalleryType && cardGalleryType !== selectedGalleryType) {
+                    show = false;
+                }
+
+                if (selectedMediaType && cardMediaType !== selectedMediaType) {
+                    show = false;
+                }
+
+                card.style.display = show ? 'block' : 'none';
+            });
+        }
+
+        galleryTypeFilter.addEventListener('change', filterGallery);
+        mediaTypeFilter.addEventListener('change', filterGallery);
 
         // Auto-dismiss flash toasts
         setTimeout(() => {

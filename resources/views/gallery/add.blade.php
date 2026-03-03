@@ -19,7 +19,7 @@
             Image Details
         </div>
 
-        <form action="#" method="POST" enctype="multipart/form-data"> {{-- replace # with route('gallery.store') --}}
+        <form action="{{route('save-gallery')}}" method="POST" enctype="multipart/form-data">
             @csrf
 
             <div class="form-row cols-2">
@@ -27,46 +27,26 @@
                 {{-- Gallery Type --}}
                 <div class="form-group">
                     <label for="gallery_type">Gallery Type <span style="color:#FF8080;">*</span></label>
-                    <select name="gallery_type" id="gallery_type">
-                        <option value="" disabled {{ old('gallery_type') ? '' : 'selected' }}>Select Gallery Type</option>
-                        {{--
-                          Option A — Static list:
-                        --}}
-                        <option value="residential"    {{ old('gallery_type') == 'residential'    ? 'selected' : '' }}>Residential</option>
-                        <option value="commercial"     {{ old('gallery_type') == 'commercial'     ? 'selected' : '' }}>Commercial</option>
-                        <option value="interior"       {{ old('gallery_type') == 'interior'       ? 'selected' : '' }}>Interior</option>
-                        <option value="exterior"       {{ old('gallery_type') == 'exterior'       ? 'selected' : '' }}>Exterior</option>
-                        <option value="construction"   {{ old('gallery_type') == 'construction'   ? 'selected' : '' }}>Construction</option>
-                        {{--
-                          Option B — Dynamic from DB (comment out static list above and use this):
-                          @foreach($galleryTypes as $type)
-                            <option value="{{ $type->id }}" {{ old('gallery_type') == $type->id ? 'selected' : '' }}>
-                              {{ $type->name }}
+                    <select name="gallery_type" id="gallery_type" class="h-10">
+                        <option value="" selected disabled>Select Gallery Type</option>
+                          @foreach($types as $type)
+                            <option value="{{ $type->id }}">
+                              {{ $type->type }}
                             </option>
                           @endforeach
-                        --}}
                     </select>
                     @error('gallery_type')
                     <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
                     @enderror
                 </div>
 
-                {{-- Media Type --}}
+
                 <div class="form-group">
                     <label for="media_type">Media Type <span style="color:#FF8080;">*</span></label>
-                    <select name="media_type" id="media_type">
-                        <option value="" disabled {{ old('media_type') ? '' : 'selected' }}>Select Media Type</option>
-                        <option value="image"                {{ old('media_type') == 'image'                ? 'selected' : '' }}>Image</option>
-                        <option value="render"               {{ old('media_type') == 'render'               ? 'selected' : '' }}>Render</option>
-                        <option value="architectural_drawing" {{ old('media_type') == 'architectural_drawing' ? 'selected' : '' }}>Architectural Drawing</option>
-                        {{--
-                          Dynamic option:
-                          @foreach($mediaTypes as $type)
-                            <option value="{{ $type->id }}" {{ old('media_type') == $type->id ? 'selected' : '' }}>
-                              {{ $type->name }}
-                            </option>
-                          @endforeach
-                        --}}
+                    <select name="media_type" id="media_type" class="h-10">
+                        <option value="" selected disabled>Select Media Type</option>
+                        <option value="1">Image</option>
+                        <option value="2">Video</option>
                     </select>
                     @error('media_type')
                     <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
@@ -81,7 +61,6 @@
                 <input type="text"
                        name="title"
                        id="title"
-                       value="{{ old('title') }}"
                        placeholder="Enter image title...">
                 @error('title')
                 <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
@@ -93,7 +72,7 @@
                 <label for="description">Description</label>
                 <textarea name="description"
                           id="description"
-                          placeholder="Enter image description...">{{ old('description') }}</textarea>
+                          placeholder="Enter image description..."></textarea>
                 @error('description')
                 <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
                 @enderror
@@ -103,18 +82,22 @@
             <div class="form-row cols-2" style="align-items: start;">
 
                 <div class="form-group">
-                    <label for="gallery_image">Upload Image <span style="color:#FF8080;">*</span></label>
+                    <label for="gallery_content" id="upload-label">
+                        Upload Image <span style="color:#FF8080;">*</span>
+                    </label>
                     <div class="img-uploader">
                         <input type="file"
-                               name="gallery_image"
-                               id="gallery_image"
+                               name="gallery_content"
+                               id="gallery_content"
                                accept="image/*"
-                               onchange="previewImage(this, 'gallery-add-preview')">
+                               onchange="previewContent(this, 'gallery-add-preview')">
                         <div class="icon">🖼️</div>
                         <p>Drag & drop or <span>browse</span></p>
-                        <p style="margin-top:4px; font-size:0.72rem;">JPG, PNG, WEBP · Max 10MB</p>
+                        <p id="file-type-text" style="margin-top:4px; font-size:0.72rem;">
+                            JPG, PNG, WEBP · Max 10MB
+                        </p>
                     </div>
-                    @error('gallery_image')
+                    @error('gallery_content')
                     <p style="color:#FF8080; font-size:0.75rem; margin-top:5px;">{{ $message }}</p>
                     @enderror
                 </div>
@@ -122,15 +105,14 @@
                 <div class="form-group">
                     <label>Preview</label>
                     <div class="preview-box" style="height: 185px;" id="gallery-add-preview">
-                        <div class="placeholder">📷<br>No image selected</div>
+                        <div class="placeholder">📷<br>No content selected</div>
                     </div>
                 </div>
 
             </div>
 
-            {{-- Actions --}}
             <div style="display:flex; gap:12px; margin-top:8px;">
-                <button type="submit" class="btn-primary">Upload Image</button>
+                <button type="submit" class="btn-primary">Upload Content</button>
                 <button type="reset" class="btn-secondary" onclick="resetPreview('gallery-add-preview')">Reset</button>
             </div>
 
@@ -174,6 +156,72 @@
 
 @push('scripts')
     <script>
+        const mediaTypeSelect = document.getElementById('media_type');
+        const fileInput = document.getElementById('gallery_content');
+        const fileTypeText = document.getElementById('file-type-text');
+        const uploadLabel = document.getElementById('upload-label');
+
+        mediaTypeSelect.addEventListener('change', function () {
+
+            // Reset file input
+            fileInput.value = '';
+            resetPreview('gallery-add-preview');
+
+            if (this.value === "1") {
+                // Image selected
+                fileInput.setAttribute('accept', 'image/*');
+                fileTypeText.innerHTML = "JPG, PNG, WEBP · Max 10MB";
+                uploadLabel.innerHTML = 'Upload Image <span style="color:#FF8080;">*</span>';
+            }
+            else if (this.value === "2") {
+                // Video selected
+                fileInput.setAttribute('accept', 'video/*');
+                fileTypeText.innerHTML = "MP4, MOV, AVI · Max 50MB";
+                uploadLabel.innerHTML = 'Upload Video <span style="color:#FF8080;">*</span>';
+            }
+        });
+
+        function previewContent(input, previewId) {
+
+            const previewBox = document.getElementById(previewId);
+            previewBox.innerHTML = "";
+
+            if (input.files && input.files[0]) {
+
+                const file = input.files[0];
+                const fileType = file.type;
+                const reader = new FileReader();
+
+                reader.onload = function (e) {
+
+                    // If Image
+                    if (fileType.startsWith('image/')) {
+
+                        previewBox.innerHTML = `
+                    <img src="${e.target.result}"
+                         style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                `;
+
+                    }
+
+                    // If Video
+                    else if (fileType.startsWith('video/')) {
+
+                        previewBox.innerHTML = `
+                    <video controls
+                           style="width:100%; height:100%; object-fit:cover; border-radius:8px;">
+                        <source src="${e.target.result}" type="${fileType}">
+                        Your browser does not support video.
+                    </video>
+                `;
+
+                    }
+                };
+
+                reader.readAsDataURL(file);
+            }
+        }
+
         // Reset preview box back to placeholder
         function resetPreview(previewId) {
             document.getElementById(previewId).innerHTML =

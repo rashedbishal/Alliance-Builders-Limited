@@ -48,8 +48,11 @@ class FortifyServiceProvider extends ServiceProvider
     private function configureViews(): void
     {
         Fortify::loginView(fn (Request $request) => Inertia::render('auth/login', [
-            'canResetPassword' => Features::enabled(Features::resetPasswords()),
-            'canRegister' => Features::enabled(Features::registration()),
+//            'canResetPassword' => Features::enabled(Features::resetPasswords()),
+//            'canRegister' => Features::enabled(Features::registration()),
+//            'status' => $request->session()->get('status'),
+            'canResetPassword' => false,
+            'canRegister' => config('app.registration_enabled'),
             'status' => $request->session()->get('status'),
         ]));
 

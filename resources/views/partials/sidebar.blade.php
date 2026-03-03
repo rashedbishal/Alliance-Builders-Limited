@@ -21,7 +21,7 @@
 
         {{-- Gallery Image Management --}}
         <div class="nav-item">
-            <div class="nav-link {{ Request::routeIs('gallery.*') ? 'active open' : '' }}"
+            <div class="nav-link {{ Request::routeIs('gallery-*') ? 'active open' : '' }}"
                  onclick="toggleMenu('gallery-menu', this)">
                 <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
                     <rect x="3" y="3" width="18" height="18" rx="2"/>
@@ -33,13 +33,13 @@
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
             </div>
-            <div class="submenu {{ Request::routeIs('gallery.*') ? 'open' : '' }}" id="gallery-menu">
-                <a href="#" {{-- replace # with route('gallery.add') --}}
-                class="submenu-link {{ Request::routeIs('gallery.add') ? 'active' : '' }}">
+            <div class="submenu {{ Request::routeIs('gallery-*') ? 'open' : '' }}" id="gallery-menu">
+                <a href="{{route('gallery-add')}}" {{-- replace # with route('gallery.add') --}}
+                class="submenu-link {{ Request::routeIs('gallery-add') ? 'active' : '' }}">
                     Add Image
                 </a>
-                <a href="#" {{-- replace # with route('gallery.remove') --}}
-                class="submenu-link {{ Request::routeIs('gallery.remove') ? 'active' : '' }}">
+                <a href="{{route('gallery-erase')}}" {{-- replace # with route('gallery.remove') --}}
+                class="submenu-link {{ Request::routeIs('gallery-erase') ? 'active' : '' }}">
                     Remove Image
                 </a>
             </div>
@@ -84,7 +84,7 @@
                     <path d="M9 18l6-6-6-6"/>
                 </svg>
             </div>
-            <div class="submenu {{ Request::routeIs('project.*') ? 'open' : '' }}" id="project-menu">
+            <div class="submenu {{ Request::routeIs('project-*') ? 'open' : '' }}" id="project-menu">
                 <a href="{{route('project-add')}}" {{-- replace # with route('project.add') --}}
                 class="submenu-link {{ Request::routeIs('project-add') ? 'active' : '' }}">
                     Add Project
@@ -104,7 +104,7 @@
 
     {{-- Logout --}}
     <div class="logout-btn">
-        <form method="POST" action="#"> {{-- replace # with route('logout') --}}
+        <form method="POST" action="{{ route('logout') }}">
             @csrf
             <button type="submit">
                 <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
