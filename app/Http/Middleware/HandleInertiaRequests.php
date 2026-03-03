@@ -42,6 +42,12 @@ class HandleInertiaRequests extends Middleware
                 'user' => $request->user(),
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
+            'isPopupEnabled' => function () {
+                return \App\Models\Releases\Popup::value('isEnabled') ?? false;
+            },
+            'popupImgUrl' => function () {
+                return \App\Models\Releases\Popup::value('imagePath') ?? false;
+            },
         ];
     }
 }

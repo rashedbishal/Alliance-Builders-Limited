@@ -100,6 +100,17 @@
             </div>
         </div>
 
+        <div class="nav-item">
+            <a href="{{route('popup-add')}}" {{-- replace # with route('carousel.index') --}}
+            class="nav-link {{ Request::routeIs('popup-add') ? 'active' : '' }}">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
+                    <rect x="2" y="6" width="20" height="12" rx="2"/>
+                    <path d="M17 12H7M12 7l5 5-5 5"/>
+                </svg>
+                Pop-up Settings
+            </a>
+        </div>
+
     </nav>
 
     {{-- Logout --}}

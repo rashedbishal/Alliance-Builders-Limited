@@ -32,6 +32,9 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('gallery/erase', 'galleryErase')->name('gallery-erase');
     Route::post('destroy/gallery', 'destroyGallery')->name('destroy-gallery');
 
+    Route::get('popup/add', 'popupAdd')->name('popup-add');
+    Route::post('save/popup', 'savePopup')->name('save-popup');
+
 });
 
 require __DIR__.'/settings.php';

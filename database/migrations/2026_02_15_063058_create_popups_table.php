@@ -13,7 +13,8 @@ return new class extends Migration
     {
         Schema::create('popups', function (Blueprint $table) {
             $table->id();
-            $table->string('description');
+            $table->boolean('isEnabled')->default(false);
+            $table->string('imagePath')->nullable();
             $table->timestamps();
         });
     }

@@ -1,4 +1,5 @@
 import { Link } from '@inertiajs/react';
+import { usePage } from '@inertiajs/react';
 import * as Dialog from '@radix-ui/react-dialog';
 import { AnimatePresence, motion } from 'framer-motion';
 import { X } from 'lucide-react';
@@ -17,14 +18,17 @@ interface PropertyData {
 const POPUP_STORAGE_KEY = 'popup_shown_session';
 
 // Hardcoded featured property data (can be replaced with backend data)
-const FEATURED_PROPERTY: PropertyData = {
-    title: "Big House",
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?w=800&h=600&fit=crop',
-    hyperlink: 'https://hyperlink.io/',
-};
 
-export default function Popup({ showOnLoad = true }: PopupProps) {
+
+export function Popup({ showOnLoad = true }: PopupProps) {
     const [open, setOpen] = useState(false);
+    const { popupImgUrl } = usePage().props as { popupImgUrl?: string };
+
+    const FEATURED_PROPERTY: PropertyData = {
+        title: 'Big House',
+        image: popupImgUrl ?? '',
+        hyperlink: 'https://hyperlink.io/',
+    };
 
     useEffect(() => {
         if (showOnLoad) {
@@ -71,7 +75,8 @@ export default function Popup({ showOnLoad = true }: PopupProps) {
                                 >
                                     {/* Close Button */}
                                     <Dialog.Close asChild>
-                                        <button className="group absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-2 transition-all hover:bg-white">
+                                        <button
+                                            className="group absolute top-4 right-4 z-10 cursor-pointer rounded-full bg-white/80 p-2 transition-all hover:bg-white">
                                             <X className="h-5 w-5 text-gray-700 transition-colors group-hover:text-gray-900" />
                                         </button>
                                     </Dialog.Close>

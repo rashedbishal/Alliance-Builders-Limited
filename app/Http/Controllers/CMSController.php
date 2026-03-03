@@ -9,6 +9,7 @@ use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
+use App\Models\Releases\Popup;
 use App\Models\Visual\Carousel;
 use App\Models\Visual\Gallery;
 use App\Models\Visual\Image;
@@ -91,6 +92,13 @@ class CMSController extends Controller
         $types = Gallery::with('images', 'videos')->select('id', 'type')->get();
 
         return view('gallery.remove', compact('types'));
+    }
+
+    public function popupAdd()
+    {
+        $popup = Popup::findOrFail(1);
+
+        return view('popup.index', compact('popup'));
     }
 
     public function updateCarousel(Request $request)
@@ -507,6 +515,35 @@ class CMSController extends Controller
                     }
 
                     $video->delete();
+                }
+            });
+
+            return redirect()->back()->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function savePopup(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+
+                $popup = Popup::findOrFail(1);
+                $popup->isEnabled = $request->input('isEnabled') ?? false;
+                $popup->save();
+
+                if ($request->hasFile('image')) {
+                    $imageFile = $request->file('image');
+
+                    if (Storage::disk('public')->exists(path: 'popup/'.$popup->getRawOriginal('imagePath'))) {
+                        Storage::disk('public')->delete('popup/'.$popup->getRawOriginal('imagePath'));
+                    }
+
+                    $sanitizedName = 'popup'.'.'.$imageFile->getClientOriginalExtension();
+                    $imageFile->storeAs('popup', $sanitizedName, 'public');
+                    $popup->imagePath = $sanitizedName;
+                    $popup->save();
                 }
             });
 

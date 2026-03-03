@@ -1,11 +1,11 @@
 import AboutSection from '@/components/home/AboutSection';
+import FavoriteProperties from "@/components/home/FavoriteProperties";
 import FeaturedProperties from '@/components/home/FeaturedProperties';
 import HeroImageCollage from '@/components/home/HeroImageCollage';
 import SearchSection from '@/components/home/SearchSection';
 import SisterCompanies from '@/components/home/SisterCompanies';
 import TestimonialsSection from '@/components/home/TestimonialsSection';
 import AppLayout from '@/layouts/AppLayout';
-import FavoriteProperties from "@/components/home/FavoriteProperties";
 
 const Home = () => {
     return (
