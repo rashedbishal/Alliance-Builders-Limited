@@ -130,9 +130,9 @@ class CMSController extends Controller
 
         if ($request->hasFile('image')) {
             $imageFile = $request->file('image');
-            $request->validate([
-                'image' => 'required|image|mimes:webp|max:250',
-            ]);
+//             $request->validate([
+//                 'image' => 'required|image|mimes:webp|max:250',
+//             ]);
             try {
                 DB::transaction(function () use ($request, $imageFile) {
                     $sanitizedName = '';
