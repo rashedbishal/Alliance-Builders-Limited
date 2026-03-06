@@ -2,79 +2,96 @@ import { Link, router, usePage } from '@inertiajs/react';
 import type { ReactNode } from 'react';
 import { useState, useEffect } from 'react';
 import { route } from 'ziggy-js';
+
 interface Props {
-  children: ReactNode;
-  title?: string;
-  breadcrumb?: string;
+    children: ReactNode;
+    title?: string;
+    breadcrumb?: string;
 }
 
 interface AuthUser {
-  name: string;
+    name: string;
 }
 
 interface PageProps {
-  auth: { user: AuthUser };
-  flash?: { success?: string; error?: string };
+    auth: { user: AuthUser };
+    flash?: { success?: string; error?: string };
 }
 
 function NavIcon({ children }: { children: ReactNode }) {
-  return (
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8"
-      style={{ width: 16, height: 16, flexShrink: 0 }}>
-      {children}
-    </svg>
-  );
+    return (
+        <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.8"
+            style={{ width: 16, height: 16, flexShrink: 0 }}
+        >
+            {children}
+        </svg>
+    );
 }
 
-export default function CMSLayout({ children, title = 'CMS', breadcrumb = 'Dashboard' }: Props) {
-  const { auth } = usePage<PageProps>().props;
-    const { flash } = usePage().props;
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
-  const [toast, setToast] = useState<{ message: string; type: 'success' | 'error' } | null>(null);
+export default function CMSLayout({
+    children,
+    title = 'CMS',
+    breadcrumb = 'Dashboard',
+}: Props) {
+    // @ts-ignore
+    const { auth, flash } = usePage<PageProps>().props;
+    const [sidebarOpen, setSidebarOpen] = useState(false);
+    const [openMenus, setOpenMenus] = useState<Record<string, boolean>>({});
+    const [toast, setToast] = useState<{
+        message: string;
+        type: 'success' | 'error';
+    } | null>(null);
 
-  const currentRoute = (name: string) => {
-    try { return route().current(name); } catch { return false; }
-  };
+    const currentRoute = (name: string) => {
+        try {
+            return route().current(name);
+        } catch {
+            return false;
+        }
+    };
 
-  // Auto-open active submenu
-  useEffect(() => {
-    const menus: Record<string, boolean> = {};
-    if (currentRoute('gallery-*')) menus['gallery'] = true;
-    if (currentRoute('media-*')) menus['media'] = true;
-    if (currentRoute('project-*')) menus['project'] = true;
-    setOpenMenus(menus);
-  }, []);
+    // Auto-open active submenu
+    useEffect(() => {
+        const menus: Record<string, boolean> = {};
+        if (currentRoute('gallery-*')) menus['gallery'] = true;
+        if (currentRoute('media-*')) menus['media'] = true;
+        if (currentRoute('project-*')) menus['project'] = true;
+        setOpenMenus(menus);
+    }, []);
 
-  // Flash toast
-  useEffect(() => {
-    if (flash?.success) {
-      setToast({ message: flash.success, type: 'success' });
-    } else if (flash?.error) {
-      setToast({ message: flash.error, type: 'error' });
-    }
-  }, [flash]);
+    // Flash toast
+    useEffect(() => {
+        if (flash?.success) {
+            setToast({ message: flash.success, type: 'success' });
+        } else if (flash?.error) {
+            setToast({ message: flash.error, type: 'error' });
+        }
+    }, [flash]);
 
-  useEffect(() => {
-    if (!toast) return;
-    const t = setTimeout(() => setToast(null), 3000);
-    return () => clearTimeout(t);
-  }, [toast]);
+    useEffect(() => {
+        if (!toast) return;
+        const t = setTimeout(() => setToast(null), 3000);
+        return () => clearTimeout(t);
+    }, [toast]);
 
-  const toggleMenu = (key: string) => {
-    setOpenMenus(prev => {
-      const isOpen = prev[key];
-      const next: Record<string, boolean> = {};
-      if (!isOpen) next[key] = true;
-      return next;
-    });
-  };
+    const toggleMenu = (key: string) => {
+        setOpenMenus((prev) => {
+            const isOpen = prev[key];
+            const next: Record<string, boolean> = {};
+            if (!isOpen) next[key] = true;
+            return next;
+        });
+    };
 
-  const userInitials = (auth?.user?.name ?? 'AB').slice(0, 2).toUpperCase();
+    const userInitials = (auth?.user?.name ?? 'AB').slice(0, 2).toUpperCase();
 
-  return (
-    <>
-      <style>{`
+    return (
+        <>
+            <style>{`
         :root {
           --gold: #C9A84C;
           --gold-light: #E8C97A;
@@ -262,184 +279,383 @@ export default function CMSLayout({ children, title = 'CMS', breadcrumb = 'Dashb
         }
       `}</style>
 
-      <link
-        href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
-        rel="stylesheet"
-      />
+            <link
+                href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;600;700&family=DM+Sans:wght@300;400;500;600&display=swap"
+                rel="stylesheet"
+            />
 
-      {/* Mobile Overlay */}
-      <div
-        className={`cms-overlay${sidebarOpen ? ' active' : ''}`}
-        onClick={() => setSidebarOpen(false)}
-      />
+            {/* Mobile Overlay */}
+            <div
+                className={`cms-overlay ${sidebarOpen ? 'active' : ''}`}
+                onClick={() => setSidebarOpen(false)}
+            />
 
-      {/* Sidebar */}
-      <aside className={`cms-sidebar${sidebarOpen ? ' open' : ''}`}>
-        <div style={{ padding: '28px 24px 20px', borderBottom: '1px solid var(--border)', flexShrink: 0 }}>
-          <h1 style={{ fontSize: '1.1rem', color: 'var(--gold)', lineHeight: 1.2 }}>Alliance Builders</h1>
-          <p style={{ fontSize: '0.7rem', color: 'var(--muted)', letterSpacing: '0.15em', textTransform: 'uppercase', marginTop: 4 }}>
-            Content Management System
-          </p>
-        </div>
+            {/* Sidebar */}
+            <aside className={`cms-sidebar ${sidebarOpen ? 'open' : ''}`}>
+                <div
+                    style={{
+                        padding: '28px 24px 20px',
+                        borderBottom: '1px solid var(--border)',
+                        flexShrink: 0,
+                    }}
+                >
+                    <h1
+                        style={{
+                            fontSize: '1.1rem',
+                            color: 'var(--gold)',
+                            lineHeight: 1.2,
+                        }}
+                    >
+                        Alliance Builders
+                    </h1>
+                    <p
+                        style={{
+                            fontSize: '0.7rem',
+                            color: 'var(--muted)',
+                            letterSpacing: '0.15em',
+                            textTransform: 'uppercase',
+                            marginTop: 4,
+                        }}
+                    >
+                        Content Management System
+                    </p>
+                </div>
 
-        <nav style={{ padding: '16px 0', flex: 1 }}>
-          <div style={{ padding: '16px 24px 6px', fontSize: '0.65rem', letterSpacing: '0.12em', textTransform: 'uppercase', color: 'var(--muted)', opacity: 0.6 }}>
-            Management
-          </div>
+                <nav style={{ padding: '16px 0', flex: 1 }}>
+                    <div
+                        style={{
+                            padding: '16px 24px 6px',
+                            fontSize: '0.65rem',
+                            letterSpacing: '0.12em',
+                            textTransform: 'uppercase',
+                            color: 'var(--muted)',
+                            opacity: 0.6,
+                        }}
+                    >
+                        Management
+                    </div>
 
-          {/* Carousel Banner */}
-          <div>
-            <Link
-              href={route('dashboard')}
-              className={`nav-link-base${currentRoute('dashboard') ? ' nav-link-active' : ''}`}
-            >
-              <NavIcon><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M17 12H7M12 7l5 5-5 5"/></NavIcon>
-              Carousel Banner
-            </Link>
-          </div>
+                    {/* Carousel Banner */}
+                    <div>
+                        <Link
+                            href={route('dashboard')}
+                            className={`nav-link-base ${currentRoute('dashboard') ? 'nav-link-active' : ''}`}
+                        >
+                            <NavIcon>
+                                <rect
+                                    x="2"
+                                    y="6"
+                                    width="20"
+                                    height="12"
+                                    rx="2"
+                                />
+                                <path d="M17 12H7M12 7l5 5-5 5" />
+                            </NavIcon>
+                            Carousel Banner
+                        </Link>
+                    </div>
 
-          {/* Gallery */}
-          <div>
-            <button
-              className={`nav-link-base${currentRoute('gallery-*') ? ' nav-link-active' : ''}`}
-              onClick={() => toggleMenu('gallery')}
-            >
-              <NavIcon><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="8.5" cy="8.5" r="1.5"/><path d="M21 15l-5-5L5 21"/></NavIcon>
-              Gallery Image
-              <svg
-                style={{ marginLeft: 'auto', width: 14, height: 14, transition: 'transform 0.25s', transform: openMenus['gallery'] ? 'rotate(90deg)' : 'none' }}
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              >
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-            <div className={`submenu${openMenus['gallery'] ? ' open' : ''}`}>
-              <Link href={route('gallery-add')} className={`submenu-link${currentRoute('gallery-add') ? ' submenu-link-active' : ''}`}>Add Image</Link>
-              <Link href={route('gallery-erase')} className={`submenu-link${currentRoute('gallery-erase') ? ' submenu-link-active' : ''}`}>Remove Image</Link>
+                    {/* Gallery */}
+                    <div>
+                        <button
+                            className={`nav-link-base ${currentRoute('gallery-*') ? 'nav-link-active' : ''}`}
+                            onClick={() => toggleMenu('gallery')}
+                        >
+                            <NavIcon>
+                                <rect
+                                    x="3"
+                                    y="3"
+                                    width="18"
+                                    height="18"
+                                    rx="2"
+                                />
+                                <circle cx="8.5" cy="8.5" r="1.5" />
+                                <path d="M21 15l-5-5L5 21" />
+                            </NavIcon>
+                            Gallery Image
+                            <svg
+                                style={{
+                                    marginLeft: 'auto',
+                                    width: 14,
+                                    height: 14,
+                                    transition: 'transform 0.25s',
+                                    transform: openMenus['gallery']
+                                        ? 'rotate(90deg)'
+                                        : 'none',
+                                }}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
+                        <div
+                            className={`submenu ${openMenus['gallery'] ? 'open' : ''}`}
+                        >
+                            <Link
+                                href={route('gallery-add')}
+                                className={`submenu-link ${currentRoute('gallery-add') ? 'submenu-link-active' : ''}`}
+                            >
+                                Add Image
+                            </Link>
+                            <Link
+                                href={route('gallery-erase')}
+                                className={`submenu-link ${currentRoute('gallery-erase') ? 'submenu-link-active' : ''}`}
+                            >
+                                Remove Image
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Media Coverage */}
+                    <div>
+                        <button
+                            className={`nav-link-base ${currentRoute('media-*') ? 'nav-link-active' : ''}`}
+                            onClick={() => toggleMenu('media')}
+                        >
+                            <NavIcon>
+                                <path d="M4 6h16M4 10h16M4 14h10" />
+                                <circle cx="18" cy="17" r="3" />
+                                <path d="M20.2 19.2L22 21" />
+                            </NavIcon>
+                            Media Coverage
+                            <svg
+                                style={{
+                                    marginLeft: 'auto',
+                                    width: 14,
+                                    height: 14,
+                                    transition: 'transform 0.25s',
+                                    transform: openMenus['media']
+                                        ? 'rotate(90deg)'
+                                        : 'none',
+                                }}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
+                        <div
+                            className={`submenu ${openMenus['media'] ? 'open' : ''}`}
+                        >
+                            <Link
+                                href={route('media-add')}
+                                className={`submenu-link ${currentRoute('media-add') ? 'submenu-link-active' : ''}`}
+                            >
+                                Add Image
+                            </Link>
+                            <Link
+                                href={route('media-erase')}
+                                className={`submenu-link ${currentRoute('media-erase') ? 'submenu-link-active' : ''}`}
+                            >
+                                Remove Image
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Project Info */}
+                    <div>
+                        <button
+                            className={`nav-link-base ${currentRoute('project-*') ? 'nav-link-active' : ''}`}
+                            onClick={() => toggleMenu('project')}
+                        >
+                            <NavIcon>
+                                <path d="M3 21h18M9 21V9l3-6 3 6v12M5 21V12l-2-2M19 21V12l2-2" />
+                                <path d="M9 12h6" />
+                            </NavIcon>
+                            Project Info
+                            <svg
+                                style={{
+                                    marginLeft: 'auto',
+                                    width: 14,
+                                    height: 14,
+                                    transition: 'transform 0.25s',
+                                    transform: openMenus['project']
+                                        ? 'rotate(90deg)'
+                                        : 'none',
+                                }}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
+                        <div
+                            className={`submenu ${openMenus['project'] ? 'open' : ''}`}
+                        >
+                            <Link
+                                href={route('project-add')}
+                                className={`submenu-link ${currentRoute('project-add') ? 'submenu-link-active' : ''}`}
+                            >
+                                Add Project
+                            </Link>
+                            <Link
+                                href={route('project-update')}
+                                className={`submenu-link ${currentRoute('project-update') ? 'submenu-link-active' : ''}`}
+                            >
+                                Update Project
+                            </Link>
+                            <Link
+                                href={route('project-erase')}
+                                className={`submenu-link ${currentRoute('project-erase') ? 'submenu-link-active' : ''}`}
+                            >
+                                Remove Project
+                            </Link>
+                        </div>
+                    </div>
+
+                    {/* Pop-up Settings */}
+                    <div>
+                        <Link
+                            href={route('popup-add')}
+                            className={`nav-link-base ${currentRoute('popup-add') ? 'nav-link-active' : ''}`}
+                        >
+                            <NavIcon>
+                                <rect
+                                    x="2"
+                                    y="6"
+                                    width="20"
+                                    height="12"
+                                    rx="2"
+                                />
+                                <path d="M17 12H7M12 7l5 5-5 5" />
+                            </NavIcon>
+                            Pop-up Settings
+                        </Link>
+                    </div>
+                </nav>
+
+                {/* Logout */}
+                <div
+                    style={{
+                        marginTop: 'auto',
+                        padding: '20px 24px',
+                        borderTop: '1px solid var(--border)',
+                        flexShrink: 0,
+                    }}
+                >
+                    <button
+                        onClick={() => router.post(route('logout'))}
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 10,
+                            width: '100%',
+                            padding: '10px 16px',
+                            borderRadius: 8,
+                            background: 'rgba(255,80,80,0.08)',
+                            border: '1px solid rgba(255,80,80,0.2)',
+                            color: '#FF8080',
+                            fontSize: '0.82rem',
+                            fontWeight: 500,
+                            cursor: 'pointer',
+                            fontFamily: "'DM Sans', sans-serif",
+                        }}
+                    >
+                        <svg
+                            width="16"
+                            height="16"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
+                            <polyline points="16 17 21 12 16 7" />
+                            <line x1="21" y1="12" x2="9" y2="12" />
+                        </svg>
+                        Logout
+                    </button>
+                </div>
+            </aside>
+
+            {/* Main */}
+            <div className="cms-main" style={{ marginLeft: 280 }}>
+                {/* Topbar */}
+                <header className="cms-topbar">
+                    <button
+                        className="menu-toggle-btn"
+                        style={{
+                            display: 'none',
+                            background: 'none',
+                            border: 'none',
+                            color: 'var(--text)',
+                            cursor: 'pointer',
+                        }}
+                        onClick={() => setSidebarOpen((v) => !v)}
+                    >
+                        <svg
+                            width="22"
+                            height="22"
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        >
+                            <line x1="3" y1="6" x2="21" y2="6" />
+                            <line x1="3" y1="12" x2="21" y2="12" />
+                            <line x1="3" y1="18" x2="21" y2="18" />
+                        </svg>
+                    </button>
+                    <div
+                        style={{
+                            fontSize: '0.8rem',
+                            color: 'var(--muted)',
+                            flex: 1,
+                        }}
+                    >
+                        Dashboard /{' '}
+                        <span style={{ color: 'var(--gold)' }}>
+                            {breadcrumb}
+                        </span>
+                    </div>
+                    <div
+                        style={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 10,
+                        }}
+                    >
+                        <div
+                            style={{
+                                width: 34,
+                                height: 34,
+                                borderRadius: '50%',
+                                background:
+                                    'linear-gradient(135deg,var(--gold),#8A5A00)',
+                                display: 'flex',
+                                alignItems: 'center',
+                                justifyContent: 'center',
+                                fontSize: '0.75rem',
+                                fontWeight: 700,
+                                color: '#0F1117',
+                            }}
+                        >
+                            {userInitials}
+                        </div>
+                    </div>
+                </header>
+
+                {/* Page Content */}
+                <div className="page-content">{children}</div>
             </div>
-          </div>
 
-          {/* Media Coverage */}
-          <div>
-            <button
-              className={`nav-link-base${currentRoute('media-*') ? ' nav-link-active' : ''}`}
-              onClick={() => toggleMenu('media')}
-            >
-              <NavIcon><path d="M4 6h16M4 10h16M4 14h10"/><circle cx="18" cy="17" r="3"/><path d="M20.2 19.2L22 21"/></NavIcon>
-              Media Coverage
-              <svg
-                style={{ marginLeft: 'auto', width: 14, height: 14, transition: 'transform 0.25s', transform: openMenus['media'] ? 'rotate(90deg)' : 'none' }}
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              >
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-            <div className={`submenu${openMenus['media'] ? ' open' : ''}`}>
-              <Link href={route('media-add')} className={`submenu-link${currentRoute('media-add') ? ' submenu-link-active' : ''}`}>Add Image</Link>
-              <Link href={route('media-erase')} className={`submenu-link${currentRoute('media-erase') ? ' submenu-link-active' : ''}`}>Remove Image</Link>
-            </div>
-          </div>
+            {/* Flash Toast */}
+            {toast && (
+                <div
+                    className={`flash-toast ${toast.type === 'success' ? 'flash-success' : 'flash-error'}`}
+                >
+                    {toast.type === 'success' ? '✅' : '❌'} {toast.message}
+                </div>
+            )}
 
-          {/* Project Info */}
-          <div>
-            <button
-              className={`nav-link-base${currentRoute('project-*') ? ' nav-link-active' : ''}`}
-              onClick={() => toggleMenu('project')}
-            >
-              <NavIcon><path d="M3 21h18M9 21V9l3-6 3 6v12M5 21V12l-2-2M19 21V12l2-2"/><path d="M9 12h6"/></NavIcon>
-              Project Info
-              <svg
-                style={{ marginLeft: 'auto', width: 14, height: 14, transition: 'transform 0.25s', transform: openMenus['project'] ? 'rotate(90deg)' : 'none' }}
-                viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2"
-              >
-                <path d="M9 18l6-6-6-6"/>
-              </svg>
-            </button>
-            <div className={`submenu${openMenus['project'] ? ' open' : ''}`}>
-              <Link href={route('project-add')} className={`submenu-link${currentRoute('project-add') ? ' submenu-link-active' : ''}`}>Add Project</Link>
-              <Link href={route('project-update')} className={`submenu-link${currentRoute('project-update') ? ' submenu-link-active' : ''}`}>Update Project</Link>
-              <Link href={route('project-erase')} className={`submenu-link${currentRoute('project-erase') ? ' submenu-link-active' : ''}`}>Remove Project</Link>
-            </div>
-          </div>
-
-          {/* Pop-up Settings */}
-          <div>
-            <Link
-              href={route('popup-add')}
-              className={`nav-link-base${currentRoute('popup-add') ? ' nav-link-active' : ''}`}
-            >
-              <NavIcon><rect x="2" y="6" width="20" height="12" rx="2"/><path d="M17 12H7M12 7l5 5-5 5"/></NavIcon>
-              Pop-up Settings
-            </Link>
-          </div>
-        </nav>
-
-        {/* Logout */}
-        <div style={{ marginTop: 'auto', padding: '20px 24px', borderTop: '1px solid var(--border)', flexShrink: 0 }}>
-          <button
-            onClick={() => router.post(route('logout'))}
-            style={{
-              display: 'flex', alignItems: 'center', gap: 10, width: '100%',
-              padding: '10px 16px', borderRadius: 8,
-              background: 'rgba(255,80,80,0.08)', border: '1px solid rgba(255,80,80,0.2)',
-              color: '#FF8080', fontSize: '0.82rem', fontWeight: 500,
-              cursor: 'pointer', fontFamily: "'DM Sans', sans-serif",
-            }}
-          >
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/>
-              <polyline points="16 17 21 12 16 7"/>
-              <line x1="21" y1="12" x2="9" y2="12"/>
-            </svg>
-            Logout
-          </button>
-        </div>
-      </aside>
-
-      {/* Main */}
-      <div className="cms-main" style={{ marginLeft: 280 }}>
-        {/* Topbar */}
-        <header className="cms-topbar">
-          <button
-            className="menu-toggle-btn"
-            style={{ display: 'none', background: 'none', border: 'none', color: 'var(--text)', cursor: 'pointer' }}
-            onClick={() => setSidebarOpen(v => !v)}
-          >
-            <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2">
-              <line x1="3" y1="6" x2="21" y2="6"/>
-              <line x1="3" y1="12" x2="21" y2="12"/>
-              <line x1="3" y1="18" x2="21" y2="18"/>
-            </svg>
-          </button>
-          <div style={{ fontSize: '0.8rem', color: 'var(--muted)', flex: 1 }}>
-            Dashboard / <span style={{ color: 'var(--gold)' }}>{breadcrumb}</span>
-          </div>
-          <div style={{ display: 'flex', alignItems: 'center', gap: 10 }}>
-            <div style={{
-              width: 34, height: 34, borderRadius: '50%',
-              background: 'linear-gradient(135deg,var(--gold),#8A5A00)',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontSize: '0.75rem', fontWeight: 700, color: '#0F1117',
-            }}>
-              {userInitials}
-            </div>
-          </div>
-        </header>
-
-        {/* Page Content */}
-        <div className="page-content">
-          {children}
-        </div>
-      </div>
-
-      {/* Flash Toast */}
-      {toast && (
-        <div className={`flash-toast ${toast.type === 'success' ? 'flash-success' : 'flash-error'}`}>
-          {toast.type === 'success' ? '✅' : '❌'} {toast.message}
-        </div>
-      )}
-
-      <title>{title} — Alliance Builders Limited</title>
-    </>
-  );
+            <title>{title} — Alliance Builders Limited</title>
+        </>
+    );
 }
