@@ -15,6 +15,7 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('project/update', 'projectUpdate')->name('project-update');
     Route::get('cms/projects/by-type', 'projectByType')->name('project-by-type');
     Route::get('cms/projects/{id}/data', 'projectData')->name('project-data');
+    Route::post('project/image/destroy', 'destroyProjectImage')->name('destroy-project-image');
     Route::post('update/project', 'updateProject')->name('update-project');
 
     Route::get('project/erase', 'projectErase')->name('project-erase');

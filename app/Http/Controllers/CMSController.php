@@ -294,9 +294,7 @@ class CMSController extends Controller
 
                 if ($request->hasFile('thumbnail')) {
 
-                    if (Storage::disk('public')->exists(path: 'properties/propertyThumbs'.'/'.$project->image->path)) {
-                        Storage::disk('public')->delete('properties/propertyThumbs'.'/'.$project->image->path);
-                    }
+                    Storage::disk('public')->delete("properties/propertyThumbs/{$project->image->getRawOriginal('path')}");
 
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
@@ -339,6 +337,35 @@ class CMSController extends Controller
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
 
+    }
+
+    public function destroyProjectImage(Request $request)
+    {
+        try {
+            DB::transaction(function () use ($request) {
+                $image = ProjectImage::with('project')->findOrFail($request->input('image_id'));
+
+                $storagePath = match ($image->project->project_type_id) {
+                    1 => 'properties/handoverProject',
+                    2 => 'properties/ongoingProject',
+                    3 => 'properties/upcomingProject',
+                    4 => 'properties/hotelsResorts',
+                    default => 'properties/projectImages',
+                };
+
+                $filename = $image->getRawOriginal('image');
+
+                if (Storage::disk('public')->exists($storagePath . '/' . $filename)) {
+                    Storage::disk('public')->delete($storagePath . '/' . $filename);
+                }
+
+                $image->delete();
+            });
+
+            return response()->json(['success' => true]);
+        } catch (\Exception $e) {
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 500);
+        }
     }
 
     public function destroyProject(Request $request)

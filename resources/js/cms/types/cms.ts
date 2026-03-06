@@ -84,28 +84,33 @@ export interface ProjectDetails {
   youtube_video_id?: string;
 }
 
+export interface ProjectImage {
+    id: number;
+    image: string; // full path e.g. "storage/properties/handoverProject/file.jpg"
+}
+
 export interface Project {
-  id: number;
-  name: string;
-  address?: string;
-  google_map_url?: string;
-  floors?: string;
-  size?: string;
-  description?: string;
-  surroundings?: string;
-  price?: number;
-  construction_start_date?: string;
-  handover_date?: string;
-  isFeatured?: boolean;
-  project_id: string;
-  project_type_id: number;
-  location_id: number;
-  slug: string;
-  details?: ProjectDetails;
-  tags?: Tag[];
-  facilities?: Facility[];
-  location?: Location;
-  projectType?: ProjectType;
-  image?: { path: string };
-  projectImages?: { id: number; image: string }[];
+    id: number;
+    name: string;
+    address?: string;
+    google_map_url?: string;
+    floors?: string;
+    size?: string;
+    description?: string;
+    surroundings?: string;
+    price?: number;
+    construction_start_date?: string;
+    handover_date?: string;
+    isFeatured?: boolean;
+    project_id: string;
+    project_type_id: number;
+    location_id: number;
+    slug: string;
+    details?: ProjectDetails;
+    tags?: Tag[];
+    facilities?: Facility[];
+    location?: Location;
+    projectType?: ProjectType;
+    image?: { path: string };
+    project_images?: ProjectImage[];
 }
