@@ -36,6 +36,26 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('popup/add', 'popupAdd')->name('popup-add');
     Route::post('save/popup', 'savePopup')->name('save-popup');
 
+        // ── Facility Config ──────────────────────────────────────────
+    Route::get('facility/add',    'facilityAdd')->name('facility-add');
+    Route::post('facility/store', 'facilityStore')->name('facility-store');
+
+    Route::get('facility/update',  'facilityUpdate')->name('facility-update');
+    Route::post('facility/update', 'facilityUpdateStore')->name('facility-update-store');
+
+    Route::get('facility/delete',  'facilityDelete')->name('facility-delete');
+    Route::post('facility/destroy','facilityDestroy')->name('facility-destroy');
+
+    // ── Tag Config ───────────────────────────────────────────────
+    Route::get('tag/add',    'tagAdd')->name('tag-add');
+    Route::post('tag/store', 'tagStore')->name('tag-store');
+
+    Route::get('tag/update',  'tagUpdate')->name('tag-update');
+    Route::post('tag/update', 'tagUpdateStore')->name('tag-update-store');
+
+    Route::get('tag/delete',  'tagDelete')->name('tag-delete');
+    Route::post('tag/destroy','tagDestroy')->name('tag-destroy');
+
 });
 
 require __DIR__.'/settings.php';

@@ -60,6 +60,7 @@ export default function CMSLayout({
         if (currentRoute('gallery-*')) menus['gallery'] = true;
         if (currentRoute('media-*')) menus['media'] = true;
         if (currentRoute('project-*')) menus['project'] = true;
+        if (currentRoute('facility-*') || currentRoute('tag-*')) menus['config'] = true;
         setOpenMenus(menus);
     }, []);
 
@@ -132,7 +133,7 @@ export default function CMSLayout({
         .nav-link-active { color: var(--gold) !important; border-left-color: var(--gold) !important; background: rgba(201,168,76,0.08) !important; }
 
         .submenu { overflow: hidden; max-height: 0; transition: max-height 0.3s ease; }
-        .submenu.open { max-height: 200px; }
+        .submenu.open { max-height: 400px; }
 
         .submenu-link {
           display: flex; align-items: center; gap: 10px;
@@ -528,6 +529,96 @@ export default function CMSLayout({
                             </NavIcon>
                             Pop-up Settings
                         </Link>
+                    </div>
+                    <div>
+                        <button
+                            className={`nav-link-base ${currentRoute('facility-*') || currentRoute('tag-*') ? 'nav-link-active' : ''}`}
+                            onClick={() => toggleMenu('config')}
+                        >
+                            <NavIcon>
+                                <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" />
+                                <path d="M12 8v4l3 3" />
+                            </NavIcon>
+                            Project Configuration
+                            <svg
+                                style={{
+                                    marginLeft: 'auto',
+                                    width: 14,
+                                    height: 14,
+                                    transition: 'transform 0.25s',
+                                    transform: openMenus['config'] ? 'rotate(90deg)' : 'none',
+                                }}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
+                        <div className={`submenu ${openMenus['config'] ? 'open' : ''}`}>
+
+                            {/* Facility Config sub-group label */}
+                            <div style={{
+                                padding: '8px 24px 4px 52px',
+                                fontSize: '0.65rem',
+                                letterSpacing: '0.1em',
+                                textTransform: 'uppercase',
+                                color: 'var(--muted)',
+                                opacity: 0.5,
+                            }}>
+                                Facility Config
+                            </div>
+                            <Link
+                                href={route('facility-add')}
+                                className={`submenu-link ${currentRoute('facility-add') ? 'submenu-link-active' : ''}`}
+                            >
+                                Add Facility
+                            </Link>
+                            <Link
+                                href={route('facility-update')}
+                                className={`submenu-link ${currentRoute('facility-update') ? 'submenu-link-active' : ''}`}
+                            >
+                                Update Facility
+                            </Link>
+                            <Link
+                                href={route('facility-delete')}
+                                className={`submenu-link ${currentRoute('facility-delete') ? 'submenu-link-active' : ''}`}
+                            >
+                                Delete Facility
+                            </Link>
+
+                            {/* Tag Config sub-group label */}
+                            <div style={{
+                                padding: '8px 24px 4px 52px',
+                                fontSize: '0.65rem',
+                                letterSpacing: '0.1em',
+                                textTransform: 'uppercase',
+                                color: 'var(--muted)',
+                                opacity: 0.5,
+                                marginTop: 4,
+                            }}>
+                                Tag Config
+                            </div>
+                            <Link
+                                href={route('tag-add')}
+                                className={`submenu-link ${currentRoute('tag-add') ? 'submenu-link-active' : ''}`}
+                            >
+                                Add Tag
+                            </Link>
+                            <Link
+                                href={route('tag-update')}
+                                className={`submenu-link ${currentRoute('tag-update') ? 'submenu-link-active' : ''}`}
+                            >
+                                Update Tag
+                            </Link>
+                            <Link
+                                href={route('tag-delete')}
+                                className={`submenu-link ${currentRoute('tag-delete') ? 'submenu-link-active' : ''}`}
+                            >
+                                Delete Tag
+                            </Link>
+                        </div>
                     </div>
                 </nav>
 

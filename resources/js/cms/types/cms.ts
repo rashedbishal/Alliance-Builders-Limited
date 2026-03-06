@@ -65,10 +65,11 @@ export interface Facility {
 }
 
 export interface Tag {
-  id: number;
-  name: string;
+    id: number;
+    name: string;
+    slug?: string;
+    description?: string;
 }
-
 export interface ProjectDetails {
   apartment_size?: string;
   bedroom?: string;

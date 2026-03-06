@@ -572,4 +572,133 @@ class CMSController extends Controller
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
+
+    public function facilityAdd()
+    {
+        return Inertia::render('cms/facility/Add', [
+            'facilities' => Facility::orderBy('name')->get(),
+        ]);
+    }
+
+    public function facilityStore(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+        ]);
+
+        Facility::create(['name' => $request->name]);
+
+        return redirect()->route('facility-add')
+            ->with('success', 'Facility added successfully.');
+    }
+
+    public function facilityUpdate()
+    {
+        return Inertia::render('cms/facility/Update', [
+            'facilities' => Facility::orderBy('name')->get(),
+        ]);
+    }
+
+    public function facilityUpdateStore(Request $request)
+    {
+        $request->validate([
+            'id'   => 'required|exists:facilities,id',
+            'name' => 'required|string|max:255',
+        ]);
+
+        Facility::findOrFail($request->id)->update(['name' => $request->name]);
+
+        return redirect()->route('facility-update')
+            ->with('success', 'Facility updated successfully.');
+    }
+
+    public function facilityDelete()
+    {
+        return Inertia::render('cms/facility/Delete', [
+            'facilities' => Facility::orderBy('name')->get(),
+        ]);
+    }
+
+    public function facilityDestroy(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:facilities,id',
+        ]);
+
+        Facility::findOrFail($request->id)->delete();
+
+        return redirect()->route('facility-delete')
+            ->with('success', 'Facility deleted successfully.');
+    }
+
+
+// ═══════════════════════════════════════════════════════════════
+// TAG CONFIG
+// ═══════════════════════════════════════════════════════════════
+
+    public function tagAdd()
+    {
+        return Inertia::render('cms/tag/Add', [
+            'tags' => Tag::orderBy('name')->get(),
+        ]);
+    }
+
+    public function tagStore(Request $request)
+    {
+        $request->validate([
+            'name'        => 'required|string|max:255|unique:tags,name',
+            'description' => 'nullable|string|max:1048',
+        ]);
+
+        Tag::create([
+            'name'        => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('tag-add')
+            ->with('success', 'Tag added successfully.');
+    }
+
+    public function tagUpdate()
+    {
+        return Inertia::render('cms/tag/Update', [
+            'tags' => Tag::orderBy('name')->get(),
+        ]);
+    }
+
+    public function tagUpdateStore(Request $request)
+    {
+        $request->validate([
+            'id'          => 'required|exists:tags,id',
+            'name'        => 'required|string|max:255|unique:tags,name,' . $request->id,
+            'description' => 'nullable|string|max:1048',
+        ]);
+
+        Tag::findOrFail($request->id)->update([
+            'name'        => $request->name,
+            'description' => $request->description,
+        ]);
+
+        return redirect()->route('tag-update')
+            ->with('success', 'Tag updated successfully.');
+    }
+
+    public function tagDelete()
+    {
+        return Inertia::render('cms/tag/Delete', [
+            'tags' => Tag::orderBy('name')->get(),
+        ]);
+    }
+
+    public function tagDestroy(Request $request)
+    {
+        $request->validate([
+            'id' => 'required|exists:tags,id',
+        ]);
+
+        Tag::findOrFail($request->id)->delete();
+
+        return redirect()->route('tag-delete')
+            ->with('success', 'Tag deleted successfully.');
+    }
 }

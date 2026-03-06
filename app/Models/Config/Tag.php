@@ -2,6 +2,7 @@
 
 namespace App\Models\Config;
 
+use App\Concerns\HasProjects;
 use App\Models\Properties\Project;
 use Illuminate\Database\Eloquent\Casts\Attribute;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
@@ -12,8 +13,8 @@ use Illuminate\Support\Str;
 
 class Tag extends Model
 {
-    use HasFactory;
-    protected $fillable = ['name'];
+    use HasFactory, HasProjects;
+    protected $fillable = ['name', 'description'];
     public function getRouteKeyName()
     {
         return 'slug';
