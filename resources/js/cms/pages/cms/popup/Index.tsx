@@ -16,7 +16,7 @@ export default function PopupIndex({ popup }: Props) {
 
   const currentImage = popup.imagePath
     ? `/storage/popup/${popup.imagePath}`
-    : popup.image?.path ?? null;
+    : null;
 
   const [preview, setPreview] = useState<string | null>(currentImage);
   const [enabled, setEnabled] = useState(popup.isEnabled);
@@ -78,7 +78,7 @@ export default function PopupIndex({ popup }: Props) {
           <div className="form-row cols-2" style={{ alignItems: 'start' }}>
             <div className="form-group">
               <label>Popup Image</label>
-              <div className="img-uploader" onClick={() => fileRef.current?.click()}>
+              <div className="img-uploader">
                 <input
                   ref={fileRef}
                   type="file"

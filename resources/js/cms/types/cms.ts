@@ -47,7 +47,6 @@ export interface Popup {
   id: number;
   isEnabled: boolean;
   imagePath?: string;
-  image?: { path: string };
 }
 
 export interface ProjectType {
