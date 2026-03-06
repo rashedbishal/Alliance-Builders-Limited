@@ -48,6 +48,10 @@ class HandleInertiaRequests extends Middleware
             'popupImgUrl' => function () {
                 return \App\Models\Releases\Popup::value('imagePath') ?? false;
             },
+            'flash' => [
+                'success' => fn () => $request->session()->get('success'),
+                'error'   => fn () => $request->session()->get('error'),
+            ],
         ];
     }
 }

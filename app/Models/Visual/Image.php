@@ -46,12 +46,12 @@ class Image extends Model
             } elseif ($type == 'media') {
                 $path = 'storage/media/';
             } elseif ($type == 'popup') {
-                $path = 'images/popup/';
+                $path = 'storage/popup/';
             }
         }
 
         return Attribute::make(
-            get: fn ($value) => $path.$value,
+            get: fn ($value) => $value ? asset($path.$value) : null,
             set: fn ($value) => $value,
         );
     }
@@ -64,11 +64,6 @@ class Image extends Model
     public function mediaCoverage(): MorphTo
     {
         return $this->morphTo(MediaCoverage::class, 'imageable_type', 'imageable_id', 'id');
-    }
-
-    public function popup(): MorphTo
-    {
-        return $this->morphTo(Popup::class, 'imageable_type', 'imageable_id', 'id');
     }
 
     public function project(): MorphTo

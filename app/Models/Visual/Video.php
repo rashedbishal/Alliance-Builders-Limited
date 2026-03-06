@@ -50,7 +50,7 @@ class Video extends Model
         }
 
         return Attribute::make(
-            get: fn ($value) => $path.$value,
+            get: fn ($value) => $value ? asset($path . $value) : null,
             set: fn ($value) => $value,
         );
     }

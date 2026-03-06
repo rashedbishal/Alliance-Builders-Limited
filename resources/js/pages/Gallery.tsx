@@ -49,7 +49,6 @@ const Gallery = () => {
     const [selectedMedia, setSelectedMedia] = useState<{ type: 'video' | 'image'; src: string; title: string } | null>(null);
     const [activeGallery, setActiveGallery] = useState<GalleryType>('handover');
     const {galleries} = usePage<{ galleries: Galleries[] }>().props;
-    console.log(galleries);
 
     // mapping backend data to frontend type
     const typeMap: Record<string, GalleryType> = {
@@ -67,13 +66,13 @@ const Gallery = () => {
 
             acc[key] = {
                 videos: gallery.videos.map((vid) => ({
-                    src: `/${vid.path}`, // IMPORTANT: prepend slash
+                    src: `${vid.path}`, // IMPORTANT: prepend slash
                     title: vid.title ?? gallery.type,
                     date: new Date(vid.created_at).toLocaleDateString(),
                     description: vid.description,
                 })),
                 images: gallery.images.map((img) => ({
-                    src: `/${img.path}`, // IMPORTANT: prepend slash
+                    src: `${img.path}`, // IMPORTANT: prepend slash
                     title: img.title ?? gallery.type,
                     date: new Date(img.created_at).toLocaleDateString(),
                     description: img.description,
@@ -107,6 +106,7 @@ const Gallery = () => {
     ];
 
     const currentContent = galleryContent[activeGallery] || { images: [], videos: [] };
+
 
     return (
         <AppLayout>

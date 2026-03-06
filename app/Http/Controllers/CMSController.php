@@ -19,12 +19,15 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Inertia\Inertia;
 
 class CMSController extends Controller
 {
     public function carousel()
     {
-        return view('carousel.index');
+//        return view('carousel.index');
+        $carousels = Carousel::select('id', 'property_name', 'description', 'image')->get();
+        return Inertia::render('cms/carousel/Index', ['carousels' => $carousels]);
     }
 
     public function projectAdd()
@@ -34,7 +37,8 @@ class CMSController extends Controller
         $facilities = Facility::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
 
-        return view('project.add', compact('types', 'locations', 'facilities', 'tags'));
+//        return view('project.add', compact('types', 'locations', 'facilities', 'tags'));
+        return Inertia::render('cms/project/Add', compact('types', 'locations', 'facilities', 'tags'));
     }
 
     public function projectUpdate()
@@ -45,7 +49,8 @@ class CMSController extends Controller
         $tags = Tag::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
 
-        return view('project.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
+//        return view('project.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
+        return Inertia::render('cms/project/Update', compact('types', 'locations', 'facilities', 'tags'));
     }
 
     public function projectByType(Request $request)
@@ -65,40 +70,46 @@ class CMSController extends Controller
         $types = ProjectType::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
 
-        return view('project.remove', compact('types', 'projects'));
+//        return view('project.remove', compact('types', 'projects'));
+        return Inertia::render('cms/project/Remove', compact('types'));
     }
 
     public function mediaAdd()
     {
-        return view('media.add');
+//        return view('media.add');
+        return Inertia::render('cms/media/Add');
     }
 
     public function mediaErase()
     {
         $mediaItems = MediaCoverage::with('image')->paginate(7);
 
-        return view('media.remove', compact('mediaItems'));
+//        return view('media.remove', compact('mediaItems'));
+        return Inertia::render('cms/media/Remove', compact('mediaItems'));
     }
 
     public function galleryAdd()
     {
         $types = Gallery::select('id', 'type')->get();
 
-        return view('gallery.add', compact('types'));
+//        return view('gallery.add', compact('types'));
+        return Inertia::render('cms/gallery/Add', compact('types'));
     }
 
     public function galleryErase()
     {
         $types = Gallery::with('images', 'videos')->select('id', 'type')->get();
 
-        return view('gallery.remove', compact('types'));
+//        return view('gallery.remove', compact('types'));
+        return Inertia::render('cms/gallery/Remove', compact('types'));
     }
 
     public function popupAdd()
     {
         $popup = Popup::findOrFail(1);
 
-        return view('popup.index', compact('popup'));
+//        return view('popup.index', compact('popup'));
+        return Inertia::render('cms/popup/Index', compact('popup'));
     }
 
     public function updateCarousel(Request $request)
@@ -128,45 +139,27 @@ class CMSController extends Controller
         $carouselData->description = $request->input('description') ?? ' ';
         $carouselData->save();
 
-        if ($request->hasFile('image')) {
-            $imageFile = $request->file('image');
-//            $request->validate([
-//                'image' => 'required|image|mimes:webp|max:250',
-//            ]);
-            try {
-                DB::transaction(function () use ($request, $imageFile) {
-                    $sanitizedName = '';
-                    switch ($request->input('position')) {
-                        case '1':
-                            $sanitizedName = 'carousel-image-1'.'.'.$imageFile->getClientOriginalExtension();
-                            break;
-                        case '2':
-                            $sanitizedName = 'carousel-image-2'.'.'.$imageFile->getClientOriginalExtension();
-                            break;
-                        case '3':
-                            $sanitizedName = 'carousel-image-3'.'.'.$imageFile->getClientOriginalExtension();
-                            break;
-                        case '4':
-                            $sanitizedName = 'carousel-image-4'.'.'.$imageFile->getClientOriginalExtension();
-                            break;
-                        case '5':
-                            $sanitizedName = 'carousel-image-5'.'.'.$imageFile->getClientOriginalExtension();
-                            break;
-                        default:
-                            abort(500);
-                    }
+        try {
 
-                    if (Storage::disk('public')->exists('home/carousel'.'/'.$sanitizedName)) {
-                        Storage::disk('public')->delete('home/carousel'.'/'.$sanitizedName);
-                    }
+            if ($request->hasFile('image')) {
+                $imageFile = $request->file('image');
 
-                    $imageFile->storeAs('home/carousel', $sanitizedName, 'public');
-                });
+                $sanitizedName = "carousel-image-{$request->input('position')}.".$imageFile->getClientOriginalExtension();
 
-                return redirect()->route('dashboard')->with('success', 'Operation Successful');
-            } catch (\Exception $e) {
-                return redirect()->route('dashboard')->with('error', 'Operation Failed: '.$e->getMessage());
+                Storage::disk('public')->delete("home/carousel/{$sanitizedName}"); // safe even if missing
+
+                $imageFile->storeAs('/home/carousel', $sanitizedName, 'public');
+
+                // IMPORTANT: store only filename because model accessor adds the path
+                $carouselData->image = $sanitizedName;
             }
+
+
+            $carouselData->save();
+
+            return redirect()->route('dashboard')->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->route('dashboard')->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
 
@@ -393,7 +386,7 @@ class CMSController extends Controller
 
                 if ($request->hasFile('image')) {
                     $imageFile = $request->file('image');
-                    $sanitizedName = Str::slug($media->media_title).'-thumbnail.'.$imageFile->getClientOriginalExtension();
+                    $sanitizedName = Str::slug($media->media_title).'-'.uniqid().'.'.$imageFile->getClientOriginalExtension();
                     $imageFile->storeAs('media', $sanitizedName, 'public');
 
                     $image = new Image;
@@ -435,7 +428,7 @@ class CMSController extends Controller
             DB::transaction(function () use ($request) {
                 if ($request->hasFile('gallery_content')) {
                     $imageFile = $request->file('gallery_content');
-                    $sanitizedName = uniqid().'.'.$imageFile->getClientOriginalExtension();
+                    $sanitizedName = uniqid() .'.'.$imageFile->getClientOriginalExtension();
 
                     if ($request->input('media_type') == '1') {
                         $storagePath = match ($request->input('gallery_type')) {

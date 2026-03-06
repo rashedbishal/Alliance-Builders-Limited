@@ -1,0 +1,201 @@
+import { useState, useRef } from 'react';
+import { useForm } from '@inertiajs/react';
+import CMSLayout from '@/cms/layouts/CMSLayout';
+import { GalleryType } from '@/cms/types/cms';
+import { route } from 'ziggy-js';
+
+interface Props {
+  types: GalleryType[];
+}
+
+export default function GalleryAdd({ types }: Props) {
+  const { data, setData, post, processing, errors, reset } = useForm({
+    gallery_type: '',
+    media_type: '',
+    title: '',
+    description: '',
+    gallery_content: null as File | null,
+  });
+
+  const [preview, setPreview] = useState<{ url: string; type: 'image' | 'video' } | null>(null);
+  const [fileTypeText, setFileTypeText] = useState('JPG, PNG, WEBP · Max 10MB');
+  const [uploadLabel, setUploadLabel] = useState('Upload Image');
+  const fileRef = useRef<HTMLInputElement>(null);
+
+  const handleMediaTypeChange = (val: string) => {
+    setData('media_type', val);
+    setPreview(null);
+    if (fileRef.current) fileRef.current.value = '';
+    if (val === '1') {
+      setUploadLabel('Upload Image');
+      setFileTypeText('JPG, PNG, WEBP · Max 10MB');
+      fileRef.current?.setAttribute('accept', 'image/*');
+    } else if (val === '2') {
+      setUploadLabel('Upload Video');
+      setFileTypeText('MP4, MOV, AVI · Max 50MB');
+      fileRef.current?.setAttribute('accept', 'video/*');
+    }
+  };
+
+  const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
+    if (!file) return;
+    setData('gallery_content', file);
+    const url = URL.createObjectURL(file);
+    if (file.type.startsWith('image/')) setPreview({ url, type: 'image' });
+    else if (file.type.startsWith('video/')) setPreview({ url, type: 'video' });
+  };
+
+    const handleReset = () => {
+        if (preview?.url) {
+            URL.revokeObjectURL(preview.url);
+        }
+
+        reset();
+        setPreview(null);
+        setFileTypeText('JPG, PNG, WEBP · Max 10MB');
+        setUploadLabel('Upload Image');
+
+        if (fileRef.current) {
+            fileRef.current.value = '';
+            fileRef.current.setAttribute('accept', 'image/*');
+        }
+    };
+
+  const handleSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+      post(route('save-gallery'), {
+          forceFormData: true,
+          preserveScroll: true,
+          onSuccess: () => {
+              handleReset();
+          },
+      });
+  };
+
+  return (
+    <CMSLayout title="Add Gallery Image" breadcrumb="Gallery Image Management / Add Image">
+      <div className="page-header">
+        <h2>Add Gallery Image</h2>
+        <p>Upload a new image to the gallery</p>
+        <div className="gold-line" />
+      </div>
+
+      <div className="section-card">
+        <div className="section-title">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8">
+            <path d="M12 5v14M5 12h14"/>
+          </svg>
+          Image Details
+        </div>
+
+        <form onSubmit={handleSubmit}>
+          <div className="form-row cols-2">
+            <div className="form-group">
+              <label>Gallery Type <span style={{ color: '#FF8080' }}>*</span></label>
+              <select
+                value={data.gallery_type}
+                onChange={e => setData('gallery_type', e.target.value)}
+                className="h-10"
+              >
+                <option value="" disabled>Select Gallery Type</option>
+                {types.map(t => (
+                  <option key={t.id} value={t.id}>{t.type}</option>
+                ))}
+              </select>
+              {errors.gallery_type && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.gallery_type}</p>}
+            </div>
+
+            <div className="form-group">
+              <label>Media Type <span style={{ color: '#FF8080' }}>*</span></label>
+              <select
+                value={data.media_type}
+                onChange={e => handleMediaTypeChange(e.target.value)}
+                className="h-10"
+              >
+                <option value="" disabled>Select Media Type</option>
+                <option value="1">Image</option>
+                <option value="2">Video</option>
+              </select>
+              {errors.media_type && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.media_type}</p>}
+            </div>
+          </div>
+
+          <div className="form-group">
+            <label>Title <span style={{ color: '#FF8080' }}>*</span></label>
+            <input
+              type="text"
+              value={data.title}
+              onChange={e => setData('title', e.target.value)}
+              placeholder="Enter image title..."
+            />
+            {errors.title && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.title}</p>}
+          </div>
+
+          <div className="form-group">
+            <label>Description</label>
+            <textarea
+              value={data.description}
+              onChange={e => setData('description', e.target.value)}
+              placeholder="Enter image description..."
+            />
+          </div>
+
+          <div className="form-row cols-2" style={{ alignItems: 'start' }}>
+            <div className="form-group">
+              <label>
+                {uploadLabel} <span style={{ color: '#FF8080' }}>*</span>
+              </label>
+              <div className="img-uploader">
+                <input
+                  ref={fileRef}
+                  type="file"
+                  accept="image/*"
+                  className="uploader-input"
+                  onChange={handleFile}
+                />
+                <div style={{ fontSize: '2rem', marginBottom: 8, pointerEvents: 'none' }}>🖼️</div>
+                <p style={{ fontSize: '0.8rem', color: 'var(--muted)', pointerEvents: 'none' }}>
+                  Drag & drop or <span style={{ color: 'var(--gold)' }}>browse</span>
+                </p>
+                <p style={{ marginTop: 4, fontSize: '0.72rem', color: 'var(--muted)', pointerEvents: 'none' }}>
+                  {fileTypeText}
+                </p>
+              </div>
+              {errors.gallery_content && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.gallery_content}</p>}
+            </div>
+
+            <div className="form-group">
+              <label>Preview</label>
+              <div className="preview-box" style={{ height: 185 }}>
+                {preview?.type === 'image' && (
+                  <img src={preview.url} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} alt="preview" />
+                )}
+                {preview?.type === 'video' && (
+                  <video controls style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}>
+                    <source src={preview.url} />
+                    Your browser does not support video.
+                  </video>
+                )}
+                {!preview && (
+                  <div style={{ color: 'var(--muted)', fontSize: '0.78rem', textAlign: 'center', padding: 20 }}>
+                    📷<br/>No content selected
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+
+          <div style={{ display: 'flex', gap: 12, marginTop: 8 }}>
+            <button type="submit" className="btn-primary" disabled={processing}>
+              {processing ? 'Uploading...' : 'Upload Content'}
+            </button>
+            <button type="button" className="btn-secondary" onClick={handleReset}>
+              Reset
+            </button>
+          </div>
+        </form>
+      </div>
+    </CMSLayout>
+  );
+}

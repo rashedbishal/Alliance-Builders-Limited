@@ -9,13 +9,13 @@ use Illuminate\Database\Eloquent\Model;
 class Carousel extends Model
 {
     use HasFactory;
-    private $path = 'storage/home/carousel/';
+    private $path = '/storage/home/carousel/';
 
-    protected function image() : Attribute
+    protected function image(): Attribute
     {
         return Attribute::make(
-            get: fn($value) => $this->path.$value,
-            set: fn($value) => $value,
+            get: fn ($value) => $value ? asset('storage/home/carousel/'.$value) : null,
+            set: fn ($value) => $value,
         );
     }
 }

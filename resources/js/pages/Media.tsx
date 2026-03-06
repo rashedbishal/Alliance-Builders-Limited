@@ -30,9 +30,6 @@ const Media = () => {
     const featuredContent = contents.find((content) => content.isFeatured) || contents[0];
     // const featuredContent = featuredContentArray[0];
 
-    console.log("Contents", contents);
-    console.log("featured content", featuredContent);
-
     return (
         <AppLayout>
             <div className="min-h-screen bg-background">
