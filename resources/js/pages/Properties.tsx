@@ -71,7 +71,25 @@ const Properties = () => {
     // Handle case where projects is undefined
     const projectList = projects || [];
 
+    const isHotelProject = (project: ProjectThumb) => {
+        const typeId =
+            (project as any).project_type_id ??
+            (project as any).projectType?.id ??
+            null;
+
+        return typeId === 4;
+    };
+
+    const hotelProjects = projectList.filter((project) => isHotelProject(project));
+    const nonHotelProjects = projectList.filter(
+        (project) => !isHotelProject(project),
+    );
+
+    console.log('nonHotelProjects', nonHotelProjects);
+    console.log('hotelProjects', hotelProjects);
+
     const pageUrl = usePage().url;
+
     //
     const queryParams = new URLSearchParams(pageUrl.split('?')[1] || '');
 
@@ -110,7 +128,8 @@ const Properties = () => {
 
     // Filter properties based on active tab and search
     const filteredProperties = useMemo(() => {
-        let filtered = projectList;
+        const isHotelsRoute = url === '/hotels-resorts';
+        let filtered = isHotelsRoute ? hotelProjects : nonHotelProjects;
 
         // Filter by tab (All, Favorites, Upcoming, Ongoing, Handover)
         if (activeTab === 'favorites') {
@@ -146,7 +165,15 @@ const Properties = () => {
         }
 
         return filtered;
-    }, [projectList, activeTab, searchTerm, favorites, locationFilter]);
+    }, [
+        nonHotelProjects,
+        hotelProjects,
+        activeTab,
+        searchTerm,
+        favorites,
+        locationFilter,
+        url,
+    ]);
 
     return (
         <AppLayout>
@@ -232,44 +259,49 @@ const Properties = () => {
                                 <div className="mb-12 flex justify-center">
                                     <TabsList className="grid h-auto w-full max-w-4xl grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
                                         <TabsTrigger value="all">
-                                            All ({projectList.length})
-                                        </TabsTrigger>
-                                        <TabsTrigger value="upcoming">
-                                            Upcoming (
-                                            {
-                                                projectList.filter(
-                                                    (p) =>
-                                                        (p as any).project_type
-                                                            ?.name ===
-                                                        'Upcoming',
-                                                ).length
-                                            }
+                                            All (
+                                            {url === '/hotels-resorts'
+                                                ? hotelProjects.length
+                                                : nonHotelProjects.length}
                                             )
                                         </TabsTrigger>
-                                        <TabsTrigger value="ongoing">
-                                            Ongoing (
-                                            {
-                                                projectList.filter(
-                                                    (p) =>
-                                                        (p as any).project_type
-                                                            ?.name ===
-                                                        'Ongoing',
-                                                ).length
-                                            }
-                                            )
-                                        </TabsTrigger>
-                                        <TabsTrigger value="handover">
-                                            Handover (
-                                            {
-                                                projectList.filter(
-                                                    (p) =>
-                                                        (p as any).project_type
-                                                            ?.name ===
-                                                        'Handover',
-                                                ).length
-                                            }
-                                            )
-                                        </TabsTrigger>
+                                        {url !== '/hotels-resorts' && (
+                                            <>
+                                                <TabsTrigger value="upcoming">
+                                                    Upcoming (
+                                                    {nonHotelProjects.filter(
+                                                        (p) =>
+                                                            (p as any)
+                                                                .project_type
+                                                                ?.name ===
+                                                            'Upcoming',
+                                                    ).length}
+                                                    )
+                                                </TabsTrigger>
+                                                <TabsTrigger value="ongoing">
+                                                    Ongoing (
+                                                    {nonHotelProjects.filter(
+                                                        (p) =>
+                                                            (p as any)
+                                                                .project_type
+                                                                ?.name ===
+                                                            'Ongoing',
+                                                    ).length}
+                                                    )
+                                                </TabsTrigger>
+                                                <TabsTrigger value="handover">
+                                                    Handover (
+                                                    {nonHotelProjects.filter(
+                                                        (p) =>
+                                                            (p as any)
+                                                                .project_type
+                                                                ?.name ===
+                                                            'Handover',
+                                                    ).length}
+                                                    )
+                                                </TabsTrigger>
+                                            </>
+                                        )}
                                         <TabsTrigger value="favorites">
                                             Favorites ({favorites.length})
                                         </TabsTrigger>
