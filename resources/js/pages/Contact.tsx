@@ -84,23 +84,13 @@ const Contact = () => {
                                     <CardContent className="p-8">
                                         <h2 className="mb-6 text-3xl font-bold text-primary">Send Us a Message</h2>
                                         <form className="space-y-6">
-                                            <div className="grid grid-cols-1 gap-6 md:grid-cols-2">
-                                                <div>
-                                                    <label className="mb-2 block text-sm font-medium">First Name</label>
-                                                    <input
-                                                        type="text"
-                                                        className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                        placeholder="John"
-                                                    />
-                                                </div>
-                                                <div>
-                                                    <label className="mb-2 block text-sm font-medium">Last Name</label>
-                                                    <input
-                                                        type="text"
-                                                        className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                        placeholder="Doe"
-                                                    />
-                                                </div>
+                                            <div>
+                                                <label className="mb-2 block text-sm font-medium">Full Name</label>
+                                                <input
+                                                    type="text"
+                                                    className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
+                                                    placeholder="John"
+                                                />
                                             </div>
                                             <div>
                                                 <label className="mb-2 block text-sm font-medium">Email Address</label>
@@ -119,17 +109,9 @@ const Contact = () => {
                                                 />
                                             </div>
                                             <div>
-                                                <label className="mb-2 block text-sm font-medium">Subject</label>
-                                                <input
-                                                    type="text"
-                                                    className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                    placeholder="How can we help you?"
-                                                />
-                                            </div>
-                                            <div>
                                                 <label className="mb-2 block text-sm font-medium">Message</label>
                                                 <textarea
-                                                    rows={6}
+                                                    rows={10}
                                                     className="w-full resize-none rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
                                                     placeholder="Tell us more about what you're looking for..."
                                                 ></textarea>
