@@ -59,11 +59,13 @@ const PropertyCard = ({
                         <div className="absolute -top-[200%] -left-[200%] w-[200px] h-[400%] bg-gradient-to-r from-white/0 via-white/10 via-white/20 via-white/30 via-white/40 via-white/50 via-white/60 via-white/50 via-white/40 via-white/30 via-white/20 via-white/10 to-white/0 rotate-45 pointer-events-none transition-all ease-in-out group-hover:top-full group-hover:left-full z-50" style={{ transitionDuration: '900ms' }}></div>
 
                         {/* Background Image */}
-                        <img
-                            src={property.image.path}
-                            alt={property.name}
-                            className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                        />
+                        {property.image?.path && (
+                            <img
+                                src={property.image.path}
+                                alt={property.name}
+                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
+                            />
+                        )}
 
                         {/* Gradient Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20"></div>

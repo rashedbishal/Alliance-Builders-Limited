@@ -91,15 +91,108 @@ const Navbar = () => {
         {label: 'Favorites', href: '/properties?tab=favorites', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>},
     ];
 
+    const hotelsResortsItems = [
+        {
+            label: 'All Hotels & Resorts',
+            href: '/hotels-resorts',
+            icon: (
+                <svg
+                    className="h-full w-full"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M3 22V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14" />
+                    <path d="M7 22V10h10v12" />
+                    <path d="M9 13h1" />
+                    <path d="M14 13h1" />
+                    <path d="M9 16h1" />
+                    <path d="M14 16h1" />
+                </svg>
+            ),
+        },
+        {
+            label: 'Beach Resorts',
+            href: '/hotels-resorts/beach',
+            icon: (
+                <svg
+                    className="h-full w-full"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M3 20c4-2 6-2 10 0s6 2 8 0" />
+                    <path d="M4 16c3-2 5-2 9 0s6 2 7 1" />
+                    <path d="M12 3v7" />
+                    <path d="M9 6h6" />
+                </svg>
+            ),
+        },
+        {
+            label: 'City Hotels',
+            href: '/hotels-resorts/city',
+            icon: (
+                <svg
+                    className="h-full w-full"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M3 22V7l6-3 6 3v15" />
+                    <path d="M9 22V12h6v10" />
+                    <path d="M7 10h.01" />
+                    <path d="M17 10h.01" />
+                    <path d="M7 13h.01" />
+                    <path d="M17 13h.01" />
+                </svg>
+            ),
+        },
+        {
+            label: 'Luxury Collection',
+            href: '/hotels-resorts/luxury',
+            icon: (
+                <svg
+                    className="h-full w-full"
+                    viewBox="0 0 24 24"
+                    fill="none"
+                    stroke="currentColor"
+                    strokeWidth="2"
+                    strokeLinecap="round"
+                    strokeLinejoin="round"
+                >
+                    <path d="M3 7l4 3 5-7 5 7 4-3" />
+                    <path d="M5 10v8h14v-8" />
+                    <path d="M7 18v3" />
+                    <path d="M17 18v3" />
+                </svg>
+            ),
+        },
+    ];
+
     const contactItems = [
         {label: 'Customer Inquiry', href: contact.url(), icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" className="h-4" fill="currentColor" aria-hidden="true"><path d="m32.991 24.801h46.908l-25.624 20.122c-.543.426-1.189.634-1.775.691-.59-.058-1.238-.266-1.787-.691l-18.312-14.385c-.194-.156-.413-.275-.654-.349.862-1.216 1.354-2.687 1.328-4.272-.005-.363-.037-.737-.084-1.116zm-11.929-12.941c.059.01.156.047.367.145.417.198 1.08.708 1.729 1.419 1.307 1.424 2.613 3.581 3.291 5.005.021.042.043.088.063.135 1.924 3.301 2.754 5.826 2.779 7.41.027 1.591-.4 2.276-1.749 3.051l-3.48 2.006c-2.267 1.305-3.338 3.644-3.604 5.826-.267 2.183.126 4.304 1.097 5.981l8.59 14.805c.973 1.676 2.634 3.078 4.665 3.939 2.033.863 4.604 1.107 6.871-.195l3.48-2.002c1.348-.773 2.163-.789 3.532.025 1.373.816 3.156 2.787 5.072 6.09.027.049.053.09.084.137.898 1.295 2.121 3.492 2.711 5.332.293.914.408 1.74.371 2.197-.041.459-.051.412-.172.484l-2.648 1.518c-6.652 2.885-12.749 2.234-18.198-.592-5.459-2.838-10.204-7.963-13.512-13.98-.011-.012-.016-.027-.025-.035l-7.246-12.488c-.012-.012-.017-.023-.027-.039-3.585-5.86-5.674-12.513-5.412-18.634.262-6.112 2.742-11.684 8.584-15.971l2.649-1.513c.061-.035.081-.062.138-.056zm.027-3.721c-.701-.011-1.416.136-2.059.509l-2.801 1.611c-.063.036-.121.073-.178.109-6.739 4.932-9.842 11.798-10.145 18.875-.303 7.074 2.059 14.375 5.961 20.758l7.222 12.445-.017-.037c3.605 6.551 8.771 12.234 15.084 15.508 6.316 3.279 13.84 4.039 21.504.697.063-.027.127-.057.184-.092l2.805-1.611c1.297-.738 1.949-2.174 2.055-3.428.109-1.25-.146-2.467-.533-3.666-.758-2.371-2.08-4.674-3.172-6.254-2.063-3.549-4.055-6.012-6.357-7.389-2.32-1.383-5.105-1.363-7.377-.057l-3.48 2.006c-1.028.592-2.23.523-3.495-.012-1.259-.535-2.425-1.605-2.858-2.355l-8.59-14.804c-.434-.754-.789-2.292-.621-3.648.162-1.352.711-2.411 1.74-3.004l3.381-1.944c.088.453.344.864.715 1.14l18.313 14.388c1.191.936 2.602 1.457 4.023 1.539.072.004.146.004.219 0 1.422-.082 2.826-.604 4.018-1.539l25.222-19.814v32.734c0 .498-.568 1.154-1.682 1.154h-17.461c-1.051-.006-1.902.842-1.902 1.887 0 1.043.852 1.891 1.902 1.885h17.461c2.854 0 5.477-2.063 5.477-4.926v-34.849c0-2.865-2.623-4.927-5.477-4.927h-48.218c-.534-1.335-1.239-2.75-2.127-4.288-.831-1.73-2.179-4.017-3.866-5.856-.852-.932-1.771-1.758-2.92-2.292v.005c-.571-.27-1.25-.443-1.95-.458z"/></svg>},
     ];
 
     // Mobile submenu component
+    type MobileSubmenuItem = {
+        label: string;
+        href: string;
+        icon?: React.ReactNode;
+    };
+
     const MobileSubmenu = ({title, icon, items, delay}: {
         title: string;
         icon: React.ReactNode;
-        items: typeof projectItems;
+        items: MobileSubmenuItem[];
         delay: number
     }) => {
         const isOpen = openMobileSubmenu === title;
@@ -288,127 +381,261 @@ const Navbar = () => {
                         </DropdownMenu>
                     </div>
 
-                    {/* Media */}
-                    <Link href={media.url()} className="nav-link group">
-                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                            <svg
-                                className="h-3"
-                                xmlns="http://www.w3.org/2000/svg"
-                                viewBox="0 0 682.667 682.667"
-                            >
-                                <defs>
-                                    <clipPath id="b">
-                                        <rect
-                                            x="0"
-                                            y="0"
-                                            width="512"
-                                            height="512"
-                                        />
-                                    </clipPath>
-                                </defs>
-
-                                <g
-                                    clip-path="url(#b)"
-                                    transform="matrix(1.33333 0 0 -1.33333 0 682.667)"
-                                    fill="none"
-                                    stroke="#000"
-                                    stroke-width="15"
-                                    stroke-linecap="round"
-                                    stroke-linejoin="round"
-                                    stroke-miterlimit="10"
-                                    stroke-dasharray="none"
-                                    stroke-opacity="1"
+                    {/* Media & Gallery Dropdown */}
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setOpenMenu('mediaGallery')}
+                        onMouseLeave={() => setOpenMenu(null)}
+                    >
+                        <DropdownMenu
+                            open={openMenu === 'mediaGallery'}
+                            onOpenChange={(open) =>
+                                handleDropdownChange('mediaGallery', open)
+                            }
+                        >
+                            <DropdownMenuTrigger asChild>
+                                <Button
+                                    variant="ghost"
+                                    className="nav-link group"
                                 >
-                                    <path
-                                        d="M0 0c0-137.243-111.257-248.5-248.5-248.5S-497-137.243-497 0s111.257 248.5 248.5 248.5S0 137.243 0 0"
-                                        transform="translate(504.5 256)"
-                                    />
-                                    <path
-                                        d="M0 0c57.703 24.81 121.613 38.599 188.86 38.599 67.278 0 131.216-13.802 188.94-38.634"
-                                        transform="translate(67.14 97.159)"
-                                    />
-                                    <path
-                                        d="M0 0h56.113"
-                                        transform="translate(448.387 256)"
-                                    />
-                                    <path
-                                        d="M0 0h56.113"
-                                        transform="translate(7.5 256)"
-                                    />
-                                    <path
-                                        d="M0 0v-168.341"
-                                        transform="translate(256 175.84)"
-                                    />
-                                    <path
-                                        d="M0 0v-168.337"
-                                        transform="translate(256 504.5)"
-                                    />
-                                    <path
-                                        d="M0 0c-57.703-24.81-121.613-38.599-188.86-38.599-67.278 0-131.216 13.802-188.94 38.634"
-                                        transform="translate(444.94 414.841)"
-                                    />
-                                    <path
-                                        d="M0 0c-8.12 20.834-14.585 44.225-19.017 69.438"
-                                        transform="translate(153.58 106.4)"
-                                    />
-                                    <path
-                                        d="M0 0c-17.212-97.91-65.08-168.338-121.438-168.338-34.147 0-65.177 25.853-88.16 68.009"
-                                        transform="translate(377.438 175.838)"
-                                    />
-                                    <path
-                                        d="M0 0c8.166-20.899 14.666-44.377 19.116-69.693"
-                                        transform="translate(358.322 405.855)"
-                                    />
-                                    <path
-                                        d="M0 0c17.212 97.909 65.08 168.337 121.438 168.337 34.166 0 65.213-25.885 88.2-68.084"
-                                        transform="translate(134.562 336.163)"
-                                    />
-                                    <path
-                                        d="M0 0h-335.643c-13.567 0-24.565 10.999-24.565 24.566v111.191c0 13.567 10.998 24.566 24.565 24.566H0c13.567 0 24.566-10.999 24.566-24.566V24.566C24.566 10.999 13.567 0 0 0"
-                                        transform="translate(423.821 175.839)"
-                                    />
-                                    <path
-                                        d="M0 0h-48.097v64.129H0"
-                                        transform="translate(236.46 223.935)"
-                                    />
-                                    <path
-                                        d="M0 0h-40.081"
-                                        transform="translate(230.449 256)"
-                                    />
-                                    <path
-                                        d="M0 0v64.129L48.097 0v64.129"
-                                        transform="translate(110.207 223.935)"
-                                    />
-                                    <path
-                                        d="m0 0-18.036-64.129L-36.073 0l-18.036-64.129L-72.145 0"
-                                        transform="translate(334.408 288.065)"
-                                    />
-                                    <path
-                                        d="M0 0c0-7.748 10.767-14.028 24.048-14.028 13.282 0 24.049 6.28 24.049 14.028 0 10.02-9.619 14.028-24.049 18.036C9.62 22.044 0 26.052 0 36.073c0 7.747 10.767 14.028 24.048 14.028 13.282 0 24.049-6.281 24.049-14.028"
-                                        transform="translate(358.707 237.964)"
-                                    />
-                                </g>
-                            </svg>
-                            Media
-                        </span>
-                    </Link>
+                <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                    <svg
+                        className="h-3"
+                        xmlns="http://www.w3.org/2000/svg"
+                        viewBox="0 0 24 24"
+                    >
+                        <path
+                            d="M4 5h16v14H4z"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="2"
+                        />
+                        <circle cx="8" cy="9" r="1.5" />
+                        <path d="M21 15l-5-5L5 21" />
+                    </svg>
 
-                    {/* Gallery */}
-                    <Link href={gallery.url()} className="nav-link group">
-                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                            <svg
-                                className="h-3"
-                                viewBox="0 0 24 24"
-                                xmlns="http://www.w3.org/2000/svg"
-                            >
-                                <path
-                                    d="M15 1.25H9C3.567 1.25 1.25 3.568 1.25 9v6c0 5.432 2.317 7.75 7.75 7.75h6c5.433 0 7.75-2.318 7.75-7.75V9c0-5.432-2.317-7.75-7.75-7.75M21.25 15c0 4.614-1.636 6.25-6.25 6.25H9c-2.757 0-4.444-.591-5.361-2.045l4.373-2.934a1.49 1.49 0 0 1 1.733.084l.333.286a2.976 2.976 0 0 0 3.8 0l4.161-3.57a1.48 1.48 0 0 1 1.846 0l1.367 1.173zm0-2.733-.391-.335a2.976 2.976 0 0 0-3.8 0L12.9 15.5a1.48 1.48 0 0 1-1.844 0l-.333-.286a2.98 2.98 0 0 0-3.546-.191L3.048 17.8a11.2 11.2 0 0 1-.3-2.8V9C2.75 4.386 4.386 2.75 9 2.75h6c4.614 0 6.25 1.636 6.25 6.25zM9 5.25A2.75 2.75 0 1 0 11.75 8 2.75 2.75 0 0 0 9 5.25m0 4A1.25 1.25 0 1 1 10.25 8 1.25 1.25 0 0 1 9 9.25"
-                                    data-name="1"
-                                />
-                            </svg>
-                            Gallery
-                        </span>
-                    </Link>
+                    Media & Gallery
+
+                    <ChevronDown
+                        className={`h-4 transition-transform duration-300 ${
+                            openMenu === 'mediaGallery'
+                                ? 'rotate-180'
+                                : 'rotate-0'
+                        }`}
+                    />
+                </span>
+                                </Button>
+                            </DropdownMenuTrigger>
+
+                            <DropdownMenuContent className="dropdown-content">
+
+                                <DropdownMenuItem className="dropdown-item">
+                                    <Link
+                                        href={media.url()}
+                                        className="flex w-full items-center gap-2"
+                                    >
+                                        Media Coverage
+                                    </Link>
+                                </DropdownMenuItem>
+
+                                <DropdownMenuItem className="dropdown-item">
+                                    <Link
+                                        href={gallery.url()}
+                                        className="flex w-full items-center gap-2"
+                                    >
+                                        Photos & Videos
+                                    </Link>
+                                </DropdownMenuItem>
+
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
+                    {/* Hotels & Resorts Dropdown (hardcoded URLs for now) */}
+                    <div
+                        className="relative"
+                        onMouseEnter={() => setOpenMenu('hotelsResorts')}
+                        onMouseLeave={() => setOpenMenu(null)}
+                    >
+                        <DropdownMenu
+                            open={openMenu === 'hotelsResorts'}
+                            onOpenChange={(open) =>
+                                handleDropdownChange('hotelsResorts', open)
+                            }
+                        >
+                            <DropdownMenuTrigger asChild>
+                                <Button variant="ghost" className="nav-link group">
+                                    <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                        <svg
+                                            className="h-3"
+                                            viewBox="0 0 24 24"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
+                                            strokeLinecap="round"
+                                            strokeLinejoin="round"
+                                        >
+                                            <path d="M7 22V10h10v12" />
+                                            <path d="M5 10l7-7 7 7" />
+                                            <path d="M4 22h16" />
+                                        </svg>
+                                        Hotels &amp; Resorts
+                                        <ChevronDown
+                                            className={`h-4 transition-transform duration-300 ${
+                                                openMenu === 'hotelsResorts'
+                                                    ? 'rotate-180'
+                                                    : 'rotate-0'
+                                            }`}
+                                        />
+                                    </span>
+                                </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent className="dropdown-content">
+                                {hotelsResortsItems.map((item) => (
+                                    <DropdownMenuItem
+                                        key={item.label}
+                                        className="dropdown-item"
+                                    >
+                                        <Link
+                                            href={item.href}
+                                            className="flex w-full items-center justify-between gap-2"
+                                        >
+                                            <span className="flex items-center gap-2">
+                                                {item.icon && (
+                                                    <span className="h-4 w-4 flex-shrink-0">
+                                                        {item.icon}
+                                                    </span>
+                                                )}
+                                                {item.label}
+                                            </span>
+                                        </Link>
+                                    </DropdownMenuItem>
+                                ))}
+                            </DropdownMenuContent>
+                        </DropdownMenu>
+                    </div>
+
+                    {/* Media */}
+                    {/*<Link href={media.url()} className="nav-link group">*/}
+                    {/*    <span className="inline-flex items-center gap-1 transition-transform duration-300">*/}
+                    {/*        <svg*/}
+                    {/*            className="h-3"*/}
+                    {/*            xmlns="http://www.w3.org/2000/svg"*/}
+                    {/*            viewBox="0 0 682.667 682.667"*/}
+                    {/*        >*/}
+                    {/*            <defs>*/}
+                    {/*                <clipPath id="b">*/}
+                    {/*                    <rect*/}
+                    {/*                        x="0"*/}
+                    {/*                        y="0"*/}
+                    {/*                        width="512"*/}
+                    {/*                        height="512"*/}
+                    {/*                    />*/}
+                    {/*                </clipPath>*/}
+                    {/*            </defs>*/}
+
+                    {/*            <g*/}
+                    {/*                clip-path="url(#b)"*/}
+                    {/*                transform="matrix(1.33333 0 0 -1.33333 0 682.667)"*/}
+                    {/*                fill="none"*/}
+                    {/*                stroke="#000"*/}
+                    {/*                stroke-width="15"*/}
+                    {/*                stroke-linecap="round"*/}
+                    {/*                stroke-linejoin="round"*/}
+                    {/*                stroke-miterlimit="10"*/}
+                    {/*                stroke-dasharray="none"*/}
+                    {/*                stroke-opacity="1"*/}
+                    {/*            >*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c0-137.243-111.257-248.5-248.5-248.5S-497-137.243-497 0s111.257 248.5 248.5 248.5S0 137.243 0 0"*/}
+                    {/*                    transform="translate(504.5 256)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c57.703 24.81 121.613 38.599 188.86 38.599 67.278 0 131.216-13.802 188.94-38.634"*/}
+                    {/*                    transform="translate(67.14 97.159)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0h56.113"*/}
+                    {/*                    transform="translate(448.387 256)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0h56.113"*/}
+                    {/*                    transform="translate(7.5 256)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0v-168.341"*/}
+                    {/*                    transform="translate(256 175.84)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0v-168.337"*/}
+                    {/*                    transform="translate(256 504.5)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c-57.703-24.81-121.613-38.599-188.86-38.599-67.278 0-131.216 13.802-188.94 38.634"*/}
+                    {/*                    transform="translate(444.94 414.841)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c-8.12 20.834-14.585 44.225-19.017 69.438"*/}
+                    {/*                    transform="translate(153.58 106.4)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c-17.212-97.91-65.08-168.338-121.438-168.338-34.147 0-65.177 25.853-88.16 68.009"*/}
+                    {/*                    transform="translate(377.438 175.838)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c8.166-20.899 14.666-44.377 19.116-69.693"*/}
+                    {/*                    transform="translate(358.322 405.855)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c17.212 97.909 65.08 168.337 121.438 168.337 34.166 0 65.213-25.885 88.2-68.084"*/}
+                    {/*                    transform="translate(134.562 336.163)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0h-335.643c-13.567 0-24.565 10.999-24.565 24.566v111.191c0 13.567 10.998 24.566 24.565 24.566H0c13.567 0 24.566-10.999 24.566-24.566V24.566C24.566 10.999 13.567 0 0 0"*/}
+                    {/*                    transform="translate(423.821 175.839)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0h-48.097v64.129H0"*/}
+                    {/*                    transform="translate(236.46 223.935)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0h-40.081"*/}
+                    {/*                    transform="translate(230.449 256)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0v64.129L48.097 0v64.129"*/}
+                    {/*                    transform="translate(110.207 223.935)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="m0 0-18.036-64.129L-36.073 0l-18.036-64.129L-72.145 0"*/}
+                    {/*                    transform="translate(334.408 288.065)"*/}
+                    {/*                />*/}
+                    {/*                <path*/}
+                    {/*                    d="M0 0c0-7.748 10.767-14.028 24.048-14.028 13.282 0 24.049 6.28 24.049 14.028 0 10.02-9.619 14.028-24.049 18.036C9.62 22.044 0 26.052 0 36.073c0 7.747 10.767 14.028 24.048 14.028 13.282 0 24.049-6.281 24.049-14.028"*/}
+                    {/*                    transform="translate(358.707 237.964)"*/}
+                    {/*                />*/}
+                    {/*            </g>*/}
+                    {/*        </svg>*/}
+                    {/*        Media*/}
+                    {/*    </span>*/}
+                    {/*</Link>*/}
+
+                    {/*/!* Gallery *!/*/}
+                    {/*<Link href={gallery.url()} className="nav-link group">*/}
+                    {/*    <span className="inline-flex items-center gap-1 transition-transform duration-300">*/}
+                    {/*        <svg*/}
+                    {/*            className="h-3"*/}
+                    {/*            viewBox="0 0 24 24"*/}
+                    {/*            xmlns="http://www.w3.org/2000/svg"*/}
+                    {/*        >*/}
+                    {/*            <path*/}
+                    {/*                d="M15 1.25H9C3.567 1.25 1.25 3.568 1.25 9v6c0 5.432 2.317 7.75 7.75 7.75h6c5.433 0 7.75-2.318 7.75-7.75V9c0-5.432-2.317-7.75-7.75-7.75M21.25 15c0 4.614-1.636 6.25-6.25 6.25H9c-2.757 0-4.444-.591-5.361-2.045l4.373-2.934a1.49 1.49 0 0 1 1.733.084l.333.286a2.976 2.976 0 0 0 3.8 0l4.161-3.57a1.48 1.48 0 0 1 1.846 0l1.367 1.173zm0-2.733-.391-.335a2.976 2.976 0 0 0-3.8 0L12.9 15.5a1.48 1.48 0 0 1-1.844 0l-.333-.286a2.98 2.98 0 0 0-3.546-.191L3.048 17.8a11.2 11.2 0 0 1-.3-2.8V9C2.75 4.386 4.386 2.75 9 2.75h6c4.614 0 6.25 1.636 6.25 6.25zM9 5.25A2.75 2.75 0 1 0 11.75 8 2.75 2.75 0 0 0 9 5.25m0 4A1.25 1.25 0 1 1 10.25 8 1.25 1.25 0 0 1 9 9.25"*/}
+                    {/*                data-name="1"*/}
+                    {/*            />*/}
+                    {/*        </svg>*/}
+                    {/*        Gallery*/}
+                    {/*    </span>*/}
+                    {/*</Link>*/}
 
                     {/* Contact Us Dropdown */}
                     <div
@@ -576,133 +803,185 @@ const Navbar = () => {
                                 delay={800}
                             />
 
-                            <Link
-                                href={media.url()}
-                                className="mobile-menu-item"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                <div className="inline-flex items-center gap-2">
-                                    <svg
-                                        className="h-3"
-                                        xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 682.667 682.667"
-                                    >
-                                        <defs>
-                                            <clipPath id="b">
-                                                <rect
-                                                    x="0"
-                                                    y="0"
-                                                    width="512"
-                                                    height="512"
-                                                />
-                                            </clipPath>
-                                        </defs>
-
-                                        <g
-                                            clip-path="url(#b)"
-                                            transform="matrix(1.33333 0 0 -1.33333 0 682.667)"
-                                            fill="none"
-                                            stroke="#000"
-                                            stroke-width="15"
-                                            stroke-linecap="round"
-                                            stroke-linejoin="round"
-                                            stroke-miterlimit="10"
-                                            stroke-dasharray="none"
-                                            stroke-opacity="1"
-                                        >
-                                            <path
-                                                d="M0 0c0-137.243-111.257-248.5-248.5-248.5S-497-137.243-497 0s111.257 248.5 248.5 248.5S0 137.243 0 0"
-                                                transform="translate(504.5 256)"
-                                            />
-                                            <path
-                                                d="M0 0c57.703 24.81 121.613 38.599 188.86 38.599 67.278 0 131.216-13.802 188.94-38.634"
-                                                transform="translate(67.14 97.159)"
-                                            />
-                                            <path
-                                                d="M0 0h56.113"
-                                                transform="translate(448.387 256)"
-                                            />
-                                            <path
-                                                d="M0 0h56.113"
-                                                transform="translate(7.5 256)"
-                                            />
-                                            <path
-                                                d="M0 0v-168.341"
-                                                transform="translate(256 175.84)"
-                                            />
-                                            <path
-                                                d="M0 0v-168.337"
-                                                transform="translate(256 504.5)"
-                                            />
-                                            <path
-                                                d="M0 0c-57.703-24.81-121.613-38.599-188.86-38.599-67.278 0-131.216 13.802-188.94 38.634"
-                                                transform="translate(444.94 414.841)"
-                                            />
-                                            <path
-                                                d="M0 0c-8.12 20.834-14.585 44.225-19.017 69.438"
-                                                transform="translate(153.58 106.4)"
-                                            />
-                                            <path
-                                                d="M0 0c-17.212-97.91-65.08-168.338-121.438-168.338-34.147 0-65.177 25.853-88.16 68.009"
-                                                transform="translate(377.438 175.838)"
-                                            />
-                                            <path
-                                                d="M0 0c8.166-20.899 14.666-44.377 19.116-69.693"
-                                                transform="translate(358.322 405.855)"
-                                            />
-                                            <path
-                                                d="M0 0c17.212 97.909 65.08 168.337 121.438 168.337 34.166 0 65.213-25.885 88.2-68.084"
-                                                transform="translate(134.562 336.163)"
-                                            />
-                                            <path
-                                                d="M0 0h-335.643c-13.567 0-24.565 10.999-24.565 24.566v111.191c0 13.567 10.998 24.566 24.565 24.566H0c13.567 0 24.566-10.999 24.566-24.566V24.566C24.566 10.999 13.567 0 0 0"
-                                                transform="translate(423.821 175.839)"
-                                            />
-                                            <path
-                                                d="M0 0h-48.097v64.129H0"
-                                                transform="translate(236.46 223.935)"
-                                            />
-                                            <path
-                                                d="M0 0h-40.081"
-                                                transform="translate(230.449 256)"
-                                            />
-                                            <path
-                                                d="M0 0v64.129L48.097 0v64.129"
-                                                transform="translate(110.207 223.935)"
-                                            />
-                                            <path
-                                                d="m0 0-18.036-64.129L-36.073 0l-18.036-64.129L-72.145 0"
-                                                transform="translate(334.408 288.065)"
-                                            />
-                                            <path
-                                                d="M0 0c0-7.748 10.767-14.028 24.048-14.028 13.282 0 24.049 6.28 24.049 14.028 0 10.02-9.619 14.028-24.049 18.036C9.62 22.044 0 26.052 0 36.073c0 7.747 10.767 14.028 24.048 14.028 13.282 0 24.049-6.281 24.049-14.028"
-                                                transform="translate(358.707 237.964)"
-                                            />
-                                        </g>
-                                    </svg>
-                                    Media
-                                </div>
-                            </Link>
-
-                            <Link
-                                href={gallery.url()}
-                                className="mobile-menu-item"
-                                onClick={() => setIsMobileMenuOpen(false)}
-                            >
-                                <div className="inline-flex items-center gap-2">
+                            <MobileSubmenu
+                                title="Media & Gallery"
+                                icon={
                                     <svg
                                         className="h-3"
                                         viewBox="0 0 24 24"
                                         xmlns="http://www.w3.org/2000/svg"
                                     >
                                         <path
-                                            d="M15 1.25H9C3.567 1.25 1.25 3.568 1.25 9v6c0 5.432 2.317 7.75 7.75 7.75h6c5.433 0 7.75-2.318 7.75-7.75V9c0-5.432-2.317-7.75-7.75-7.75M21.25 15c0 4.614-1.636 6.25-6.25 6.25H9c-2.757 0-4.444-.591-5.361-2.045l4.373-2.934a1.49 1.49 0 0 1 1.733.084l.333.286a2.976 2.976 0 0 0 3.8 0l4.161-3.57a1.48 1.48 0 0 1 1.846 0l1.367 1.173zm0-2.733-.391-.335a2.976 2.976 0 0 0-3.8 0L12.9 15.5a1.48 1.48 0 0 1-1.844 0l-.333-.286a2.98 2.98 0 0 0-3.546-.191L3.048 17.8a11.2 11.2 0 0 1-.3-2.8V9C2.75 4.386 4.386 2.75 9 2.75h6c4.614 0 6.25 1.636 6.25 6.25zM9 5.25A2.75 2.75 0 1 0 11.75 8 2.75 2.75 0 0 0 9 5.25m0 4A1.25 1.25 0 1 1 10.25 8 1.25 1.25 0 0 1 9 9.25"
-                                            data-name="1"
+                                            d="M21 19V5a2 2 0 0 0-2-2H5a2 2 0 0 0-2 2v14"
+                                            fill="none"
+                                            stroke="currentColor"
+                                            strokeWidth="2"
                                         />
+                                        <circle cx="9" cy="9" r="1.5" />
+                                        <path d="M21 15l-5-5L5 21" />
                                     </svg>
-                                    Gallery
-                                </div>
-                            </Link>
+                                }
+                                items={[
+                                    {
+                                        label: "Media Coverage",
+                                        href: media.url(),
+                                    },
+                                    {
+                                        label: "Photos & Videos",
+                                        href: gallery.url(),
+                                    },
+                                ]}
+                                delay={500}
+                            />
+
+                            <MobileSubmenu
+                                title="Hotels & Resorts"
+                                icon={
+                                    <svg
+                                        className="h-3"
+                                        viewBox="0 0 24 24"
+                                        fill="none"
+                                        stroke="currentColor"
+                                        strokeWidth="2"
+                                        strokeLinecap="round"
+                                        strokeLinejoin="round"
+                                    >
+                                        <path d="M7 22V10h10v12" />
+                                        <path d="M5 10l7-7 7 7" />
+                                        <path d="M4 22h16" />
+                                    </svg>
+                                }
+                                items={hotelsResortsItems}
+                                delay={450}
+                            />
+
+                            {/*<Link*/}
+                            {/*    href={media.url()}*/}
+                            {/*    className="mobile-menu-item"*/}
+                            {/*    onClick={() => setIsMobileMenuOpen(false)}*/}
+                            {/*>*/}
+                            {/*    <div className="inline-flex items-center gap-2">*/}
+                            {/*        <svg*/}
+                            {/*            className="h-3"*/}
+                            {/*            xmlns="http://www.w3.org/2000/svg"*/}
+                            {/*            viewBox="0 0 682.667 682.667"*/}
+                            {/*        >*/}
+                            {/*            <defs>*/}
+                            {/*                <clipPath id="b">*/}
+                            {/*                    <rect*/}
+                            {/*                        x="0"*/}
+                            {/*                        y="0"*/}
+                            {/*                        width="512"*/}
+                            {/*                        height="512"*/}
+                            {/*                    />*/}
+                            {/*                </clipPath>*/}
+                            {/*            </defs>*/}
+
+                            {/*            <g*/}
+                            {/*                clip-path="url(#b)"*/}
+                            {/*                transform="matrix(1.33333 0 0 -1.33333 0 682.667)"*/}
+                            {/*                fill="none"*/}
+                            {/*                stroke="#000"*/}
+                            {/*                stroke-width="15"*/}
+                            {/*                stroke-linecap="round"*/}
+                            {/*                stroke-linejoin="round"*/}
+                            {/*                stroke-miterlimit="10"*/}
+                            {/*                stroke-dasharray="none"*/}
+                            {/*                stroke-opacity="1"*/}
+                            {/*            >*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c0-137.243-111.257-248.5-248.5-248.5S-497-137.243-497 0s111.257 248.5 248.5 248.5S0 137.243 0 0"*/}
+                            {/*                    transform="translate(504.5 256)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c57.703 24.81 121.613 38.599 188.86 38.599 67.278 0 131.216-13.802 188.94-38.634"*/}
+                            {/*                    transform="translate(67.14 97.159)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0h56.113"*/}
+                            {/*                    transform="translate(448.387 256)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0h56.113"*/}
+                            {/*                    transform="translate(7.5 256)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0v-168.341"*/}
+                            {/*                    transform="translate(256 175.84)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0v-168.337"*/}
+                            {/*                    transform="translate(256 504.5)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c-57.703-24.81-121.613-38.599-188.86-38.599-67.278 0-131.216 13.802-188.94 38.634"*/}
+                            {/*                    transform="translate(444.94 414.841)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c-8.12 20.834-14.585 44.225-19.017 69.438"*/}
+                            {/*                    transform="translate(153.58 106.4)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c-17.212-97.91-65.08-168.338-121.438-168.338-34.147 0-65.177 25.853-88.16 68.009"*/}
+                            {/*                    transform="translate(377.438 175.838)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c8.166-20.899 14.666-44.377 19.116-69.693"*/}
+                            {/*                    transform="translate(358.322 405.855)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c17.212 97.909 65.08 168.337 121.438 168.337 34.166 0 65.213-25.885 88.2-68.084"*/}
+                            {/*                    transform="translate(134.562 336.163)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0h-335.643c-13.567 0-24.565 10.999-24.565 24.566v111.191c0 13.567 10.998 24.566 24.565 24.566H0c13.567 0 24.566-10.999 24.566-24.566V24.566C24.566 10.999 13.567 0 0 0"*/}
+                            {/*                    transform="translate(423.821 175.839)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0h-48.097v64.129H0"*/}
+                            {/*                    transform="translate(236.46 223.935)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0h-40.081"*/}
+                            {/*                    transform="translate(230.449 256)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0v64.129L48.097 0v64.129"*/}
+                            {/*                    transform="translate(110.207 223.935)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="m0 0-18.036-64.129L-36.073 0l-18.036-64.129L-72.145 0"*/}
+                            {/*                    transform="translate(334.408 288.065)"*/}
+                            {/*                />*/}
+                            {/*                <path*/}
+                            {/*                    d="M0 0c0-7.748 10.767-14.028 24.048-14.028 13.282 0 24.049 6.28 24.049 14.028 0 10.02-9.619 14.028-24.049 18.036C9.62 22.044 0 26.052 0 36.073c0 7.747 10.767 14.028 24.048 14.028 13.282 0 24.049-6.281 24.049-14.028"*/}
+                            {/*                    transform="translate(358.707 237.964)"*/}
+                            {/*                />*/}
+                            {/*            </g>*/}
+                            {/*        </svg>*/}
+                            {/*        Media*/}
+                            {/*    </div>*/}
+                            {/*</Link>*/}
+
+                            {/*<Link*/}
+                            {/*    href={gallery.url()}*/}
+                            {/*    className="mobile-menu-item"*/}
+                            {/*    onClick={() => setIsMobileMenuOpen(false)}*/}
+                            {/*>*/}
+                            {/*    <div className="inline-flex items-center gap-2">*/}
+                            {/*        <svg*/}
+                            {/*            className="h-3"*/}
+                            {/*            viewBox="0 0 24 24"*/}
+                            {/*            xmlns="http://www.w3.org/2000/svg"*/}
+                            {/*        >*/}
+                            {/*            <path*/}
+                            {/*                d="M15 1.25H9C3.567 1.25 1.25 3.568 1.25 9v6c0 5.432 2.317 7.75 7.75 7.75h6c5.433 0 7.75-2.318 7.75-7.75V9c0-5.432-2.317-7.75-7.75-7.75M21.25 15c0 4.614-1.636 6.25-6.25 6.25H9c-2.757 0-4.444-.591-5.361-2.045l4.373-2.934a1.49 1.49 0 0 1 1.733.084l.333.286a2.976 2.976 0 0 0 3.8 0l4.161-3.57a1.48 1.48 0 0 1 1.846 0l1.367 1.173zm0-2.733-.391-.335a2.976 2.976 0 0 0-3.8 0L12.9 15.5a1.48 1.48 0 0 1-1.844 0l-.333-.286a2.98 2.98 0 0 0-3.546-.191L3.048 17.8a11.2 11.2 0 0 1-.3-2.8V9C2.75 4.386 4.386 2.75 9 2.75h6c4.614 0 6.25 1.636 6.25 6.25zM9 5.25A2.75 2.75 0 1 0 11.75 8 2.75 2.75 0 0 0 9 5.25m0 4A1.25 1.25 0 1 1 10.25 8 1.25 1.25 0 0 1 9 9.25"*/}
+                            {/*                data-name="1"*/}
+                            {/*            />*/}
+                            {/*        </svg>*/}
+                            {/*        Gallery*/}
+                            {/*    </div>*/}
+                            {/*</Link>*/}
 
                             <MobileSubmenu
                                 title="Contact Us"
