@@ -115,7 +115,9 @@ class CMSController extends Controller
 
     public function updateCarousel(Request $request)
     {
-        $carouselData = '';
+        $carouselData = $request->validate(
+            ['image' => 'required|image|mimes:png']
+        );
         switch ($request->input('position')) {
             case '1':
                 $carouselData = Carousel::findOrFail(1);

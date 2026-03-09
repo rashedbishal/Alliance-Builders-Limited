@@ -9,7 +9,7 @@ interface Props {
 }
 
 function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }) {
-    const { data, setData, post, processing } = useForm({
+    const { data, setData, post, processing, errors } = useForm({
         position: String(index + 1),
         property_name: carousel.property_name ?? '',
         description: carousel.description ?? '',
@@ -37,68 +37,125 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
     };
 
   return (
-    <div className="banner-card">
-      <div className="banner-num">BANNER {index + 1}</div>
-      <form onSubmit={handleSubmit}>
-        <input type="hidden" name="position" value={data.position} />
+      <div className="banner-card">
+          <div className="banner-num">BANNER {index + 1}</div>
+          <form onSubmit={handleSubmit}>
+              <input type="hidden" name="position" value={data.position} />
 
-        <div className="form-row cols-2" style={{ marginTop: 12 }}>
-          <div className="form-group">
-            <label>Property Name</label>
-            <input
-              type="text"
-              value={data.property_name}
-              onChange={e => setData('property_name', e.target.value)}
-              placeholder="Enter property name..."
-            />
-          </div>
-          <div className="form-group">
-            <label>Description</label>
-            <input
-              type="text"
-              value={data.description}
-              onChange={e => setData('description', e.target.value)}
-              placeholder="Enter description..."
-            />
-          </div>
-        </div>
+              <div className="form-row cols-2" style={{ marginTop: 12 }}>
+                  <div className="form-group">
+                      <label>Property Name</label>
+                      <input
+                          type="text"
+                          value={data.property_name}
+                          onChange={(e) =>
+                              setData('property_name', e.target.value)
+                          }
+                          placeholder="Enter property name..."
+                      />
+                  </div>
+                  <div className="form-group">
+                      <label>Description</label>
+                      <input
+                          type="text"
+                          value={data.description}
+                          onChange={(e) =>
+                              setData('description', e.target.value)
+                          }
+                          placeholder="Enter description..."
+                      />
+                  </div>
+              </div>
 
-        <div className="form-row cols-2" style={{ alignItems: 'start' }}>
-          <div className="form-group">
-            <label>Upload Image</label>
-            <div className="img-uploader">
-              <input
-                ref={fileRef}
-                type="file"
-                accept="image/*"
-                className="uploader-input"
-                onChange={handleFile}
-              />
-              <div style={{ fontSize: '2rem', marginBottom: 8, pointerEvents: 'none' }}>🖼️</div>
-              <p style={{ fontSize: '0.8rem', color: 'var(--muted)', pointerEvents: 'none' }}>
-                Drag & drop or <span style={{ color: 'var(--gold)' }}>browse</span>
-              </p>
-              <p style={{ marginTop: 4, fontSize: '0.72rem', color: 'var(--muted)', pointerEvents: 'none' }}>
-                JPG, PNG, WEBP · Leave empty to keep current
-              </p>
-            </div>
-          </div>
-          <div className="form-group">
-            <label>Preview</label>
-            <div className="preview-box" style={{ height: 140 }}>
-              {preview
-                ? <img src={preview} style={{ width: '100%', height: '100%', objectFit: 'cover' }} alt="preview" />
-                : <div style={{ color: 'var(--muted)', fontSize: '0.78rem', textAlign: 'center', padding: 20 }}>📷<br/>No image selected</div>
-              }
-            </div>
-          </div>
-        </div>
+              <div className="form-row cols-2" style={{ alignItems: 'start' }}>
+                  <div className="form-group">
+                      <label>Upload Image</label>
+                      <div className="img-uploader">
+                          <input
+                              ref={fileRef}
+                              type="file"
+                              accept="image/*"
+                              className="uploader-input"
+                              onChange={handleFile}
+                          />
+                          <div
+                              style={{
+                                  fontSize: '2rem',
+                                  marginBottom: 8,
+                                  pointerEvents: 'none',
+                              }}
+                          >
+                              🖼️
+                          </div>
+                          <p
+                              style={{
+                                  fontSize: '0.8rem',
+                                  color: 'var(--muted)',
+                                  pointerEvents: 'none',
+                              }}
+                          >
+                              Drag & drop or{' '}
+                              <span style={{ color: 'var(--gold)' }}>
+                                  browse
+                              </span>
+                          </p>
+                          <p
+                              style={{
+                                  marginTop: 4,
+                                  fontSize: '0.72rem',
+                                  color: 'var(--muted)',
+                                  pointerEvents: 'none',
+                              }}
+                          >
+                              JPG, PNG, WEBP · Leave empty to keep current
+                          </p>
+                      </div>
+                      {errors.image && (
+                          <span className="text-sm text-red-500">
+                              {errors.image}
+                          </span>
+                      )}
+                  </div>
+                  <div className="form-group">
+                      <label>Preview</label>
+                      <div className="preview-box" style={{ height: 140 }}>
+                          {preview ? (
+                              <img
+                                  src={preview}
+                                  style={{
+                                      width: '100%',
+                                      height: '100%',
+                                      objectFit: 'cover',
+                                  }}
+                                  alt="preview"
+                              />
+                          ) : (
+                              <div
+                                  style={{
+                                      color: 'var(--muted)',
+                                      fontSize: '0.78rem',
+                                      textAlign: 'center',
+                                      padding: 20,
+                                  }}
+                              >
+                                  📷
+                                  <br />
+                                  No image selected
+                              </div>
+                          )}
+                      </div>
+                  </div>
+              </div>
 
-        <button type="submit" className="btn-primary" disabled={processing}>
-          {processing ? 'Saving...' : 'Update Banner'}
-        </button>
-      </form>
-    </div>
+              <button
+                  type="submit"
+                  className="btn-primary"
+                  disabled={processing}
+              >
+                  {processing ? 'Saving...' : 'Update Banner'}
+              </button>
+          </form>
+      </div>
   );
 }
 
