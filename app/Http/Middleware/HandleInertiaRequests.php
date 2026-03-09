@@ -2,6 +2,7 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Properties\Project;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -47,6 +48,12 @@ class HandleInertiaRequests extends Middleware
             },
             'popupImgUrl' => function () {
                 return \App\Models\Releases\Popup::value('imagePath') ?? false;
+            },
+            'navHotels' => function () {
+                return Project::where('project_type_id', 4)
+                    ->select('id', 'name', 'slug')
+                    ->orderBy('name')
+                    ->get();
             },
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),

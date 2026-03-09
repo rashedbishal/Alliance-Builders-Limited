@@ -1,4 +1,4 @@
-import {Link} from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import {ChevronDown, Menu, X, Phone, Heart} from 'lucide-react';
 import React, {useState, useRef, useEffect} from 'react';
 import logo from '@/assets/images/logo/alliance logo.webp'
@@ -19,7 +19,10 @@ const Navbar = () => {
     const [rotation, setRotation] = useState({x: 0, y: 0});
     const navRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
-    const {favorites} = useFavorites();
+    const { favorites } = useFavorites();
+    const { navHotels } = usePage<{
+        navHotels?: { id: number; name: string; slug: string }[];
+    }>().props;
 
     // 3D tilt effect on mouse move
     useEffect(() => {
@@ -91,92 +94,12 @@ const Navbar = () => {
         {label: 'Favorites', href: '/properties?tab=favorites', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z"/></svg>},
     ];
 
-    const hotelsResortsItems = [
-        {
-            label: 'All Hotels & Resorts',
-            href: '/hotels-resorts',
-            icon: (
-                <svg
-                    className="h-full w-full"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M3 22V8a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v14" />
-                    <path d="M7 22V10h10v12" />
-                    <path d="M9 13h1" />
-                    <path d="M14 13h1" />
-                    <path d="M9 16h1" />
-                    <path d="M14 16h1" />
-                </svg>
-            ),
-        },
-        {
-            label: 'Beach Resorts',
-            href: '/hotels-resorts/beach',
-            icon: (
-                <svg
-                    className="h-full w-full"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M3 20c4-2 6-2 10 0s6 2 8 0" />
-                    <path d="M4 16c3-2 5-2 9 0s6 2 7 1" />
-                    <path d="M12 3v7" />
-                    <path d="M9 6h6" />
-                </svg>
-            ),
-        },
-        {
-            label: 'City Hotels',
-            href: '/hotels-resorts/city',
-            icon: (
-                <svg
-                    className="h-full w-full"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M3 22V7l6-3 6 3v15" />
-                    <path d="M9 22V12h6v10" />
-                    <path d="M7 10h.01" />
-                    <path d="M17 10h.01" />
-                    <path d="M7 13h.01" />
-                    <path d="M17 13h.01" />
-                </svg>
-            ),
-        },
-        {
-            label: 'Luxury Collection',
-            href: '/hotels-resorts/luxury',
-            icon: (
-                <svg
-                    className="h-full w-full"
-                    viewBox="0 0 24 24"
-                    fill="none"
-                    stroke="currentColor"
-                    strokeWidth="2"
-                    strokeLinecap="round"
-                    strokeLinejoin="round"
-                >
-                    <path d="M3 7l4 3 5-7 5 7 4-3" />
-                    <path d="M5 10v8h14v-8" />
-                    <path d="M7 18v3" />
-                    <path d="M17 18v3" />
-                </svg>
-            ),
-        },
-    ];
+    const hotelsResortsItems: MobileSubmenuItem[] = (navHotels ?? []).map(
+        (hotel) => ({
+            label: hotel.name,
+            href: `/hotels-resorts/${hotel.slug}`,
+        }),
+    );
 
     const contactItems = [
         {label: 'Customer Inquiry', href: contact.url(), icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" className="h-4" fill="currentColor" aria-hidden="true"><path d="m32.991 24.801h46.908l-25.624 20.122c-.543.426-1.189.634-1.775.691-.59-.058-1.238-.266-1.787-.691l-18.312-14.385c-.194-.156-.413-.275-.654-.349.862-1.216 1.354-2.687 1.328-4.272-.005-.363-.037-.737-.084-1.116zm-11.929-12.941c.059.01.156.047.367.145.417.198 1.08.708 1.729 1.419 1.307 1.424 2.613 3.581 3.291 5.005.021.042.043.088.063.135 1.924 3.301 2.754 5.826 2.779 7.41.027 1.591-.4 2.276-1.749 3.051l-3.48 2.006c-2.267 1.305-3.338 3.644-3.604 5.826-.267 2.183.126 4.304 1.097 5.981l8.59 14.805c.973 1.676 2.634 3.078 4.665 3.939 2.033.863 4.604 1.107 6.871-.195l3.48-2.002c1.348-.773 2.163-.789 3.532.025 1.373.816 3.156 2.787 5.072 6.09.027.049.053.09.084.137.898 1.295 2.121 3.492 2.711 5.332.293.914.408 1.74.371 2.197-.041.459-.051.412-.172.484l-2.648 1.518c-6.652 2.885-12.749 2.234-18.198-.592-5.459-2.838-10.204-7.963-13.512-13.98-.011-.012-.016-.027-.025-.035l-7.246-12.488c-.012-.012-.017-.023-.027-.039-3.585-5.86-5.674-12.513-5.412-18.634.262-6.112 2.742-11.684 8.584-15.971l2.649-1.513c.061-.035.081-.062.138-.056zm.027-3.721c-.701-.011-1.416.136-2.059.509l-2.801 1.611c-.063.036-.121.073-.178.109-6.739 4.932-9.842 11.798-10.145 18.875-.303 7.074 2.059 14.375 5.961 20.758l7.222 12.445-.017-.037c3.605 6.551 8.771 12.234 15.084 15.508 6.316 3.279 13.84 4.039 21.504.697.063-.027.127-.057.184-.092l2.805-1.611c1.297-.738 1.949-2.174 2.055-3.428.109-1.25-.146-2.467-.533-3.666-.758-2.371-2.08-4.674-3.172-6.254-2.063-3.549-4.055-6.012-6.357-7.389-2.32-1.383-5.105-1.363-7.377-.057l-3.48 2.006c-1.028.592-2.23.523-3.495-.012-1.259-.535-2.425-1.605-2.858-2.355l-8.59-14.804c-.434-.754-.789-2.292-.621-3.648.162-1.352.711-2.411 1.74-3.004l3.381-1.944c.088.453.344.864.715 1.14l18.313 14.388c1.191.936 2.602 1.457 4.023 1.539.072.004.146.004.219 0 1.422-.082 2.826-.604 4.018-1.539l25.222-19.814v32.734c0 .498-.568 1.154-1.682 1.154h-17.461c-1.051-.006-1.902.842-1.902 1.887 0 1.043.852 1.891 1.902 1.885h17.461c2.854 0 5.477-2.063 5.477-4.926v-34.849c0-2.865-2.623-4.927-5.477-4.927h-48.218c-.534-1.335-1.239-2.75-2.127-4.288-.831-1.73-2.179-4.017-3.866-5.856-.852-.932-1.771-1.758-2.92-2.292v.005c-.571-.27-1.25-.443-1.95-.458z"/></svg>},

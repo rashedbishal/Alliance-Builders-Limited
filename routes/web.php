@@ -75,7 +75,7 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
     Route::get('/handover', 'properties')->name('handover-properties');
     Route::get('/ongoing', 'properties')->name('ongoing-properties');
     Route::get('/upcoming', 'properties')->name('upcoming-properties');
-    Route::get('/hotels-resorts', 'hotelsResorts')->name('hotels-resorts');
+    Route::get('/hotels-resorts/{project:slug}', 'hotelDetails')->name('hotel-details');
     Route::get('{project:slug}', 'propertyDetails')->name('propertyDetails');
 
 });

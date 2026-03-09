@@ -79,18 +79,25 @@ class PageController extends Controller
         return Inertia::render('Properties', ['projects' => $projects, 'projectTypes' => $projectTypes]);
     }
 
-    public function hotelsResorts()
-    {
-        $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->where('project_type_id', 4)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
-
-        return Inertia::render('Properties', ['projects' => $projects]);
-    }
-
     public function propertyDetails(Project $project)
     {
         $projectDetails = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->where('id', $project->id)->first();
 
         return Inertia::render('PropertyDetails', [
+            'projectDetails' => $projectDetails,
+        ]);
+    }
+
+    public function hotelDetails(Project $project)
+    {
+        // Ensure this is a hotel/resort project
+        abort_unless($project->project_type_id === 4, 404);
+
+        $projectDetails = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')
+            ->where('id', $project->id)
+            ->first();
+
+        return Inertia::render('HotelDetails', [
             'projectDetails' => $projectDetails,
         ]);
     }
