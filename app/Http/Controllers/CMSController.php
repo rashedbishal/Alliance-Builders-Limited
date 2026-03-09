@@ -7,6 +7,7 @@ use App\Models\Config\Facility;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
+use App\Models\Inquiry\Contact;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
 use App\Models\Releases\Popup;
@@ -15,11 +16,14 @@ use App\Models\Visual\Gallery;
 use App\Models\Visual\Image;
 use App\Models\Visual\ProjectImage;
 use App\Models\Visual\Video;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Inertia\Inertia;
+use PhpOffice\PhpSpreadsheet\Spreadsheet;
+use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CMSController extends Controller
 {
@@ -701,5 +705,68 @@ class CMSController extends Controller
 
         return redirect()->route('tag-delete')
             ->with('success', 'Tag deleted successfully.');
+    }
+
+    public function feedbackIndex()
+    {
+        $feedbacks = Contact::latest()->paginate(5);
+
+        return inertia('cms/contact/Feedback', [
+            'feedbacks' => $feedbacks,
+        ]);
+    }
+
+    public function feedbackDownload(Request $request)
+    {
+        $request->validate([
+            'from' => 'required|date',
+            'to' => 'required|date|after_or_equal:from',
+        ]);
+
+        $from = Carbon::parse($request->from)->startOfDay();
+        $to = Carbon::parse($request->to)->endOfDay();
+
+        $rows = Contact::whereBetween('created_at', [$from, $to])
+            ->orderBy('created_at', 'desc')
+            ->get(['id', 'name', 'email', 'phone', 'message', 'created_at']);
+
+        // ── Build spreadsheet with PhpSpreadsheet (no extra package needed) ──
+        $spreadsheet = new Spreadsheet;
+        $sheet = $spreadsheet->getActiveSheet();
+        $sheet->setTitle('Feedback');
+
+        // Header row
+        $headers = ['#', 'Name', 'Email', 'Phone', 'Message', 'Submitted At'];
+        foreach ($headers as $col => $header) {
+            $cell = chr(65 + $col).'1';
+            $sheet->setCellValue($cell, $header);
+            $sheet->getStyle($cell)->getFont()->setBold(true);
+        }
+
+        // Data rows
+        foreach ($rows as $i => $row) {
+            $r = $i + 2;
+            $sheet->setCellValue("A{$r}", $i + 1);
+            $sheet->setCellValue("B{$r}", $row->name);
+            $sheet->setCellValue("C{$r}", $row->email);
+            $sheet->setCellValue("D{$r}", $row->phone);
+            $sheet->setCellValue("E{$r}", $row->message);
+            $sheet->setCellValue("F{$r}", $row->created_at->format('d M Y, h:i A'));
+        }
+
+        // Auto-size columns
+        foreach (range('A', 'F') as $col) {
+            $sheet->getColumnDimension($col)->setAutoSize(true);
+        }
+
+        $filename = 'feedback_'.$request->from.'_to_'.$request->to.'.xlsx';
+
+        $writer = new Xlsx($spreadsheet);
+
+        return response()->streamDownload(function () use ($writer) {
+            $writer->save('php://output');
+        }, $filename, [
+            'Content-Type' => 'application/vnd.openxmlformats-officedocument.spreadsheetml.sheet',
+        ]);
     }
 }

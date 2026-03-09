@@ -546,7 +546,9 @@ export default function CMSLayout({
                                     width: 14,
                                     height: 14,
                                     transition: 'transform 0.25s',
-                                    transform: openMenus['config'] ? 'rotate(90deg)' : 'none',
+                                    transform: openMenus['config']
+                                        ? 'rotate(90deg)'
+                                        : 'none',
                                 }}
                                 viewBox="0 0 24 24"
                                 fill="none"
@@ -556,17 +558,20 @@ export default function CMSLayout({
                                 <path d="M9 18l6-6-6-6" />
                             </svg>
                         </button>
-                        <div className={`submenu ${openMenus['config'] ? 'open' : ''}`}>
-
+                        <div
+                            className={`submenu ${openMenus['config'] ? 'open' : ''}`}
+                        >
                             {/* Facility Config sub-group label */}
-                            <div style={{
-                                padding: '8px 24px 4px 52px',
-                                fontSize: '0.65rem',
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
-                                color: 'var(--muted)',
-                                opacity: 0.5,
-                            }}>
+                            <div
+                                style={{
+                                    padding: '8px 24px 4px 52px',
+                                    fontSize: '0.65rem',
+                                    letterSpacing: '0.1em',
+                                    textTransform: 'uppercase',
+                                    color: 'var(--muted)',
+                                    opacity: 0.5,
+                                }}
+                            >
                                 Facility Config
                             </div>
                             <Link
@@ -589,15 +594,17 @@ export default function CMSLayout({
                             </Link>
 
                             {/* Tag Config sub-group label */}
-                            <div style={{
-                                padding: '8px 24px 4px 52px',
-                                fontSize: '0.65rem',
-                                letterSpacing: '0.1em',
-                                textTransform: 'uppercase',
-                                color: 'var(--muted)',
-                                opacity: 0.5,
-                                marginTop: 4,
-                            }}>
+                            <div
+                                style={{
+                                    padding: '8px 24px 4px 52px',
+                                    fontSize: '0.65rem',
+                                    letterSpacing: '0.1em',
+                                    textTransform: 'uppercase',
+                                    color: 'var(--muted)',
+                                    opacity: 0.5,
+                                    marginTop: 4,
+                                }}
+                            >
                                 Tag Config
                             </div>
                             <Link
@@ -619,6 +626,17 @@ export default function CMSLayout({
                                 Delete Tag
                             </Link>
                         </div>
+                    </div>
+                    <div>
+                        <Link
+                            href={route('feedback-index')}
+                            className={`nav-link-base ${currentRoute('feedback-index') ? 'nav-link-active' : ''}`}
+                        >
+                            <NavIcon>
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </NavIcon>
+                            Incoming Feedback
+                        </Link>
                     </div>
                 </nav>
 

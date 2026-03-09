@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
+use App\Models\Inquiry\Contact;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
 use App\Models\Visual\Carousel;
 use App\Models\Visual\Gallery;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
 
@@ -100,5 +102,21 @@ class PageController extends Controller
         return Inertia::render('HotelDetails', [
             'projectDetails' => $projectDetails,
         ]);
+    }
+
+    public function storeContact(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:255',
+            'email' => 'required|email|max:255',
+            'phone' => 'required|string|max:50',
+            'message' => 'required|string|max:5000',
+        ]);
+
+        Contact::create($request->only('name', 'email', 'phone', 'message'));
+
+        // Returning back with no redirect keeps Inertia on the same page.
+        // The React component handles the success popup itself.
+        return back();
     }
 }

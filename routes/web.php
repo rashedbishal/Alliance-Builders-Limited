@@ -36,25 +36,28 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('popup/add', 'popupAdd')->name('popup-add');
     Route::post('save/popup', 'savePopup')->name('save-popup');
 
-        // ── Facility Config ──────────────────────────────────────────
-    Route::get('facility/add',    'facilityAdd')->name('facility-add');
+    // ── Facility Config ──────────────────────────────────────────
+    Route::get('facility/add', 'facilityAdd')->name('facility-add');
     Route::post('facility/store', 'facilityStore')->name('facility-store');
 
-    Route::get('facility/update',  'facilityUpdate')->name('facility-update');
+    Route::get('facility/update', 'facilityUpdate')->name('facility-update');
     Route::post('facility/update', 'facilityUpdateStore')->name('facility-update-store');
 
-    Route::get('facility/delete',  'facilityDelete')->name('facility-delete');
-    Route::post('facility/destroy','facilityDestroy')->name('facility-destroy');
+    Route::get('facility/delete', 'facilityDelete')->name('facility-delete');
+    Route::post('facility/destroy', 'facilityDestroy')->name('facility-destroy');
 
     // ── Tag Config ───────────────────────────────────────────────
-    Route::get('tag/add',    'tagAdd')->name('tag-add');
+    Route::get('tag/add', 'tagAdd')->name('tag-add');
     Route::post('tag/store', 'tagStore')->name('tag-store');
 
-    Route::get('tag/update',  'tagUpdate')->name('tag-update');
+    Route::get('tag/update', 'tagUpdate')->name('tag-update');
     Route::post('tag/update', 'tagUpdateStore')->name('tag-update-store');
 
-    Route::get('tag/delete',  'tagDelete')->name('tag-delete');
-    Route::post('tag/destroy','tagDestroy')->name('tag-destroy');
+    Route::get('tag/delete', 'tagDelete')->name('tag-delete');
+    Route::post('tag/destroy', 'tagDestroy')->name('tag-destroy');
+
+    Route::get('/cms/feedback', [CMSController::class, 'feedbackIndex'])->name('feedback-index');
+    Route::get('/cms/feedback/download', [CMSController::class, 'feedbackDownload'])->name('feedback-download');
 
 });
 
@@ -76,6 +79,7 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
     Route::get('/ongoing', 'properties')->name('ongoing-properties');
     Route::get('/upcoming', 'properties')->name('upcoming-properties');
     Route::get('/hotels-resorts/{project:slug}', 'hotelDetails')->name('hotel-details');
+    Route::post('/contact', 'storeContact')->name('contact.store');
     Route::get('{project:slug}', 'propertyDetails')->name('propertyDetails');
 
 });
