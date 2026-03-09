@@ -13,17 +13,19 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 
-import AppLayout from '@/layouts/AppLayout';
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
+import AppLayout from '@/layouts/AppLayout';
 import type { Project } from '@/types/Project';
 
 const HotelDetails = () => {
     const [activeImage, setActiveImage] = useState(0);
     const { projectDetails } = usePage<{ projectDetails: Project }>().props;
+
+    console.log('Project details', projectDetails);
 
     if (!projectDetails) {
         return (
@@ -103,17 +105,17 @@ const HotelDetails = () => {
             <div className="min-h-screen bg-slate-950 text-white">
                 {/* Back Button */}
                 <div className="container mx-auto px-4 pb-6 pt-28">
-                    <ScrollAnimation>
-                        <Link href="/hotels-resorts">
-                            <Button
-                                variant="ghost"
-                                className="p-4 text-white hover:bg-white/10"
-                            >
-                                <ArrowLeft className="mr-2 h-4 w-4" />
-                                Back to Hotels &amp; Resorts
-                            </Button>
-                        </Link>
-                    </ScrollAnimation>
+                    {/*<ScrollAnimation>*/}
+                    {/*    <Link href="/hotels-resorts">*/}
+                    {/*        <Button*/}
+                    {/*            variant="ghost"*/}
+                    {/*            className="p-4 text-white hover:bg-white/10"*/}
+                    {/*        >*/}
+                    {/*            <ArrowLeft className="mr-2 h-4 w-4" />*/}
+                    {/*            Back to Hotels &amp; Resorts*/}
+                    {/*        </Button>*/}
+                    {/*    </Link>*/}
+                    {/*</ScrollAnimation>*/}
                 </div>
 
                 {/* Hero + Gallery */}
