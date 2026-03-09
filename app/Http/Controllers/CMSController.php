@@ -25,8 +25,9 @@ class CMSController extends Controller
 {
     public function carousel()
     {
-//        return view('carousel.index');
+        //        return view('carousel.index');
         $carousels = Carousel::select('id', 'property_name', 'description', 'image')->get();
+
         return Inertia::render('cms/carousel/Index', ['carousels' => $carousels]);
     }
 
@@ -37,7 +38,7 @@ class CMSController extends Controller
         $facilities = Facility::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
 
-//        return view('project.add', compact('types', 'locations', 'facilities', 'tags'));
+        //        return view('project.add', compact('types', 'locations', 'facilities', 'tags'));
         return Inertia::render('cms/project/Add', compact('types', 'locations', 'facilities', 'tags'));
     }
 
@@ -49,7 +50,7 @@ class CMSController extends Controller
         $tags = Tag::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
 
-//        return view('project.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
+        //        return view('project.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
         return Inertia::render('cms/project/Update', compact('types', 'locations', 'facilities', 'tags'));
     }
 
@@ -70,13 +71,13 @@ class CMSController extends Controller
         $types = ProjectType::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
 
-//        return view('project.remove', compact('types', 'projects'));
+        //        return view('project.remove', compact('types', 'projects'));
         return Inertia::render('cms/project/Remove', compact('types'));
     }
 
     public function mediaAdd()
     {
-//        return view('media.add');
+        //        return view('media.add');
         return Inertia::render('cms/media/Add');
     }
 
@@ -84,7 +85,7 @@ class CMSController extends Controller
     {
         $mediaItems = MediaCoverage::with('image')->paginate(7);
 
-//        return view('media.remove', compact('mediaItems'));
+        //        return view('media.remove', compact('mediaItems'));
         return Inertia::render('cms/media/Remove', compact('mediaItems'));
     }
 
@@ -92,7 +93,7 @@ class CMSController extends Controller
     {
         $types = Gallery::select('id', 'type')->get();
 
-//        return view('gallery.add', compact('types'));
+        //        return view('gallery.add', compact('types'));
         return Inertia::render('cms/gallery/Add', compact('types'));
     }
 
@@ -100,7 +101,7 @@ class CMSController extends Controller
     {
         $types = Gallery::with('images', 'videos')->select('id', 'type')->get();
 
-//        return view('gallery.remove', compact('types'));
+        //        return view('gallery.remove', compact('types'));
         return Inertia::render('cms/gallery/Remove', compact('types'));
     }
 
@@ -108,7 +109,7 @@ class CMSController extends Controller
     {
         $popup = Popup::findOrFail(1);
 
-//        return view('popup.index', compact('popup'));
+        //        return view('popup.index', compact('popup'));
         return Inertia::render('cms/popup/Index', compact('popup'));
     }
 
@@ -144,16 +145,15 @@ class CMSController extends Controller
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
 
-                $sanitizedName = "carousel-image-{$request->input('position')}.".$imageFile->getClientOriginalExtension();
+                $sanitizedName = "carousel-image-{$request->input('position')}.".$imageFile->getaDDriginalExtension();
 
-                Storage::disk('public')->delete("home/carousel/{$sanitizedName}"); // safe even if missing
+                Storage::disk('public')->delete("home/carousel/{$sanitizedName}"); // safe even aDDing
 
                 $imageFile->storeAs('/home/carousel', $sanitizedName, 'public');
 
                 // IMPORTANT: store only filename because model accessor adds the path
                 $carouselData->image = $sanitizedName;
             }
-
 
             $carouselData->save();
 
@@ -355,8 +355,8 @@ class CMSController extends Controller
 
                 $filename = $image->getRawOriginal('image');
 
-                if (Storage::disk('public')->exists($storagePath . '/' . $filename)) {
-                    Storage::disk('public')->delete($storagePath . '/' . $filename);
+                if (Storage::disk('public')->exists($storagePath.'/'.$filename)) {
+                    Storage::disk('public')->delete($storagePath.'/'.$filename);
                 }
 
                 $image->delete();
@@ -455,7 +455,7 @@ class CMSController extends Controller
             DB::transaction(function () use ($request) {
                 if ($request->hasFile('gallery_content')) {
                     $imageFile = $request->file('gallery_content');
-                    $sanitizedName = uniqid() .'.'.$imageFile->getClientOriginalExtension();
+                    $sanitizedName = uniqid().'.'.$imageFile->getClientOriginalExtension();
 
                     if ($request->input('media_type') == '1') {
                         $storagePath = match ($request->input('gallery_type')) {
@@ -602,7 +602,7 @@ class CMSController extends Controller
     public function facilityUpdateStore(Request $request)
     {
         $request->validate([
-            'id'   => 'required|exists:facilities,id',
+            'id' => 'required|exists:facilities,id',
             'name' => 'required|string|max:255',
         ]);
 
@@ -631,10 +631,9 @@ class CMSController extends Controller
             ->with('success', 'Facility deleted successfully.');
     }
 
-
-// ═══════════════════════════════════════════════════════════════
-// TAG CONFIG
-// ═══════════════════════════════════════════════════════════════
+    // ═══════════════════════════════════════════════════════════════
+    // TAG CONFIG
+    // ═══════════════════════════════════════════════════════════════
 
     public function tagAdd()
     {
@@ -646,12 +645,12 @@ class CMSController extends Controller
     public function tagStore(Request $request)
     {
         $request->validate([
-            'name'        => 'required|string|max:255|unique:tags,name',
+            'name' => 'required|string|max:255|unique:tags,name',
             'description' => 'nullable|string|max:1048',
         ]);
 
         Tag::create([
-            'name'        => $request->name,
+            'name' => $request->name,
             'description' => $request->description,
         ]);
 
@@ -669,13 +668,13 @@ class CMSController extends Controller
     public function tagUpdateStore(Request $request)
     {
         $request->validate([
-            'id'          => 'required|exists:tags,id',
-            'name'        => 'required|string|max:255|unique:tags,name,' . $request->id,
+            'id' => 'required|exists:tags,id',
+            'name' => 'required|string|max:255|unique:tags,name,'.$request->id,
             'description' => 'nullable|string|max:1048',
         ]);
 
         Tag::findOrFail($request->id)->update([
-            'name'        => $request->name,
+            'name' => $request->name,
             'description' => $request->description,
         ]);
 
