@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
+use App\Models\Config\Facility;
 use App\Models\Inquiry\Contact;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
@@ -87,6 +88,7 @@ class PageController extends Controller
 
         return Inertia::render('PropertyDetails', [
             'projectDetails' => $projectDetails,
+            'allFacilities' => Facility::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 
@@ -101,6 +103,7 @@ class PageController extends Controller
 
         return Inertia::render('HotelDetails', [
             'projectDetails' => $projectDetails,
+            'allFacilities' => Facility::select('id', 'name')->orderBy('name')->get(),
         ]);
     }
 

@@ -1,24 +1,44 @@
-import { usePage, Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { motion } from 'framer-motion';
-import { MapPin, Bed, Bath, Square, Car, Heart, Share2, ArrowLeft, Wifi, ParkingCircle, Wind } from 'lucide-react';
-import React, { useState } from 'react';
+import {
+    ArrowLeft,
+    Bath,
+    Bed,
+    Building2,
+    Calendar,
+    Car,
+    CheckCircle2,
+    Compass,
+    ExternalLink,
+    Hash,
+    MapPin,
+    Ruler,
+    ShieldCheck,
+    Square,
+    Tag as TagIcon,
+    Video,
+    Waves,
+    Wifi,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import React, { useMemo, useState } from 'react';
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
-import { Badge } from "@/components/ui/badge";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
+import { Badge } from '@/components/ui/badge';
+import { Button } from '@/components/ui/button';
+import { Card, CardContent } from '@/components/ui/card';
 
 
 import AppLayout from "@/layouts/AppLayout";
 import {properties} from "@/routes";
-import type {Project} from "@/types/Project";
+import type { Facility, Project } from '@/types/Project';
 
 const PropertyDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
-    const {projectDetails} = usePage<{projectDetails: Project}>().props;
-
-    console.log(projectDetails);
+    const { projectDetails, allFacilities } = usePage<{
+        projectDetails: Project;
+        allFacilities?: Facility[];
+    }>().props;
 
     // Handle property not found
     if (!projectDetails) {
@@ -39,105 +59,110 @@ const PropertyDetail = () => {
         );
     }
 
-    // Map backend data to property object
-    // ---------- IMAGES ----------
+    const normalize = (value: string) =>
+        value
+            .trim()
+            .toLowerCase()
+            .replace(/&/g, 'and')
+            .replace(/[^a-z0-9]+/g, '-')
+            .replace(/(^-|-$)/g, '');
+
+    const formatDate = (value: string | null | undefined) => {
+        if (!value) return '—';
+        const d = new Date(value);
+        if (Number.isNaN(d.getTime())) return '—';
+        return d.toLocaleDateString(undefined, {
+            year: 'numeric',
+            month: 'short',
+            day: '2-digit',
+        });
+    };
+
+    const formatCurrency = (value: number | null | undefined) => {
+        if (value === null || value === undefined) return 'Contact for price';
+        try {
+            return new Intl.NumberFormat('en-BD', {
+                style: 'currency',
+                currency: 'BDT',
+                maximumFractionDigits: 0,
+            }).format(value);
+        } catch {
+            return value.toLocaleString();
+        }
+    };
+
     const images =
-        projectDetails.project_images?.map((img) => "/" + img.image) ?? [];
+        projectDetails.project_images?.map((img) => `/${img.image}`) ?? [];
 
+    const primaryImage = images[activeImage] ?? images[0] ?? '';
 
-// ---------- AMENITIES (FACILITIES) ----------
-    const amenityIconMap = {
-        wifi: Wifi,
-        parking: ParkingCircle,
-        garage: ParkingCircle,
-        balcony: Wind,
+    const facilityIcon = (facilityName: string) => {
+        const key = normalize(facilityName);
+        const map: Record<string, LucideIcon> = {
+            wifi: Wifi,
+            'wi-fi': Wifi,
+            internet: Wifi,
+            security: ShieldCheck,
+            '24-7-security': ShieldCheck,
+            parking: Car,
+            garage: Car,
+            pool: Waves,
+            'swimming-pool': Waves,
+        };
+        return map[key] ?? CheckCircle2;
     };
 
-    const amenities =
-        projectDetails.facilities?.map((facility) => {
-            const key = facility.name.toLowerCase();
-            const Icon = amenityIconMap[key] || Wifi;
+    const tagList = projectDetails.tags ?? projectDetails.tag ?? [];
 
-            return {
-                name: facility.name,
-                icon: Icon,
-                description: facility.name,
-            };
-        }) ?? [];
+    const facilityIds = useMemo(() => {
+        const ids = new Set<number>();
+        (projectDetails.facilities ?? []).forEach((f) => ids.add(f.id));
+        return ids;
+    }, [projectDetails.facilities]);
 
+    const presentFacilities = useMemo(() => {
+        const source = (allFacilities?.length ? allFacilities : projectDetails.facilities) ?? [];
+        return source
+            .filter((f) => facilityIds.has(f.id))
+            .sort((a, b) => a.name.localeCompare(b.name));
+    }, [allFacilities, facilityIds, projectDetails.facilities]);
 
-// ---------- DETAILS FEATURES ----------
-    if (projectDetails.details) {
-        const d = projectDetails.details;
-
-        if (d.parking)
-            amenities.push({
-                name: "Parking",
-                icon: ParkingCircle,
-                description: `${d.parking} Parking`,
-            });
-
-        if (d.garage_no)
-            amenities.push({
-                name: "Garage",
-                icon: ParkingCircle,
-                description: `${d.garage_no} Garage`,
-            });
-
-        if (d.balcony)
-            amenities.push({
-                name: "Balcony",
-                icon: Wind,
-                description: `${d.balcony} Balcony`,
-            });
-    }
-
-
-// ---------- PROPERTY OBJECT ----------
-    const property = {
-        id: projectDetails.id,
-        title: projectDetails.name,
-        description: projectDetails.description ?? "",
-        address: projectDetails.address ?? "",
-        location: projectDetails.location?.name ?? "Unknown",
-
-        beds: projectDetails.details?.bedroom ?? "N/A",
-        baths: projectDetails.details?.bathroom ?? "N/A",
-
-        sqft:
-            projectDetails.details?.apartment_size ??
-            projectDetails.size ??
-            "N/A",
-
-        facing: projectDetails.details?.apartment_direction ?? "N/A",
-
-        parking: parseInt(projectDetails.details?.garage_no ?? 0),
-
-        status: projectDetails.isFeatured ? "Featured" : "Available",
-
-        type: projectDetails.tag?.[0]?.name ?? "Property",
-
-        price: projectDetails.price
-            ? `$${projectDetails.price.toLocaleString()}`
-            : "Contact for Price",
-
-        yearBuilt: projectDetails.construction_start_date ?? "",
-
-        amenities,
-
-        images: images.length ? images : [],
-    };
+    const quickFacts = [
+        {
+            label: 'Bedrooms',
+            value: projectDetails.details?.bedroom ?? '—',
+            icon: Bed,
+        },
+        {
+            label: 'Bathrooms',
+            value: projectDetails.details?.bathroom ?? '—',
+            icon: Bath,
+        },
+        {
+            label: 'Size',
+            value:
+                projectDetails.details?.apartment_size ??
+                projectDetails.size ??
+                '—',
+            icon: Square,
+        },
+        {
+            label: 'Floors',
+            value: projectDetails.floors ?? '—',
+            icon: Building2,
+        },
+    ];
 
     return (
         <AppLayout>
-            <div className="min-h-screen bg-black">
+            <div className="min-h-screen bg-black text-white">
                 {/* Back Button */}
-                <div className="container mx-auto px-4 pt-28 pb-8">
+                <div className="container mx-auto px-4 pb-6 pt-28">
                     <ScrollAnimation>
                         <Link href={properties()}>
                             <Button
                                 variant="ghost"
-                                className="p-4 text-white hover:bg-white/10"
+                                className="px-0 text-white/90 hover:bg-transparent hover:text-white"
                             >
                                 <ArrowLeft className="mr-2 h-4 w-4" />
                                 Back to Properties
@@ -146,439 +171,486 @@ const PropertyDetail = () => {
                     </ScrollAnimation>
                 </div>
 
-                {/* Image Gallery */}
-                <section className="container mx-auto px-4 pb-12">
+                {/* Hero: Gallery + Summary */}
+                <section className="container mx-auto px-4 pb-10">
                     <ScrollAnimation>
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-3">
-                            <div className="flex lg:col-span-2">
-                                {property.images.length > 0 && (
-                                    <img
-                                        src={property.images[activeImage]}
-                                        alt={property.title}
-                                        className="shadow-elegant-lg h-[500px] w-full rounded-lg object-cover"
-                                    />
-                                )}
+                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                            <div className="grid grid-cols-4 gap-3 lg:flex lg:flex-col">
+                                {images.slice(0, 5).map((img, index) => (
+                                    <motion.button
+                                        key={`${img}-${index}`}
+                                        type="button"
+                                        onClick={() => setActiveImage(index)}
+                                        className={`relative h-20 overflow-hidden rounded-xl border transition-all duration-300 lg:h-24 ${
+                                            activeImage === index
+                                                ? 'border-white/40 bg-white/5'
+                                                : 'border-white/10 hover:border-white/25'
+                                        }`}
+                                        whileHover={{ scale: 1.02 }}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Property view ${index + 1}`}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </motion.button>
+                                ))}
                             </div>
 
-                            {property.images.length > 0 && (
-                                <div className="grid grid-cols-2 gap-4 md:grid-cols-3 lg:flex lg:flex-col">
-                                    {property.images.map((image, index) => (
+                            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 lg:col-span-2">
+                                {primaryImage ? (
+                                    <motion.div
+                                        className="relative h-[420px] w-full overflow-hidden"
+                                        initial={{ opacity: 0 }}
+                                        animate={{ opacity: 1 }}
+                                        transition={{ duration: 0.4 }}
+                                    >
                                         <img
-                                            key={index}
-                                            src={image}
-                                            alt={`View ${index + 1}`}
-                                            className={`h-40 w-full cursor-pointer rounded-lg object-cover transition-all duration-300 ${
-                                                activeImage === index
-                                                    ? 'ring-2 ring-white'
-                                                    : 'hover:opacity-75'
-                                            }`}
-                                            onClick={() =>
-                                                setActiveImage(index)
-                                            }
+                                            src={primaryImage}
+                                            alt={projectDetails.name}
+                                            className="h-full w-full object-cover"
                                         />
-                                    ))}
+                                        <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-black/80 via-black/30 to-transparent" />
+                                    </motion.div>
+                                ) : (
+                                    <div className="flex h-[420px] items-center justify-center text-white/60">
+                                        No images available
+                                    </div>
+                                )}
+
+                                <div className="relative z-10 px-6 pb-6 pt-4 md:px-10">
+                                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                                        {projectDetails.isFeatured && (
+                                            <Badge className="border-0 bg-primary/90 text-white">
+                                                Featured
+                                            </Badge>
+                                        )}
+                                        {tagList.slice(0, 2).map((t) => (
+                                            <Badge
+                                                key={t.id}
+                                                variant="outline"
+                                                className="border-white/20 bg-black/20 text-white/90"
+                                            >
+                                                {t.name}
+                                            </Badge>
+                                        ))}
+                                    </div>
+
+                                    <h1 className="text-3xl font-semibold tracking-tight md:text-4xl">
+                                        {projectDetails.name}
+                                    </h1>
+                                    <div className="mt-2 space-y-1 text-sm text-white/80">
+                                        <div className="flex items-start gap-2">
+                                            <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                                            <div>
+                                                <div>
+                                                    {projectDetails.location
+                                                        ?.name ?? '—'}
+                                                </div>
+                                                {projectDetails.address && (
+                                                    <div className="text-white/60">
+                                                        {projectDetails.address}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-5 flex flex-col gap-3 sm:flex-row sm:items-end sm:justify-between">
+                                        <div>
+                                            <div className="text-xs uppercase tracking-wide text-white/60">
+                                                Indicative price
+                                            </div>
+                                            <div className="text-2xl font-semibold">
+                                                {formatCurrency(
+                                                    projectDetails.price,
+                                                )}
+                                            </div>
+                                        </div>
+                                        {projectDetails.google_map_url && (
+                                            <Button
+                                                asChild
+                                                variant="secondary"
+                                                className="bg-white/15 text-white hover:bg-white/25"
+                                            >
+                                                <a
+                                                    href={
+                                                        projectDetails.google_map_url
+                                                    }
+                                                    target="_blank"
+                                                    rel="noreferrer"
+                                                >
+                                                    Open in Google Maps
+                                                    <ExternalLink className="ml-2 h-4 w-4" />
+                                                </a>
+                                            </Button>
+                                        )}
+                                    </div>
                                 </div>
-                            )}
+                            </div>
                         </div>
                     </ScrollAnimation>
                 </section>
 
-                {/* Property Details */}
-                <section className="container mx-auto w-3/4 px-4 pb-20">
-                    <div className="space-y-16">
-                        {/* Header Card */}
+                {/* Content */}
+                <section className="container mx-auto px-4 pb-20">
+                    <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+                        {/* Left rail - At a Glance */}
                         <ScrollAnimation>
-                            <div className="relative overflow-hidden rounded-2xl">
-                                {/* Background with gradient */}
-                                <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent" />
-
-                                {/* Glass morphism card */}
-                                <div className="relative bg-white/10 shadow-2xl backdrop-blur-xl">
-                                    <div className="p-8 md:p-12">
-                                        {/* Top Section - Title and Actions */}
-                                        <div className="mb-8 flex flex-col justify-between gap-6 md:flex-row md:items-start">
-                                            <div className="flex-1">
-                                                <div className="mb-4 flex items-center gap-3">
-                                                    <Badge className="border-0 bg-gradient-to-r from-primary to-accent px-4 py-1.5 text-sm font-medium text-white">
-                                                        {property.status}
-                                                    </Badge>
-                                                    <Badge
-                                                        variant="outline"
-                                                        className="border-white/30 px-4 py-1.5 text-white"
-                                                    >
-                                                        {property.type}
-                                                    </Badge>
-                                                </div>
-                                                <h1 className="mb-4 text-4xl leading-tight font-bold text-white md:text-5xl">
-                                                    {projectDetails.name}
-                                                </h1>
-                                                <div className="flex items-center text-lg text-white/80">
-                                                    <MapPin className="mr-2 h-5 w-5 flex-shrink-0" />
-                                                    <span>
-                                                        {property.location}
-                                                    </span>
-                                                </div>
-                                            </div>
-
-                                            {/* Price and Actions */}
-                                            <div className="flex flex-col items-end gap-4">
-                                                {/* <div className="text-right">
-                        <div className="text-sm text-white/70 mb-1">Starting From</div>
-                        <div className="text-5xl font-bold text-white">{property.price}</div>
-                      </div> */}
-                                                <div className="flex gap-3">
-                                                    <motion.div
-                                                        whileHover={{
-                                                            scale: 1.05,
-                                                        }}
-                                                        whileTap={{
-                                                            scale: 0.95,
-                                                        }}
-                                                    >
-                                                        <Button
-                                                            size="icon"
-                                                            className="h-12 w-12 rounded-full border border-white/30 bg-white/20 backdrop-blur-sm hover:bg-white/30"
-                                                        >
-                                                            <Heart className="h-5 w-5 text-white" />
-                                                        </Button>
-                                                    </motion.div>
-                                                    <motion.div
-                                                        whileHover={{
-                                                            scale: 1.05,
-                                                        }}
-                                                        whileTap={{
-                                                            scale: 0.95,
-                                                        }}
-                                                    >
-                                                        <Button
-                                                            size="icon"
-                                                            className="h-12 w-12 rounded-full border border-white/30 bg-white/20 backdrop-blur-sm hover:bg-white/30"
-                                                        >
-                                                            <Share2 className="h-5 w-5 text-white" />
-                                                        </Button>
-                                                    </motion.div>
-                                                </div>
-                                            </div>
+                            <Card className="border-white/10 bg-white/5 backdrop-blur-xl lg:sticky lg:top-28 lg:h-fit">
+                                <CardContent className="p-6 text-sm text-white/85">
+                                    <h2 className="text-base font-semibold">
+                                        At a Glance
+                                    </h2>
+                                    <div className="mt-4 grid gap-3">
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <MapPin className="h-3.5 w-3.5" />
+                                                Location
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {projectDetails.location?.name ??
+                                                    '—'}
+                                            </span>
                                         </div>
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Square className="h-3.5 w-3.5" />
+                                                Apartment Size
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {projectDetails.details
+                                                    ?.apartment_size ??
+                                                    projectDetails.size ??
+                                                    '—'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Bed className="h-3.5 w-3.5" />
+                                                Bedroom
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {projectDetails.details
+                                                    ?.bedroom ?? '—'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Bath className="h-3.5 w-3.5" />
+                                                Bathroom
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {projectDetails.details
+                                                    ?.bathroom ?? '—'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Building2 className="h-3.5 w-3.5" />
+                                                No. of Floors
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {projectDetails.floors ?? '—'}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Calendar className="h-3.5 w-3.5" />
+                                                Launch / Start
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {formatDate(
+                                                    projectDetails.construction_start_date,
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Calendar className="h-3.5 w-3.5" />
+                                                Expected Completion
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {formatDate(
+                                                    projectDetails.handover_date,
+                                                )}
+                                            </span>
+                                        </div>
+                                        <div className="flex items-start justify-between gap-4">
+                                            <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                <Hash className="h-3.5 w-3.5" />
+                                                Project ID
+                                            </span>
+                                            <span className="text-right text-sm">
+                                                {projectDetails.project_id ??
+                                                    '—'}
+                                            </span>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </ScrollAnimation>
 
-                                        {/* Quick Stats - Modern Grid */}
-                                        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                        {/* Main sections */}
+                        <div className="space-y-10 lg:col-span-2">
+                            <ScrollAnimation>
+                                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                    <CardContent className="p-8">
+                                        <div className="mb-3 flex items-center gap-2">
+                                            <Badge className="bg-white/10 text-white">
+                                                Overview
+                                            </Badge>
+                                        </div>
+                                        <p className="text-sm leading-relaxed text-white/80">
+                                            {projectDetails.description ??
+                                                '—'}
+                                        </p>
+
+                                        {projectDetails.surroundings && (
+                                            <div className="mt-6 rounded-2xl border border-white/10 bg-black/10 p-5">
+                                                <div className="flex items-center gap-2 text-sm font-semibold">
+                                                    <MapPin className="h-4 w-4" />
+                                                    Surroundings
+                                                </div>
+                                                <p className="mt-2 text-sm text-white/75">
+                                                    {projectDetails.surroundings}
+                                                </p>
+                                            </div>
+                                        )}
+
+                                        {tagList.length > 0 && (
+                                            <div className="mt-6">
+                                                <div className="flex items-center gap-2 text-sm font-semibold">
+                                                    <TagIcon className="h-4 w-4" />
+                                                    Tags
+                                                </div>
+                                                <div className="mt-3 flex flex-wrap gap-2">
+                                                    {tagList.map((t) => (
+                                                        <Badge
+                                                            key={t.id}
+                                                            variant="outline"
+                                                            className="border-white/15 bg-black/10 text-white/80"
+                                                        >
+                                                            {t.name}
+                                                        </Badge>
+                                                    ))}
+                                                </div>
+                                            </div>
+                                        )}
+                                    </CardContent>
+                                </Card>
+                            </ScrollAnimation>
+
+                            <ScrollAnimation delay={0.12}>
+                                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                    <CardContent className="p-8">
+                                        <h2 className="text-xl font-semibold">
+                                            Unit specifications
+                                        </h2>
+
+                                        <div className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
                                             {[
                                                 {
-                                                    icon: Bed,
-                                                    value: property.beds,
-                                                    label: 'Bedrooms',
-                                                    color: 'from-blue-500 to-cyan-500',
-                                                },
-                                                {
-                                                    icon: Bath,
-                                                    value: property.baths,
-                                                    label: 'Bathrooms',
-                                                    color: 'from-purple-500 to-pink-500',
-                                                },
-                                                {
+                                                    label: 'Apartment size',
+                                                    value: projectDetails.details
+                                                        ?.apartment_size,
                                                     icon: Square,
-                                                    value: property.sqft,
-                                                    label: 'Square Feet',
-                                                    color: 'from-orange-500 to-red-500',
                                                 },
                                                 {
-                                                    icon: Car,
-                                                    value: property.parking,
-                                                    label: 'Parking',
-                                                    color: 'from-green-500 to-emerald-500',
+                                                    label: 'Facing',
+                                                    value: projectDetails.details
+                                                        ?.apartment_direction,
+                                                    icon: Compass,
                                                 },
-                                            ].map((stat, index) => {
-                                                const Icon = stat.icon;
-                                                return (
-                                                    <motion.div
-                                                        key={index}
-                                                        className="group relative"
-                                                        whileHover={{ y: -5 }}
-                                                        transition={{
-                                                            duration: 0.2,
-                                                        }}
-                                                    >
-                                                        <div className="relative rounded-xl border border-white/20 bg-white/10 p-6 backdrop-blur-md transition-all duration-300 hover:bg-white/20">
-                                                            {/* Gradient accent on hover */}
-                                                            <div
-                                                                className={`absolute inset-0 bg-gradient-to-br opacity-0 group-hover:opacity-10 ${stat.color} rounded-xl transition-opacity duration-300`}
-                                                            />
-
-                                                            <div className="relative">
-                                                                <div
-                                                                    className={`inline-flex rounded-lg bg-gradient-to-br p-3 ${stat.color} mb-3`}
-                                                                >
-                                                                    <Icon className="h-6 w-6 text-white" />
+                                                {
+                                                    label: 'Bedrooms',
+                                                    value: projectDetails.details
+                                                        ?.bedroom,
+                                                    icon: Bed,
+                                                },
+                                                {
+                                                    label: 'Bathrooms',
+                                                    value: projectDetails.details
+                                                        ?.bathroom,
+                                                    icon: Bath,
+                                                },
+                                                {
+                                                    label: 'Balcony',
+                                                    value: projectDetails.details
+                                                        ?.balcony,
+                                                    icon: CheckCircle2,
+                                                },
+                                                {
+                                                    label: 'Kitchen',
+                                                    value: projectDetails.details
+                                                        ?.kitchen,
+                                                    icon: CheckCircle2,
+                                                },
+                                                {
+                                                    label: 'Living & Dining',
+                                                    value: projectDetails.details
+                                                        ?.living_dining,
+                                                    icon: CheckCircle2,
+                                                },
+                                                {
+                                                    label: 'Parking',
+                                                    value: projectDetails.details
+                                                        ?.parking,
+                                                    icon: Car,
+                                                },
+                                                {
+                                                    label: 'Garage (No.)',
+                                                    value: projectDetails.details
+                                                        ?.garage_no,
+                                                    icon: Car,
+                                                },
+                                                {
+                                                    label: 'Garage size',
+                                                    value: projectDetails.details
+                                                        ?.garage_size,
+                                                    icon: Ruler,
+                                                },
+                                            ]
+                                                .filter((x) => x.value)
+                                                .map((item) => {
+                                                    const Icon = item.icon;
+                                                    return (
+                                                        <div
+                                                            key={item.label}
+                                                            className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/10 p-4"
+                                                        >
+                                                            <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10">
+                                                                <Icon className="h-4 w-4 text-white/85" />
+                                                            </div>
+                                                            <div>
+                                                                <div className="text-xs uppercase tracking-wide text-white/60">
+                                                                    {item.label}
                                                                 </div>
-                                                                <div className="mb-1 text-3xl font-bold text-white">
-                                                                    {stat.value}
-                                                                </div>
-                                                                <div className="text-sm text-white/70">
-                                                                    {stat.label}
+                                                                <div className="mt-1 font-medium text-white">
+                                                                    {item.value}
                                                                 </div>
                                                             </div>
                                                         </div>
-                                                    </motion.div>
-                                                );
-                                            })}
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </ScrollAnimation>
-
-                        {/* Description Section with Images */}
-                        <ScrollAnimation delay={0.2}>
-                            <div className="grid grid-cols-1 gap-8 lg:grid-cols-2">
-                                <div className="grid grid-cols-2 gap-4">
-                                    {property.images
-                                        .slice(0, 2)
-                                        .map((img, index) => (
-                                            <motion.img
-                                                key={index}
-                                                src={img}
-                                                alt={`Property view ${index + 1}`}
-                                                className="h-64 w-full rounded-lg object-cover shadow-lg"
-                                                whileHover={{ scale: 1.05 }}
-                                                transition={{ duration: 0.3 }}
-                                            />
-                                        ))}
-                                </div>
-                                <Card className="shadow-elegant-lg bg-white/80">
-                                    <CardContent className="p-8">
-                                        <Badge className="mb-4 bg-primary/10 text-primary">
-                                            {property.type.toUpperCase()}
-                                        </Badge>
-                                        <h2 className="mb-4 text-3xl font-bold text-black">
-                                            {property.title}
-                                        </h2>
-                                        <p className="mb-4 leading-relaxed text-muted-foreground">
-                                            {property.description}
-                                        </p>
-                                        <div className="mt-4 space-y-2 text-black">
-                                            <p>
-                                                <strong>Address:</strong>{' '}
-                                                {property.address}
-                                            </p>
-                                            <p>
-                                                <strong>Beds:</strong>{' '}
-                                                {property.beds} |{' '}
-                                                <strong>Baths:</strong>{' '}
-                                                {property.baths}
-                                            </p>
-                                            <p>
-                                                <strong>Size:</strong>{' '}
-                                                {property.sqft}
-                                            </p>
+                                                    );
+                                                })}
                                         </div>
                                     </CardContent>
                                 </Card>
-                            </div>
-                        </ScrollAnimation>
+                            </ScrollAnimation>
 
-                        {/* Features Grid */}
-                        <ScrollAnimation delay={0.3}>
-                            <Card className="shadow-elegant-lg border-0 bg-black backdrop-blur-lg">
-                                <CardContent className="p-8">
-                                    <h2 className="mb-8 text-center text-3xl font-bold text-white">
-                                        Amenities
-                                    </h2>
-                                    <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
-                                        {property.amenities.map(
-                                            (amenity, index) => {
-                                                const Icon = amenity.icon;
-                                                return (
-                                                    <>
+                            <ScrollAnimation delay={0.2}>
+                                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                    <CardContent className="p-8">
+                                        <h2 className="text-xl font-semibold">
+                                            Amenities
+                                        </h2>
+                                        <p className="mt-1 text-sm text-white/65">
+                                            Selected facilities available in
+                                            this property.
+                                        </p>
+
+                                        {presentFacilities.length === 0 ? (
+                                            <div className="mt-6 rounded-2xl border border-white/10 bg-black/10 p-5 text-sm text-white/70">
+                                                Amenities will be announced
+                                                soon.
+                                            </div>
+                                        ) : (
+                                            <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                                                {presentFacilities.map((f) => {
+                                                    const Icon = facilityIcon(
+                                                        f.name,
+                                                    );
+                                                    return (
                                                         <motion.div
-                                                            key={index}
-                                                            className="relative flex flex-col items-center rounded-lg bg-white/10 p-6 text-center shadow-2xl backdrop-blur-xl"
+                                                            key={f.id}
+                                                            className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 p-4"
                                                             whileHover={{
-                                                                y: -5,
+                                                                y: -3,
+                                                                scale: 1.01,
                                                             }}
                                                             transition={{
-                                                                duration: 0.3,
+                                                                duration: 0.2,
                                                             }}
                                                         >
-                                                            {/* Background with gradient */}
-                                                            <div className="absolute inset-0 bg-gradient-to-br from-primary/20 via-accent/10 to-transparent" />
-                                                            <div className="mb-4 rounded-full bg-primary/10 p-4">
-                                                                <Icon className="h-8 w-8 text-white" />
+                                                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
+                                                                <Icon className="h-5 w-5 text-white/90" />
                                                             </div>
-                                                            <h3 className="mb-2 text-lg font-bold text-white">
-                                                                {amenity.name}
-                                                            </h3>
-                                                            <p className="text-sm text-white">
-                                                                {
-                                                                    amenity.description
-                                                                }
-                                                            </p>
+                                                            <div className="text-sm font-medium text-white">
+                                                                {f.name}
+                                                            </div>
                                                         </motion.div>
-                                                    </>
-                                                );
-                                            },
+                                                    );
+                                                })}
+                                            </div>
                                         )}
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </ScrollAnimation>
+                                    </CardContent>
+                                </Card>
+                            </ScrollAnimation>
 
-                        {/* Large Property Image */}
-                        <ScrollAnimation delay={0.4}>
-                            {property.images?.[0] && (
-                                <motion.div
-                                    className="shadow-elegant-lg relative h-[500px] overflow-hidden rounded-lg"
-                                    whileHover={{ scale: 1.02 }}
-                                    transition={{ duration: 0.5 }}
-                                >
-                                    <img
-                                        src={property.images[0]}
-                                        alt={property.title}
-                                        className="h-full w-full object-cover"
-                                    />
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/50 to-transparent" />
-                                </motion.div>
+                            {projectDetails.details?.youtube_video_id && (
+                                <ScrollAnimation delay={0.28}>
+                                    <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                        <CardContent className="p-8">
+                                            <div className="flex items-center gap-2">
+                                                <Video className="h-5 w-5" />
+                                                <h2 className="text-xl font-semibold">
+                                                    Video tour
+                                                </h2>
+                                            </div>
+                                            <div className="mt-5 overflow-hidden rounded-2xl border border-white/10">
+                                                <iframe
+                                                    className="aspect-video w-full"
+                                                    src={`https://www.youtube.com/embed/${projectDetails.details.youtube_video_id}`}
+                                                    title="YouTube video player"
+                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                    referrerPolicy="strict-origin-when-cross-origin"
+                                                    allowFullScreen
+                                                />
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </ScrollAnimation>
                             )}
-                        </ScrollAnimation>
 
-                        {/* Video Album Section */}
-                        <ScrollAnimation delay={0.6}>
-                            <Card className="shadow-elegant-lg bg-white/80">
-                                <CardContent className="p-8">
-                                    <div className="mb-8 text-center">
-                                        <Badge className="mb-4 bg-primary/10 text-primary">
-                                            VISUAL TOUR
-                                        </Badge>
-                                        <h2 className="text-4xl font-bold text-black">
-                                            ECOPI GARDEN ALBUM
-                                        </h2>
-                                    </div>
-
-                                    <Tabs defaultValue="all" className="w-full">
-                                        <TabsList className="mb-8 flex flex-wrap justify-center">
-                                            <TabsTrigger value="all">
-                                                All
-                                            </TabsTrigger>
-                                            <TabsTrigger value="living">
-                                                Living Room
-                                            </TabsTrigger>
-                                            <TabsTrigger value="bed">
-                                                Bed Room
-                                            </TabsTrigger>
-                                            <TabsTrigger value="bath">
-                                                Bath Room
-                                            </TabsTrigger>
-                                            <TabsTrigger value="basement">
-                                                Basement
-                                            </TabsTrigger>
-                                            <TabsTrigger value="kitchen">
-                                                Kitchen
-                                            </TabsTrigger>
-                                            <TabsTrigger value="entertainment">
-                                                Entertainment
-                                            </TabsTrigger>
-                                        </TabsList>
-
-                                        <TabsContent
-                                            value="all"
-                                            className="grid grid-cols-2 gap-4 md:grid-cols-4"
-                                        >
-                                            {property.images.map(
-                                                (img, index) => (
-                                                    <motion.div
-                                                        key={index}
-                                                        className="group relative h-48 cursor-pointer overflow-hidden rounded-lg"
-                                                        whileHover={{
-                                                            scale: 1.05,
-                                                        }}
-                                                        transition={{
-                                                            duration: 0.3,
-                                                        }}
+                            <ScrollAnimation delay={0.35}>
+                                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                    <CardContent className="p-8">
+                                        <div className="flex flex-col items-start justify-between gap-3 sm:flex-row sm:items-center">
+                                            <div>
+                                                <h2 className="text-xl font-semibold">
+                                                    Location
+                                                </h2>
+                                                <p className="mt-1 text-sm text-white/65">
+                                                    Explore the neighborhood and
+                                                    nearby points of interest.
+                                                </p>
+                                            </div>
+                                            {projectDetails.google_map_url && (
+                                                <Button
+                                                    asChild
+                                                    variant="secondary"
+                                                    className="bg-white/15 text-white hover:bg-white/25"
+                                                >
+                                                    <a
+                                                        href={
+                                                            projectDetails.google_map_url
+                                                        }
+                                                        target="_blank"
+                                                        rel="noreferrer"
                                                     >
-                                                        <img
-                                                            src={img}
-                                                            alt={`Gallery ${index + 1}`}
-                                                            className="h-full w-full object-cover"
-                                                        />
-                                                        <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                                                            <Button
-                                                                size="sm"
-                                                                variant="secondary"
-                                                            >
-                                                                View
-                                                            </Button>
-                                                        </div>
-                                                    </motion.div>
-                                                ),
+                                                        View on Google Maps
+                                                        <ExternalLink className="ml-2 h-4 w-4" />
+                                                    </a>
+                                                </Button>
                                             )}
-                                        </TabsContent>
-
-                                        {[
-                                            'living',
-                                            'bed',
-                                            'bath',
-                                            'basement',
-                                            'kitchen',
-                                            'entertainment',
-                                        ].map((tab) => (
-                                            <TabsContent
-                                                key={tab}
-                                                value={tab}
-                                                className="grid grid-cols-2 gap-4 md:grid-cols-4"
-                                            >
-                                                {property.images
-                                                    .slice(0, 3)
-                                                    .map((img, index) => (
-                                                        <motion.div
-                                                            key={index}
-                                                            className="group relative h-48 cursor-pointer overflow-hidden rounded-lg"
-                                                            whileHover={{
-                                                                scale: 1.05,
-                                                            }}
-                                                            transition={{
-                                                                duration: 0.3,
-                                                            }}
-                                                        >
-                                                            <img
-                                                                src={img}
-                                                                alt={`${tab} ${index + 1}`}
-                                                                className="h-full w-full object-cover"
-                                                            />
-                                                            <div className="absolute inset-0 flex items-center justify-center bg-black/40 opacity-0 transition-opacity group-hover:opacity-100">
-                                                                <Button
-                                                                    size="sm"
-                                                                    variant="secondary"
-                                                                >
-                                                                    View
-                                                                </Button>
-                                                            </div>
-                                                        </motion.div>
-                                                    ))}
-                                            </TabsContent>
-                                        ))}
-                                    </Tabs>
-                                </CardContent>
-                            </Card>
-                        </ScrollAnimation>
-
-                        {/* Map Section */}
-                        <ScrollAnimation delay={0.7}>
-                            <Card className="shadow-elegant-lg mx-auto items-center border-0 text-center">
-                                <CardContent>
-                                    <div className="mt-16 flex flex-col gap-4">
-                                        <h2 className="mb-4 text-4xl font-medium text-white lg:text-5xl">
-                                            Find In Google Map
-                                        </h2>
-                                        <div className="flex justify-center">
-                                            <MapComponent
-                                                width="100%"
-                                                // mapUrl={projectDetails.google_map_url}
-                                            />
                                         </div>
-                                    </div>
-                                </CardContent>
-                            </Card>
-                        </ScrollAnimation>
+                                        <div className="mt-6 overflow-hidden rounded-2xl border border-white/10">
+                                            <MapComponent width="100%" />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </ScrollAnimation>
+                        </div>
                     </div>
                 </section>
             </div>

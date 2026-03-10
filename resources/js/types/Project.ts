@@ -21,8 +21,7 @@ interface Details {
     youtube_video_id: string | null;
 }
 
-interface Facilities
-{
+export interface Facility {
     id: number;
     name: string;
 }
@@ -49,8 +48,11 @@ export interface Project
     isFeatured: boolean;
     project_id: string;
     location: Location;
+    // Backend returns `tags` (not `tag`) via `with('tags')`.
+    tags?: Tag[] | null;
+    // Kept for backward compatibility with older pages (if any).
     tag?: Tag[] | null;
     details?: Details | null;
-    facilities?: Facilities[] | null;
+    facilities?: Facility[] | null;
     project_images?: ProjectImages[] | null;
 }
