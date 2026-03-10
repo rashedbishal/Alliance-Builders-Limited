@@ -175,29 +175,7 @@ const PropertyDetail = () => {
                 <section className="container mx-auto px-4 pb-10">
                     <ScrollAnimation>
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                            <div className="grid grid-cols-4 gap-3 lg:flex lg:flex-col">
-                                {images.slice(0, 5).map((img, index) => (
-                                    <motion.button
-                                        key={`${img}-${index}`}
-                                        type="button"
-                                        onClick={() => setActiveImage(index)}
-                                        className={`relative h-20 overflow-hidden rounded-xl border transition-all duration-300 lg:h-24 ${
-                                            activeImage === index
-                                                ? 'border-white/40 bg-white/5'
-                                                : 'border-white/10 hover:border-white/25'
-                                        }`}
-                                        whileHover={{ scale: 1.02 }}
-                                    >
-                                        <img
-                                            src={img}
-                                            alt={`Property view ${index + 1}`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    </motion.button>
-                                ))}
-                            </div>
-
-                            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 lg:col-span-2">
+                        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 lg:col-span-2">
                                 {primaryImage ? (
                                     <motion.div
                                         className="relative h-[420px] w-full overflow-hidden"
@@ -287,6 +265,28 @@ const PropertyDetail = () => {
                                         )}
                                     </div>
                                 </div>
+                            </div>
+
+                            <div className="grid grid-cols-4 gap-3 lg:flex lg:flex-col">
+                                {images.slice(0, 5).map((img, index) => (
+                                    <motion.button
+                                        key={`${img}-${index}`}
+                                        type="button"
+                                        onClick={() => setActiveImage(index)}
+                                        className={`relative h-20 overflow-hidden rounded-xl border transition-all duration-300 lg:h-24 ${
+                                            activeImage === index
+                                                ? 'border-white/40 bg-white/5'
+                                                : 'border-white/10 hover:border-white/25'
+                                        }`}
+                                        whileHover={{ scale: 1.02 }}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Property view ${index + 1}`}
+                                            className="h-full w-full object-cover"
+                                        />
+                                    </motion.button>
+                                ))}
                             </div>
                         </div>
                     </ScrollAnimation>
