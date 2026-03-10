@@ -146,7 +146,7 @@ const HotelDetails = () => {
                                     </motion.button>
                                 ))}
                             </div>
-                            
+
                             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/10 via-slate-900 to-slate-950 lg:col-span-2">
                                 <motion.div
                                     className="relative h-[420px] w-full overflow-hidden"

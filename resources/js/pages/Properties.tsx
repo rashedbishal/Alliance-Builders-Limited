@@ -27,8 +27,8 @@ const Properties = () => {
 
     const save = sessionStorage.getItem('propertyFilters');
 
-    console.log('projects', projects);
-    console.log('saved data here!!!!!:', save);
+    // console.log('projects', projects);
+    // console.log('saved data here!!!!!:', save);
 
     useEffect(() => {
         const saved = sessionStorage.getItem('propertyFilters');
