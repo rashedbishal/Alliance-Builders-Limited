@@ -21,7 +21,7 @@ import {
     Wifi,
 } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
@@ -35,6 +35,7 @@ import type { Facility, Project } from '@/types/Project';
 
 const PropertyDetail = () => {
     const [activeImage, setActiveImage] = useState(0);
+    const thumbsRef = useRef<HTMLDivElement | null>(null);
     const { projectDetails, allFacilities } = usePage<{
         projectDetails: Project;
         allFacilities?: Facility[];
@@ -95,6 +96,14 @@ const PropertyDetail = () => {
         projectDetails.project_images?.map((img) => `/${img.image}`) ?? [];
 
     const primaryImage = images[activeImage] ?? images[0] ?? '';
+
+    useEffect(() => {
+        if (images.length <= 1) return undefined;
+        const id = window.setInterval(() => {
+            setActiveImage((prev) => (prev + 1) % images.length);
+        }, 4500);
+        return () => window.clearInterval(id);
+    }, [images.length]);
 
     const facilityIcon = (facilityName: string) => {
         const key = normalize(facilityName);
@@ -175,7 +184,7 @@ const PropertyDetail = () => {
                 <section className="container mx-auto px-4 pb-10">
                     <ScrollAnimation>
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                        <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 lg:col-span-2">
+                            <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-white/5 lg:col-span-2">
                                 {primaryImage ? (
                                     <motion.div
                                         className="relative h-[420px] w-full overflow-hidden"
@@ -265,29 +274,128 @@ const PropertyDetail = () => {
                                         )}
                                     </div>
                                 </div>
+
+                                {/* Slider thumbs (below main image) */}
+                                {images.length > 1 && (
+                                    <div className="border-t border-white/10 bg-black/20 px-4 py-4 md:px-8">
+                                        <div
+                                            ref={thumbsRef}
+                                            className="flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+                                        >
+                                            {images.map((img, index) => (
+                                                <motion.button
+                                                    key={`${img}-${index}-thumb`}
+                                                    data-thumb-index={index}
+                                                    type="button"
+                                                    onClick={() =>
+                                                        setActiveImage(index)
+                                                    }
+                                                    className={`relative h-20 w-32 flex-shrink-0 overflow-hidden rounded-2xl border transition-all duration-300 md:h-24 md:w-40 ${
+                                                        activeImage === index
+                                                            ? 'border-white/45 ring-1 ring-white/20'
+                                                            : 'border-white/10 hover:border-white/25'
+                                                    }`}
+                                                    whileHover={{ scale: 1.02 }}
+                                                >
+                                                    <img
+                                                        src={img}
+                                                        alt={`Thumbnail ${index + 1}`}
+                                                        className="h-full w-full object-cover"
+                                                    />
+                                                    {activeImage === index && (
+                                                        <div className="pointer-events-none absolute inset-0 bg-white/5" />
+                                                    )}
+                                                </motion.button>
+                                            ))}
+                                        </div>
+                                    </div>
+                                )}
                             </div>
 
-                            <div className="grid grid-cols-4 gap-3 lg:flex lg:flex-col">
-                                {images.slice(0, 5).map((img, index) => (
-                                    <motion.button
-                                        key={`${img}-${index}`}
-                                        type="button"
-                                        onClick={() => setActiveImage(index)}
-                                        className={`relative h-20 overflow-hidden rounded-xl border transition-all duration-300 lg:h-24 ${
-                                            activeImage === index
-                                                ? 'border-white/40 bg-white/5'
-                                                : 'border-white/10 hover:border-white/25'
-                                        }`}
-                                        whileHover={{ scale: 1.02 }}
-                                    >
-                                        <img
-                                            src={img}
-                                            alt={`Property view ${index + 1}`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    </motion.button>
-                                ))}
-                            </div>
+                            {/* Summary / quick facts (right) */}
+                            <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                <CardContent className="p-6 md:p-7">
+                                    <div className="mb-3 flex flex-wrap items-center gap-2">
+                                        {projectDetails.isFeatured && (
+                                            <Badge className="border-0 bg-primary/90 text-white">
+                                                Featured
+                                            </Badge>
+                                        )}
+                                        {tagList.slice(0, 3).map((t) => (
+                                            <Badge
+                                                key={t.id}
+                                                variant="outline"
+                                                className="border-white/20 bg-black/20 text-white/90"
+                                            >
+                                                {t.name}
+                                            </Badge>
+                                        ))}
+                                    </div>
+
+                                    <div className="text-xs uppercase tracking-wide text-white/60">
+                                        Indicative price
+                                    </div>
+                                    <div className="mt-1 text-3xl font-semibold">
+                                        {formatCurrency(projectDetails.price)}
+                                    </div>
+
+                                    <div className="mt-4 space-y-2 text-sm text-white/80">
+                                        <div className="flex items-start gap-2">
+                                            <MapPin className="mt-0.5 h-4 w-4 flex-shrink-0" />
+                                            <div>
+                                                <div className="font-medium text-white">
+                                                    {projectDetails.location
+                                                        ?.name ?? '—'}
+                                                </div>
+                                                {projectDetails.address && (
+                                                    <div className="text-white/60">
+                                                        {projectDetails.address}
+                                                    </div>
+                                                )}
+                                            </div>
+                                        </div>
+                                    </div>
+
+                                    <div className="mt-5 grid grid-cols-2 gap-3">
+                                        {quickFacts.map((f) => {
+                                            const Icon = f.icon;
+                                            return (
+                                                <div
+                                                    key={f.label}
+                                                    className="rounded-2xl border border-white/10 bg-black/10 p-4"
+                                                >
+                                                    <div className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
+                                                        <Icon className="h-4 w-4" />
+                                                        {f.label}
+                                                    </div>
+                                                    <div className="mt-2 text-xl font-semibold text-white">
+                                                        {f.value ?? '—'}
+                                                    </div>
+                                                </div>
+                                            );
+                                        })}
+                                    </div>
+
+                                    {projectDetails.google_map_url && (
+                                        <Button
+                                            asChild
+                                            variant="secondary"
+                                            className="mt-5 w-full bg-white/15 text-white hover:bg-white/25"
+                                        >
+                                            <a
+                                                href={
+                                                    projectDetails.google_map_url
+                                                }
+                                                target="_blank"
+                                                rel="noreferrer"
+                                            >
+                                                Open in Google Maps
+                                                <ExternalLink className="ml-2 h-4 w-4" />
+                                            </a>
+                                        </Button>
+                                    )}
+                                </CardContent>
+                            </Card>
                         </div>
                     </ScrollAnimation>
                 </section>
@@ -297,18 +405,27 @@ const PropertyDetail = () => {
                     <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
                         {/* Left rail - At a Glance */}
                         <ScrollAnimation>
-                            <Card className="border-white/10 bg-white/5 backdrop-blur-xl lg:sticky lg:top-28 lg:h-fit">
-                                <CardContent className="p-6 text-sm text-white/85">
-                                    <h2 className="text-base font-semibold">
-                                        At a Glance
-                                    </h2>
+                            <Card className="border-white/10 bg-gradient-to-b from-white/10 via-white/5 to-white/0 backdrop-blur-xl lg:sticky lg:top-28 lg:h-fit">
+                                <CardContent className="p-7 md:p-8 text-sm text-white/90">
+                                    <div className="mb-4">
+                                        <div className="inline-flex items-center gap-2 rounded-full border border-white/15 bg-black/20 px-3 py-1 text-xs uppercase tracking-wide text-white/70">
+                                            <TagIcon className="h-3.5 w-3.5" />
+                                            Key Information
+                                        </div>
+                                        <h2 className="mt-3 text-2xl font-semibold tracking-tight">
+                                            At a Glance
+                                        </h2>
+                                        <p className="mt-1 text-sm text-white/65">
+                                            The essentials — at a quick look.
+                                        </p>
+                                    </div>
                                     <div className="mt-4 grid gap-3">
                                         <div className="flex items-start justify-between gap-4 border-b border-white/5 pb-3">
                                             <span className="flex items-center gap-2 text-xs font-medium uppercase tracking-wide text-white/60">
                                                 <MapPin className="h-3.5 w-3.5" />
                                                 Location
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {projectDetails.location?.name ??
                                                     '—'}
                                             </span>
@@ -318,7 +435,7 @@ const PropertyDetail = () => {
                                                 <Square className="h-3.5 w-3.5" />
                                                 Apartment Size
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {projectDetails.details
                                                     ?.apartment_size ??
                                                     projectDetails.size ??
@@ -330,7 +447,7 @@ const PropertyDetail = () => {
                                                 <Bed className="h-3.5 w-3.5" />
                                                 Bedroom
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {projectDetails.details
                                                     ?.bedroom ?? '—'}
                                             </span>
@@ -340,7 +457,7 @@ const PropertyDetail = () => {
                                                 <Bath className="h-3.5 w-3.5" />
                                                 Bathroom
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {projectDetails.details
                                                     ?.bathroom ?? '—'}
                                             </span>
@@ -350,7 +467,7 @@ const PropertyDetail = () => {
                                                 <Building2 className="h-3.5 w-3.5" />
                                                 No. of Floors
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {projectDetails.floors ?? '—'}
                                             </span>
                                         </div>
@@ -359,7 +476,7 @@ const PropertyDetail = () => {
                                                 <Calendar className="h-3.5 w-3.5" />
                                                 Launch / Start
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {formatDate(
                                                     projectDetails.construction_start_date,
                                                 )}
@@ -370,7 +487,7 @@ const PropertyDetail = () => {
                                                 <Calendar className="h-3.5 w-3.5" />
                                                 Expected Completion
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {formatDate(
                                                     projectDetails.handover_date,
                                                 )}
@@ -381,7 +498,7 @@ const PropertyDetail = () => {
                                                 <Hash className="h-3.5 w-3.5" />
                                                 Project ID
                                             </span>
-                                            <span className="text-right text-sm">
+                                            <span className="text-right text-base font-medium">
                                                 {projectDetails.project_id ??
                                                     '—'}
                                             </span>
@@ -448,7 +565,7 @@ const PropertyDetail = () => {
                                             Unit specifications
                                         </h2>
 
-                                        <div className="mt-6 grid gap-4 text-sm sm:grid-cols-2">
+                                        <div className="mt-6 grid gap-5 text-sm sm:grid-cols-2">
                                             {[
                                                 {
                                                     label: 'Apartment size',
@@ -517,16 +634,16 @@ const PropertyDetail = () => {
                                                     return (
                                                         <div
                                                             key={item.label}
-                                                            className="flex items-start gap-3 rounded-2xl border border-white/10 bg-black/10 p-4"
+                                                            className="flex items-start gap-4 rounded-3xl border border-white/10 bg-black/10 p-6"
                                                         >
-                                                            <div className="mt-0.5 flex h-9 w-9 items-center justify-center rounded-xl bg-white/10">
-                                                                <Icon className="h-4 w-4 text-white/85" />
+                                                            <div className="mt-0.5 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
+                                                                <Icon className="h-5 w-5 text-white/90" />
                                                             </div>
                                                             <div>
                                                                 <div className="text-xs uppercase tracking-wide text-white/60">
                                                                     {item.label}
                                                                 </div>
-                                                                <div className="mt-1 font-medium text-white">
+                                                                <div className="mt-1 text-base font-semibold text-white">
                                                                     {item.value}
                                                                 </div>
                                                             </div>
@@ -539,15 +656,23 @@ const PropertyDetail = () => {
                             </ScrollAnimation>
 
                             <ScrollAnimation delay={0.2}>
-                                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
-                                    <CardContent className="p-8">
-                                        <h2 className="text-xl font-semibold">
-                                            Amenities
-                                        </h2>
-                                        <p className="mt-1 text-sm text-white/65">
-                                            Selected facilities available in
-                                            this property.
-                                        </p>
+                                <Card className="border-white/10 bg-gradient-to-br from-white/10 via-white/5 to-white/0 backdrop-blur-xl">
+                                    <CardContent className="p-8 md:p-10">
+                                        <div className="flex flex-col gap-2 sm:flex-row sm:items-end sm:justify-between">
+                                            <div>
+                                                <h2 className="text-2xl font-semibold">
+                                                    Amenities
+                                                </h2>
+                                                <p className="mt-1 text-sm text-white/65">
+                                                    Facilities available in this
+                                                    property.
+                                                </p>
+                                            </div>
+                                            <div className="text-xs uppercase tracking-wide text-white/60">
+                                                {presentFacilities.length}{' '}
+                                                available
+                                            </div>
+                                        </div>
 
                                         {presentFacilities.length === 0 ? (
                                             <div className="mt-6 rounded-2xl border border-white/10 bg-black/10 p-5 text-sm text-white/70">
@@ -555,7 +680,7 @@ const PropertyDetail = () => {
                                                 soon.
                                             </div>
                                         ) : (
-                                            <div className="mt-6 grid gap-4 sm:grid-cols-2 md:grid-cols-3">
+                                            <div className="mt-7 grid gap-5 sm:grid-cols-2 md:grid-cols-3">
                                                 {presentFacilities.map((f) => {
                                                     const Icon = facilityIcon(
                                                         f.name,
@@ -563,7 +688,7 @@ const PropertyDetail = () => {
                                                     return (
                                                         <motion.div
                                                             key={f.id}
-                                                            className="flex items-center gap-3 rounded-2xl border border-white/10 bg-black/10 p-4"
+                                                            className="flex items-center gap-4 rounded-3xl border border-white/10 bg-black/10 p-6"
                                                             whileHover={{
                                                                 y: -3,
                                                                 scale: 1.01,
@@ -572,10 +697,10 @@ const PropertyDetail = () => {
                                                                 duration: 0.2,
                                                             }}
                                                         >
-                                                            <div className="flex h-10 w-10 items-center justify-center rounded-xl bg-white/10">
-                                                                <Icon className="h-5 w-5 text-white/90" />
+                                                            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-white/10">
+                                                                <Icon className="h-6 w-6 text-white/90" />
                                                             </div>
-                                                            <div className="text-sm font-medium text-white">
+                                                            <div className="text-base font-semibold text-white">
                                                                 {f.name}
                                                             </div>
                                                         </motion.div>
@@ -587,30 +712,110 @@ const PropertyDetail = () => {
                                 </Card>
                             </ScrollAnimation>
 
-                            {projectDetails.details?.youtube_video_id && (
-                                <ScrollAnimation delay={0.28}>
-                                    <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
-                                        <CardContent className="p-8">
-                                            <div className="flex items-center gap-2">
-                                                <Video className="h-5 w-5" />
-                                                <h2 className="text-xl font-semibold">
+                            <ScrollAnimation delay={0.28}>
+                                <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
+                                    <CardContent className="p-8 md:p-10">
+                                        <div className="flex items-center gap-2">
+                                            <Video className="h-5 w-5" />
+                                            <h2 className="text-2xl font-semibold">
+                                                Media
+                                            </h2>
+                                        </div>
+                                        <p className="mt-1 text-sm text-white/65">
+                                            Virtual tour and highlights.
+                                        </p>
+
+                                        <div className="mt-7 grid gap-6 lg:grid-cols-2">
+                                            <div className="space-y-4">
+                                                <div className="text-sm font-semibold text-white">
                                                     Video tour
-                                                </h2>
+                                                </div>
+                                                <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/10">
+                                                    {projectDetails.details
+                                                        ?.youtube_video_id ? (
+                                                        <iframe
+                                                            className="aspect-video w-full"
+                                                            src={`https://www.youtube.com/embed/${projectDetails.details.youtube_video_id}`}
+                                                            title="YouTube video player"
+                                                            allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                                                            referrerPolicy="strict-origin-when-cross-origin"
+                                                            allowFullScreen
+                                                        />
+                                                    ) : (
+                                                        <div className="flex aspect-video items-center justify-center text-sm text-white/70">
+                                                            Video tour will be
+                                                            available soon.
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                            <div className="mt-5 overflow-hidden rounded-2xl border border-white/10">
-                                                <iframe
-                                                    className="aspect-video w-full"
-                                                    src={`https://www.youtube.com/embed/${projectDetails.details.youtube_video_id}`}
-                                                    title="YouTube video player"
-                                                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                                                    referrerPolicy="strict-origin-when-cross-origin"
-                                                    allowFullScreen
-                                                />
+
+                                            <div className="space-y-4">
+                                                <div className="text-sm font-semibold text-white">
+                                                    Photo carousel
+                                                </div>
+                                                <div className="overflow-hidden rounded-3xl border border-white/10 bg-black/10">
+                                                    {images.length > 0 ? (
+                                                        <div className="relative">
+                                                            <div className="aspect-video w-full overflow-hidden">
+                                                                <img
+                                                                    src={
+                                                                        primaryImage
+                                                                    }
+                                                                    alt="Gallery"
+                                                                    className="h-full w-full object-cover"
+                                                                />
+                                                            </div>
+                                                            {images.length >
+                                                                1 && (
+                                                                <div className="border-t border-white/10 bg-black/20 p-4">
+                                                                    <div className="flex gap-3 overflow-x-auto pb-1 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+                                                                        {images.map(
+                                                                            (
+                                                                                img,
+                                                                                index,
+                                                                            ) => (
+                                                                                <button
+                                                                                    key={`${img}-${index}-media`}
+                                                                                    type="button"
+                                                                                    onClick={() =>
+                                                                                        setActiveImage(
+                                                                                            index,
+                                                                                        )
+                                                                                    }
+                                                                                    className={`h-16 w-24 flex-shrink-0 overflow-hidden rounded-2xl border ${
+                                                                                        activeImage ===
+                                                                                        index
+                                                                                            ? 'border-white/40'
+                                                                                            : 'border-white/10 hover:border-white/25'
+                                                                                    }`}
+                                                                                >
+                                                                                    <img
+                                                                                        src={
+                                                                                            img
+                                                                                        }
+                                                                                        alt={`Media thumb ${index + 1}`}
+                                                                                        className="h-full w-full object-cover"
+                                                                                    />
+                                                                                </button>
+                                                                            ),
+                                                                        )}
+                                                                    </div>
+                                                                </div>
+                                                            )}
+                                                        </div>
+                                                    ) : (
+                                                        <div className="flex aspect-video items-center justify-center text-sm text-white/70">
+                                                            Photos will be
+                                                            available soon.
+                                                        </div>
+                                                    )}
+                                                </div>
                                             </div>
-                                        </CardContent>
-                                    </Card>
-                                </ScrollAnimation>
-                            )}
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </ScrollAnimation>
 
                             <ScrollAnimation delay={0.35}>
                                 <Card className="border-white/10 bg-white/5 backdrop-blur-xl">
