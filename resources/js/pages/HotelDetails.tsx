@@ -122,6 +122,31 @@ const HotelDetails = () => {
                 <section className="container mx-auto px-4 pb-12">
                     <ScrollAnimation>
                         <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
+                            <div className="grid grid-cols-3 gap-3 lg:flex lg:flex-col">
+                                {images.slice(0, 3).map((img, index) => (
+                                    <motion.button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => setActiveImage(index)}
+                                        className={`relative h-28 overflow-hidden rounded-2xl border transition-all duration-300 ${
+                                            activeImage === index
+                                                ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
+                                                : 'border-white/10 hover:border-sky-400/50'
+                                        }`}
+                                        whileHover={{ scale: 1.03 }}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Hotel view ${index + 1}`}
+                                            className="h-full w-full object-cover"
+                                        />
+                                        {activeImage === index && (
+                                            <div className="pointer-events-none absolute inset-0 bg-sky-500/20" />
+                                        )}
+                                    </motion.button>
+                                ))}
+                            </div>
+                            
                             <div className="relative overflow-hidden rounded-3xl border border-white/10 bg-gradient-to-br from-sky-500/10 via-slate-900 to-slate-950 lg:col-span-2">
                                 <motion.div
                                     className="relative h-[420px] w-full overflow-hidden"
@@ -230,31 +255,6 @@ const HotelDetails = () => {
                                     </div>
                                 </div>
                             </div>
-
-                            <div className="grid grid-cols-3 gap-3 lg:flex lg:flex-col">
-                                {images.slice(0, 3).map((img, index) => (
-                                    <motion.button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => setActiveImage(index)}
-                                        className={`relative h-28 overflow-hidden rounded-2xl border transition-all duration-300 ${
-                                            activeImage === index
-                                                ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
-                                                : 'border-white/10 hover:border-sky-400/50'
-                                        }`}
-                                        whileHover={{ scale: 1.03 }}
-                                    >
-                                        <img
-                                            src={img}
-                                            alt={`Hotel view ${index + 1}`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                        {activeImage === index && (
-                                            <div className="pointer-events-none absolute inset-0 bg-sky-500/20" />
-                                        )}
-                                    </motion.button>
-                                ))}
-                            </div>
                         </div>
                     </ScrollAnimation>
                 </section>
@@ -262,6 +262,68 @@ const HotelDetails = () => {
                 {/* Hotel Content */}
                 <section className="container mx-auto px-4 pb-20">
                     <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+                        <div className="space-y-6">
+                            <ScrollAnimation>
+                                <Card className="border-sky-500/30 bg-gradient-to-b from-slate-950 to-slate-950/80 backdrop-blur-xl">
+                                    <CardContent className="space-y-4 p-6">
+                                        <h3 className="text-lg font-semibold">
+                                            Reservation Info
+                                        </h3>
+                                        <p className="text-sm text-slate-200/90">
+                                            Get in touch with our team to know
+                                            more about availability, pricing,
+                                            and bespoke stay options tailored
+                                            for you.
+                                        </p>
+                                        <div className="space-y-3 text-sm text-slate-200/90">
+                                            <p>
+                                                <span className="text-slate-400">
+                                                    Project ID:
+                                                </span>{' '}
+                                                {projectDetails.project_id}
+                                            </p>
+                                            {projectDetails.price && (
+                                                <p>
+                                                    <span className="text-slate-400">
+                                                        Indicative Price:
+                                                    </span>{' '}
+                                                    {projectDetails.price.toLocaleString()}
+                                                </p>
+                                            )}
+                                        </div>
+                                        <Button className="mt-2 w-full bg-sky-500 hover:bg-sky-600">
+                                            Enquire About This Hotel
+                                        </Button>
+                                    </CardContent>
+                                </Card>
+                            </ScrollAnimation>
+
+                            {primaryImage && (
+                                <ScrollAnimation delay={0.15}>
+                                    <motion.div
+                                        className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-lg"
+                                        whileHover={{ scale: 1.02 }}
+                                        transition={{ duration: 0.4 }}
+                                    >
+                                        <img
+                                            src={primaryImage}
+                                            alt={projectDetails.name}
+                                            className="h-56 w-full object-cover"
+                                        />
+                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/10 to-transparent" />
+                                        <div className="absolute bottom-4 left-4">
+                                            <p className="text-xs uppercase tracking-[0.2em] text-slate-300">
+                                                Signature Collection
+                                            </p>
+                                            <p className="text-lg font-semibold">
+                                                Hotels &amp; Resorts
+                                            </p>
+                                        </div>
+                                    </motion.div>
+                                </ScrollAnimation>
+                            )}
+                        </div>
+
                         <div className="space-y-10 lg:col-span-2">
                             <ScrollAnimation>
                                 <Card className="border-white/10 bg-slate-950/60 backdrop-blur-xl">
@@ -384,68 +446,6 @@ const HotelDetails = () => {
                                     </CardContent>
                                 </Card>
                             </ScrollAnimation>
-                        </div>
-
-                        <div className="space-y-6">
-                            <ScrollAnimation>
-                                <Card className="border-sky-500/30 bg-gradient-to-b from-slate-950 to-slate-950/80 backdrop-blur-xl">
-                                    <CardContent className="space-y-4 p-6">
-                                        <h3 className="text-lg font-semibold">
-                                            Reservation Info
-                                        </h3>
-                                        <p className="text-sm text-slate-200/90">
-                                            Get in touch with our team to know
-                                            more about availability, pricing,
-                                            and bespoke stay options tailored
-                                            for you.
-                                        </p>
-                                        <div className="space-y-3 text-sm text-slate-200/90">
-                                            <p>
-                                                <span className="text-slate-400">
-                                                    Project ID:
-                                                </span>{' '}
-                                                {projectDetails.project_id}
-                                            </p>
-                                            {projectDetails.price && (
-                                                <p>
-                                                    <span className="text-slate-400">
-                                                        Indicative Price:
-                                                    </span>{' '}
-                                                    {projectDetails.price.toLocaleString()}
-                                                </p>
-                                            )}
-                                        </div>
-                                        <Button className="mt-2 w-full bg-sky-500 hover:bg-sky-600">
-                                            Enquire About This Hotel
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            </ScrollAnimation>
-
-                            {primaryImage && (
-                                <ScrollAnimation delay={0.15}>
-                                    <motion.div
-                                        className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-lg"
-                                        whileHover={{ scale: 1.02 }}
-                                        transition={{ duration: 0.4 }}
-                                    >
-                                        <img
-                                            src={primaryImage}
-                                            alt={projectDetails.name}
-                                            className="h-56 w-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/10 to-transparent" />
-                                        <div className="absolute bottom-4 left-4">
-                                            <p className="text-xs uppercase tracking-[0.2em] text-slate-300">
-                                                Signature Collection
-                                            </p>
-                                            <p className="text-lg font-semibold">
-                                                Hotels &amp; Resorts
-                                            </p>
-                                        </div>
-                                    </motion.div>
-                                </ScrollAnimation>
-                            )}
                         </div>
                     </div>
                 </section>
