@@ -261,134 +261,131 @@ const PropertyDetail = () => {
                     </div>
                 </section>
 
-                {/* 4. INTERNAL SPECIFICATIONS: Asymmetric Technical Split with Icons */}
+                {/* 4. INTERNAL SPECIFICATIONS: Balanced Dual-Image & Technical Table */}
                 <section className="overflow-hidden border-t border-white/5 bg-black py-24">
                     <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-1 items-start gap-12 lg:grid-cols-12 lg:gap-24">
-                            {/* LEFT: The Visual Pillar (Sticky on Scroll) */}
-                            <div className="lg:sticky lg:top-24 lg:col-span-5">
-                                <div className="group relative">
-                                    <span className="absolute -top-10 left-0 text-xs font-bold tracking-[0.4em] text-primary uppercase">
-                                        Architectural Detail
+                        <div className="grid grid-cols-1 items-start gap-16 lg:grid-cols-2 lg:gap-24">
+                            {/* LEFT: Equal Width Dual-Image Column (Sticky) */}
+                            <div className="h-fit lg:sticky lg:top-24">
+                                <div className="relative flex flex-col gap-6">
+                                    <span className="mb-4 text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
+                                        Structural Visualization
                                     </span>
-                                    <div className="aspect-[3/4] overflow-hidden rounded-[3rem] border border-white/10 shadow-2xl">
+
+                                    {/* Primary Image: Taller Aspect */}
+                                    <div className="relative z-10 aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10">
                                         <motion.img
                                             initial={{ scale: 1.1, opacity: 0 }}
                                             whileInView={{
                                                 scale: 1,
                                                 opacity: 1,
                                             }}
-                                            transition={{
-                                                duration: 1.5,
-                                                ease: 'easeOut',
-                                            }}
-                                            src={`/${projectDetails.project_images[1]?.image || projectDetails.project_images[0]?.image}`}
-                                            className="h-full w-full object-cover transition-transform duration-[3s] group-hover:scale-105"
-                                            alt="Interior detail"
+                                            transition={{ duration: 1.2 }}
+                                            src={`/${projectDetails.project_images[0]?.image}`}
+                                            className="h-full w-full object-cover"
+                                            alt="Main Architectural View"
                                         />
-                                        {/* Overlay Gradient for depth */}
-                                        <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-60" />
                                     </div>
 
-                                    {/* Floating Brand Stamp */}
-                                    <div className="absolute -right-6 -bottom-6 hidden rounded-3xl bg-primary p-8 shadow-xl md:block">
-                                        <p className="font-mono text-[10px] leading-tight font-bold tracking-tighter text-black">
-                                            ALLIANCE BUILDERS
-                                            <br />
-                                            STRUCTURAL SPEC
-                                            <br />
-                                            REF: {projectDetails.project_id}
-                                        </p>
+                                    {/* Secondary Image: Shifted and Scaled up */}
+                                    <motion.div
+                                        initial={{ x: 50, opacity: 0 }}
+                                        whileInView={{ x: 0, opacity: 1 }}
+                                        transition={{ delay: 0.3, duration: 1 }}
+                                        className="group -right-12 -bottom-16 z-20 aspect-[3/4] w-[70%] overflow-hidden rounded-[2rem] border-[12px] border-black shadow-2xl lg:absolute"
+                                    >
+                                        <img
+                                            src={`/${projectDetails.project_images[1]?.image || projectDetails.project_images[0]?.image}`}
+                                            className="h-full w-full object-cover transition-transform duration-[2s] group-hover:scale-110"
+                                            alt="Secondary Detail View"
+                                        />
+                                        <div className="absolute inset-0 flex items-end bg-gradient-to-t from-black/80 via-transparent to-transparent p-8 opacity-0 transition-opacity duration-500 group-hover:opacity-100">
+                                            <p className="font-mono text-xs tracking-widest text-white uppercase">
+                                                Exterior Detail 02
+                                            </p>
+                                        </div>
+                                    </motion.div>
+
+                                    {/* Technical Branding Stamp */}
+                                    <div className="pt-20 lg:pt-32">
+                                        <div className="flex items-center gap-4">
+                                            <div className="h-px w-12 bg-primary" />
+                                            <span className="font-mono text-[10px] tracking-[0.3em] text-white/30 uppercase">
+                                                Alliance Builders x ICSE
+                                                Engineering
+                                            </span>
+                                        </div>
                                     </div>
                                 </div>
                             </div>
 
-                            {/* RIGHT: The Technical Data Table with Visual Icons */}
-                            <div className="pt-12 lg:col-span-7 lg:pt-0">
-                                <div className="mb-12">
-                                    <h2 className="font-serif text-5xl font-light tracking-tight text-white">
-                                        Unit{' '}
+                            {/* RIGHT: Equal Width Technical Data Table */}
+                            <div className="pt-12 lg:pt-0">
+                                <div className="mb-16">
+                                    <h2 className="font-serif text-6xl leading-tight font-light tracking-tight text-white">
+                                        Unit <br />
                                         <span className="text-primary italic">
                                             Specifications
                                         </span>
                                     </h2>
-                                    <p className="mt-4 max-w-md text-sm leading-relaxed text-white/40">
-                                        Detailed technical breakdown of interior
-                                        parameters and structural allowances for{' '}
-                                        {projectDetails.name}.
-                                    </p>
+                                    <div className="mt-6 h-1 w-20 bg-primary" />
                                 </div>
 
-                                <div className="space-y-0">
+                                <div className="divide-y divide-white/10">
                                     {unitSpecs.map((spec, i) => (
                                         <motion.div
                                             key={i}
-                                            initial={{ opacity: 0, x: 20 }}
-                                            whileInView={{ opacity: 1, x: 0 }}
-                                            transition={{ delay: i * 0.1 }}
-                                            className="group relative flex items-center justify-between border-b border-white/10 py-10"
+                                            initial={{ opacity: 0, y: 10 }}
+                                            whileInView={{ opacity: 1, y: 0 }}
+                                            transition={{ delay: i * 0.05 }}
+                                            className="group relative flex items-center justify-between py-10"
                                         >
                                             <div className="flex items-center gap-8">
-                                                {/* Technical Axis: Number + Icon */}
-                                                <div className="flex flex-col items-center gap-2">
-                                                    <span className="font-mono text-[10px] text-primary/40 transition-colors group-hover:text-primary">
+                                                <div className="flex flex-col items-start gap-1">
+                                                    <span className="font-mono text-[10px] text-primary/60">
                                                         0{i + 1}
                                                     </span>
-                                                    <div className="h-10 w-px bg-white/10 transition-all duration-500 group-hover:bg-primary/50" />
-                                                </div>
-
-                                                <div className="flex items-center gap-5">
-                                                    <div className="flex h-14 w-14 items-center justify-center rounded-2xl border border-white/5 bg-white/[0.03] transition-all duration-500 group-hover:border-primary/20 group-hover:bg-primary/10">
-                                                        <spec.icon className="h-6 w-6 text-white/20 transition-all duration-500 group-hover:scale-110 group-hover:text-primary" />
+                                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/[0.03] transition-all duration-500 group-hover:border-primary/40 group-hover:bg-primary/10">
+                                                        <spec.icon className="h-5 w-5 text-white/20 transition-all duration-500 group-hover:text-primary" />
                                                     </div>
-                                                    <h3 className="text-xl font-light tracking-wide text-white/50 transition-colors group-hover:text-white">
-                                                        {spec.label}
-                                                    </h3>
                                                 </div>
+                                                <h3 className="text-xl font-light text-white/40 transition-colors group-hover:text-white">
+                                                    {spec.label}
+                                                </h3>
                                             </div>
 
-                                            <div className="flex flex-col items-end text-right">
-                                                <span className="text-3xl font-light tracking-tighter text-white/90 transition-colors group-hover:text-primary">
+                                            <div className="text-right">
+                                                <span className="text-3xl font-light tracking-tighter text-white transition-colors group-hover:text-primary">
                                                     {spec.value}
                                                 </span>
-                                                <div className="mt-1 h-px w-0 bg-primary/40 transition-all duration-700 group-hover:w-full" />
                                             </div>
 
-                                            {/* Hover Background Accent */}
-                                            <div className="absolute inset-0 -z-10 bg-gradient-to-r from-primary/5 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                            {/* Hover Highlight line */}
+                                            <div className="absolute bottom-0 left-0 h-px w-0 bg-primary transition-all duration-700 group-hover:w-full" />
                                         </motion.div>
                                     ))}
                                 </div>
 
                                 {/* Technical Direction Footer */}
-                                <div className="group/footer relative mt-16 flex items-center justify-between overflow-hidden rounded-[2.5rem] border border-white/5 bg-white/[0.02] p-10">
-                                    <div className="relative z-10 flex items-center gap-6">
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-full border border-primary/30 transition-all duration-500 group-hover/footer:bg-primary">
-                                            <Compass className="h-6 w-6 text-primary transition-colors group-hover/footer:text-black" />
-                                        </div>
-                                        <div>
-                                            <p className="text-[10px] tracking-[0.2em] text-white/30 uppercase">
-                                                Orientation
-                                            </p>
-                                            <p className="text-xl font-medium text-white">
-                                                {
-                                                    projectDetails.details
-                                                        ?.apartment_direction
-                                                }
-                                            </p>
-                                        </div>
-                                    </div>
-                                    <div className="relative z-10 text-right">
-                                        <p className="text-[10px] tracking-[0.2em] text-white/30 uppercase">
-                                            Build Grade
+                                <div className="mt-12 grid grid-cols-2 gap-px overflow-hidden rounded-2xl border border-white/10 bg-white/10">
+                                    <div className="bg-black p-8">
+                                        <p className="mb-2 text-[10px] tracking-widest text-white/30 uppercase">
+                                            Orientation
                                         </p>
                                         <p className="text-xl font-medium text-white">
-                                            Engineering Class A
+                                            {
+                                                projectDetails.details
+                                                    ?.apartment_direction
+                                            }
                                         </p>
                                     </div>
-                                    {/* Background Decorative Element */}
-                                    <div className="pointer-events-none absolute top-0 right-0 p-4 font-serif text-8xl italic opacity-[0.02]">
-                                        Spec
+                                    <div className="bg-black p-8">
+                                        <p className="mb-2 text-[10px] tracking-widest text-white/30 uppercase">
+                                            Build Class
+                                        </p>
+                                        <p className="text-xl font-medium text-white">
+                                            Alliance Grade A
+                                        </p>
                                     </div>
                                 </div>
                             </div>
