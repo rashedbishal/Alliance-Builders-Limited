@@ -133,13 +133,16 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 2. AT A GLANCE (TECHNICAL PRECISION) */}
-                <section className="py-24 border-b border-white/5">
+                <section className="border-b border-white/5 py-24">
                     <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                        <div className="grid grid-cols-1 gap-16 lg:grid-cols-12">
                             <div className="lg:col-span-5">
-                                <span className="text-xs uppercase tracking-[0.3em] text-primary font-bold">The Narrative</span>
-                                <h2 className="mt-6 text-4xl font-light leading-snug">
-                                    Architectural excellence meets modern living.
+                                <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
+                                    The Narrative
+                                </span>
+                                <h2 className="mt-6 text-4xl leading-snug font-light">
+                                    Architectural excellence meets modern
+                                    living.
                                 </h2>
                                 <p className="mt-8 text-lg leading-relaxed text-white/60 italic">
                                     "{projectDetails.description}"
@@ -147,38 +150,65 @@ const PropertyDetail = () => {
                             </div>
 
                             {/* HOVER HIGHLIGHT GRID */}
-                            <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-px bg-white/10 border border-white/10 rounded-3xl overflow-hidden">
+                            <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3 lg:col-span-7">
                                 {[
-                                    { label: 'Apartment Size', value: projectDetails.size, icon: Square },
-                                    { label: 'Total Floors', value: projectDetails.floors, icon: Building2 },
-                                    { label: 'Bedrooms', value: projectDetails.details?.bedroom, icon: Bed },
-                                    { label: 'Bathrooms', value: projectDetails.details?.bathroom, icon: Bath },
-                                    { label: 'Handover', value: formatDate(projectDetails.handover_date), icon: Calendar },
-                                    { label: 'Project ID', value: projectDetails.project_id, icon: Hash },
+                                    {
+                                        label: 'Apartment Size',
+                                        value: projectDetails.size,
+                                        icon: Square,
+                                    },
+                                    {
+                                        label: 'Total Floors',
+                                        value: projectDetails.floors,
+                                        icon: Building2,
+                                    },
+                                    {
+                                        label: 'Bedrooms',
+                                        value: projectDetails.details?.bedroom,
+                                        icon: Bed,
+                                    },
+                                    {
+                                        label: 'Bathrooms',
+                                        value: projectDetails.details?.bathroom,
+                                        icon: Bath,
+                                    },
+                                    {
+                                        label: 'Handover',
+                                        value: formatDate(
+                                            projectDetails.handover_date,
+                                        ),
+                                        icon: Calendar,
+                                    },
+                                    {
+                                        label: 'Project ID',
+                                        value: projectDetails.project_id,
+                                        icon: Hash,
+                                    },
                                 ].map((stat, i) => (
                                     <motion.div
                                         key={i}
                                         whileHover={{
-                                            backgroundColor: "rgba(255, 255, 255, 0.03)",
-                                            transition: { duration: 0.2 }
+                                            backgroundColor:
+                                                'rgba(255, 255, 255, 0.03)',
+                                            transition: { duration: 0.2 },
                                         }}
-                                        className="group relative bg-[#0a0a0a] p-8 transition-all duration-300 cursor-default"
+                                        className="group relative cursor-default bg-[#0a0a0a] p-8 transition-all duration-300"
                                     >
                                         {/* Hover Border Highlight Effect */}
-                                        <div className="absolute inset-0 border-primary/0 border-1 group-hover:border-primary/30 transition-all duration-500" />
+                                        <div className="absolute inset-0 border-1 border-primary/0 transition-all duration-500 group-hover:border-primary/30" />
 
-                                        <stat.icon className="h-5 w-5 text-white/40 mb-4 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+                                        <stat.icon className="mb-4 h-5 w-5 text-white/40 transition-all duration-300 group-hover:scale-110 group-hover:text-primary" />
 
-                                        <div className="text-xs uppercase tracking-widest text-white/40 mb-1 group-hover:text-white/60 transition-colors">
+                                        <div className="mb-1 text-xs tracking-widest text-white/40 uppercase transition-colors group-hover:text-white/60">
                                             {stat.label}
                                         </div>
 
-                                        <div className="text-xl font-medium group-hover:translate-x-1 transition-transform duration-300">
+                                        <div className="text-xl font-medium transition-transform duration-300 group-hover:translate-x-1">
                                             {stat.value || '—'}
                                         </div>
 
                                         {/* Subtle Bottom Glow on Hover */}
-                                        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-hover:w-full transition-all duration-500" />
+                                        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
                                     </motion.div>
                                 ))}
                             </div>
@@ -186,27 +216,45 @@ const PropertyDetail = () => {
                     </div>
                 </section>
 
-                {/* AMENITIES: Strictly filtering based on backend 'facilities' array */}
-                <section className="py-24">
+                {/* 3. AMENITIES: Centered Flex Logic */}
+                <section className="bg-[#0d0d0d] py-24">
                     <div className="container mx-auto px-4">
-                        <h2 className="mb-12 text-center text-3xl font-light tracking-widest uppercase">
-                            Lifestyle Amenities
-                        </h2>
-                        <div className="grid grid-cols-1 gap-6 sm:grid-cols-2 lg:grid-cols-4">
+                        <div className="mb-16 text-center">
+                            <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
+                                Lifestyle & Comfort
+                            </span>
+                            <h2 className="mt-4 font-serif text-5xl font-light tracking-tight">
+                                Project Amenities
+                            </h2>
+                        </div>
+
+                        {/* DYNAMIC FLEX LOGIC:
+            Uses 'flex-wrap' to wrap items and 'justify-center' to handle
+            any count of items (1, 2, 5, etc.) gracefully.
+        */}
+                        <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-6">
                             {projectDetails.facilities?.map((f) => {
                                 const Icon = getFacilityIcon(f.name);
                                 return (
-                                    <div
+                                    <motion.div
                                         key={f.id}
-                                        className="flex items-center gap-4 rounded-2xl border border-white/10 bg-white/5 p-6"
+                                        whileHover={{ y: -5, scale: 1.02 }}
+                                        className="group relative flex min-w-[200px] flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-all duration-300 md:min-w-[240px]"
                                     >
-                                        <div className="flex h-12 w-12 items-center justify-center rounded-xl bg-primary/20">
-                                            <Icon className="h-6 w-6 text-primary" />
+                                        {/* Background Glow Effect */}
+                                        <div className="absolute inset-0 bg-gradient-to-b from-primary/10 to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+
+                                        <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 group-hover:rotate-[360deg] group-hover:bg-primary">
+                                            <Icon className="h-8 w-8 text-primary transition-colors group-hover:text-white" />
                                         </div>
-                                        <span className="font-medium">
+
+                                        <span className="relative z-10 text-lg font-medium tracking-wide transition-colors group-hover:text-white">
                                             {f.name}
                                         </span>
-                                    </div>
+
+                                        {/* Animated Border Reveal */}
+                                        <div className="absolute inset-0 scale-90 rounded-[2rem] border border-primary/20 opacity-0 transition-all duration-500 group-hover:scale-100 group-hover:opacity-100" />
+                                    </motion.div>
                                 );
                             })}
                         </div>
