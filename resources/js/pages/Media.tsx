@@ -1,19 +1,17 @@
+import {Link, usePage} from "@inertiajs/react";
 import { motion } from 'framer-motion';
-import { Calendar, Newspaper, ArrowRight, Clock } from 'lucide-react';
-import React, { useState } from 'react';
+import { Calendar, Newspaper, ArrowRight } from 'lucide-react';
 
 // Import media assets
 import heroVideo from '@/assets/videos/PixVerse_V5_Image_Text_360P_Hero_section_video.mp4';
 
 // import ui
 import { Badge } from '@/components/ui/badge';
-import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
-import {Image} from "@/types/Image";
+import AppLayout from '@/layouts/AppLayout';
+import type {Image} from "@/types/Image";
 
 // import layout
-import AppLayout from '@/layouts/AppLayout';
-import {Link, usePage} from "@inertiajs/react";
 
 interface Media
 {
@@ -29,6 +27,8 @@ const Media = () => {
     const { contents } = usePage<{contents: Media[]}>().props;
     const featuredContent = contents.find((content) => content.isFeatured) || contents[0];
     // const featuredContent = featuredContentArray[0];
+
+    console.log('contents', contents);
 
     return (
         <AppLayout>
