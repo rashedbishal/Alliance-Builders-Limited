@@ -172,7 +172,7 @@ const Navbar = () => {
         >
             <nav
                 ref={navRef}
-                className="navbar-container bg-navbar-gradient shadow-navbar relative flex h-12 items-center justify-between overflow-hidden rounded-xl border border-blue-300/40 px-2 backdrop-blur-xl transition-all duration-300 md:h-14 md:rounded-2xl"
+                className="navbar-container bg-navbar-gradient shadow-navbar relative flex h-12 items-center justify-between overflow-hidden rounded-xl border-2 border-blue-300/40 px-1 backdrop-blur-xl transition-all duration-300 md:h-14 md:rounded-2xl"
                 style={{
                     transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                     boxShadow: `
