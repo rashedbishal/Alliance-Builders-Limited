@@ -172,7 +172,7 @@ const Navbar = () => {
         >
             <nav
                 ref={navRef}
-                className="navbar-container bg-navbar-gradient shadow-navbar relative flex h-16 items-center justify-between overflow-hidden rounded-2xl border border-blue-300/40 px-4 backdrop-blur-xl transition-all duration-300 md:h-20 md:rounded-3xl"
+                className="navbar-container bg-navbar-gradient shadow-navbar relative flex h-12 items-center justify-between overflow-hidden rounded-xl border-2 border-blue-300/40 px-1 backdrop-blur-xl transition-all duration-300 md:h-14 md:rounded-2xl"
                 style={{
                     transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                     boxShadow: `
@@ -275,9 +275,9 @@ const Navbar = () => {
                                     >
                                         <Link
                                             href={item.href}
-                                            preserveState={false}   // ← force no preservation → fresh state
+                                            preserveState={false} // ← force no preservation → fresh state
                                             preserveScroll
-                                            replace={true}          // replace history entry (cleaner back button)
+                                            replace={true} // replace history entry (cleaner back button)
                                             className="flex w-full items-center justify-between gap-2"
                                             // preserveState={item.label !== 'All Projects'} // optional: preserve filters except maybe "All"
                                         >
@@ -321,37 +321,34 @@ const Navbar = () => {
                                     variant="ghost"
                                     className="nav-link group"
                                 >
-                <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                    <svg
-                        className="h-3"
-                        xmlns="http://www.w3.org/2000/svg"
-                        viewBox="0 0 24 24"
-                    >
-                        <path
-                            d="M4 5h16v14H4z"
-                            fill="none"
-                            stroke="currentColor"
-                            strokeWidth="2"
-                        />
-                        <circle cx="8" cy="9" r="1.5" />
-                        <path d="M21 15l-5-5L5 21" />
-                    </svg>
-
-                    Media & Gallery
-
-                    <ChevronDown
-                        className={`h-4 transition-transform duration-300 ${
-                            openMenu === 'mediaGallery'
-                                ? 'rotate-180'
-                                : 'rotate-0'
-                        }`}
-                    />
-                </span>
+                                    <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                        <svg
+                                            className="h-3"
+                                            xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 24 24"
+                                        >
+                                            <path
+                                                d="M4 5h16v14H4z"
+                                                fill="none"
+                                                stroke="currentColor"
+                                                strokeWidth="2"
+                                            />
+                                            <circle cx="8" cy="9" r="1.5" />
+                                            <path d="M21 15l-5-5L5 21" />
+                                        </svg>
+                                        Media & Gallery
+                                        <ChevronDown
+                                            className={`h-4 transition-transform duration-300 ${
+                                                openMenu === 'mediaGallery'
+                                                    ? 'rotate-180'
+                                                    : 'rotate-0'
+                                            }`}
+                                        />
+                                    </span>
                                 </Button>
                             </DropdownMenuTrigger>
 
                             <DropdownMenuContent className="dropdown-content">
-
                                 <DropdownMenuItem className="dropdown-item">
                                     <Link
                                         href={media.url()}
@@ -369,7 +366,6 @@ const Navbar = () => {
                                         Photos & Videos
                                     </Link>
                                 </DropdownMenuItem>
-
                             </DropdownMenuContent>
                         </DropdownMenu>
                     </div>
@@ -387,7 +383,10 @@ const Navbar = () => {
                             }
                         >
                             <DropdownMenuTrigger asChild>
-                                <Button variant="ghost" className="nav-link group">
+                                <Button
+                                    variant="ghost"
+                                    className="nav-link group"
+                                >
                                     <span className="inline-flex items-center gap-1 transition-transform duration-300">
                                         <svg
                                             className="h-3"
@@ -746,11 +745,11 @@ const Navbar = () => {
                                 }
                                 items={[
                                     {
-                                        label: "Media Coverage",
+                                        label: 'Media Coverage',
                                         href: media.url(),
                                     },
                                     {
-                                        label: "Photos & Videos",
+                                        label: 'Photos & Videos',
                                         href: gallery.url(),
                                     },
                                 ]}

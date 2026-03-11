@@ -1,3 +1,5 @@
+import AboutBackground from '@images/home/about-section.jpg';
+import {Link} from "@inertiajs/react";
 import {
   Building2,
   Users,
@@ -9,16 +11,14 @@ import {
   Sparkles
 } from "lucide-react";
 import React from 'react';
-import AboutBackground from '@images/home/about-section.jpg';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 
 import { WritingText } from '@/components/ui/shadcn-io/writing-text';
+import {contact, properties} from "@/routes";
 import ScrollAnimation from '../ScrollAnimation';
 import ScrollSlideIn from '../ScrollSlideIn';
 import LineMeet from '../ui/line-meet';
-import {Link} from "@inertiajs/react";
-import {contact, properties} from "@/routes";
 
 const AboutSection = () => {
   const services = [

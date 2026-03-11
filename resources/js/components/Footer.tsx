@@ -12,7 +12,7 @@ import {
   Clock
 } from "lucide-react";
 import React from 'react';
-import abstractBg2 from "@/assets/images/backgrounds/abstract-bg-2.jpg";
+import abstractBg2 from "@/assets/images/backgrounds/city.webp";
 import logo from "@/assets/images/logo/alliance logo.webp";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
