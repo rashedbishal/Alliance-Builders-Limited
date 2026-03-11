@@ -132,76 +132,55 @@ const PropertyDetail = () => {
                     </div>
                 </section>
 
-                {/* AT A GLANCE: Dynamic Date and ID Logic */}
-                <section className="border-b border-white/5 py-24">
-                    <div className="container mx-auto grid grid-cols-1 gap-16 px-4 lg:grid-cols-12">
-                        <div className="lg:col-span-5">
-                            <h2 className="mb-8 text-4xl leading-tight font-light">
-                                {projectDetails.description}
-                            </h2>
-                            <div className="space-y-4">
-                                <div className="flex justify-between border-b border-white/5 pb-4">
-                                    <span className="text-xs tracking-widest text-white/40 uppercase">
-                                        Project ID
-                                    </span>
-                                    <span className="font-medium">
-                                        {projectDetails.project_id}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between border-b border-white/5 pb-4">
-                                    <span className="text-xs tracking-widest text-white/40 uppercase">
-                                        Commenced
-                                    </span>
-                                    <span className="font-medium">
-                                        {formatDate(
-                                            projectDetails.construction_start_date,
-                                        )}
-                                    </span>
-                                </div>
-                                <div className="flex justify-between border-b border-white/5 pb-4">
-                                    <span className="text-xs tracking-widest text-white/40 uppercase">
-                                        Handover
-                                    </span>
-                                    <span className="font-medium">
-                                        {formatDate(
-                                            projectDetails.handover_date,
-                                        )}
-                                    </span>
-                                </div>
+                {/* 2. AT A GLANCE (TECHNICAL PRECISION) */}
+                <section className="py-24 border-b border-white/5">
+                    <div className="container mx-auto px-4">
+                        <div className="grid grid-cols-1 lg:grid-cols-12 gap-16">
+                            <div className="lg:col-span-5">
+                                <span className="text-xs uppercase tracking-[0.3em] text-primary font-bold">The Narrative</span>
+                                <h2 className="mt-6 text-4xl font-light leading-snug">
+                                    Architectural excellence meets modern living.
+                                </h2>
+                                <p className="mt-8 text-lg leading-relaxed text-white/60 italic">
+                                    "{projectDetails.description}"
+                                </p>
                             </div>
-                        </div>
 
-                        <div className="grid grid-cols-2 gap-4 lg:col-span-7">
-                            {/* Core Stats Bento */}
-                            <div className="rounded-3xl border border-white/10 bg-white/5 p-10">
-                                <Building2 className="mb-6 h-8 w-8 text-primary" />
-                                <div className="mb-1 text-4xl font-light">
-                                    {projectDetails.floors}
-                                </div>
-                                <div className="text-xs tracking-widest text-white/40 uppercase">
-                                    Storeys High
-                                </div>
-                            </div>
-                            <div className="rounded-3xl border border-white/10 bg-white/5 p-10">
-                                <Square className="mb-6 h-8 w-8 text-primary" />
-                                <div className="mb-1 text-4xl font-light">
-                                    {projectDetails.size}
-                                </div>
-                                <div className="text-xs tracking-widest text-white/40 uppercase">
-                                    Sq Ft Area
-                                </div>
-                            </div>
-                            <div className="col-span-2 rounded-3xl border border-white/10 bg-gradient-to-r from-primary/10 to-transparent p-10">
-                                <Compass className="mb-6 h-8 w-8 text-primary" />
-                                <div className="mb-1 text-2xl font-light">
-                                    {
-                                        projectDetails.details
-                                            ?.apartment_direction
-                                    }
-                                </div>
-                                <div className="text-xs tracking-widest text-white/40 uppercase">
-                                    Unit Orientation
-                                </div>
+                            {/* HOVER HIGHLIGHT GRID */}
+                            <div className="lg:col-span-7 grid grid-cols-2 md:grid-cols-3 gap-px bg-white/10 border border-white/10 rounded-3xl overflow-hidden">
+                                {[
+                                    { label: 'Apartment Size', value: projectDetails.size, icon: Square },
+                                    { label: 'Total Floors', value: projectDetails.floors, icon: Building2 },
+                                    { label: 'Bedrooms', value: projectDetails.details?.bedroom, icon: Bed },
+                                    { label: 'Bathrooms', value: projectDetails.details?.bathroom, icon: Bath },
+                                    { label: 'Handover', value: formatDate(projectDetails.handover_date), icon: Calendar },
+                                    { label: 'Project ID', value: projectDetails.project_id, icon: Hash },
+                                ].map((stat, i) => (
+                                    <motion.div
+                                        key={i}
+                                        whileHover={{
+                                            backgroundColor: "rgba(255, 255, 255, 0.03)",
+                                            transition: { duration: 0.2 }
+                                        }}
+                                        className="group relative bg-[#0a0a0a] p-8 transition-all duration-300 cursor-default"
+                                    >
+                                        {/* Hover Border Highlight Effect */}
+                                        <div className="absolute inset-0 border-primary/0 border-1 group-hover:border-primary/30 transition-all duration-500" />
+
+                                        <stat.icon className="h-5 w-5 text-white/40 mb-4 group-hover:text-primary group-hover:scale-110 transition-all duration-300" />
+
+                                        <div className="text-xs uppercase tracking-widest text-white/40 mb-1 group-hover:text-white/60 transition-colors">
+                                            {stat.label}
+                                        </div>
+
+                                        <div className="text-xl font-medium group-hover:translate-x-1 transition-transform duration-300">
+                                            {stat.value || '—'}
+                                        </div>
+
+                                        {/* Subtle Bottom Glow on Hover */}
+                                        <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary group-hover:w-full transition-all duration-500" />
+                                    </motion.div>
+                                ))}
                             </div>
                         </div>
                     </div>
