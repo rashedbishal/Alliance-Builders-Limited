@@ -20,6 +20,7 @@ import {
     FlameKindling,
     Wifi,
     Calendar,
+    Video,
 } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import MapComponent from '@/components/MapComponent';
@@ -278,7 +279,7 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 3. AMENITIES: Interactive Grid with Spinning Icons */}
-                <section className="py-24">
+                <section className="py-24 bg-sidebar">
                     <div className="container mx-auto px-4">
                         <div className="mb-16 text-center">
                             <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
@@ -301,12 +302,12 @@ const PropertyDetail = () => {
                                         >
                                             {/* The Spinning Icon Container */}
                                             <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary">
-                                                <Icon className="h-8 w-8 text-primary transition-colors duration-500 group-hover:text-black" />
+                                                <Icon className="h-8 w-8 text-primary-foreground transition-colors duration-500 group-hover:text-black" />
                                             </div>
 
                                             <span className="relative z-10 text-lg font-medium text-white/70 transition-colors group-hover:text-white">
-                                            {f.name}
-                                        </span>
+                                                {f.name}
+                                            </span>
 
                                             {/* Subtle background glow on hover */}
                                             <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
@@ -487,10 +488,10 @@ const PropertyDetail = () => {
 
                         {/* Contained Video Wrapper */}
                         <div className="relative mx-auto max-w-6xl">
-                            <div className="relative aspect-video overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl md:rounded-[3rem]">
+                            <div className="relative  overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl md:rounded-[3rem]">
                                 {projectDetails.details?.youtube_video_id ? (
                                     <iframe
-                                        className="h-full w-full"
+                                        className="h-[80dvh] w-full"
                                         src={`https://www.youtube.com/embed/${projectDetails.details.youtube_video_id}?rel=0&modestbranding=1`}
                                         title="Property Video Tour"
                                         allowFullScreen
@@ -536,7 +537,7 @@ const PropertyDetail = () => {
                     {/* Map Container - Now Unblocked */}
                     <div className="relative h-[65vh] w-full overflow-hidden border-y border-white/5">
                         <div className="h-full w-full contrast-[1.1] grayscale invert-[0.05] transition-all duration-1000 ease-in-out hover:grayscale-0">
-                            <MapComponent width="100%" height="100%" />
+                            <MapComponent width="100%" height="100%" src={projectDetails.google_map_url} />
                         </div>
 
                         {/* Decorative corner accents instead of full overlays */}
