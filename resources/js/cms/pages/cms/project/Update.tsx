@@ -461,7 +461,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                       </div>
 
                       <div className="form-group">
-                          <label>Google Map URL</label>
+                          <label>Google Map Embed URL</label>
                           <input
                               type="url"
                               value={data.google_map_url}

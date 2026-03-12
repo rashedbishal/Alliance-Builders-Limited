@@ -356,7 +356,7 @@ export default function ProjectAdd({
                     </div>
 
                     <div className="form-group">
-                        <label>Google Map URL</label>
+                        <label>Google Map Embed URL</label>
                         <input
                             type="url"
                             value={data.google_map_url}
