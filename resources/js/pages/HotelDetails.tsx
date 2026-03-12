@@ -110,7 +110,7 @@ const HotelDetails = () => {
     }
 
     const images =
-        projectDetails.project_images?.map((img) => img.image) || [];
+        projectDetails.project_images?.map((img) => `/${img.image}`) || [];
 
     const hotelFeatures =
         projectDetails.facilities?.map((facility) => ({
@@ -341,7 +341,7 @@ const HotelDetails = () => {
                                             <h2 className="mb-6 text-center text-2xl font-semibold tracking-tight">
                                                 Signature Amenities
                                             </h2>
-                                            <div className="grid gap-5 md:grid-cols-3">
+                                            <div className="flex flex-col sm:flex-row justify-center gap-5">
                                                 {hotelFeatures.length === 0 && (
                                                     <p className="col-span-3 text-center text-sm text-slate-300">
                                                         Amenities will be
@@ -355,7 +355,7 @@ const HotelDetails = () => {
                                                         return (
                                                             <motion.div
                                                                 key={`${feature.name}-${index}`}
-                                                                className="relative flex flex-col items-center rounded-xl border border-cyan-200/10 bg-slate-950/30 px-4 py-5 text-center shadow-sm"
+                                                                className="w-1/4 relative flex flex-col items-center rounded-xl border border-cyan-200/10 bg-slate-950/30 px-4 py-5 text-center shadow-sm"
                                                                 whileHover={{
                                                                     y: -4,
                                                                     scale: 1.02,

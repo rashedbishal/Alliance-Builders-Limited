@@ -38,7 +38,7 @@ const SurroundingsSection = ({ project }: any) => {
                         viewport={{ once: true }}
                     >
                         <img
-                            src={project.project_images?.[0]?.image}
+                            src= {`/${project.project_images?.[0]?.image}`}
                             className="shadow-elegant-xl rounded-3xl"
                         />
                     </motion.div>
