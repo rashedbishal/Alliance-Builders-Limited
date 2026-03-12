@@ -66,11 +66,14 @@ const Media = () => {
                 </section>
 
                 {/* Media Content */}
-                <section className="bg-gradient-soft flex w-full justify-center px-4 py-20 md:px-16">
-                    <div className="space-y-8">
+                <section className="bg-powder flex w-full justify-center px-4 py-20 md:px-16">
+                    <div className="container mx-auto space-y-8 px-4">
                         {/* Featured News */}
                         {featuredContent ? (
-                            <div className="mb-12">
+                            <a
+                                href={featuredContent.news_hyperlink}
+                                className="mb-12"
+                            >
                                 <motion.div
                                     initial={{ opacity: 0, y: 20 }}
                                     whileInView={{ opacity: 1, y: 0 }}
@@ -121,7 +124,7 @@ const Media = () => {
                                         </div>
                                     </Card>
                                 </motion.div>
-                            </div>
+                            </a>
                         ) : (
                             <p className="text-center text-lg text-gray-400">
                                 No featured news available.
@@ -130,7 +133,7 @@ const Media = () => {
 
                         {/* All News Articles */}
                         <div>
-                            <h2 className="mb-8 flex items-center gap-3 text-3xl font-bold">
+                            <h2 className="mb-8 flex items-center gap-3 text-3xl font-bold mt-12">
                                 <Newspaper className="h-8 w-8 text-primary" />
                                 All News
                             </h2>
@@ -147,47 +150,57 @@ const Media = () => {
                                             }}
                                             viewport={{ once: true }}
                                         >
-                                            <Card className="group relative h-80 overflow-hidden border border-border/50 transition-all duration-500 hover:border-primary/50 hover:shadow-2xl">
-                                                <img
-                                                    src={article.image.path}
-                                                    alt={article.media_title}
-                                                    className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                                                />
-                                                {/* Gradient overlay */}
-                                                <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent transition-opacity duration-300" />
-
-                                                {/* Badge */}
-                                                <div className="absolute top-4 left-4 z-20">
-                                                    <Badge className="bg-accent/80 text-xs">
-                                                        {article.media_type}
-                                                    </Badge>
-                                                </div>
-
-                                                {/* Content */}
-                                                <div className="relative z-10 flex h-full flex-col justify-end p-6">
-                                                    <div className="mb-3 flex items-center gap-2 text-xs text-gray-200">
-                                                        <Calendar className="h-3 w-3" />
-                                                        {article.created_date}
-                                                    </div>
-                                                    <h3 className="mb-4 line-clamp-2 text-lg font-bold text-white transition-colors">
-                                                        {article.media_title}
-                                                    </h3>
-                                                    <Link
-                                                        href={
-                                                            article.news_hyperlink
+                                            <a href={article.news_hyperlink}>
+                                                <Card className="group relative h-80 overflow-hidden border border-border/50 transition-all duration-500 hover:border-primary/50 hover:shadow-2xl">
+                                                    <img
+                                                        src={article.image.path}
+                                                        alt={
+                                                            article.media_title
                                                         }
-                                                        className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 hover:gap-3 hover:text-primary/80"
-                                                    >
-                                                        Read More
-                                                        <ArrowRight className="h-4 w-4" />
-                                                    </Link>
-                                                </div>
-                                            </Card>
+                                                        className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                                                    />
+                                                    {/* Gradient overlay */}
+                                                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/60 to-transparent transition-opacity duration-300" />
+
+                                                    {/* Badge */}
+                                                    <div className="absolute top-4 left-4 z-20">
+                                                        <Badge className="bg-accent/80 text-xs">
+                                                            {article.media_type}
+                                                        </Badge>
+                                                    </div>
+
+                                                    {/* Content */}
+                                                    <div className="relative z-10 flex h-full flex-col justify-end p-6">
+                                                        <div className="mb-3 flex items-center gap-2 text-xs text-gray-200">
+                                                            <Calendar className="h-3 w-3" />
+                                                            {
+                                                                article.created_date
+                                                            }
+                                                        </div>
+                                                        <h3 className="mb-4 line-clamp-2 text-lg font-bold text-white transition-colors">
+                                                            {
+                                                                article.media_title
+                                                            }
+                                                        </h3>
+                                                        <Link
+                                                            href={
+                                                                article.news_hyperlink
+                                                            }
+                                                            className="inline-flex w-fit items-center gap-2 text-sm font-semibold text-primary transition-all duration-300 hover:gap-3 hover:text-primary/80"
+                                                        >
+                                                            Read More
+                                                            <ArrowRight className="h-4 w-4" />
+                                                        </Link>
+                                                    </div>
+                                                </Card>
+                                            </a>
                                         </motion.div>
                                     ))}
                                 </div>
                             ) : (
-                                <p className="text-center text-lg text-gray-400">No news articles available.</p>
+                                <p className="text-center text-lg text-gray-400">
+                                    No news articles available.
+                                </p>
                             )}
                         </div>
                     </div>
