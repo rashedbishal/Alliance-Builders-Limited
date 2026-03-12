@@ -4,15 +4,17 @@ import {
     ArrowLeft,
     Bath,
     Bed,
-    Compass,
+    Car,
     MapPin,
     Sparkles,
-    Star,
     Wifi,
     Wind,
 } from 'lucide-react';
 import React, { useRef, useState } from 'react';
 
+import FloatingGallery from '@/components/HotelDetails/FloatingGallery';
+import HotelStats from '@/components/HotelDetails/HotelStats';
+import SurroundingsSection from '@/components/HotelDetails/SurroundingsSection';
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
@@ -20,10 +22,6 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
 import type { Project } from '@/types/Project';
-import { properties } from '@/routes';
-import FloatingGallery from '@/components/HotelDetails/FloatingGallery';
-import HotelStats from '@/components/HotelDetails/HotelStats';
-import SurroundingsSection from '@/components/HotelDetails/SurroundingsSection';
 
 const OceanBackdrop = () => {
     const bubbles = [
@@ -51,7 +49,7 @@ const OceanBackdrop = () => {
             {/* Rising bubbles */}
             {bubbles.map((b, idx) => (
                 <motion.div
-                    // eslint-disable-next-line react/no-array-index-key
+
                     key={idx}
                     className="absolute bottom-[-60px] rounded-full border border-cyan-200/25 bg-cyan-200/5 backdrop-blur-sm"
                     style={{
@@ -112,52 +110,71 @@ const HotelDetails = () => {
     const images =
         projectDetails.project_images?.map((img) => `/${img.image}`) || [];
 
-    const hotelFeatures =
-        projectDetails.facilities?.map((facility) => ({
-            name: facility.name,
-            icon:
-                facility.name.toLowerCase().includes('spa') ||
-                facility.name.toLowerCase().includes('pool') ||
-                facility.name.toLowerCase().includes('bar')
-                    ? Sparkles
-                    : Wifi,
-            description: facility.name,
-        })) || [];
+    // const hotelFeatures =
+    //     projectDetails.facilities?.map((facility) => ({
+    //         name: facility.name,
+    //         icon:
+    //             facility.name.toLowerCase().includes('spa') ||
+    //             facility.name.toLowerCase().includes('pool') ||
+    //             facility.name.toLowerCase().includes('bar')
+    //                 ? Sparkles
+    //                 : Wifi,
+    //         description: facility.name,
+    //     })) || [];
+    //
+    // if (projectDetails.details) {
+    //     const detailsFeatures: {
+    //         name: string;
+    //         icon:
+    //             | typeof Bed
+    //             | typeof Bath
+    //             | typeof Wind;
+    //         description: string;
+    //     }[] = [];
+    //
+    //     if (projectDetails.details.bedroom) {
+    //         detailsFeatures.push({
+    //             name: 'Bedrooms',
+    //             icon: Bed,
+    //             description: projectDetails.details.bedroom,
+    //         });
+    //     }
+    //     if (projectDetails.details.bathroom) {
+    //         detailsFeatures.push({
+    //             name: 'Bathrooms',
+    //             icon: Bath,
+    //             description: projectDetails.details.bathroom,
+    //         });
+    //     }
+    //     if (projectDetails.details.balcony) {
+    //         detailsFeatures.push({
+    //             name: 'Balcony',
+    //             icon: Wind,
+    //             description: projectDetails.details.balcony,
+    //         });
+    //     }
+    //
+    //     hotelFeatures.push(...detailsFeatures);
+    // }
 
-    if (projectDetails.details) {
-        const detailsFeatures: {
-            name: string;
-            icon:
-                | typeof Bed
-                | typeof Bath
-                | typeof Wind;
-            description: string;
-        }[] = [];
+    // Amenities from facilities
+    const amenities = projectDetails.facilities?.map((facility) => ({
+        name: facility.name,
+        icon: facility.name.toLowerCase().includes('spa') ||
+        facility.name.toLowerCase().includes('pool')
+            ? Sparkles : Wifi,
+    })) || [];
 
-        if (projectDetails.details.bedroom) {
-            detailsFeatures.push({
-                name: 'Bedrooms',
-                icon: Bed,
-                description: projectDetails.details.bedroom,
-            });
-        }
-        if (projectDetails.details.bathroom) {
-            detailsFeatures.push({
-                name: 'Bathrooms',
-                icon: Bath,
-                description: projectDetails.details.bathroom,
-            });
-        }
-        if (projectDetails.details.balcony) {
-            detailsFeatures.push({
-                name: 'Balcony',
-                icon: Wind,
-                description: projectDetails.details.balcony,
-            });
-        }
-
-        hotelFeatures.push(...detailsFeatures);
-    }
+// Unit specs from details
+    const unitSpecs = [];
+    if (projectDetails.details?.bedroom)
+        unitSpecs.push({ name: 'Bedrooms', icon: Bed, value: projectDetails.details.bedroom });
+    if (projectDetails.details?.bathroom)
+        unitSpecs.push({ name: 'Bathrooms', icon: Bath, value: projectDetails.details.bathroom });
+    if (projectDetails.details?.balcony)
+        unitSpecs.push({ name: 'Balcony', icon: Wind, value: projectDetails.details.balcony });
+    if (projectDetails.details?.parking)
+        unitSpecs.push({ name: 'Parking', icon: Car, value: projectDetails.details.parking });
 
     const primaryImage =
         images[activeImage] || projectDetails.project_images?.[0]?.image || '';
@@ -175,7 +192,6 @@ const HotelDetails = () => {
             <div className="relative min-h-screen text-white">
                 <OceanBackdrop />
                 <div className="relative">
-
                     {/* 1. HERO SECTION */}
                     <section
                         ref={heroRef}
@@ -190,13 +206,12 @@ const HotelDetails = () => {
                             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-[#0a0a0a]" />
                         </motion.div>
                         <div className="relative z-10 container mx-auto flex h-full flex-col justify-end px-4 pb-20">
-
                             <div className="mb-4 flex flex-wrap gap-2">
                                 <Badge className="bg-primary text-white">
                                     Jana Series
                                 </Badge>
                             </div>
-                            <h1 className="mb-4 font-serif text-6xl font-light tracking-tighter md:text-8xl">
+                            <h1 className="text-blue-shadow mb-4 font-serif text-6xl font-light tracking-tighter md:text-8xl">
                                 {projectDetails.name}
                             </h1>
                             <div className="flex flex-col justify-between gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center">
@@ -341,70 +356,117 @@ const HotelDetails = () => {
                                             <h2 className="mb-6 text-center text-2xl font-semibold tracking-tight">
                                                 Signature Amenities
                                             </h2>
-                                            <div className="flex flex-col sm:flex-row justify-center gap-5">
-                                                {hotelFeatures.length === 0 && (
-                                                    <p className="col-span-3 text-center text-sm text-slate-300">
-                                                        Amenities will be
-                                                        announced soon.
-                                                    </p>
-                                                )}
-                                                {hotelFeatures.map(
-                                                    (feature, index) => {
-                                                        const Icon =
-                                                            feature.icon;
-                                                        return (
-                                                            <motion.div
-                                                                key={`${feature.name}-${index}`}
-                                                                className="w-1/4 relative flex flex-col items-center rounded-xl border border-cyan-200/10 bg-slate-950/30 px-4 py-5 text-center shadow-sm"
-                                                                whileHover={{
-                                                                    y: -4,
-                                                                    scale: 1.02,
-                                                                }}
-                                                            >
-                                                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-cyan-300/10 ring-1 ring-cyan-200/10">
-                                                                    <Icon className="h-5 w-5 text-cyan-200" />
-                                                                </div>
-                                                                <h3 className="mb-1 text-sm font-semibold">
-                                                                    {
-                                                                        feature.name
-                                                                    }
-                                                                </h3>
-                                                                <p className="text-xs text-slate-300">
-                                                                    {
-                                                                        feature.description
-                                                                    }
-                                                                </p>
-                                                            </motion.div>
-                                                        );
-                                                    },
-                                                )}
-                                            </div>
-                                        </CardContent>
-                                    </Card>
-                                </ScrollAnimation>
+                                            <div className="flex flex-col justify-center gap-5 sm:flex-row">
+                                                {/* Amenities Card */}
+                                                <Card className="border-cyan-200/15 bg-gradient-to-br from-slate-950/50 via-slate-950/60 to-cyan-950/30 backdrop-blur-xl">
+                                                    <CardContent className="p-8">
+                                                        <h2 className="mb-6 text-center text-2xl font-semibold">
+                                                            Signature Amenities
+                                                        </h2>
+                                                        <div className="grid gap-5 md:grid-cols-3">
+                                                            {amenities.map(
+                                                                (
+                                                                    item,
+                                                                    index,
+                                                                ) => {
+                                                                    const Icon =
+                                                                        item.icon;
+                                                                    return (
+                                                                        <motion.div
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            className="flex flex-col items-center ..."
+                                                                        >
+                                                                            <Icon className="h-5 w-5 text-cyan-200" />
+                                                                            <h3 className="text-sm font-semibold">
+                                                                                {
+                                                                                    item.name
+                                                                                }
+                                                                            </h3>
+                                                                        </motion.div>
+                                                                    );
+                                                                },
+                                                            )}
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
 
-                                <ScrollAnimation delay={0.25}>
-                                    <Card className="border-cyan-200/15 bg-slate-950/55 backdrop-blur-xl">
-                                        <CardContent className="p-6 md:p-8">
-                                            <div className="mb-6 flex flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
-                                                <div>
-                                                    <h2 className="text-xl font-semibold">
-                                                        Explore on the Map
-                                                    </h2>
-                                                    <p className="text-xs text-slate-300">
-                                                        Discover nearby
-                                                        attractions and
-                                                        surroundings.
-                                                    </p>
-                                                </div>
-                                            </div>
-                                            <div className="overflow-hidden rounded-2xl border border-cyan-200/15">
-                                                <MapComponent width="100%" />
+                                                {/* Unit Specs Card */}
+                                                <Card className="border-cyan-200/15 bg-gradient-to-br from-slate-950/50 via-slate-950/60 to-cyan-950/30 backdrop-blur-xl">
+                                                    <CardContent className="p-8">
+                                                        <h2 className="mb-6 text-2xl font-semibold">
+                                                            Unit Specifications
+                                                        </h2>
+                                                        <div className="divide-y divide-white/10">
+                                                            {unitSpecs.map(
+                                                                (
+                                                                    spec,
+                                                                    index,
+                                                                ) => {
+                                                                    const Icon =
+                                                                        spec.icon;
+                                                                    return (
+                                                                        <div
+                                                                            key={
+                                                                                index
+                                                                            }
+                                                                            className="flex items-center justify-between py-4"
+                                                                        >
+                                                                            <div className="flex items-center gap-3">
+                                                                                <Icon className="h-5 w-5 text-cyan-300" />
+                                                                                <span className="text-slate-300">
+                                                                                    {
+                                                                                        spec.name
+                                                                                    }
+                                                                                </span>
+                                                                            </div>
+                                                                            <span className="font-medium text-white">
+                                                                                {
+                                                                                    spec.value
+                                                                                }
+                                                                            </span>
+                                                                        </div>
+                                                                    );
+                                                                },
+                                                            )}
+                                                        </div>
+                                                    </CardContent>
+                                                </Card>
                                             </div>
                                         </CardContent>
                                     </Card>
                                 </ScrollAnimation>
                             </div>
+                        </div>
+
+                        <div className="mt-12 space-y-10 lg:col-span-2">
+                            <ScrollAnimation delay={0.25}>
+                                <Card className="border-cyan-200/15 bg-slate-950/55 backdrop-blur-xl">
+                                    <CardContent className="p-6 md:p-8">
+                                        <div className="mb-6 flex flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
+                                            <div>
+                                                <h2 className="text-xl font-semibold">
+                                                    Explore on the Map
+                                                </h2>
+                                                <p className="text-xs text-slate-300">
+                                                    Discover nearby attractions
+                                                    and surroundings.
+                                                </p>
+                                            </div>
+                                        </div>
+                                        <div className="overflow-hidden rounded-2xl border border-cyan-200/15">
+                                            <MapComponent
+                                                width="100%"
+                                                src={
+                                                    projectDetails.google_map_url ??
+                                                    ''
+                                                }
+                                            />
+                                        </div>
+                                    </CardContent>
+                                </Card>
+                            </ScrollAnimation>
                         </div>
                     </section>
 
