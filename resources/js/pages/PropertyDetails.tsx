@@ -27,6 +27,7 @@ import { Badge } from '@/components/ui/badge';
 import AppLayout from "@/layouts/AppLayout";
 import { properties } from "@/routes";
 import type { Project } from '@/types/Project';
+import ScrollAnimation from '@/components/ScrollAnimation';
 
 const PropertyDetail = () => {
     const { projectDetails } = usePage<{ projectDetails: Project }>().props;
@@ -35,9 +36,15 @@ const PropertyDetail = () => {
     // Gallery State & Refs
     const scrollRef = useRef<HTMLDivElement>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isDragging, setIsDragging] = useState(false);
-    const [startX, setStartX] = useState(0);
-    const [scrollLeft, setScrollLeft] = useState(0);
+    // const [isDragging, setIsDragging] = useState(false);
+    // const [startX, setStartX] = useState(0);
+    // const [scrollLeft, setScrollLeft] = useState(0);
+    const isDragging = useRef(false);  // useRef instead of useState to avoid re-renders
+    const startX = useRef(0);
+    const scrollLeftRef = useRef(0);
+    const velX = useRef(0);
+    const lastX = useRef(0);
+    const animFrame = useRef<number>(0);
 
     const { scrollYProgress } = useScroll({
         target: heroRef,
@@ -86,21 +93,64 @@ const PropertyDetail = () => {
     ].filter(spec => spec.value && spec.value !== "0");
 
     // --- MOUSE SWIPE LOGIC ---
+    // const handleMouseDown = (e: React.MouseEvent) => {
+    //     setIsDragging(true);
+    //     setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
+    //     setScrollLeft(scrollRef.current?.scrollLeft || 0);
+    // };
+    //
+    // const handleMouseMove = (e: React.MouseEvent) => {
+    //     if (!isDragging || !scrollRef.current) return;
+    //     e.preventDefault();
+    //     const x = e.pageX - (scrollRef.current.offsetLeft || 0);
+    //     const walk = (x - startX) * 2.5; // Scroll speed multiplier
+    //     scrollRef.current.scrollLeft = scrollLeft - walk;
+    // };
+    //
+    // const handleMouseUp = () => setIsDragging(false);
     const handleMouseDown = (e: React.MouseEvent) => {
-        setIsDragging(true);
-        setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
-        setScrollLeft(scrollRef.current?.scrollLeft || 0);
+        if (!scrollRef.current) return;
+        isDragging.current = true;
+        startX.current = e.pageX;
+        scrollLeftRef.current = scrollRef.current.scrollLeft;
+        velX.current = 0;
+        lastX.current = e.pageX;
+        scrollRef.current.style.cursor = 'grabbing';
+        if (animFrame.current) cancelAnimationFrame(animFrame.current);
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging || !scrollRef.current) return;
+        if (!isDragging.current || !scrollRef.current) return;
         e.preventDefault();
-        const x = e.pageX - (scrollRef.current.offsetLeft || 0);
-        const walk = (x - startX) * 2.5; // Scroll speed multiplier
-        scrollRef.current.scrollLeft = scrollLeft - walk;
+        velX.current = e.pageX - lastX.current;
+        lastX.current = e.pageX;
+        const walk = e.pageX - startX.current;
+        scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
     };
 
-    const handleMouseUp = () => setIsDragging(false);
+    const handleMouseUp = () => {
+        if (!scrollRef.current) return;
+        isDragging.current = false;
+        scrollRef.current.style.cursor = 'grab';
+
+        // Momentum / inertia after release
+        const momentum = () => {
+            if (!scrollRef.current) return;
+            velX.current *= 0.92; // friction — lower = stops faster
+            scrollRef.current.scrollLeft -= velX.current;
+            if (Math.abs(velX.current) > 0.5) {
+                animFrame.current = requestAnimationFrame(momentum);
+            }
+        };
+        animFrame.current = requestAnimationFrame(momentum);
+    };
+
+    // Cleanup on unmount
+    useEffect(() => {
+        return () => {
+            if (animFrame.current) cancelAnimationFrame(animFrame.current);
+        };
+    }, []);
 
     const scrollToIndex = (direction: 'next' | 'prev') => {
         if (!scrollRef.current) return;
@@ -272,17 +322,23 @@ const PropertyDetail = () => {
                         <div className="grid grid-cols-1 items-start gap-24 lg:grid-cols-2">
                             <div className="h-fit lg:sticky lg:top-24">
                                 <div className="relative flex flex-col gap-6">
-                                    <div className="relative z-10 aspect-[4/5] overflow-hidden rounded-[2rem] border border-white/10">
+                                    <motion.div
+                                        initial={{ x: -50, opacity: 0 }}
+                                        whileInView={{ x: 0, opacity: 1 }}
+                                        transition={{ duration: 1 }}
+                                        className="relative z-10 aspect-4/5 overflow-hidden rounded-4xl border border-white/10"
+                                    >
                                         <img
                                             src={`/${projectDetails.project_images[0]?.image}`}
                                             className="h-full w-full object-cover"
                                             alt="Main"
                                         />
-                                    </div>
+                                    </motion.div>
                                     <motion.div
                                         initial={{ x: 50, opacity: 0 }}
                                         whileInView={{ x: 0, opacity: 1 }}
-                                        className="-right-12 -bottom-16 z-20 aspect-[3/4] w-[70%] overflow-hidden rounded-[2rem] border-[12px] border-black shadow-2xl lg:absolute"
+                                        transition={{ duration: 1 }}
+                                        className="-right-12 -bottom-40 z-20 aspect-3/4 w-[70%] overflow-hidden rounded-4xl border-2 border-black shadow-2xl lg:absolute"
                                     >
                                         <img
                                             src={`/${projectDetails.project_images[1]?.image || projectDetails.project_images[0]?.image}`}
@@ -292,6 +348,7 @@ const PropertyDetail = () => {
                                     </motion.div>
                                 </div>
                             </div>
+
                             <div>
                                 <h2 className="mb-16 font-serif text-6xl leading-tight font-light tracking-tight">
                                     Unit <br />
@@ -301,27 +358,29 @@ const PropertyDetail = () => {
                                 </h2>
                                 <div className="divide-y divide-white/10">
                                     {unitSpecs.map((spec, i) => (
-                                        <div
-                                            key={i}
-                                            className="group relative flex items-center justify-between py-10"
-                                        >
-                                            <div className="flex items-center gap-8">
-                                                <div className="flex flex-col items-start gap-1">
-                                                    <span className="font-mono text-[10px] text-primary/60">
-                                                        0{i + 1}
-                                                    </span>
-                                                    <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/[0.03] group-hover:bg-primary/10">
-                                                        <spec.icon className="h-5 w-5 text-white/20 transition-all duration-500 group-hover:text-primary" />
+                                        <ScrollAnimation>
+                                            <div
+                                                key={i}
+                                                className="group relative flex items-center justify-between py-5"
+                                            >
+                                                <div className="flex items-center gap-8">
+                                                    <div className="flex flex-col items-start gap-1">
+                                                        <span className="font-mono text-[10px] text-primary/60">
+                                                            0{i + 1}
+                                                        </span>
+                                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/[0.03] group-hover:bg-primary/10">
+                                                            <spec.icon className="h-5 w-5 text-white/20 transition-all duration-500 group-hover:text-primary" />
+                                                        </div>
                                                     </div>
+                                                    <h3 className="text-xl font-light text-white/40 transition-colors group-hover:text-white">
+                                                        {spec.label}
+                                                    </h3>
                                                 </div>
-                                                <h3 className="text-xl font-light text-white/40 transition-colors group-hover:text-white">
-                                                    {spec.label}
-                                                </h3>
+                                                <span className="text-3xl font-light tracking-tighter transition-colors group-hover:text-primary">
+                                                    {spec.value}
+                                                </span>
                                             </div>
-                                            <span className="text-3xl font-light tracking-tighter transition-colors group-hover:text-primary">
-                                                {spec.value}
-                                            </span>
-                                        </div>
+                                        </ScrollAnimation>
                                     ))}
                                 </div>
                             </div>
@@ -369,10 +428,11 @@ const PropertyDetail = () => {
                                 if (index !== currentIndex)
                                     setCurrentIndex(index);
                             }}
-                            className={`no-scrollbar flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto pb-10 select-none ${isDragging ? 'cursor-grabbing' : ''}`}
+                            className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto pb-10 select-none"
                             style={{
                                 scrollbarWidth: 'none',
                                 msOverflowStyle: 'none',
+                                willChange: 'scroll-position', // GPU hint
                             }}
                         >
                             <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
