@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { motion } from 'framer-motion';
+import { motion, useScroll, useTransform } from 'framer-motion';
 import {
     ArrowLeft,
     Bath,
@@ -11,7 +11,7 @@ import {
     Wifi,
     Wind,
 } from 'lucide-react';
-import React, { useState } from 'react';
+import React, { useRef, useState } from 'react';
 
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
@@ -20,6 +20,10 @@ import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
 import type { Project } from '@/types/Project';
+import { properties } from '@/routes';
+import FloatingGallery from '@/components/HotelDetails/FloatingGallery';
+import HotelStats from '@/components/HotelDetails/HotelStats';
+import SurroundingsSection from '@/components/HotelDetails/SurroundingsSection';
 
 const OceanBackdrop = () => {
     const bubbles = [
@@ -158,358 +162,261 @@ const HotelDetails = () => {
     const primaryImage =
         images[activeImage] || projectDetails.project_images?.[0]?.image || '';
 
+    const heroRef = useRef(null);
+    const { scrollYProgress } = useScroll({
+        target: heroRef,
+        offset: ['start start', 'end start'],
+    });
+
+    const y = useTransform(scrollYProgress, [0, 1], ['0%', '40%']);
+
     return (
         <AppLayout>
             <div className="relative min-h-screen text-white">
                 <OceanBackdrop />
                 <div className="relative">
-                {/* Back Button */}
-                <div className="container mx-auto px-4 pb-6 pt-28">
-                    {/*<ScrollAnimation>*/}
-                    {/*    <Link href="/hotels-resorts">*/}
-                    {/*        <Button*/}
-                    {/*            variant="ghost"*/}
-                    {/*            className="p-4 text-white hover:bg-white/10"*/}
-                    {/*        >*/}
-                    {/*            <ArrowLeft className="mr-2 h-4 w-4" />*/}
-                    {/*            Back to Hotels &amp; Resorts*/}
-                    {/*        </Button>*/}
-                    {/*    </Link>*/}
-                    {/*</ScrollAnimation>*/}
-                </div>
 
-                {/* Hero + Gallery */}
-                <section className="container mx-auto px-4 pb-12">
-                    <ScrollAnimation>
-                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-3">
-                            <div className="grid grid-cols-3 gap-3 lg:flex lg:flex-col">
-                                {images.slice(0, 3).map((img, index) => (
-                                    <motion.button
-                                        key={index}
-                                        type="button"
-                                        onClick={() => setActiveImage(index)}
-                                        className={`relative h-28 overflow-hidden rounded-2xl border transition-all duration-300 ${
-                                            activeImage === index
-                                                ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
-                                                : 'border-white/10 hover:border-sky-400/50'
-                                        }`}
-                                        whileHover={{ scale: 1.03 }}
-                                    >
-                                        <img
-                                            src={img}
-                                            alt={`Hotel view ${index + 1}`}
-                                            className="h-full w-full object-cover"
-                                        />
-                                        {activeImage === index && (
-                                            <div className="pointer-events-none absolute inset-0 bg-sky-500/20" />
-                                        )}
-                                    </motion.button>
-                                ))}
+                    {/* 1. HERO SECTION */}
+                    <section
+                        ref={heroRef}
+                        className="relative h-screen w-full overflow-hidden"
+                    >
+                        <motion.div style={{ y }} className="absolute inset-0">
+                            <img
+                                src={primaryImage}
+                                alt={projectDetails.name}
+                                className="h-full w-full object-cover"
+                            />
+                            <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-[#0a0a0a]" />
+                        </motion.div>
+                        <div className="relative z-10 container mx-auto flex h-full flex-col justify-end px-4 pb-20">
+
+                            <div className="mb-4 flex flex-wrap gap-2">
+                                <Badge className="bg-primary text-white">
+                                    Jana Series
+                                </Badge>
                             </div>
-
-                            <div className="relative overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 lg:col-span-2">
-                                <motion.div
-                                    className="relative h-[420px] w-full overflow-hidden"
-                                    initial={{ scale: 1.02, opacity: 0 }}
-                                    animate={{ scale: 1, opacity: 1 }}
-                                    transition={{ duration: 0.6 }}
-                                >
-                                    {primaryImage && (
-                                        <img
-                                            src={primaryImage}
-                                            alt={projectDetails.name}
-                                            className="h-full w-full object-cover"
-                                        />
-                                    )}
-                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
-                                </motion.div>
-
-                                <div className="pointer-events-none absolute inset-0">
-                                    <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-cyan-400/25 blur-3xl" />
-                                    <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-sky-400/15 blur-3xl" />
-                                    <div className="absolute left-1/3 top-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+                            <h1 className="mb-4 font-serif text-6xl font-light tracking-tighter md:text-8xl">
+                                {projectDetails.name}
+                            </h1>
+                            <div className="flex flex-col justify-between gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center">
+                                <div className="flex items-center gap-3 text-lg text-white/60">
+                                    <MapPin className="h-5 w-5 text-primary" />{' '}
+                                    {projectDetails.address},{' '}
+                                    {projectDetails.location?.name}
                                 </div>
-
-                                <div className="relative z-10 flex flex-col gap-4 px-6 pb-6 pt-4 md:px-10 md:pb-8">
-                                    <div className="flex flex-wrap items-center justify-between gap-4">
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            <Badge className="bg-gradient-to-r from-cyan-300 to-sky-400 px-4 py-1.5 text-sm font-semibold text-slate-950">
-                                                Signature Hotel
-                                            </Badge>
-                                            <Badge
-                                                variant="outline"
-                                                className="border-cyan-200/25 bg-slate-950/35 px-3 py-1 text-xs uppercase tracking-wide text-cyan-50/90"
-                                            >
-                                                Hotels &amp; Resorts
-                                            </Badge>
-                                        </div>
-                                        <div className="flex items-center gap-1 text-amber-300">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                    key={i}
-                                                    className="h-4 w-4 fill-amber-300"
-                                                />
-                                            ))}
-                                            <span className="ml-1 text-xs text-slate-200">
-                                                Premium Experience
-                                            </span>
-                                        </div>
-                                    </div>
-
-                                    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                                        <div>
-                                            <h1 className="mb-2 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
-                                                {projectDetails.name}
-                                            </h1>
-                                            <div className="flex items-center text-sm text-slate-200/80">
-                                                <MapPin className="mr-2 h-4 w-4 flex-shrink-0 text-sky-300" />
-                                                <span>
-                                                    {projectDetails.address ??
-                                                        'Address to be announced'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-wrap gap-3">
-                                            {projectDetails.details
-                                                ?.bedroom && (
-                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
-                                                    <Bed className="h-4 w-4 text-cyan-200" />
-                                                    <span>
-                                                        {
-                                                            projectDetails
-                                                                .details
-                                                                .bedroom
-                                                        }{' '}
-                                                        Beds
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {projectDetails.details
-                                                ?.bathroom && (
-                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
-                                                    <Bath className="h-4 w-4 text-cyan-200" />
-                                                    <span>
-                                                        {
-                                                            projectDetails
-                                                                .details
-                                                                .bathroom
-                                                        }{' '}
-                                                        Baths
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {projectDetails.details
-                                                ?.apartment_direction && (
-                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
-                                                    <Compass className="h-4 w-4 text-cyan-200" />
-                                                    <span>
-                                                        Facing{' '}
-                                                        {
-                                                            projectDetails
-                                                                .details
-                                                                .apartment_direction
-                                                        }
-                                                    </span>
-                                                </div>
-                                            )}
-                                        </div>
-                                    </div>
-                                </div>
+                                {/*<div className="text-3xl font-light md:text-5xl">*/}
+                                {/*    {formatCurrency(projectDetails.price)}*/}
+                                {/*</div>*/}
                             </div>
                         </div>
-                    </ScrollAnimation>
-                </section>
+                    </section>
 
-                {/* Hotel Content */}
-                <section className="container mx-auto px-4 pb-20">
-                    <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
-                        <div className="space-y-6">
-                            <ScrollAnimation>
-                                <Card className="border-cyan-200/20 bg-gradient-to-b from-slate-950/40 to-slate-950/70 backdrop-blur-xl">
-                                    <CardContent className="space-y-4 p-6">
-                                        <h3 className="text-lg font-semibold">
-                                            Reservation Info
-                                        </h3>
-                                        <p className="text-sm text-slate-200/90">
-                                            Get in touch with our team to know
-                                            more about availability, pricing,
-                                            and bespoke stay options tailored
-                                            for you.
-                                        </p>
-                                        <div className="space-y-3 text-sm text-slate-200/90">
-                                            <p>
-                                                <span className="text-slate-400">
-                                                    Project ID:
-                                                </span>{' '}
-                                                {projectDetails.project_id}
+                    {/* Hotel Content */}
+                    <section className="container mx-auto px-4 py-20">
+                        <div className="grid grid-cols-1 gap-10 lg:grid-cols-3">
+                            <div className="space-y-6">
+                                <ScrollAnimation>
+                                    <Card className="border-cyan-200/20 bg-gradient-to-b from-slate-950/40 to-slate-950/70 backdrop-blur-xl">
+                                        <CardContent className="space-y-4 p-6">
+                                            <h3 className="text-lg font-semibold">
+                                                Reservation Info
+                                            </h3>
+                                            <p className="text-sm text-slate-200/90">
+                                                Get in touch with our team to
+                                                know more about availability,
+                                                pricing, and bespoke stay
+                                                options tailored for you.
                                             </p>
-                                            {projectDetails.price && (
+                                            <div className="space-y-3 text-sm text-slate-200/90">
                                                 <p>
                                                     <span className="text-slate-400">
-                                                        Indicative Price:
+                                                        Project ID:
                                                     </span>{' '}
-                                                    {projectDetails.price.toLocaleString()}
+                                                    {projectDetails.project_id}
                                                 </p>
-                                            )}
-                                        </div>
-                                        <Button className="mt-2 w-full bg-cyan-500/90 hover:bg-cyan-500">
-                                            Enquire About This Hotel
-                                        </Button>
-                                    </CardContent>
-                                </Card>
-                            </ScrollAnimation>
-
-                            {primaryImage && (
-                                <ScrollAnimation delay={0.15}>
-                                    <motion.div
-                                        className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-lg"
-                                        whileHover={{ scale: 1.02 }}
-                                        transition={{ duration: 0.4 }}
-                                    >
-                                        <img
-                                            src={primaryImage}
-                                            alt={projectDetails.name}
-                                            className="h-56 w-full object-cover"
-                                        />
-                                        <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/10 to-transparent" />
-                                        <div className="absolute bottom-4 left-4">
-                                            <p className="text-xs uppercase tracking-[0.2em] text-slate-300">
-                                                Signature Collection
-                                            </p>
-                                            <p className="text-lg font-semibold">
-                                                Hotels &amp; Resorts
-                                            </p>
-                                        </div>
-                                    </motion.div>
+                                                {projectDetails.price && (
+                                                    <p>
+                                                        <span className="text-slate-400">
+                                                            Indicative Price:
+                                                        </span>{' '}
+                                                        {projectDetails.price.toLocaleString()}
+                                                    </p>
+                                                )}
+                                            </div>
+                                            <Button className="mt-2 w-full bg-cyan-500/90 hover:bg-cyan-500">
+                                                Enquire About This Hotel
+                                            </Button>
+                                        </CardContent>
+                                    </Card>
                                 </ScrollAnimation>
-                            )}
+
+                                {primaryImage && (
+                                    <ScrollAnimation delay={0.15}>
+                                        <motion.div
+                                            className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-lg"
+                                            whileHover={{ scale: 1.02 }}
+                                            transition={{ duration: 0.4 }}
+                                        >
+                                            <img
+                                                src={primaryImage}
+                                                alt={projectDetails.name}
+                                                className="h-56 w-full object-cover"
+                                            />
+                                            <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/10 to-transparent" />
+                                            <div className="absolute bottom-4 left-4">
+                                                <p className="text-xs tracking-[0.2em] text-slate-300 uppercase">
+                                                    Signature Collection
+                                                </p>
+                                                <p className="text-lg font-semibold">
+                                                    Hotels &amp; Resorts
+                                                </p>
+                                            </div>
+                                        </motion.div>
+                                    </ScrollAnimation>
+                                )}
+                            </div>
+
+                            <div className="space-y-10 lg:col-span-2">
+                                <ScrollAnimation>
+                                    <Card className="border-cyan-200/15 bg-slate-950/45 backdrop-blur-xl">
+                                        <CardContent className="space-y-4 p-8">
+                                            <Badge className="mb-3 bg-cyan-300/10 text-xs font-medium tracking-wide text-cyan-100 uppercase">
+                                                Hotel Overview
+                                            </Badge>
+                                            <h2 className="mb-2 text-2xl font-semibold tracking-tight">
+                                                A curated stay for modern
+                                                travelers
+                                            </h2>
+                                            <p className="text-sm leading-relaxed text-slate-200/80">
+                                                {projectDetails.description ??
+                                                    'Experience a thoughtfully designed hotel with curated amenities, elegant interiors, and a calm atmosphere — ideal for both business and leisure stays.'}
+                                            </p>
+                                            <div className="mt-4 grid gap-4 text-sm text-slate-200/90 sm:grid-cols-2">
+                                                <div>
+                                                    <p className="text-slate-400">
+                                                        Location
+                                                    </p>
+                                                    <p>
+                                                        {projectDetails.location
+                                                            ?.name ??
+                                                            'To be announced'}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-slate-400">
+                                                        Floors
+                                                    </p>
+                                                    <p>
+                                                        {projectDetails.floors ??
+                                                            'N/A'}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-slate-400">
+                                                        Size
+                                                    </p>
+                                                    <p>
+                                                        {projectDetails.size ??
+                                                            'N/A'}
+                                                    </p>
+                                                </div>
+                                                <div>
+                                                    <p className="text-slate-400">
+                                                        Handover
+                                                    </p>
+                                                    <p>
+                                                        {projectDetails.handover_date ??
+                                                            'TBA'}
+                                                    </p>
+                                                </div>
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </ScrollAnimation>
+
+                                <ScrollAnimation delay={0.15}>
+                                    <Card className="border-cyan-200/15 bg-gradient-to-br from-slate-950/50 via-slate-950/60 to-cyan-950/30 backdrop-blur-xl">
+                                        <CardContent className="p-8">
+                                            <h2 className="mb-6 text-center text-2xl font-semibold tracking-tight">
+                                                Signature Amenities
+                                            </h2>
+                                            <div className="grid gap-5 md:grid-cols-3">
+                                                {hotelFeatures.length === 0 && (
+                                                    <p className="col-span-3 text-center text-sm text-slate-300">
+                                                        Amenities will be
+                                                        announced soon.
+                                                    </p>
+                                                )}
+                                                {hotelFeatures.map(
+                                                    (feature, index) => {
+                                                        const Icon =
+                                                            feature.icon;
+                                                        return (
+                                                            <motion.div
+                                                                key={`${feature.name}-${index}`}
+                                                                className="relative flex flex-col items-center rounded-xl border border-cyan-200/10 bg-slate-950/30 px-4 py-5 text-center shadow-sm"
+                                                                whileHover={{
+                                                                    y: -4,
+                                                                    scale: 1.02,
+                                                                }}
+                                                            >
+                                                                <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-cyan-300/10 ring-1 ring-cyan-200/10">
+                                                                    <Icon className="h-5 w-5 text-cyan-200" />
+                                                                </div>
+                                                                <h3 className="mb-1 text-sm font-semibold">
+                                                                    {
+                                                                        feature.name
+                                                                    }
+                                                                </h3>
+                                                                <p className="text-xs text-slate-300">
+                                                                    {
+                                                                        feature.description
+                                                                    }
+                                                                </p>
+                                                            </motion.div>
+                                                        );
+                                                    },
+                                                )}
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </ScrollAnimation>
+
+                                <ScrollAnimation delay={0.25}>
+                                    <Card className="border-cyan-200/15 bg-slate-950/55 backdrop-blur-xl">
+                                        <CardContent className="p-6 md:p-8">
+                                            <div className="mb-6 flex flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
+                                                <div>
+                                                    <h2 className="text-xl font-semibold">
+                                                        Explore on the Map
+                                                    </h2>
+                                                    <p className="text-xs text-slate-300">
+                                                        Discover nearby
+                                                        attractions and
+                                                        surroundings.
+                                                    </p>
+                                                </div>
+                                            </div>
+                                            <div className="overflow-hidden rounded-2xl border border-cyan-200/15">
+                                                <MapComponent width="100%" />
+                                            </div>
+                                        </CardContent>
+                                    </Card>
+                                </ScrollAnimation>
+                            </div>
                         </div>
+                    </section>
 
-                        <div className="space-y-10 lg:col-span-2">
-                            <ScrollAnimation>
-                                <Card className="border-cyan-200/15 bg-slate-950/45 backdrop-blur-xl">
-                                    <CardContent className="space-y-4 p-8">
-                                        <Badge className="mb-3 bg-cyan-300/10 text-xs font-medium uppercase tracking-wide text-cyan-100">
-                                            Hotel Overview
-                                        </Badge>
-                                        <h2 className="mb-2 text-2xl font-semibold tracking-tight">
-                                            A curated stay for modern
-                                            travelers
-                                        </h2>
-                                        <p className="text-sm leading-relaxed text-slate-200/80">
-                                            {projectDetails.description ??
-                                                'Experience a thoughtfully designed hotel with curated amenities, elegant interiors, and a calm atmosphere — ideal for both business and leisure stays.'}
-                                        </p>
-                                        <div className="mt-4 grid gap-4 text-sm text-slate-200/90 sm:grid-cols-2">
-                                            <div>
-                                                <p className="text-slate-400">
-                                                    Location
-                                                </p>
-                                                <p>
-                                                    {projectDetails.location
-                                                        ?.name ?? 'To be announced'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="text-slate-400">
-                                                    Floors
-                                                </p>
-                                                <p>
-                                                    {projectDetails.floors ??
-                                                        'N/A'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="text-slate-400">
-                                                    Size
-                                                </p>
-                                                <p>
-                                                    {projectDetails.size ??
-                                                        'N/A'}
-                                                </p>
-                                            </div>
-                                            <div>
-                                                <p className="text-slate-400">
-                                                    Handover
-                                                </p>
-                                                <p>
-                                                    {projectDetails.handover_date ??
-                                                        'TBA'}
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </ScrollAnimation>
+                    <FloatingGallery images={images} />
 
-                            <ScrollAnimation delay={0.15}>
-                                <Card className="border-cyan-200/15 bg-gradient-to-br from-slate-950/50 via-slate-950/60 to-cyan-950/30 backdrop-blur-xl">
-                                    <CardContent className="p-8">
-                                        <h2 className="mb-6 text-center text-2xl font-semibold tracking-tight">
-                                            Signature Amenities
-                                        </h2>
-                                        <div className="grid gap-5 md:grid-cols-3">
-                                            {hotelFeatures.length === 0 && (
-                                                <p className="col-span-3 text-center text-sm text-slate-300">
-                                                    Amenities will be announced
-                                                    soon.
-                                                </p>
-                                            )}
-                                            {hotelFeatures.map(
-                                                (feature, index) => {
-                                                    const Icon = feature.icon;
-                                                    return (
-                                                        <motion.div
-                                                            key={`${feature.name}-${index}`}
-                                                            className="relative flex flex-col items-center rounded-xl border border-cyan-200/10 bg-slate-950/30 px-4 py-5 text-center shadow-sm"
-                                                            whileHover={{
-                                                                y: -4,
-                                                                scale: 1.02,
-                                                            }}
-                                                        >
-                                                            <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-full bg-cyan-300/10 ring-1 ring-cyan-200/10">
-                                                                <Icon className="h-5 w-5 text-cyan-200" />
-                                                            </div>
-                                                            <h3 className="mb-1 text-sm font-semibold">
-                                                                {feature.name}
-                                                            </h3>
-                                                            <p className="text-xs text-slate-300">
-                                                                {
-                                                                    feature.description
-                                                                }
-                                                            </p>
-                                                        </motion.div>
-                                                    );
-                                                },
-                                            )}
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </ScrollAnimation>
+                    <HotelStats
+                        details={projectDetails.details}
+                        floors={projectDetails.floors}
+                        size={projectDetails.size}
+                    />
 
-                            <ScrollAnimation delay={0.25}>
-                                <Card className="border-cyan-200/15 bg-slate-950/55 backdrop-blur-xl">
-                                    <CardContent className="p-6 md:p-8">
-                                        <div className="mb-6 flex flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
-                                            <div>
-                                                <h2 className="text-xl font-semibold">
-                                                    Explore on the Map
-                                                </h2>
-                                                <p className="text-xs text-slate-300">
-                                                    Discover nearby attractions
-                                                    and surroundings.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="overflow-hidden rounded-2xl border border-cyan-200/15">
-                                            <MapComponent width="100%" />
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </ScrollAnimation>
-                        </div>
-                    </div>
-                </section>
+                    <SurroundingsSection project={projectDetails} />
                 </div>
             </div>
         </AppLayout>

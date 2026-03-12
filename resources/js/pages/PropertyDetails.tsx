@@ -21,6 +21,7 @@ import {
     Wifi,
     Calendar,
     Video,
+    Star,
 } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import MapComponent from '@/components/MapComponent';
@@ -33,6 +34,7 @@ import ScrollAnimation from '@/components/ScrollAnimation';
 const PropertyDetail = () => {
     const { projectDetails } = usePage<{ projectDetails: Project }>().props;
     const heroRef = useRef(null);
+    const [activeImage, setActiveImage] = useState(0);
 
     // Gallery State & Refs
     const scrollRef = useRef<HTMLDivElement>(null);
@@ -93,22 +95,6 @@ const PropertyDetail = () => {
         { label: 'Garage Size', value: projectDetails.details?.garage_size, icon: Ruler },
     ].filter(spec => spec.value && spec.value !== "0");
 
-    // --- MOUSE SWIPE LOGIC ---
-    // const handleMouseDown = (e: React.MouseEvent) => {
-    //     setIsDragging(true);
-    //     setStartX(e.pageX - (scrollRef.current?.offsetLeft || 0));
-    //     setScrollLeft(scrollRef.current?.scrollLeft || 0);
-    // };
-    //
-    // const handleMouseMove = (e: React.MouseEvent) => {
-    //     if (!isDragging || !scrollRef.current) return;
-    //     e.preventDefault();
-    //     const x = e.pageX - (scrollRef.current.offsetLeft || 0);
-    //     const walk = (x - startX) * 2.5; // Scroll speed multiplier
-    //     scrollRef.current.scrollLeft = scrollLeft - walk;
-    // };
-    //
-    // const handleMouseUp = () => setIsDragging(false);
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!scrollRef.current) return;
         isDragging.current = true;
@@ -168,48 +154,147 @@ const PropertyDetail = () => {
     return (
         <AppLayout>
             <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
-                {/* 1. HERO SECTION */}
-                <section
-                    ref={heroRef}
-                    className="relative h-screen w-full overflow-hidden"
-                >
-                    <motion.div style={{ y }} className="absolute inset-0">
-                        <img
-                            src={primaryImage}
-                            alt={projectDetails.name}
-                            className="h-full w-full object-cover"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-[#0a0a0a]" />
-                    </motion.div>
-                    <div className="relative z-10 container mx-auto flex h-full flex-col justify-end px-4 pb-20">
-                        <Link
-                            href={properties()}
-                            className="mb-6 inline-flex items-center text-xs tracking-[0.2em] text-white/50 uppercase transition-colors hover:text-white"
-                        >
-                            <ArrowLeft className="mr-2 h-4 w-4" /> Back to
-                            Collection
-                        </Link>
-                        <div className="mb-4 flex flex-wrap gap-2">
-                            {projectDetails.isFeatured === 1 && (
-                                <Badge className="bg-primary text-white">
-                                    Signature Series
-                                </Badge>
-                            )}
-                        </div>
-                        <h1 className="mb-4 font-serif text-6xl font-light tracking-tighter md:text-8xl">
-                            {projectDetails.name}
-                        </h1>
-                        <div className="flex flex-col justify-between gap-6 border-t border-white/10 pt-8 md:flex-row md:items-center">
-                            <div className="flex items-center gap-3 text-lg text-white/60">
-                                <MapPin className="h-5 w-5 text-primary" />{' '}
-                                {projectDetails.address},{' '}
-                                {projectDetails.location?.name}
+
+                {/* Hero + Gallery */}
+                <section className="container mx-auto px-4 pt-24 pb-12 h-full">
+                    <ScrollAnimation>
+                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
+                            <div className="grid grid-cols-3 gap-3 lg:flex lg:flex-col">
+                                {images.slice(0, 3).map((img, index) => (
+                                    <motion.button
+                                        key={index}
+                                        type="button"
+                                        onClick={() => setActiveImage(index)}
+                                        className={`relative h-28 overflow-hidden rounded-2xl border transition-all duration-300 ${
+                                            activeImage === index
+                                                ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
+                                                : 'border-white/10 hover:border-sky-400/50'
+                                        }`}
+                                        whileHover={{ scale: 1.03 }}
+                                    >
+                                        <img
+                                            src={img}
+                                            alt={`Hotel view ${index + 1}`}
+                                            className=" w-full object-cover"
+                                        />
+                                        {activeImage === index && (
+                                            <div className="pointer-events-none absolute inset-0 bg-sky-500/20" />
+                                        )}
+                                    </motion.button>
+                                ))}
                             </div>
-                            <div className="text-3xl font-light md:text-5xl">
-                                {formatCurrency(projectDetails.price)}
+
+                            <div className="relative overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 lg:col-span-3">
+                                <motion.div
+                                    className="relative h-80 w-full overflow-hidden"
+                                    initial={{ scale: 1.02, opacity: 0 }}
+                                    animate={{ scale: 1, opacity: 1 }}
+                                    transition={{ duration: 0.6 }}
+                                >
+                                    {primaryImage && (
+                                        <img
+                                            src={primaryImage}
+                                            alt={projectDetails.name}
+                                            className=" w-full object-cover"
+                                        />
+                                    )}
+                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
+                                </motion.div>
+
+                                <div className="pointer-events-none absolute inset-0">
+                                    <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-cyan-400/25 blur-3xl" />
+                                    <div className="absolute bottom-0 right-0 h-64 w-64 rounded-full bg-sky-400/15 blur-3xl" />
+                                    <div className="absolute left-1/3 top-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
+                                </div>
+
+                                <div className="relative z-10 flex flex-col gap-4 px-6 pb-6 pt-4 md:px-10 md:pb-8">
+                                    <div className="flex flex-wrap items-center justify-between gap-4">
+                                        <div className="flex flex-wrap items-center gap-3">
+                                            <Badge className="bg-gradient-to-r from-cyan-300 to-sky-400 px-4 py-1.5 text-sm font-semibold text-slate-950">
+                                                Signature Hotel
+                                            </Badge>
+                                            <Badge
+                                                variant="outline"
+                                                className="border-cyan-200/25 bg-slate-950/35 px-3 py-1 text-xs uppercase tracking-wide text-cyan-50/90"
+                                            >
+                                                Hotels &amp; Resorts
+                                            </Badge>
+                                        </div>
+                                        <div className="flex items-center gap-1 text-amber-300">
+                                            {[...Array(5)].map((_, i) => (
+                                                <Star
+                                                    key={i}
+                                                    className="h-4 w-4 fill-amber-300"
+                                                />
+                                            ))}
+                                            <span className="ml-1 text-xs text-slate-200">
+                                                Premium Experience
+                                            </span>
+                                        </div>
+                                    </div>
+
+                                    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
+                                        <div>
+                                            <h1 className="mb-2 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
+                                                {projectDetails.name}
+                                            </h1>
+                                            <div className="flex items-center text-sm text-slate-200/80">
+                                                <MapPin className="mr-2 h-4 w-4 flex-shrink-0 text-sky-300" />
+                                                <span>
+                                                    {projectDetails.address ??
+                                                        'Address to be announced'}
+                                                </span>
+                                            </div>
+                                        </div>
+                                        <div className="flex flex-wrap gap-3">
+                                            {projectDetails.details
+                                                ?.bedroom && (
+                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
+                                                    <Bed className="h-4 w-4 text-cyan-200" />
+                                                    <span>
+                                                        {
+                                                            projectDetails
+                                                                .details
+                                                                .bedroom
+                                                        }{' '}
+                                                        Beds
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {projectDetails.details
+                                                ?.bathroom && (
+                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
+                                                    <Bath className="h-4 w-4 text-cyan-200" />
+                                                    <span>
+                                                        {
+                                                            projectDetails
+                                                                .details
+                                                                .bathroom
+                                                        }{' '}
+                                                        Baths
+                                                    </span>
+                                                </div>
+                                            )}
+                                            {projectDetails.details
+                                                ?.apartment_direction && (
+                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
+                                                    <Compass className="h-4 w-4 text-cyan-200" />
+                                                    <span>
+                                                        Facing{' '}
+                                                        {
+                                                            projectDetails
+                                                                .details
+                                                                .apartment_direction
+                                                        }
+                                                    </span>
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
                         </div>
-                    </div>
+                    </ScrollAnimation>
                 </section>
 
                 {/* 2. AT A GLANCE */}
