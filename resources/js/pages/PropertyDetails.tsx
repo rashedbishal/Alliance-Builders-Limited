@@ -293,23 +293,25 @@ const PropertyDetail = () => {
                             {projectDetails.facilities?.map((f) => {
                                 const Icon = getFacilityIcon(f.name);
                                 return (
-                                    <motion.div
-                                        key={f.id}
-                                        whileHover={{ y: -5 }}
-                                        className="group relative flex min-w-[220px] flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-all duration-500 hover:border-primary/30"
-                                    >
-                                        {/* The Spinning Icon Container */}
-                                        <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary">
-                                            <Icon className="h-8 w-8 text-primary transition-colors duration-500 group-hover:text-black" />
-                                        </div>
+                                    <ScrollAnimation>
+                                        <motion.div
+                                            key={f.id}
+                                            whileHover={{ y: -5 }}
+                                            className="group relative flex min-w-[220px] flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-all duration-500 hover:border-primary/30"
+                                        >
+                                            {/* The Spinning Icon Container */}
+                                            <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary">
+                                                <Icon className="h-8 w-8 text-primary transition-colors duration-500 group-hover:text-black" />
+                                            </div>
 
-                                        <span className="relative z-10 text-lg font-medium text-white/70 transition-colors group-hover:text-white">
+                                            <span className="relative z-10 text-lg font-medium text-white/70 transition-colors group-hover:text-white">
                                             {f.name}
                                         </span>
 
-                                        {/* Subtle background glow on hover */}
-                                        <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                                    </motion.div>
+                                            {/* Subtle background glow on hover */}
+                                            <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                        </motion.div>
+                                    </ScrollAnimation>
                                 );
                             })}
                         </div>
