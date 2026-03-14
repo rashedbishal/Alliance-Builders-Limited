@@ -16,6 +16,7 @@ import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
+import MapComponent from '@/components/MapComponent';
 
 const Contact = () => {
     const [showSuccess, setShowSuccess] = useState(false);
@@ -26,6 +27,8 @@ const Contact = () => {
         phone: '',
         message: '',
     });
+
+    const mapUrl = 'https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3650.564565954962!2d90.36879267429433!3d23.798515286929444!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3755c12fae71412b%3A0xb6df06aab789d2d1!2sAlliance%20Builders%20Ltd!5e0!3m2!1sen!2sbd!4v1773468571161!5m2!1sen!2sbd" width="600" height="450" style="border:0;" allowfullscreen="" loading="lazy" referrerpolicy="no-referrer-when-downgrade';
 
     const contactInfo = [
         {
@@ -156,7 +159,7 @@ const Contact = () => {
                 )}
 
                 {/* ── Hero ── */}
-                <section className="relative overflow-hidden pt-36 pb-24">
+                <section className="relative overflow-hidden h-screen pt-58 pb-24">
                     <div className="bg-gradient-hero absolute inset-0 opacity-10" />
                     {/* Decorative blobs */}
                     <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
@@ -420,25 +423,9 @@ const Contact = () => {
                                     <div className="relative overflow-hidden rounded-3xl border border-white/10">
                                         <div className="bg-gradient-navy absolute inset-0" />
                                         <div className="absolute -right-10 -bottom-10 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
-                                        <div className="relative p-8 text-center">
-                                            <div className="bg-gradient-primary shadow-elegant mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl">
-                                                <MapPin className="h-7 w-7 text-white" />
-                                            </div>
-                                            <h3 className="mb-2 text-xl font-bold text-white">
-                                                Visit Our Office
-                                            </h3>
-                                            <p className="text-sm leading-relaxed text-white/50">
-                                                House# 640 (1st Floor),
-                                                <br />
-                                                West Kazipara Mirpur,
-                                                <br />
-                                                Dhaka-1216, Bangladesh
-                                            </p>
-                                            <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
-                                            <p className="mt-4 text-xs text-white/30">
-                                                Wed – Mon · 11:00 AM – 7:00 PM
-                                            </p>
-                                        </div>
+                                        <MapComponent src={mapUrl}>
+
+                                        </MapComponent>
                                     </div>
                                 </ScrollAnimation>
                             </div>
