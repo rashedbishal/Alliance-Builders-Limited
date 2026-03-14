@@ -1,5 +1,14 @@
 import { useForm } from '@inertiajs/react';
-import { MapPin, Phone, Mail, Clock, Send, CheckCircle, X } from 'lucide-react';
+import {
+    MapPin,
+    Phone,
+    Mail,
+    Clock,
+    Send,
+    CheckCircle,
+    X,
+    ArrowRight,
+} from 'lucide-react';
 import React, { useState } from 'react';
 import { route } from 'ziggy-js';
 import ScrollAnimation from '@/components/ScrollAnimation';
@@ -22,25 +31,24 @@ const Contact = () => {
         {
             icon: MapPin,
             title: 'Visit Us',
-            details: ['123 Estate Avenue', 'Miami Beach, FL 33139'],
+            details: [
+                'House# 640 (1st Floor), West Kazipara Mirpur, Dhaka-1216, Bangladesh',
+            ],
         },
         {
             icon: Phone,
             title: 'Call Us',
-            details: ['+1 (555) 123-4567', '+1 (555) 987-6543'],
+            details: ['+88-01928568853'],
         },
         {
             icon: Mail,
             title: 'Email Us',
-            details: ['info@estateelite.com', 'support@estateelite.com'],
+            details: ['asad@alliancebuildersltd.org'],
         },
         {
             icon: Clock,
             title: 'Business Hours',
-            details: [
-                'Mon - Fri: 9:00 AM - 6:00 PM',
-                'Sat - Sun: 10:00 AM - 4:00 PM',
-            ],
+            details: ['Wed - Mon: 11:00 AM - 7:00 PM'],
         },
     ];
 
@@ -54,303 +62,187 @@ const Contact = () => {
         });
     };
 
+    const inputClass = `
+        w-full rounded-xl border border-white/10 bg-white/5
+        px-5 py-4 text-white placeholder-white/30
+        outline-none transition-all duration-300
+        focus:border-primary focus:bg-white/8 focus:ring-1 focus:ring-primary/50
+        hover:border-white/20
+    `;
+
     return (
         <AppLayout>
-            <div className="min-h-screen bg-background">
+            <div className="min-h-screen bg-[#060810]">
                 {/* ── Success Popup ── */}
                 {showSuccess && (
-                    <>
-                        {/* Backdrop */}
+                    <div
+                        onClick={() => setShowSuccess(false)}
+                        className="fixed inset-0 z-50 flex items-center justify-center p-5"
+                        style={{
+                            background: 'rgba(0,0,0,0.75)',
+                            backdropFilter: 'blur(6px)',
+                        }}
+                    >
                         <div
-                            onClick={() => setShowSuccess(false)}
+                            onClick={(e) => e.stopPropagation()}
+                            className="shadow-elegant-xl relative w-full max-w-md rounded-2xl border border-primary/20 p-12 text-center"
                             style={{
-                                position: 'fixed',
-                                inset: 0,
-                                background: 'rgba(0,0,0,0.65)',
-                                backdropFilter: 'blur(4px)',
-                                zIndex: 1000,
-                                display: 'flex',
-                                alignItems: 'center',
-                                justifyContent: 'center',
-                                padding: '20px',
+                                background:
+                                    'linear-gradient(135deg, hsl(210,77%,10%), hsl(210,77%,15%))',
+                                animation:
+                                    'popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
                             }}
                         >
-                            {/* Modal */}
-                            <div
-                                onClick={(e) => e.stopPropagation()}
-                                style={{
-                                    background:
-                                        'linear-gradient(135deg, #0F1117 0%, #161B26 100%)',
-                                    border: '1px solid rgba(201,168,76,0.3)',
-                                    borderRadius: 20,
-                                    padding: '48px 40px',
-                                    maxWidth: 460,
-                                    width: '100%',
-                                    textAlign: 'center',
-                                    position: 'relative',
-                                    boxShadow:
-                                        '0 30px 80px rgba(0,0,0,0.6), 0 0 60px rgba(201,168,76,0.08)',
-                                    animation:
-                                        'popIn 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275)',
-                                    fontFamily: "'DM Sans', sans-serif",
-                                }}
+                            <style>{`
+                                @keyframes popIn {
+                                    from { opacity: 0; transform: scale(0.85) translateY(20px); }
+                                    to   { opacity: 1; transform: scale(1) translateY(0); }
+                                }
+                                @keyframes pulse-ring {
+                                    0%,100% { transform: scale(0.9); opacity: 0.6; }
+                                    50% { transform: scale(1.15); opacity: 0.2; }
+                                }
+                            `}</style>
+
+                            <button
+                                onClick={() => setShowSuccess(false)}
+                                className="absolute top-4 right-4 flex h-8 w-8 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/40 transition-all hover:bg-white/10 hover:text-white"
                             >
-                                <style>{`
-                                    @keyframes popIn {
-                                        from { opacity: 0; transform: scale(0.85) translateY(20px); }
-                                        to   { opacity: 1; transform: scale(1)    translateY(0);    }
-                                    }
-                                    @keyframes pulse-ring {
-                                        0%   { transform: scale(0.9); opacity: 0.8; }
-                                        50%  { transform: scale(1.1); opacity: 0.4; }
-                                        100% { transform: scale(0.9); opacity: 0.8; }
-                                    }
-                                `}</style>
+                                <X size={15} />
+                            </button>
 
-                                {/* Close button */}
-                                <button
-                                    onClick={() => setShowSuccess(false)}
-                                    style={{
-                                        position: 'absolute',
-                                        top: 16,
-                                        right: 16,
-                                        background: 'rgba(255,255,255,0.05)',
-                                        border: '1px solid rgba(255,255,255,0.1)',
-                                        borderRadius: '50%',
-                                        width: 32,
-                                        height: 32,
-                                        display: 'flex',
-                                        alignItems: 'center',
-                                        justifyContent: 'center',
-                                        cursor: 'pointer',
-                                        color: '#7A839A',
-                                        transition: 'all 0.2s',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.background =
-                                            'rgba(255,255,255,0.1)';
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.color = '#E8EAF0';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.background =
-                                            'rgba(255,255,255,0.05)';
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.color = '#7A839A';
-                                    }}
-                                >
-                                    <X size={16} />
-                                </button>
-
-                                {/* Icon */}
+                            <div className="relative mb-6 inline-block">
                                 <div
+                                    className="absolute inset-[-10px] rounded-full bg-primary/20"
                                     style={{
-                                        position: 'relative',
-                                        display: 'inline-block',
-                                        marginBottom: 24,
-                                    }}
-                                >
-                                    <div
-                                        style={{
-                                            position: 'absolute',
-                                            inset: -10,
-                                            borderRadius: '50%',
-                                            background: 'rgba(201,168,76,0.15)',
-                                            animation:
-                                                'pulse-ring 2s ease-in-out infinite',
-                                        }}
-                                    />
-                                    <div
-                                        style={{
-                                            width: 72,
-                                            height: 72,
-                                            borderRadius: '50%',
-                                            background:
-                                                'linear-gradient(135deg, rgba(201,168,76,0.25), rgba(201,168,76,0.1))',
-                                            border: '2px solid rgba(201,168,76,0.5)',
-                                            display: 'flex',
-                                            alignItems: 'center',
-                                            justifyContent: 'center',
-                                            position: 'relative',
-                                        }}
-                                    >
-                                        <CheckCircle
-                                            size={36}
-                                            color="#C9A84C"
-                                            strokeWidth={1.8}
-                                        />
-                                    </div>
-                                </div>
-
-                                {/* Content */}
-                                <h2
-                                    style={{
-                                        fontFamily: "'Playfair Display', serif",
-                                        fontSize: '1.6rem',
-                                        color: '#E8EAF0',
-                                        marginBottom: 12,
-                                        lineHeight: 1.3,
-                                    }}
-                                >
-                                    Message Sent!
-                                </h2>
-                                <p
-                                    style={{
-                                        color: '#7A839A',
-                                        fontSize: '0.92rem',
-                                        lineHeight: 1.7,
-                                        marginBottom: 8,
-                                    }}
-                                >
-                                    Thank you for reaching out to us. We've
-                                    received your message and will get back to
-                                    you within{' '}
-                                    <strong style={{ color: '#C9A84C' }}>
-                                        24 hours
-                                    </strong>
-                                    .
-                                </p>
-                                <p
-                                    style={{
-                                        color: '#7A839A',
-                                        fontSize: '0.85rem',
-                                        marginBottom: 32,
-                                    }}
-                                >
-                                    We look forward to connecting with you!
-                                </p>
-
-                                {/* Divider */}
-                                <div
-                                    style={{
-                                        width: '100%',
-                                        height: 1,
-                                        background:
-                                            'linear-gradient(90deg, transparent, rgba(201,168,76,0.3), transparent)',
-                                        marginBottom: 28,
+                                        animation:
+                                            'pulse-ring 2s ease-in-out infinite',
                                     }}
                                 />
-
-                                <button
-                                    onClick={() => setShowSuccess(false)}
-                                    style={{
-                                        padding: '12px 40px',
-                                        background:
-                                            'linear-gradient(135deg, #C9A84C, #A8782A)',
-                                        border: 'none',
-                                        borderRadius: 10,
-                                        color: '#0F1117',
-                                        fontWeight: 700,
-                                        fontSize: '0.9rem',
-                                        cursor: 'pointer',
-                                        fontFamily: "'DM Sans', sans-serif",
-                                        letterSpacing: '0.03em',
-                                        transition: 'all 0.2s',
-                                        boxShadow:
-                                            '0 6px 20px rgba(201,168,76,0.25)',
-                                    }}
-                                    onMouseEnter={(e) => {
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.transform = 'translateY(-2px)';
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.boxShadow =
-                                            '0 10px 28px rgba(201,168,76,0.35)';
-                                    }}
-                                    onMouseLeave={(e) => {
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.transform = 'translateY(0)';
-                                        (
-                                            e.currentTarget as HTMLButtonElement
-                                        ).style.boxShadow =
-                                            '0 6px 20px rgba(201,168,76,0.25)';
-                                    }}
-                                >
-                                    Close
-                                </button>
+                                <div className="bg-gradient-primary relative flex h-20 w-20 items-center justify-center rounded-full border border-primary/40">
+                                    <CheckCircle
+                                        size={38}
+                                        className="text-white"
+                                        strokeWidth={1.8}
+                                    />
+                                </div>
                             </div>
+
+                            <h2 className="mb-3 text-2xl font-bold text-white">
+                                Message Sent!
+                            </h2>
+                            <p className="mb-1 text-sm leading-relaxed text-white/50">
+                                We've received your message and will get back to
+                                you within{' '}
+                                <strong className="text-primary">
+                                    24 hours
+                                </strong>
+                                .
+                            </p>
+                            <p className="mb-8 text-xs text-white/30">
+                                We look forward to connecting with you!
+                            </p>
+
+                            <div className="mb-8 h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+
+                            <button
+                                onClick={() => setShowSuccess(false)}
+                                className="bg-gradient-primary shadow-elegant-lg rounded-xl px-10 py-3 text-sm font-bold text-white transition-all hover:-translate-y-0.5 hover:opacity-90"
+                            >
+                                Close
+                            </button>
                         </div>
-                    </>
+                    </div>
                 )}
 
-                {/* Hero Section */}
-                <section className="relative overflow-hidden pt-32 pb-20">
-                    <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
+                {/* ── Hero ── */}
+                <section className="relative overflow-hidden pt-36 pb-24">
+                    <div className="bg-gradient-hero absolute inset-0 opacity-10" />
+                    {/* Decorative blobs */}
+                    <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
+                    <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-secondary/10 blur-[100px]" />
+
                     <div className="relative z-10 container mx-auto px-4">
                         <ScrollAnimation>
-                            <Badge className="bg-gradient-accent mb-6 text-accent-foreground">
+                            <Badge className="bg-gradient-primary shadow-elegant mb-6 text-white">
                                 Contact Us
                             </Badge>
                         </ScrollAnimation>
                         <ScrollAnimation delay={0.1}>
-                            <h1 className="mb-6 text-5xl font-bold text-primary md:text-7xl">
+                            <h1 className="mb-6 text-5xl leading-tight font-bold text-white md:text-7xl">
                                 Let's Start a<br />
-                                Conversation
+                                <span className="bg-gradient-primary bg-clip-text text-transparent">
+                                    Conversation
+                                </span>
                             </h1>
                         </ScrollAnimation>
                         <ScrollAnimation delay={0.2}>
-                            <p className="max-w-3xl text-xl text-muted-foreground">
+                            <p className="max-w-2xl text-lg text-white/50">
                                 We're here to help you find your dream property.
-                                Reach out to us and let's make it happen
-                                together.
+                                Reach out and let's make it happen together.
                             </p>
                         </ScrollAnimation>
                     </div>
                 </section>
 
-                {/* Contact Info Cards */}
-                <section className="bg-black py-20">
+                {/* ── Contact Info Cards ── */}
+                <section className="py-16">
                     <div className="container mx-auto px-4">
-                        <div className="mb-20 grid grid-cols-1 gap-8 md:grid-cols-2 lg:grid-cols-4">
+                        <div className="grid grid-cols-1 gap-4 md:grid-cols-2 lg:grid-cols-4">
                             {contactInfo.map((info, index) => (
                                 <ScrollAnimation
                                     key={index}
                                     delay={index * 0.1}
+                                    className="h-full"
                                 >
-                                    <Card className="shadow-elegant hover:shadow-elegant-lg bg-white/80 text-center transition-all duration-500">
-                                        <CardContent className="p-8">
-                                            <div className="bg-gradient-elegant mb-4 inline-flex h-16 w-16 items-center justify-center rounded-full">
-                                                <info.icon className="h-8 w-8 text-primary-foreground" />
-                                            </div>
-                                            <h3 className="mb-3 text-xl font-bold text-black/60">
-                                                {info.title}
-                                            </h3>
-                                            {info.details.map((detail, idx) => (
-                                                <p
-                                                    key={idx}
-                                                    className="text-muted-foreground"
-                                                >
-                                                    {detail}
-                                                </p>
-                                            ))}
-                                        </CardContent>
-                                    </Card>
+                                    <div className="group h-full rounded-2xl border border-white/8 bg-white/[0.03] p-6 transition-all duration-300 hover:border-primary/30 hover:bg-white/[0.06]">
+                                        <div className="bg-gradient-primary shadow-elegant mb-4 inline-flex h-12 w-12 items-center justify-center rounded-xl">
+                                            <info.icon className="h-5 w-5 text-white" />
+                                        </div>
+                                        <h3 className="mb-2 text-sm font-bold tracking-widest text-white/40 uppercase">
+                                            {info.title}
+                                        </h3>
+                                        {info.details.map((detail, idx) => (
+                                            <p
+                                                key={idx}
+                                                className="text-sm leading-relaxed text-white/70"
+                                            >
+                                                {detail}
+                                            </p>
+                                        ))}
+                                    </div>
                                 </ScrollAnimation>
                             ))}
                         </div>
+                    </div>
+                </section>
 
-                        {/* Contact Form */}
-                        <div className="grid grid-cols-1 gap-12 lg:grid-cols-2">
-                            <ScrollAnimation>
-                                <Card className="shadow-elegant-lg bg-white/60">
-                                    <CardContent className="p-8">
-                                        <h2 className="mb-6 text-3xl font-bold text-primary">
+                {/* ── Main Content ── */}
+                <section className="py-16 pb-32">
+                    <div className="container mx-auto px-4">
+                        <div className="grid grid-cols-1 gap-12 lg:grid-cols-5">
+                            {/* ── Contact Form (3 cols) ── */}
+                            <ScrollAnimation className="lg:col-span-3">
+                                <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8 md:p-10">
+                                    {/* Form header */}
+                                    <div className="mb-10">
+                                        <p className="mb-2 text-xs font-bold tracking-[0.3em] text-primary uppercase">
+                                            Get in Touch
+                                        </p>
+                                        <h2 className="text-3xl font-bold text-white md:text-4xl">
                                             Send Us a Message
                                         </h2>
-                                        <form
-                                            className="space-y-6"
-                                            onSubmit={handleSubmit}
-                                        >
-                                            <div>
-                                                <label className="mb-2 block text-sm font-medium">
+                                        <div className="bg-gradient-primary mt-4 h-px w-16" />
+                                    </div>
+
+                                    <form
+                                        className="space-y-5"
+                                        onSubmit={handleSubmit}
+                                    >
+                                        {/* Name + Email row */}
+                                        <div className="grid grid-cols-1 gap-5 sm:grid-cols-2">
+                                            <div className="space-y-2">
+                                                <label className="block text-xs font-semibold tracking-wider text-white/40 uppercase">
                                                     Full Name
                                                 </label>
                                                 <input
@@ -362,18 +254,18 @@ const Contact = () => {
                                                             e.target.value,
                                                         )
                                                     }
-                                                    className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                    placeholder="John"
+                                                    className={inputClass}
+                                                    placeholder="John Doe"
                                                     required
                                                 />
                                                 {errors.name && (
-                                                    <p className="mt-1 text-sm text-red-500">
+                                                    <p className="text-xs text-red-400">
                                                         {errors.name}
                                                     </p>
                                                 )}
                                             </div>
-                                            <div>
-                                                <label className="mb-2 block text-sm font-medium">
+                                            <div className="space-y-2">
+                                                <label className="block text-xs font-semibold tracking-wider text-white/40 uppercase">
                                                     Email Address
                                                 </label>
                                                 <input
@@ -385,142 +277,169 @@ const Contact = () => {
                                                             e.target.value,
                                                         )
                                                     }
-                                                    className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                    placeholder="john.doe@example.com"
+                                                    className={inputClass}
+                                                    placeholder="john@example.com"
                                                     required
                                                 />
                                                 {errors.email && (
-                                                    <p className="mt-1 text-sm text-red-500">
+                                                    <p className="text-xs text-red-400">
                                                         {errors.email}
                                                     </p>
                                                 )}
                                             </div>
-                                            <div>
-                                                <label className="mb-2 block text-sm font-medium">
-                                                    Phone Number
-                                                </label>
-                                                <input
-                                                    type="tel"
-                                                    value={data.phone}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'phone',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className="w-full rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                    placeholder="+1 (555) 000-0000"
-                                                    required
-                                                />
-                                                {errors.phone && (
-                                                    <p className="mt-1 text-sm text-red-500">
-                                                        {errors.phone}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <div>
-                                                <label className="mb-2 block text-sm font-medium">
-                                                    Message
-                                                </label>
-                                                <textarea
-                                                    rows={10}
-                                                    value={data.message}
-                                                    onChange={(e) =>
-                                                        setData(
-                                                            'message',
-                                                            e.target.value,
-                                                        )
-                                                    }
-                                                    className="w-full resize-none rounded-lg border border-border bg-black/20 px-4 py-3 shadow-inner transition-all outline-none focus:ring-2 focus:ring-primary"
-                                                    placeholder="Tell us more about what you're looking for..."
-                                                    required
-                                                ></textarea>
-                                                {errors.message && (
-                                                    <p className="mt-1 text-sm text-red-500">
-                                                        {errors.message}
-                                                    </p>
-                                                )}
-                                            </div>
-                                            <Button
-                                                type="submit"
-                                                disabled={processing}
-                                                className="bg-gradient-elegant w-full py-6 text-lg transition-opacity hover:opacity-90"
-                                            >
-                                                <Send className="mr-2 h-5 w-5" />
-                                                {processing
-                                                    ? 'Sending...'
-                                                    : 'Send Message'}
-                                            </Button>
-                                        </form>
-                                    </CardContent>
-                                </Card>
+                                        </div>
+
+                                        {/* Phone */}
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-semibold tracking-wider text-white/40 uppercase">
+                                                Phone Number
+                                            </label>
+                                            <input
+                                                type="tel"
+                                                value={data.phone}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'phone',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className={inputClass}
+                                                placeholder="+880 19XX XXX XXX"
+                                                required
+                                            />
+                                            {errors.phone && (
+                                                <p className="text-xs text-red-400">
+                                                    {errors.phone}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Message */}
+                                        <div className="space-y-2">
+                                            <label className="block text-xs font-semibold tracking-wider text-white/40 uppercase">
+                                                Message
+                                            </label>
+                                            <textarea
+                                                rows={6}
+                                                value={data.message}
+                                                onChange={(e) =>
+                                                    setData(
+                                                        'message',
+                                                        e.target.value,
+                                                    )
+                                                }
+                                                className={`${inputClass} resize-none`}
+                                                placeholder="Tell us more about what you're looking for..."
+                                                required
+                                            />
+                                            {errors.message && (
+                                                <p className="text-xs text-red-400">
+                                                    {errors.message}
+                                                </p>
+                                            )}
+                                        </div>
+
+                                        {/* Submit */}
+                                        <button
+                                            type="submit"
+                                            disabled={processing}
+                                            className="group bg-gradient-primary shadow-elegant-lg hover:shadow-elegant-xl flex w-full items-center justify-center gap-3 rounded-xl py-4 text-sm font-bold tracking-wide text-white transition-all duration-300 hover:-translate-y-0.5 hover:opacity-90 disabled:opacity-60"
+                                        >
+                                            {processing ? (
+                                                <>
+                                                    <div className="h-4 w-4 animate-spin rounded-full border-2 border-white/30 border-t-white" />
+                                                    Sending...
+                                                </>
+                                            ) : (
+                                                <>
+                                                    <Send className="h-4 w-4" />
+                                                    Send Message
+                                                    <ArrowRight className="h-4 w-4 transition-transform group-hover:translate-x-1" />
+                                                </>
+                                            )}
+                                        </button>
+                                    </form>
+                                </div>
                             </ScrollAnimation>
 
-                            <div className="space-y-8">
-                                <ScrollAnimation delay={0.2}>
-                                    <Card className="shadow-elegant-lg overflow-hidden">
-                                        <div className="flex h-[400px] items-center justify-center bg-gradient-to-br from-primary/20 to-accent/20">
-                                            <div className="p-8 text-center">
-                                                <MapPin className="mx-auto mb-4 h-16 w-16 text-primary" />
-                                                <h3 className="mb-2 text-2xl font-bold">
-                                                    Visit Our Office
-                                                </h3>
-                                                <p className="text-muted-foreground">
-                                                    123 Estate Avenue
-                                                    <br />
-                                                    Miami Beach, FL 33139
-                                                </p>
-                                            </div>
-                                        </div>
-                                    </Card>
+                            {/* ── Right Side (2 cols) ── */}
+                            <div className="flex flex-col gap-6 lg:col-span-2">
+                                {/* Why Choose Us */}
+                                <ScrollAnimation delay={0.15}>
+                                    <div className="rounded-3xl border border-white/10 bg-white/[0.03] p-8">
+                                        <p className="mb-2 text-xs font-bold tracking-[0.3em] text-primary uppercase">
+                                            Why Us
+                                        </p>
+                                        <h3 className="mb-6 text-2xl font-bold text-white">
+                                            Why Choose Us?
+                                        </h3>
+                                        <ul className="space-y-5">
+                                            {[
+                                                {
+                                                    title: 'Quick Response',
+                                                    desc: 'We respond to all inquiries within 24 hours',
+                                                },
+                                                {
+                                                    title: 'Expert Guidance',
+                                                    desc: 'Professional advice from experienced agents',
+                                                },
+                                                {
+                                                    title: 'Personalized Service',
+                                                    desc: 'Tailored solutions for your unique needs',
+                                                },
+                                                {
+                                                    title: 'Transparent Process',
+                                                    desc: 'No hidden fees or surprises along the way',
+                                                },
+                                            ].map((item, i) => (
+                                                <li
+                                                    key={i}
+                                                    className="flex items-start gap-4"
+                                                >
+                                                    <div className="bg-gradient-primary shadow-elegant-sm mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-lg">
+                                                        <span className="text-xs font-bold text-white">
+                                                            ✓
+                                                        </span>
+                                                    </div>
+                                                    <div>
+                                                        <p className="mb-0.5 text-sm font-semibold text-white">
+                                                            {item.title}
+                                                        </p>
+                                                        <p className="text-xs leading-relaxed text-white/40">
+                                                            {item.desc}
+                                                        </p>
+                                                    </div>
+                                                </li>
+                                            ))}
+                                        </ul>
+                                    </div>
                                 </ScrollAnimation>
-                                <ScrollAnimation delay={0.3}>
-                                    <Card className="shadow-elegant-lg">
-                                        <CardContent className="p-8">
-                                            <h3 className="mb-4 text-2xl font-bold text-primary">
-                                                Why Choose Us?
+
+                                {/* Office card */}
+                                <ScrollAnimation delay={0.25}>
+                                    <div className="relative overflow-hidden rounded-3xl border border-white/10">
+                                        <div className="bg-gradient-navy absolute inset-0" />
+                                        <div className="absolute -right-10 -bottom-10 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
+                                        <div className="relative p-8 text-center">
+                                            <div className="bg-gradient-primary shadow-elegant mx-auto mb-4 flex h-14 w-14 items-center justify-center rounded-2xl">
+                                                <MapPin className="h-7 w-7 text-white" />
+                                            </div>
+                                            <h3 className="mb-2 text-xl font-bold text-white">
+                                                Visit Our Office
                                             </h3>
-                                            <ul className="space-y-4">
-                                                {[
-                                                    {
-                                                        title: 'Quick Response',
-                                                        desc: 'We respond to all inquiries within 24 hours',
-                                                    },
-                                                    {
-                                                        title: 'Expert Guidance',
-                                                        desc: 'Professional advice from experienced agents',
-                                                    },
-                                                    {
-                                                        title: 'Personalized Service',
-                                                        desc: 'Tailored solutions for your unique needs',
-                                                    },
-                                                    {
-                                                        title: 'Transparent Process',
-                                                        desc: 'No hidden fees or surprises along the way',
-                                                    },
-                                                ].map((item) => (
-                                                    <li
-                                                        key={item.title}
-                                                        className="flex items-start gap-3"
-                                                    >
-                                                        <div className="bg-gradient-elegant mt-1 flex h-6 w-6 flex-shrink-0 items-center justify-center rounded-full">
-                                                            <span className="text-sm text-primary-foreground">
-                                                                ✓
-                                                            </span>
-                                                        </div>
-                                                        <div>
-                                                            <strong className="mb-1 block">
-                                                                {item.title}
-                                                            </strong>
-                                                            <span className="text-muted-foreground">
-                                                                {item.desc}
-                                                            </span>
-                                                        </div>
-                                                    </li>
-                                                ))}
-                                            </ul>
-                                        </CardContent>
-                                    </Card>
+                                            <p className="text-sm leading-relaxed text-white/50">
+                                                House# 640 (1st Floor),
+                                                <br />
+                                                West Kazipara Mirpur,
+                                                <br />
+                                                Dhaka-1216, Bangladesh
+                                            </p>
+                                            <div className="mt-6 h-px w-full bg-gradient-to-r from-transparent via-primary/30 to-transparent" />
+                                            <p className="mt-4 text-xs text-white/30">
+                                                Wed – Mon · 11:00 AM – 7:00 PM
+                                            </p>
+                                        </div>
+                                    </div>
                                 </ScrollAnimation>
                             </div>
                         </div>
