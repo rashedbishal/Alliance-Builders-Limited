@@ -1,5 +1,5 @@
 import { Link } from '@inertiajs/react';
-import { MapPin, Bed, Bath, Square, Heart, Eye, Compass } from 'lucide-react';
+import { MapPin, Bed, Bath, Square, Heart, Compass } from 'lucide-react';
 import React, { useState, useEffect } from 'react';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Button } from "@/components/ui/button";
@@ -24,7 +24,6 @@ const PropertyCard = ({
     setHoveredCard,
     isFavorite,
     toggleFavorite,
-    showEyeButton = true
 }: PropertyCardProps) => {
     const [showSaved, setShowSaved] = useState(false);
     const { SAVED_EVENT } = useFavorites();
@@ -62,6 +61,7 @@ const PropertyCard = ({
                         {property.image?.path && (
                             <img
                                 src={property.image.path}
+                                loading='lazy'
                                 alt={property.name}
                                 className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
                             />

@@ -1,7 +1,6 @@
-import { Link, usePage } from '@inertiajs/react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { usePage } from '@inertiajs/react';
+import { motion, useScroll } from 'framer-motion';
 import {
-    ArrowLeft,
     Bath,
     Bed,
     Building2,
@@ -14,7 +13,6 @@ import {
     Square,
     ChevronLeft,
     ChevronRight,
-    Maximize2,
     Waves,
     ShieldCheck,
     FlameKindling,
@@ -25,11 +23,10 @@ import {
 } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import MapComponent from '@/components/MapComponent';
+import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from "@/layouts/AppLayout";
-import { properties } from "@/routes";
 import type { Project } from '@/types/Project';
-import ScrollAnimation from '@/components/ScrollAnimation';
 
 const PropertyDetail = () => {
     const { projectDetails } = usePage<{ projectDetails: Project }>().props;
@@ -48,14 +45,6 @@ const PropertyDetail = () => {
     const velX = useRef(0);
     const lastX = useRef(0);
     const animFrame = useRef<number>(0);
-
-    const { scrollYProgress } = useScroll({
-        target: heroRef,
-        offset: ["start start", "end start"]
-    });
-
-    const y = useTransform(scrollYProgress, [0, 1], ["0%", "40%"]);
-
     if (!projectDetails) return null;
 
     // --- DATA HELPERS ---
