@@ -223,7 +223,7 @@ const Navbar = () => {
                 {/* ─── DESKTOP ─── */}
                 <div className="relative mx-auto max-w-7xl">
                     {/* Logo - always visible, left aligned */}
-                    <div className="absolute top-4 left-4 z-30 -translate-y-1/2 lg:left-6 xl:left-8 xl:top-8">
+                    <div className="absolute top-4 left-4 z-30 -translate-y-1/2 lg:left-6 xl:left-8 xl:top-8 bg-white/70 p-1 rounded-full">
                         <Link href={home.url()}>
                             <img
                                 className="h-14 w-auto object-contain md:h-16 lg:h-18"
@@ -614,27 +614,29 @@ const Navbar = () => {
                         </Link>
 
                         {/* Mobile menu button - only < lg */}
-                        <Button
-                            ref={buttonRef} // Add this ref
-                            variant="ghost"
-                            className="p-2 hover:bg-white/10 xl:hidden"
-                            onClick={() =>
-                                setIsMobileMenuOpen(!isMobileMenuOpen)
-                            }
-                        >
-                            {isMobileMenuOpen ? (
-                                <X className="h-6 w-6" />
-                            ) : (
-                                <Menu className="h-6 w-6" />
-                            )}
-                        </Button>
+                        <div className="bg-white/70 rounded-full">
+                            <Button
+                                ref={buttonRef} // Add this ref
+                                variant="ghost"
+                                className="p-2 hover:bg-white/10 xl:hidden "
+                                onClick={() =>
+                                    setIsMobileMenuOpen(!isMobileMenuOpen)
+                                }
+                            >
+                                {isMobileMenuOpen ? (
+                                    <X className="h-6 w-6" />
+                                ) : (
+                                    <Menu className="h-6 w-6" />
+                                )}
+                            </Button>
+                        </div>
                     </div>
                 </div>
                 </div>
 
                 {/* Mobile Navigation */}
                 {isMobileMenuOpen && (
-                    <div className="flex justify-end py-1">
+                    <div className="flex mt-4 justify-end py-1">
                         <div
                             ref={mobileMenuRef}
                             onClick={(e) => e.stopPropagation()}
@@ -886,7 +888,7 @@ const Navbar = () => {
         /* ─── Nav Links Styling ─── */
         .nav-link {
             display: block;
-            padding: 8px 16px;
+            padding: 6px 12px;
             font-size: 14px;
             font-weight: 500;
             letter-spacing: 0.3px;
