@@ -237,7 +237,7 @@ const Navbar = () => {
                         <div className="hidden xl:flex xl:justify-center">
                             <nav
                                 ref={navRef}
-                                className={`navbar-container shadow-[0_8px_32px_rgba(31,38,135,0.25), inset_0_1px_0_rgba(255,255,255,0.8), inset_0_-1px_0_rgba(255,255,255,0.3)] relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/60 bg-white/90 backdrop-blur-[50px] backdrop-saturate-[2] transition-all duration-400 before:pointer-events-none before:absolute before:inset-0 before:z-[-1] before:bg-gradient-to-b before:from-white/60 before:via-white/20 before:to-transparent before:content-[''] after:pointer-events-none after:absolute after:left-0 after:right-0 after:top-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/90 after:to-transparent after:content-['']`}
+                                className={`navbar-container shadow-[0_8px_32px_rgba(31,38,135,0.25), 0_4px_12px_rgba(0,0,0,0.08), 0_2px_4px_rgba(0,0,0,0.05), inset_0_1px_0_rgba(255,255,255,0.9), inset_0_-1px_0_rgba(255,255,255,0.4)] relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/70 border-b-slate-300/50 bg-white/92 backdrop-blur-[50px] backdrop-saturate-[2] transition-all duration-400 before:pointer-events-none before:absolute before:inset-0 before:z-[-1] before:bg-gradient-to-b before:from-white/60 before:via-white/20 before:to-transparent before:content-[''] after:pointer-events-none after:absolute after:left-0 after:right-0 after:top-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/95 after:to-transparent after:content-['']`}
                                 style={{
                                     transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                                     // Remove conflicting background from style — keep it in className
@@ -798,9 +798,19 @@ const Navbar = () => {
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(59, 130, 246, 0.08) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 40%, rgba(59, 130, 246, 0.1) 100%);
             pointer-events: none;
             z-index: 1;
+        }
+
+        /* Bottom edge shadow for depth */
+        .navbar-container {
+            position: relative;
+        }
+
+        .navbar-container > * {
+            position: relative;
+            z-index: 3;
         }
 
         /* ─── Glossy shine line on navbar ─── */
@@ -813,14 +823,24 @@ const Navbar = () => {
             height: 2px;
             background: linear-gradient(90deg,
                 transparent 0%,
-                rgba(255, 255, 255, 0.4) 20%,
+                rgba(255, 255, 255, 0.5) 20%,
                 rgba(255, 255, 255, 1) 50%,
-                rgba(255, 255, 255, 0.4) 80%,
+                rgba(255, 255, 255, 0.5) 80%,
                 transparent 100%);
             border-radius: 2px;
             animation: shimmer-nav 3s ease-in-out infinite;
             z-index: 2;
-            box-shadow: 0 1px 8px rgba(255, 255, 255, 0.5);
+            box-shadow: 0 1px 10px rgba(255, 255, 255, 0.6);
+        }
+
+        /* Extra bottom shadow for contrast on bright backgrounds */
+        .navbar-container {
+            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25),
+                        0 4px 12px rgba(0, 0, 0, 0.08),
+                        0 2px 4px rgba(0, 0, 0, 0.05),
+                        inset 0 1px 0 rgba(255, 255, 255, 0.9),
+                        inset 0 -1px 0 rgba(255, 255, 255, 0.4),
+                        0 1px 0 rgba(0, 0, 0, 0.05) !important;
         }
 
         /* ─── Keyframe Animations ─── */
@@ -897,9 +917,9 @@ const Navbar = () => {
             display: block;
             padding: 6px 12px;
             font-size: 14px;
-            font-weight: 500;
+            font-weight: 600;
             letter-spacing: 0.3px;
-            color: rgba(20, 30, 60, 0.8);
+            color: rgba(15, 23, 42, 0.95) !important;
             text-decoration: none;
             border-radius: 10px;
             position: relative;
@@ -907,6 +927,18 @@ const Navbar = () => {
             background: transparent;
             border: none;
             cursor: pointer;
+            text-shadow: 0 0.5px 0.5px rgba(255, 255, 255, 0.5);
+        }
+
+        /* Override for Button components with nav-link class */
+        button.nav-link {
+            color: rgba(15, 23, 42, 0.95) !important;
+            font-weight: 600 !important;
+        }
+
+        button.nav-link > span,
+        button.nav-link * {
+            color: inherit !important;
         }
 
         .nav-link::before {
@@ -924,8 +956,12 @@ const Navbar = () => {
         }
 
         .nav-link:hover {
-            color: #1e3a8a;
+            color: #0f172a !important;
             transform: translateY(-1px);
+        }
+
+        button.nav-link:hover {
+            color: #0f172a !important;
         }
 
         .nav-link:hover::before {
@@ -995,10 +1031,11 @@ const Navbar = () => {
         }
 
         .dropdown-item {
-            color: rgba(20, 30, 60, 0.8) !important;
+            color: rgba(15, 23, 42, 0.95) !important;
             transition: all 0.3s ease;
             padding: 8px 12px !important;
             font-size: 14px;
+            font-weight: 500;
         }
 
         .dropdown-item:hover {
