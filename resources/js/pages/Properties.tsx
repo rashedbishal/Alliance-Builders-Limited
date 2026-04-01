@@ -93,27 +93,40 @@ const Properties = () => {
         queryParams.get('search') || '',
     );
 
+    // Check for tab query parameter
+    const currentUrl = new URL(url, window.location.origin);
+    const tabParam = currentUrl.searchParams.get('tab');
+
     const activeTab =
-        url === '/properties'
-            ? 'all'
-            : url === '/upcoming'
-              ? 'upcoming'
-              : url === '/ongoing'
-                ? 'ongoing'
-                : url === '/handover'
-                  ? 'handover'
-                  : url === '/favorites'
-                    ? 'favorites'
+        tabParam === 'favorites'
+            ? 'favorites'
+            : url === '/properties'
+              ? 'all'
+              : url === '/upcoming'
+                ? 'upcoming'
+                : url === '/ongoing'
+                  ? 'ongoing'
+                  : url === '/handover'
+                    ? 'handover'
                     : 'all';
 
     // Add a handler for tab changes:
     const handleTabChange = (newTab: string) => {
+        if (newTab === 'favorites') {
+            // Stay on properties page with tab parameter
+            router.get(
+                '/properties?tab=favorites',
+                {},
+                { preserveState: true, preserveScroll: true, replace: true },
+            );
+            return;
+        }
+
         const tabRoutes: Record<string, string> = {
             all: '/properties',
             upcoming: '/upcoming',
             ongoing: '/ongoing',
             handover: '/handover',
-            favorites: '/favorites',
         };
         router.get(
             tabRoutes[newTab] ?? '/properties',
@@ -193,11 +206,11 @@ const Properties = () => {
 
                         {/* Search Filters */}
                         <Card
-                            className="shadow-elegant-lg animate-scale-in mx-auto mt-8 h-auto w-full max-w-xs sm:mt-10 sm:max-w-md md:mt-12 md:max-w-2xl lg:max-w-5xl"
+                            className=" shadow-elegant-lg animate-scale-in mx-auto mt-8 h-auto w-full max-w-xs sm:mt-10 sm:max-w-sm md:mt-12 md:max-w-md lg:max-w-lg"
                             style={{ animationDelay: '400ms' }}
                         >
-                            <CardContent className="p-4 sm:p-5 md:p-6">
-                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4 md:grid-cols-2">
+                            <CardContent className="p-1 sm:p-2 md:p-3">
+                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4">
                                     <div className="relative">
                                         <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
                                         <Input
