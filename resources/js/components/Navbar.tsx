@@ -237,7 +237,7 @@ const Navbar = () => {
                         <div className="hidden xl:flex xl:justify-center">
                             <nav
                                 ref={navRef}
-                                className={`navbar-container {/* ← strongest built-in = 64px */} {/* slightly more transparent = stronger glass feel */} {/* softer edge */} shadow-[0_8px_32px_rgba(31,38,135,0.18), inset_0_2px_1px_rgba(255,255,255,0.45)] relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/25 bg-white/60 backdrop-blur-5xl transition-all duration-400 before:pointer-events-none before:absolute before:inset-0 before:z-[-1] before:bg-gradient-to-br before:from-white/20 before:via-transparent before:to-white/8 before:content-['']`}
+                                className={`navbar-container shadow-[0_8px_32px_rgba(31,38,135,0.25), inset_0_1px_0_rgba(255,255,255,0.8), inset_0_-1px_0_rgba(255,255,255,0.3)] relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/60 bg-white/90 backdrop-blur-[50px] backdrop-saturate-[2] transition-all duration-400 before:pointer-events-none before:absolute before:inset-0 before:z-[-1] before:bg-gradient-to-b before:from-white/60 before:via-white/20 before:to-transparent before:content-[''] after:pointer-events-none after:absolute after:left-0 after:right-0 after:top-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/90 after:to-transparent after:content-['']`}
                                 style={{
                                     transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
                                     // Remove conflicting background from style — keep it in className
@@ -798,28 +798,29 @@ const Navbar = () => {
             position: absolute;
             inset: 0;
             border-radius: inherit;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.02) 0%, transparent 50%, rgba(59, 130, 246, 0.01) 100%);
+            background: linear-gradient(135deg, rgba(255, 255, 255, 0.4) 0%, rgba(255, 255, 255, 0.1) 40%, rgba(59, 130, 246, 0.08) 100%);
             pointer-events: none;
             z-index: 1;
         }
 
-        /* ─── Shimmer line on navbar ─── */
+        /* ─── Glossy shine line on navbar ─── */
         .navbar-container::after {
             content: '';
             position: absolute;
             top: 0;
-            left: 10%;
-            right: 10%;
-            height: 1px;
+            left: 5%;
+            right: 5%;
+            height: 2px;
             background: linear-gradient(90deg,
-                transparent,
-                rgba(59, 130, 246, 0.6) 30%,
-                rgba(255, 255, 255, 0.8) 50%,
-                rgba(59, 130, 246, 0.6) 70%,
-                transparent);
+                transparent 0%,
+                rgba(255, 255, 255, 0.4) 20%,
+                rgba(255, 255, 255, 1) 50%,
+                rgba(255, 255, 255, 0.4) 80%,
+                transparent 100%);
             border-radius: 2px;
             animation: shimmer-nav 3s ease-in-out infinite;
             z-index: 2;
+            box-shadow: 0 1px 8px rgba(255, 255, 255, 0.5);
         }
 
         /* ─── Keyframe Animations ─── */
@@ -836,12 +837,12 @@ const Navbar = () => {
 
         @keyframes shimmer-nav {
             0%, 100% {
-                opacity: 0.4;
-                transform: scaleX(0.6);
+                opacity: 0.6;
+                transform: scaleX(0.5);
             }
             50% {
                 opacity: 1;
-                transform: scaleX(1);
+                transform: scaleX(1.1);
             }
         }
 
