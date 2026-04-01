@@ -1,4 +1,5 @@
-import { Link, usePage } from "@inertiajs/react";
+import { usePage } from "@inertiajs/react";
+import type { Image } from "@types/Image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
 import { Calendar, Newspaper, ArrowRight, ExternalLink, Sparkles, Play, Quote } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
@@ -10,7 +11,6 @@ import heroVideo from '@/assets/videos/PixVerse_V5_Image_Text_360P_Hero_section_
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
-import type { Image } from "@types/Image";
 
 interface Media {
     media_title: string;
@@ -370,7 +370,7 @@ const Media = () => {
                             >
                                 Discover the latest news, press releases, and media features
                                 <br className="hidden md:block" />
-                                showcasing <span className="text-white font-medium">Alliance Properties</span> achievements
+                                showcasing <span className="text-white font-medium">Alliance Builders Ltd.</span> achievements
                             </motion.p>
 
                             {/* Animated scroll indicator */}
@@ -394,7 +394,7 @@ const Media = () => {
                 </motion.section>
 
                 {/* Media Content Section */}
-                <section className="relative z-10 py-24 px-4 md:px-8">
+                <section className="relative z-10 py-24 px-4 md:px-16">
                     <div className="mx-auto max-w-7xl">
                         {/* Section Header */}
                         <motion.div
