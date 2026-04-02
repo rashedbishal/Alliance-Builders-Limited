@@ -197,7 +197,8 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                     </div>
 
                     {/* Label */}
-                    <AnimatePresence>
+                    <div className='hidden sm:block'>
+                        <AnimatePresence>
                         {!isOpen && (
                             <motion.div
                                 initial={{ opacity: 0, x: -10 }}
@@ -215,8 +216,9 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                                     <Zap size={14} className="text-yellow-300" fill="currentColor" />
                                 </motion.div>
                             </motion.div>
-                        )}
-                    </AnimatePresence>
+                            )}
+                        </AnimatePresence>
+                    </div>
 
                     {/* Ripple effect on hover */}
                     {isHovered && !isOpen && (

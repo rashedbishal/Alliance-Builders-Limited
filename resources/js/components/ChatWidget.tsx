@@ -101,7 +101,7 @@ export default function ChatWidget() {
                                     <div className="absolute bottom-0.5 right-0.5 h-2.5 w-2.5 rounded-full border border-white/30 bg-green-400" />
                                 </div>
 
-                                <div className="flex-1">
+                                <div className="hidden sm:flex flex-1 flex-col">
                                     <h3 className="font-semibold text-white">
                                         Alliance AI
                                     </h3>
@@ -111,7 +111,7 @@ export default function ChatWidget() {
                                     </div>
                                 </div>
 
-                                <div className="flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2 py-1">
+                                <div className="hidden sm:flex items-center gap-1.5 rounded-full border border-white/20 bg-white/10 px-2 py-1">
                                     <Sparkles size={10} className="text-yellow-300" />
                                     <span className="text-[9px] font-medium text-white/80">AI Powered</span>
                                 </div>
@@ -236,7 +236,7 @@ export default function ChatWidget() {
                             </div>
 
                             {/* Trust indicators */}
-                            <div className="mt-3 flex items-center justify-center gap-4">
+                            <div className="mt-3 hidden sm:flex items-center justify-center gap-4">
                                 <div className="flex items-center gap-1 text-[9px] text-white/30">
                                     <Shield size={10} />
                                     <span>Secure chat</span>
