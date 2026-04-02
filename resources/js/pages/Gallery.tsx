@@ -1,24 +1,16 @@
-import { useState } from 'react';
+import {usePage} from "@inertiajs/react";
 import { motion } from 'framer-motion';
 import { Video, ImageIcon, ChevronRight } from 'lucide-react';
-import { Card } from '@/components/ui/card';
-import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
-import { Button } from '@/components/ui/button';
-import AppLayout from '@/layouts/AppLayout';
+import { useState } from 'react';
 
 // Import media assets
-import heroVideo from '@/assets/videos/PixVerse_V5_Image_Text_360P_Hero_section_video.mp4';
 
-import collage1 from '@/assets/images/collage/collage-1.jpg';
-import collage2 from '@/assets/images/collage/collage-2.jpg';
-import collage3 from '@/assets/images/collage/collage-3.jpg';
-import collage4 from '@/assets/images/collage/collage-4.jpg';
-import collage5 from '@/assets/images/collage/collage-5.jpg';
-import collage6 from '@/assets/images/collage/collage-6.jpg';
-import collage7 from '@/assets/images/collage/collage-7.jpg';
-import collage8 from '@/assets/images/collage/collage-8.jpg';
-import {Images} from "@/types/Images";
-import {usePage} from "@inertiajs/react";
+import heroVideo from '@/assets/videos/PixVerse_V5_Image_Text_360P_Hero_section_video.mp4';
+import { Button } from '@/components/ui/button';
+import { Card } from '@/components/ui/card';
+import { Tabs, TabsContent, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import AppLayout from '@/layouts/AppLayout';
+import type {Images} from "@/types/Images";
 
 type GalleryType = 'handover' | 'inauguration' | 'construction' | 'events';
 
