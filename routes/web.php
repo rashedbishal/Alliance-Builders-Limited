@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
@@ -83,3 +84,5 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
     Route::get('{project:slug}', 'propertyDetails')->name('propertyDetails');
 
 });
+
+Route::post('/chatbot', [ChatbotController::class, 'chat'])->middleware('web');

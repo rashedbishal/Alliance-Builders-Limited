@@ -1,5 +1,6 @@
 import { usePage } from '@inertiajs/react';
 import type { PropsWithChildren } from 'react';
+import ChatWidget from '@/components/ChatWidget';
 import FloatingMessageButton from '@/components/FloatingMessageButton';
 import Footer from '@/components/Footer';
 import Navbar from '@/components/Navbar';
@@ -18,6 +19,8 @@ export default function AppLayout({ children }: PropsWithChildren) {
             <Footer />
             <FloatingMessageButton />
             <Popup showOnLoad={isPopupEnabled} />
+
+            <ChatWidget />
         </>
     );
 }
