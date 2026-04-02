@@ -853,7 +853,7 @@ const Media = () => {
                                             href="https://jananews24.com/"
                                             className="gap-2 inline-flex items-center justify-center rounded-full px-8 py-4"
                                         >
-                                            <span>View Our News Site</span>
+                                            <span className="text-sm sm:text-md">View Our News Site</span>
                                             <ArrowRight className="h-4 w-4" />
                                         </a>
                                     </MagneticButton>
