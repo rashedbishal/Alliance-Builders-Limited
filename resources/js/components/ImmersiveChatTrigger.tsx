@@ -141,7 +141,7 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                     animate={controls}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 p-1.5 pr-5 shadow-2xl transition-shadow hover:shadow-blue-500/25"
+                    className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 p-1.5 sm:pr-5 shadow-2xl transition-shadow hover:shadow-blue-500/25"
                 >
                     {/* Avatar Container */}
                     <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full bg-white">
