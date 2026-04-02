@@ -19,7 +19,7 @@ import {
     Wifi,
     Calendar,
     Video,
-    Star,
+    Home,
 } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
 import MapComponent from '@/components/MapComponent';
@@ -163,7 +163,7 @@ const PropertyDetail = () => {
                                     >
                                         <img
                                             src={img}
-                                            alt={`Hotel view ${index + 1}`}
+                                            alt={`Property view ${index + 1}`}
                                             className=" w-full object-cover"
                                         />
                                         {activeImage === index && (
@@ -200,26 +200,23 @@ const PropertyDetail = () => {
                                     <div className="flex flex-wrap items-center justify-between gap-4">
                                         <div className="flex flex-wrap items-center gap-3">
                                             <Badge className="bg-gradient-to-r from-cyan-300 to-sky-400 px-4 py-1.5 text-sm font-semibold text-slate-950">
-                                                Signature Hotel
+                                                {projectDetails.handover_date && new Date(projectDetails.handover_date) <= new Date() ? 'Ready to Move' : 'Under Construction'}
                                             </Badge>
                                             <Badge
                                                 variant="outline"
                                                 className="border-cyan-200/25 bg-slate-950/35 px-3 py-1 text-xs uppercase tracking-wide text-cyan-50/90"
                                             >
-                                                Hotels &amp; Resorts
+                                                {projectDetails.tags?.[0]?.name || 'Residential'}
                                             </Badge>
                                         </div>
-                                        <div className="flex items-center gap-1 text-amber-300">
-                                            {[...Array(5)].map((_, i) => (
-                                                <Star
-                                                    key={i}
-                                                    className="h-4 w-4 fill-amber-300"
-                                                />
-                                            ))}
-                                            <span className="ml-1 text-xs text-slate-200">
-                                                Premium Experience
-                                            </span>
-                                        </div>
+                                        {projectDetails.price && (
+                                            <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 ring-1 ring-cyan-200/10">
+                                                <span className="text-xs text-slate-200">Starting from</span>
+                                                <span className="text-sm font-semibold text-cyan-300">
+                                                    {formatCurrency(projectDetails.price)}
+                                                </span>
+                                            </div>
+                                        )}
                                     </div>
 
                                     <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
@@ -246,7 +243,7 @@ const PropertyDetail = () => {
                                                                 .details
                                                                 .bedroom
                                                         }{' '}
-                                                        Beds
+                                                        Bedrooms
                                                     </span>
                                                 </div>
                                             )}
@@ -260,7 +257,7 @@ const PropertyDetail = () => {
                                                                 .details
                                                                 .bathroom
                                                         }{' '}
-                                                        Baths
+                                                        Bathrooms
                                                     </span>
                                                 </div>
                                             )}
@@ -291,11 +288,15 @@ const PropertyDetail = () => {
                     <div className="container mx-auto grid grid-cols-1 gap-16 px-4 lg:grid-cols-12">
                         <div className="lg:col-span-5">
                             <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
-                                The Narrative
+                                Project Overview
                             </span>
                             <h2 className="mt-6 mb-8 text-4xl leading-tight font-light">
                                 {projectDetails.description}
                             </h2>
+                            <div className="flex items-center gap-3 text-sm text-white/60">
+                                <Home className="h-4 w-4 text-primary" />
+                                <span>Project ID: {projectDetails.project_id}</span>
+                            </div>
                         </div>
                         <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3 lg:col-span-7">
                             {[
@@ -357,11 +358,14 @@ const PropertyDetail = () => {
                     <div className="container mx-auto px-4">
                         <div className="mb-16 text-center">
                             <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
-                                Lifestyle
+                                Features
                             </span>
                             <h2 className="mt-4 font-serif text-5xl font-light text-white">
-                                Project Amenities
+                                Amenities & Facilities
                             </h2>
+                            <p className="mx-auto mt-4 max-w-2xl text-white/50">
+                                Thoughtfully designed features to enhance your living experience
+                            </p>
                         </div>
 
                         <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-6">
