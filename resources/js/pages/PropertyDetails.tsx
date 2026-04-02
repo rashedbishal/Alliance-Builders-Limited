@@ -36,6 +36,7 @@ const PropertyDetail = () => {
     // Gallery State & Refs
     const scrollRef = useRef<HTMLDivElement>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
+    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
     // const [isDragging, setIsDragging] = useState(false);
     // const [startX, setStartX] = useState(0);
     // const [scrollLeft, setScrollLeft] = useState(0);
@@ -87,6 +88,7 @@ const PropertyDetail = () => {
     const handleMouseDown = (e: React.MouseEvent) => {
         if (!scrollRef.current) return;
         isDragging.current = true;
+        setIsAutoPlaying(false);
         startX.current = e.pageX;
         scrollLeftRef.current = scrollRef.current.scrollLeft;
         velX.current = 0;
@@ -114,17 +116,21 @@ const PropertyDetail = () => {
         scrollRef.current.style.scrollBehavior = 'smooth';
 
         // Snap to nearest slide
-        const slideWidth = getSlideWidth();
+        const slideWidth = scrollRef.current.offsetWidth * 0.85;
         const gap = 16;
         const totalWidth = slideWidth + gap;
         const targetIndex = Math.round(scrollRef.current.scrollLeft / totalWidth);
         const targetScroll = targetIndex * totalWidth;
         const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
 
+        setCurrentIndex(Math.max(0, Math.min(targetIndex, images.length - 1)));
         scrollRef.current.scrollTo({
             left: Math.max(0, Math.min(targetScroll, maxScroll)),
             behavior: 'smooth'
         });
+
+        // Resume autoplay after a delay
+        setTimeout(() => setIsAutoPlaying(true), 3000);
     };
 
     // Keyboard navigation
@@ -137,44 +143,56 @@ const PropertyDetail = () => {
         return () => window.removeEventListener('keydown', handleKeyDown);
     }, [images.length]);
 
-    // Cleanup on unmount
+    // Auto-slideshow
     useEffect(() => {
-        return () => {
-            if (animFrame.current) cancelAnimationFrame(animFrame.current);
-        };
-    }, []);
+        if (!isAutoPlaying) return;
+        
+        const interval = setInterval(() => {
+            setCurrentIndex(prev => {
+                if (!scrollRef.current) return prev;
+                const slideWidth = scrollRef.current.offsetWidth * 0.85;
+                const gap = 16;
+                const totalWidth = slideWidth + gap;
+                const newIndex = (prev + 1) % images.length;
+                
+                scrollRef.current.scrollTo({
+                    left: newIndex * totalWidth,
+                    behavior: 'smooth'
+                });
+                return newIndex;
+            });
+        }, 5000); // Change slide every 5 seconds
+
+        return () => clearInterval(interval);
+    }, [isAutoPlaying, images.length]);
 
     const scrollToIndex = (direction: 'next' | 'prev') => {
         if (!scrollRef.current) return;
         const container = scrollRef.current;
-        const isLarge = window.innerWidth >= 1024;
-        const slideWidth = isLarge ? container.offsetWidth * 0.5 : 
-                          window.innerWidth >= 768 ? container.offsetWidth * 0.6 :
-                          window.innerWidth >= 640 ? container.offsetWidth * 0.7 :
-                          container.offsetWidth * 0.85;
-        const gap = 16; // sm:gap-6 = 24px, gap-4 = 16px
-        const totalWidth = slideWidth + (window.innerWidth >= 640 ? gap : 16);
-        const newScroll = container.scrollLeft + (direction === 'next' ? totalWidth : -totalWidth);
+        const slideWidth = container.offsetWidth * 0.85;
+        const gap = 16;
+        const totalWidth = slideWidth + gap;
+        const newIndex = direction === 'next' 
+            ? Math.min(currentIndex + 1, images.length - 1)
+            : Math.max(currentIndex - 1, 0);
+        
+        const newScroll = newIndex * totalWidth;
         
         container.scrollTo({
             left: newScroll,
             behavior: 'smooth'
         });
+        setCurrentIndex(newIndex);
     };
 
     const getSlideWidth = () => {
         if (!scrollRef.current) return 0;
-        const container = scrollRef.current;
-        const isLarge = window.innerWidth >= 1024;
-        return isLarge ? container.offsetWidth * 0.5 : 
-               window.innerWidth >= 768 ? container.offsetWidth * 0.6 :
-               window.innerWidth >= 640 ? container.offsetWidth * 0.7 :
-               container.offsetWidth * 0.85;
+        return scrollRef.current.offsetWidth * 0.85;
     };
 
     const calculateCurrentIndex = (scrollLeft: number) => {
         if (!scrollRef.current) return 0;
-        const slideWidth = getSlideWidth();
+        const slideWidth = scrollRef.current.offsetWidth * 0.85;
         const gap = 16;
         const totalWidth = slideWidth + gap;
         const index = Math.round(scrollLeft / totalWidth);
@@ -188,6 +206,7 @@ const PropertyDetail = () => {
     const handleTouchStart = (e: React.TouchEvent) => {
         if (!scrollRef.current) return;
         isDragging.current = true;
+        setIsAutoPlaying(false);
         startX.current = e.touches[0].clientX;
         scrollLeftRef.current = scrollRef.current.scrollLeft;
         lastX.current = e.touches[0].clientX;
@@ -211,7 +230,7 @@ const PropertyDetail = () => {
         scrollRef.current.style.scrollBehavior = 'smooth';
 
         // Snap to nearest slide with considered velocity
-        const slideWidth = getSlideWidth();
+        const slideWidth = scrollRef.current.offsetWidth * 0.85;
         const gap = 16;
         const totalWidth = slideWidth + gap;
         const currentScroll = scrollRef.current.scrollLeft;
@@ -226,12 +245,14 @@ const PropertyDetail = () => {
         const targetScroll = targetIndex * totalWidth;
         const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
 
+        setCurrentIndex(targetIndex);
         scrollRef.current.scrollTo({
             left: Math.max(0, Math.min(targetScroll, maxScroll)),
             behavior: 'smooth'
         });
-        
-        setCurrentIndex(targetIndex);
+
+        // Resume autoplay after a delay
+        setTimeout(() => setIsAutoPlaying(true), 3000);
     };
 
     return (
@@ -630,7 +651,7 @@ const PropertyDetail = () => {
                                     whileInView={{ opacity: 1, scale: 1 }}
                                     viewport={{ once: true, margin: "-100px" }}
                                     transition={{ duration: 0.5, delay: i * 0.05 }}
-                                    className="gallery-slide group relative h-full max-h-screen w-full flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:border-primary/30"
+                                    className="gallery-slide group relative h-full max-h-screen w-[85%] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:border-primary/30"
                                 >
                                     <img
                                         src={img}
