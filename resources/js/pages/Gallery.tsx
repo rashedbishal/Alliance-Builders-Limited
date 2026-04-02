@@ -272,69 +272,137 @@ const ImageCard = ({
     item,
     index,
     onClick,
-    colSpan = false,
+    featured = false,
 }: {
     item: any;
     index: number;
     onClick: () => void;
-    colSpan?: boolean;
+    featured?: boolean;
 }) => {
     const [loaded, setLoaded] = useState(false);
+    const [isHovered, setIsHovered] = useState(false);
+
+    // Varying aspect ratios for visual interest
+    const getAspectRatio = () => {
+        if (featured) return 'aspect-[16/10]';
+        if (index % 5 === 0) return 'aspect-[3/4]';
+        if (index % 3 === 0) return 'aspect-square';
+        return 'aspect-[4/3]';
+    };
 
     return (
         <motion.div
             data-magnetic
-            initial={{ opacity: 0, y: 40 }}
-            animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 40 }}
+            initial={{ opacity: 0, y: 30 }}
+            animate={{ opacity: loaded ? 1 : 0, y: loaded ? 0 : 30 }}
             transition={{
-                duration: 0.6,
-                delay: index * 0.04,
+                duration: 0.5,
+                delay: Math.min(index * 0.05, 0.5),
                 ease: [0.25, 0.46, 0.45, 0.94],
             }}
-            className={`group relative cursor-pointer overflow-hidden rounded-2xl ${colSpan ? 'col-span-2 row-span-2' : ''}`}
-            style={{
-                aspectRatio: colSpan ? '16/9' : index % 5 === 0 ? '3/4' : '4/3',
-            }}
+            className={`group relative cursor-pointer overflow-hidden rounded-xl ${
+                featured ? 'col-span-2 row-span-2' : ''
+            } ${getAspectRatio()}`}
             onClick={onClick}
-            whileHover={{ scale: 1.015 }}
+            onMouseEnter={() => setIsHovered(true)}
+            onMouseLeave={() => setIsHovered(false)}
         >
-            {/* Skeleton */}
+            {/* Background/skeleton */}
+            <div className="absolute inset-0 bg-white/[0.03]" />
             {!loaded && (
-                <div className="absolute inset-0 animate-pulse rounded-2xl bg-white/5" />
+                <div className="absolute inset-0 animate-pulse bg-white/[0.05]">
+                    <div className="absolute inset-0 bg-gradient-to-br from-white/[0.02] to-transparent" />
+                </div>
             )}
 
-            <img
+            {/* Image */}
+            <motion.img
                 src={item.src}
                 alt={item.title}
-                className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
+                className="h-full w-full object-cover"
                 onLoad={() => setLoaded(true)}
+                animate={{
+                    scale: isHovered ? 1.05 : 1,
+                }}
+                transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
             />
 
-            {/* Overlay */}
-            <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+            {/* Subtle border */}
+            <div className="pointer-events-none absolute inset-0 rounded-xl ring-1 ring-inset ring-white/10" />
 
-            {/* Content */}
-            <div className="absolute inset-0 flex flex-col justify-between p-4 opacity-0 transition-all duration-300 group-hover:opacity-100">
+            {/* Gradient overlay - always visible but intensifies on hover */}
+            <motion.div
+                className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/10 to-transparent"
+                animate={{
+                    opacity: isHovered ? 1 : 0.3,
+                }}
+                transition={{ duration: 0.3 }}
+            />
+
+            {/* Hover content */}
+            <motion.div
+                className="absolute inset-0 flex flex-col justify-between p-4"
+                initial={{ opacity: 0 }}
+                animate={{
+                    opacity: isHovered ? 1 : 0,
+                }}
+                transition={{ duration: 0.3 }}
+            >
                 <div className="flex justify-end">
-                    <div className="flex h-9 w-9 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md">
+                    <motion.div
+                        className="flex h-8 w-8 items-center justify-center rounded-full border border-white/20 bg-white/10 backdrop-blur-md"
+                        initial={{ scale: 0.8, opacity: 0 }}
+                        animate={{
+                            scale: isHovered ? 1 : 0.8,
+                            opacity: isHovered ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.2, delay: 0.05 }}
+                    >
                         <Expand size={14} className="text-white" />
-                    </div>
+                    </motion.div>
                 </div>
+
                 <div>
-                    <h4 className="text-sm leading-tight font-semibold text-white">
+                    <motion.h4
+                        className={`font-medium text-white ${featured ? 'text-base' : 'text-sm'}`}
+                        initial={{ y: 10, opacity: 0 }}
+                        animate={{
+                            y: isHovered ? 0 : 10,
+                            opacity: isHovered ? 1 : 0,
+                        }}
+                        transition={{ duration: 0.3, delay: 0.05 }}
+                    >
                         {item.title}
-                    </h4>
+                    </motion.h4>
                     {item.date && (
-                        <p className="mt-1 text-xs text-white/50">
+                        <motion.p
+                            className="mt-1 text-xs text-white/60"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{
+                                y: isHovered ? 0 : 10,
+                                opacity: isHovered ? 1 : 0,
+                            }}
+                            transition={{ duration: 0.3, delay: 0.1 }}
+                        >
                             {item.date}
-                        </p>
+                        </motion.p>
                     )}
                 </div>
-            </div>
+            </motion.div>
 
-            {/* Corner accent */}
-            <div className="absolute top-0 left-0 h-px w-0 bg-gradient-to-r from-white/60 to-transparent transition-all duration-500 group-hover:w-full" />
-            <div className="absolute top-0 left-0 h-0 w-px bg-gradient-to-b from-white/60 to-transparent transition-all duration-500 group-hover:h-full" />
+            {/* Corner accent animation */}
+            <motion.div
+                className="absolute top-0 left-0 h-px bg-gradient-to-r from-white/40 to-transparent"
+                initial={{ width: 0 }}
+                animate={{ width: isHovered ? '100%' : 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut' }}
+            />
+            <motion.div
+                className="absolute top-0 left-0 w-px bg-gradient-to-b from-white/40 to-transparent"
+                initial={{ height: 0 }}
+                animate={{ height: isHovered ? '100%' : 0 }}
+                transition={{ duration: 0.4, ease: 'easeOut', delay: 0.1 }}
+            />
         </motion.div>
     );
 };
@@ -355,11 +423,10 @@ const VideoCard = ({
     return (
         <motion.div
             data-magnetic
-            initial={{ opacity: 0, y: 40 }}
+            initial={{ opacity: 0, y: 30 }}
             animate={{ opacity: 1, y: 0 }}
-            transition={{ duration: 0.6, delay: index * 0.08 }}
-            className="group hover:shadow-elegant-lg relative cursor-pointer overflow-hidden rounded-2xl border border-gray-100 shadow-sm"
-            style={{ background: 'white' }}
+            transition={{ duration: 0.5, delay: index * 0.08 }}
+            className="group relative cursor-pointer overflow-hidden rounded-xl border border-white/10 bg-white/[0.02]"
             onClick={onClick}
             onMouseEnter={() => {
                 setIsHovered(true);
@@ -372,59 +439,89 @@ const VideoCard = ({
                     videoRef.current.currentTime = 0;
                 }
             }}
-            whileHover={{ scale: 1.02 }}
         >
+            {/* Video thumbnail area */}
             <div className="relative aspect-video overflow-hidden">
-                <video
+                <motion.video
                     ref={videoRef}
-                    className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
+                    className="h-full w-full object-cover"
                     muted
                     loop
                     playsInline
+                    animate={{ scale: isHovered ? 1.05 : 1 }}
+                    transition={{ duration: 0.6, ease: [0.25, 0.46, 0.45, 0.94] }}
                 >
                     <source src={item.src} type="video/mp4" />
-                </video>
+                </motion.video>
+
+                {/* Subtle vignette */}
+                <div className="absolute inset-0 bg-gradient-to-t from-black/50 via-black/5 to-transparent" />
 
                 {/* Play button */}
                 <div className="absolute inset-0 flex items-center justify-center">
                     <motion.div
+                        className="flex h-14 w-14 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-md"
                         animate={{
                             scale: isHovered ? 1.1 : 1,
-                            opacity: isHovered ? 0.9 : 0.7,
+                            opacity: isHovered ? 1 : 0.8,
+                            borderColor: isHovered ? 'rgba(255,255,255,0.5)' : 'rgba(255,255,255,0.3)',
                         }}
-                        className="flex h-16 w-16 items-center justify-center rounded-full border border-white/30 bg-white/10 backdrop-blur-md"
+                        transition={{ duration: 0.3 }}
                     >
                         <Play
-                            size={24}
-                            className="ml-1 text-white"
+                            size={22}
+                            className="ml-0.5 text-white"
                             fill="white"
                         />
                     </motion.div>
                 </div>
 
-                {/* Overlay gradient */}
-                <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-transparent" />
+                {/* Video badge */}
+                <motion.div
+                    className="absolute top-3 right-3 flex items-center gap-1.5 rounded-full border border-white/10 bg-black/40 px-2.5 py-1 text-[10px] text-white/70 backdrop-blur-sm"
+                    animate={{
+                        opacity: isHovered ? 1 : 0.7,
+                    }}
+                >
+                    <Video size={10} />
+                    <span>Video</span>
+                </motion.div>
 
-                {/* Duration badge */}
-                <div className="absolute top-3 right-3 rounded-full border border-white/10 bg-black/50 px-2 py-1 text-xs text-white/70 backdrop-blur-sm">
-                    <Video size={10} className="mr-1 inline" />
-                    Video
-                </div>
+                {/* Top gradient line on hover */}
+                <motion.div
+                    className="absolute top-0 left-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    initial={{ width: '0%', left: '50%' }}
+                    animate={{
+                        width: isHovered ? '100%' : '0%',
+                        left: isHovered ? '0%' : '50%',
+                    }}
+                    transition={{ duration: 0.4 }}
+                />
             </div>
 
-            <div className="p-5" style={{ background: 'white' }}>
-                <h3 className="mb-1 font-semibold text-gray-800 transition-colors group-hover:text-primary">
+            {/* Info area */}
+            <div className="relative p-5">
+                <h3 className="mb-1 text-sm font-medium text-white/90 transition-colors group-hover:text-white">
                     {item.title}
                 </h3>
-                <p className="text-xs text-gray-400">{item.date}</p>
+                <p className="text-xs text-white/40">{item.date}</p>
                 {item.description && (
-                    <p className="mt-2 line-clamp-2 text-sm text-gray-500">
+                    <p className="mt-2 line-clamp-2 text-xs leading-relaxed text-white/50">
                         {item.description}
                     </p>
                 )}
-            </div>
 
-            <div className="bg-gradient-primary absolute bottom-0 left-0 h-px w-0 transition-all duration-500 group-hover:w-full" />
+                {/* Subtle bottom glow on hover */}
+                <motion.div
+                    className="absolute bottom-0 left-0 h-px bg-gradient-to-r from-transparent via-white/30 to-transparent"
+                    initial={{ width: '0%', left: '50%' }}
+                    animate={{
+                        width: isHovered ? '100%' : '0%',
+                        left: isHovered ? '0%' : '50%',
+                    }}
+                    transition={{ duration: 0.4 }}
+                />
+            </div>
         </motion.div>
     );
 };
@@ -660,110 +757,118 @@ const Gallery = () => {
                     </motion.div>
                 </section>
 
-                {/* ── GALLERY SECTION — bright ─────────────────────────────── */}
+                {/* ── GALLERY SECTION ───────────────────────────────────────── */}
                 <section
-                    className="relative py-24"
-                    style={{ background: '#f4f6fb' }}
+                    className="relative py-20 lg:py-28"
+                    style={{ background: 'linear-gradient(180deg, #0a0f1a 0%, #0d1526 50%, #0a0f1a 100%)' }}
                 >
-                    {/* Subtle dot pattern */}
+                    {/* Subtle noise texture overlay */}
                     <div
-                        className="pointer-events-none absolute inset-0 opacity-[0.4]"
+                        className="pointer-events-none absolute inset-0 opacity-[0.015]"
                         style={{
-                            backgroundImage:
-                                'radial-gradient(circle, #c7d2e8 1px, transparent 1px)',
-                            backgroundSize: '28px 28px',
+                            backgroundImage: `url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='noise'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.65' numOctaves='3' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23noise)'/%3E%3C/svg%3E")`,
                         }}
                     />
 
-                    <div className="relative container mx-auto px-4 lg:px-8">
-                        {/* Section header */}
-                        <div className="mb-16 flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between">
-                            <div>
-                                <AnimatePresence mode="wait">
-                                    <motion.div
-                                        key={activeGallery}
-                                        initial={{ opacity: 0, x: -20 }}
-                                        animate={{ opacity: 1, x: 0 }}
-                                        exit={{ opacity: 0, x: 20 }}
-                                        transition={{ duration: 0.4 }}
-                                    >
-                                        <p className="mb-2 text-[10px] font-semibold tracking-[0.4em] text-primary uppercase">
-                                            {
-                                                galleryCategories.find(
-                                                    (c) =>
-                                                        c.id === activeGallery,
-                                                )?.label
-                                            }{' '}
-                                            —
-                                        </p>
-                                        <h2
-                                            className="text-4xl font-light tracking-tight text-gray-900 lg:text-6xl"
-                                            style={{
-                                                fontFamily: 'Georgia, serif',
-                                            }}
-                                        >
-                                            {
-                                                galleryCategories.find(
-                                                    (c) =>
-                                                        c.id === activeGallery,
-                                                )?.title
-                                            }
-                                        </h2>
-                                        <div className="mt-4 flex items-center gap-6 text-sm text-gray-500">
-                                            <span>{totalImages} photos</span>
-                                            <span className="h-px w-8 bg-gray-300" />
-                                            <span>{totalVideos} videos</span>
-                                        </div>
-                                    </motion.div>
-                                </AnimatePresence>
-                            </div>
+                    {/* Accent line */}
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-                            {/* Category switcher pills */}
-                            <div className="flex flex-wrap gap-2">
-                                {galleryCategories.map((cat) => (
-                                    <button
-                                        key={cat.id}
-                                        data-magnetic
-                                        onClick={() => setActiveGallery(cat.id)}
-                                        className={`rounded-xl border px-4 py-2 text-xs font-semibold tracking-wide shadow-sm transition-all duration-300 ${
-                                            activeGallery === cat.id
-                                                ? 'shadow-elegant border-primary bg-primary text-white'
-                                                : 'border-gray-200 bg-white text-gray-500 hover:border-primary/40 hover:text-primary'
-                                        }`}
-                                    >
-                                        {cat.title}
-                                    </button>
-                                ))}
-                            </div>
+                    <div className="container relative mx-auto px-4 sm:px-6 lg:px-8">
+                        {/* Section header */}
+                        <div className="mb-12 lg:mb-16">
+                            <AnimatePresence mode="wait">
+                                <motion.div
+                                    key={activeGallery}
+                                    initial={{ opacity: 0, y: 20 }}
+                                    animate={{ opacity: 1, y: 0 }}
+                                    exit={{ opacity: 0, y: -10 }}
+                                    transition={{ duration: 0.5 }}
+                                    className="flex flex-col gap-8 lg:flex-row lg:items-end lg:justify-between"
+                                >
+                                    {/* Left - Title */}
+                                    <div>
+                                        <div className="mb-4 flex items-center gap-4">
+                                            <span className="text-[11px] font-medium tracking-[0.3em] text-white/30 uppercase">
+                                                {galleryCategories.find((c) => c.id === activeGallery)?.label}
+                                            </span>
+                                            <div className="h-px w-12 bg-gradient-to-r from-white/20 to-transparent" />
+                                        </div>
+                                        <h2
+                                            className="text-3xl font-light tracking-tight text-white/95 sm:text-4xl lg:text-5xl"
+                                            style={{ fontFamily: 'Georgia, serif' }}
+                                        >
+                                            {galleryCategories.find((c) => c.id === activeGallery)?.title}
+                                        </h2>
+                                        <p className="mt-3 max-w-md text-sm leading-relaxed text-white/40">
+                                            {totalImages} photos · {totalVideos} videos
+                                        </p>
+                                    </div>
+
+                                    {/* Right - Category tabs */}
+                                    <div className="flex flex-wrap gap-2">
+                                        {galleryCategories.map((cat) => (
+                                            <button
+                                                key={cat.id}
+                                                data-magnetic
+                                                onClick={() => setActiveGallery(cat.id)}
+                                                className={`group relative overflow-hidden rounded-lg border px-4 py-2.5 text-xs font-medium tracking-wide transition-all duration-500 ${
+                                                    activeGallery === cat.id
+                                                        ? 'border-white/20 bg-white/10 text-white'
+                                                        : 'border-white/10 bg-transparent text-white/50 hover:border-white/15 hover:text-white/70'
+                                                }`}
+                                            >
+                                                <span className="relative z-10 flex items-center gap-2">
+                                                    <span className={`text-[9px] transition-colors ${activeGallery === cat.id ? 'text-white/60' : 'text-white/30'}`}>
+                                                        {cat.label}
+                                                    </span>
+                                                    <span>{cat.title}</span>
+                                                </span>
+                                                {activeGallery === cat.id && (
+                                                    <motion.div
+                                                        layoutId="activeTab"
+                                                        className="absolute inset-0 bg-gradient-to-r from-white/10 to-transparent"
+                                                        transition={{ type: 'spring', bounce: 0.2, duration: 0.6 }}
+                                                    />
+                                                )}
+                                            </button>
+                                        ))}
+                                    </div>
+                                </motion.div>
+                            </AnimatePresence>
                         </div>
 
                         {/* Tab switcher */}
-                        <div className="mb-10 flex w-fit items-center gap-1 rounded-xl border border-gray-200 bg-white p-1 shadow-sm">
-                            {[
-                                {
-                                    id: 'images',
-                                    icon: ImageIcon,
-                                    label: `Photos (${totalImages})`,
-                                },
-                                {
-                                    id: 'videos',
-                                    icon: Video,
-                                    label: `Videos (${totalVideos})`,
-                                },
-                            ].map(({ id, icon: Icon, label }) => (
-                                <button
-                                    key={id}
-                                    onClick={() => setActiveTab(id as any)}
-                                    className={`flex items-center gap-2 rounded-lg px-5 py-2.5 text-sm font-medium transition-all duration-300 ${
-                                        activeTab === id
-                                            ? 'bg-gradient-primary shadow-elegant text-white'
-                                            : 'text-gray-500 hover:text-gray-800'
-                                    }`}
-                                >
-                                    <Icon size={14} />
-                                    {label}
-                                </button>
-                            ))}
+                        <div className="mb-10 flex flex-col gap-6 sm:flex-row sm:items-center sm:justify-between">
+                            <div className="flex w-fit items-center gap-1 rounded-xl border border-white/10 bg-white/[0.02] p-1 backdrop-blur-sm">
+                                {[
+                                    { id: 'images', icon: ImageIcon, label: 'Photos', count: totalImages },
+                                    { id: 'videos', icon: Video, label: 'Videos', count: totalVideos },
+                                ].map(({ id, icon: Icon, label, count }) => (
+                                    <button
+                                        key={id}
+                                        onClick={() => setActiveTab(id as any)}
+                                        className={`flex items-center gap-2.5 rounded-lg px-4 py-2.5 text-sm font-medium transition-all duration-300 ${
+                                            activeTab === id
+                                                ? 'bg-white/10 text-white shadow-[0_2px_8px_rgba(255,255,255,0.05)]'
+                                                : 'text-white/40 hover:text-white/70'
+                                        }`}
+                                    >
+                                        <Icon size={15} className={activeTab === id ? 'text-white/80' : 'text-white/40'} />
+                                        <span>{label}</span>
+                                        <span className={`ml-1 rounded-full px-2 py-0.5 text-[10px] ${
+                                            activeTab === id ? 'bg-white/20 text-white/80' : 'bg-white/5 text-white/40'
+                                        }`}>
+                                            {count}
+                                        </span>
+                                    </button>
+                                ))}
+                            </div>
+
+                            {/* Filter indicator */}
+                            <div className="flex items-center gap-2 text-xs text-white/30">
+                                <div className="h-1.5 w-1.5 rounded-full bg-white/30" />
+                                <span>Showing all {activeTab}</span>
+                            </div>
                         </div>
 
                         {/* Content */}
@@ -773,55 +878,34 @@ const Gallery = () => {
                                 initial={{ opacity: 0, y: 20 }}
                                 animate={{ opacity: 1, y: 0 }}
                                 exit={{ opacity: 0, y: -10 }}
-                                transition={{ duration: 0.5 }}
+                                transition={{ duration: 0.5, ease: [0.25, 0.46, 0.45, 0.94] }}
                             >
                                 {activeTab === 'images' ? (
                                     currentContent.images.length > 0 ? (
-                                        <div
-                                            className="columns-2 gap-4 space-y-4 md:columns-3 lg:columns-4"
-                                            style={{ columnFill: 'balance' }}
-                                        >
-                                            {currentContent.images.map(
-                                                (image, index) => (
-                                                    <div
-                                                        key={index}
-                                                        className="mb-4 break-inside-avoid"
-                                                    >
-                                                        <ImageCard
-                                                            item={image}
-                                                            index={index}
-                                                            onClick={() =>
-                                                                openLightbox(
-                                                                    'image',
-                                                                    index,
-                                                                )
-                                                            }
-                                                            colSpan={false}
-                                                        />
-                                                    </div>
-                                                ),
-                                            )}
+                                        <div className="grid grid-cols-2 gap-3 sm:gap-4 md:grid-cols-3 lg:grid-cols-4">
+                                            {currentContent.images.map((image, index) => (
+                                                <ImageCard
+                                                    key={index}
+                                                    item={image}
+                                                    index={index}
+                                                    onClick={() => openLightbox('image', index)}
+                                                    featured={index === 0 && currentContent.images.length > 2}
+                                                />
+                                            ))}
                                         </div>
                                     ) : (
                                         <EmptyState type="images" />
                                     )
                                 ) : currentContent.videos.length > 0 ? (
-                                    <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
-                                        {currentContent.videos.map(
-                                            (video, index) => (
-                                                <VideoCard
-                                                    key={index}
-                                                    item={video}
-                                                    index={index}
-                                                    onClick={() =>
-                                                        openLightbox(
-                                                            'video',
-                                                            index,
-                                                        )
-                                                    }
-                                                />
-                                            ),
-                                        )}
+                                    <div className="grid grid-cols-1 gap-5 sm:grid-cols-2 lg:grid-cols-3">
+                                        {currentContent.videos.map((video, index) => (
+                                            <VideoCard
+                                                key={index}
+                                                item={video}
+                                                index={index}
+                                                onClick={() => openLightbox('video', index)}
+                                            />
+                                        ))}
                                     </div>
                                 ) : (
                                     <EmptyState type="videos" />
@@ -831,48 +915,46 @@ const Gallery = () => {
                     </div>
                 </section>
 
-                {/* ── STATS STRIP — bright ─────────────────────────────────── */}
-                <section className="py-16" style={{ background: '#eef1f8' }}>
+                {/* ── STATS STRIP ──────────────────────────────────────────── */}
+                <section className="relative py-14 border-t border-white/[0.03]" style={{ background: '#080c14' }}>
+                    {/* Subtle gradient line */}
+                    <div className="absolute top-0 left-0 right-0 h-px bg-gradient-to-r from-transparent via-white/5 to-transparent" />
+
                     <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+                        <div className="grid grid-cols-2 gap-3 md:grid-cols-4 md:gap-6">
                             {[
                                 {
-                                    value:
-                                        galleries.reduce(
-                                            (a, g) => a + g.images.length,
-                                            0,
-                                        ) + '+',
-                                    label: 'Total Photos',
+                                    value: galleries.reduce((a, g) => a + g.images.length, 0) + '+',
+                                    label: 'Photos',
                                 },
                                 {
-                                    value:
-                                        galleries.reduce(
-                                            (a, g) => a + g.videos.length,
-                                            0,
-                                        ) + '+',
-                                    label: 'Total Videos',
+                                    value: galleries.reduce((a, g) => a + g.videos.length, 0) + '+',
+                                    label: 'Videos',
                                 },
                                 { value: '4', label: 'Categories' },
-                                {
-                                    value: galleries.length + '+',
-                                    label: 'Gallery Albums',
-                                },
+                                { value: galleries.length + '+', label: 'Albums' },
                             ].map((stat, i) => (
                                 <motion.div
                                     key={i}
-                                    initial={{ opacity: 0, y: 20 }}
+                                    initial={{ opacity: 0, y: 15 }}
                                     whileInView={{ opacity: 1, y: 0 }}
                                     viewport={{ once: true }}
-                                    transition={{ delay: i * 0.1 }}
-                                    className="group hover:shadow-elegant rounded-2xl border border-gray-200 bg-white p-8 text-center shadow-sm transition-all duration-300 hover:-translate-y-1"
+                                    transition={{ delay: i * 0.08, duration: 0.4 }}
+                                    className="group relative overflow-hidden rounded-xl border border-white/[0.05] bg-white/[0.02] p-6 text-center transition-all duration-300 hover:border-white/10 hover:bg-white/[0.03]"
                                 >
+                                    {/* Subtle corner accent */}
+                                    <div className="absolute top-0 right-0 h-8 w-8 opacity-0 transition-opacity duration-300 group-hover:opacity-100">
+                                        <div className="absolute top-0 right-0 h-px w-6 bg-gradient-to-l from-white/20 to-transparent" />
+                                        <div className="absolute top-0 right-0 h-6 w-px bg-gradient-to-b from-white/20 to-transparent" />
+                                    </div>
+
                                     <div
-                                        className="mb-2 text-4xl font-light text-primary transition-colors group-hover:text-primary-dark"
+                                        className="mb-1 text-3xl font-light text-white/90 transition-colors group-hover:text-white md:text-4xl"
                                         style={{ fontFamily: 'Georgia, serif' }}
                                     >
                                         {stat.value}
                                     </div>
-                                    <div className="text-xs font-medium tracking-[0.2em] text-gray-400 uppercase">
+                                    <div className="text-[10px] font-medium tracking-[0.2em] text-white/30 uppercase transition-colors group-hover:text-white/40">
                                         {stat.label}
                                     </div>
                                 </motion.div>
@@ -924,19 +1006,22 @@ const Gallery = () => {
 
 const EmptyState = ({ type }: { type: 'images' | 'videos' }) => (
     <motion.div
-        initial={{ opacity: 0 }}
-        animate={{ opacity: 1 }}
-        className="flex flex-col items-center justify-center py-32 text-center"
+        initial={{ opacity: 0, y: 20 }}
+        animate={{ opacity: 1, y: 0 }}
+        className="flex flex-col items-center justify-center py-28 text-center"
     >
-        <div className="mb-6 flex h-20 w-20 items-center justify-center rounded-full border border-gray-200 bg-white shadow-sm">
+        <div className="mb-6 flex h-16 w-16 items-center justify-center rounded-full border border-white/10 bg-white/[0.03] backdrop-blur-sm">
             {type === 'images' ? (
-                <ImageIcon size={28} className="text-gray-300" />
+                <ImageIcon size={24} className="text-white/30" />
             ) : (
-                <Video size={28} className="text-gray-300" />
+                <Video size={24} className="text-white/30" />
             )}
         </div>
-        <p className="text-sm text-gray-400">
+        <p className="text-sm text-white/40">
             No {type} available for this category yet.
+        </p>
+        <p className="mt-2 text-xs text-white/25">
+            Check back later for new content
         </p>
     </motion.div>
 );
