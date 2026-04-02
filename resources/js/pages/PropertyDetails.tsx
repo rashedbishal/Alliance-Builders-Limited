@@ -273,10 +273,11 @@ const PropertyDetail = () => {
                                     initial={{ scale: 1.02, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     transition={{ duration: 0.6 }}
+                                    key={activeImage}
                                 >
-                                    {primaryImage && (
+                                    {images[activeImage] && (
                                         <img
-                                            src={primaryImage}
+                                            src={images[activeImage]}
                                             alt={projectDetails.name}
                                             className=" w-full object-cover"
                                         />
