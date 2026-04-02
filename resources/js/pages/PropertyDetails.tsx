@@ -92,13 +92,16 @@ const PropertyDetail = () => {
         velX.current = 0;
         lastX.current = e.pageX;
         scrollRef.current.style.cursor = 'grabbing';
+        scrollRef.current.style.scrollBehavior = 'auto';
         if (animFrame.current) cancelAnimationFrame(animFrame.current);
     };
 
     const handleMouseMove = (e: React.MouseEvent) => {
         if (!isDragging.current || !scrollRef.current) return;
         e.preventDefault();
-        velX.current = e.pageX - lastX.current;
+        const now = Date.now();
+        const deltaTime = now - (lastX.current as any);
+        velX.current = (e.pageX - lastX.current) / Math.max(deltaTime, 16);
         lastX.current = e.pageX;
         const walk = e.pageX - startX.current;
         scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
@@ -108,18 +111,31 @@ const PropertyDetail = () => {
         if (!scrollRef.current) return;
         isDragging.current = false;
         scrollRef.current.style.cursor = 'grab';
+        scrollRef.current.style.scrollBehavior = 'smooth';
 
-        // Momentum / inertia after release
-        const momentum = () => {
-            if (!scrollRef.current) return;
-            velX.current *= 0.92; // friction — lower = stops faster
-            scrollRef.current.scrollLeft -= velX.current;
-            if (Math.abs(velX.current) > 0.5) {
-                animFrame.current = requestAnimationFrame(momentum);
-            }
-        };
-        animFrame.current = requestAnimationFrame(momentum);
+        // Snap to nearest slide
+        const slideWidth = getSlideWidth();
+        const gap = 16;
+        const totalWidth = slideWidth + gap;
+        const targetIndex = Math.round(scrollRef.current.scrollLeft / totalWidth);
+        const targetScroll = targetIndex * totalWidth;
+        const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
+
+        scrollRef.current.scrollTo({
+            left: Math.max(0, Math.min(targetScroll, maxScroll)),
+            behavior: 'smooth'
+        });
     };
+
+    // Keyboard navigation
+    useEffect(() => {
+        const handleKeyDown = (e: KeyboardEvent) => {
+            if (e.key === 'ArrowLeft') scrollToIndex('prev');
+            if (e.key === 'ArrowRight') scrollToIndex('next');
+        };
+        window.addEventListener('keydown', handleKeyDown);
+        return () => window.removeEventListener('keydown', handleKeyDown);
+    }, [images.length]);
 
     // Cleanup on unmount
     useEffect(() => {
@@ -130,15 +146,93 @@ const PropertyDetail = () => {
 
     const scrollToIndex = (direction: 'next' | 'prev') => {
         if (!scrollRef.current) return;
-        const scrollAmount = scrollRef.current.offsetWidth * 0.75;
-        scrollRef.current.scrollBy({
-            left: direction === 'next' ? scrollAmount : -scrollAmount,
+        const container = scrollRef.current;
+        const isLarge = window.innerWidth >= 1024;
+        const slideWidth = isLarge ? container.offsetWidth * 0.5 : 
+                          window.innerWidth >= 768 ? container.offsetWidth * 0.6 :
+                          window.innerWidth >= 640 ? container.offsetWidth * 0.7 :
+                          container.offsetWidth * 0.85;
+        const gap = 16; // sm:gap-6 = 24px, gap-4 = 16px
+        const totalWidth = slideWidth + (window.innerWidth >= 640 ? gap : 16);
+        const newScroll = container.scrollLeft + (direction === 'next' ? totalWidth : -totalWidth);
+        
+        container.scrollTo({
+            left: newScroll,
             behavior: 'smooth'
         });
     };
 
+    const getSlideWidth = () => {
+        if (!scrollRef.current) return 0;
+        const container = scrollRef.current;
+        const isLarge = window.innerWidth >= 1024;
+        return isLarge ? container.offsetWidth * 0.5 : 
+               window.innerWidth >= 768 ? container.offsetWidth * 0.6 :
+               window.innerWidth >= 640 ? container.offsetWidth * 0.7 :
+               container.offsetWidth * 0.85;
+    };
+
+    const calculateCurrentIndex = (scrollLeft: number) => {
+        if (!scrollRef.current) return 0;
+        const slideWidth = getSlideWidth();
+        const gap = 16;
+        const totalWidth = slideWidth + gap;
+        const index = Math.round(scrollLeft / totalWidth);
+        return Math.max(0, Math.min(index, images.length - 1));
+    };
+
     const totalImages = images.length;
-    const progress = totalImages > 0 ? ((currentIndex + 1) / totalImages) * 100 : 0;
+    const progress = totalImages > 0 ? Math.min(((currentIndex + 1) / totalImages) * 100, 100) : 0;
+
+    // Touch/swipe handling for gallery
+    const handleTouchStart = (e: React.TouchEvent) => {
+        if (!scrollRef.current) return;
+        isDragging.current = true;
+        startX.current = e.touches[0].clientX;
+        scrollLeftRef.current = scrollRef.current.scrollLeft;
+        lastX.current = e.touches[0].clientX;
+        velX.current = 0;
+        scrollRef.current.style.scrollBehavior = 'auto';
+        if (animFrame.current) cancelAnimationFrame(animFrame.current);
+    };
+
+    const handleTouchMove = (e: React.TouchEvent) => {
+        if (!isDragging.current || !scrollRef.current) return;
+        const x = e.touches[0].clientX;
+        velX.current = x - lastX.current;
+        lastX.current = x;
+        const walk = x - startX.current;
+        scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
+    };
+
+    const handleTouchEnd = () => {
+        if (!scrollRef.current) return;
+        isDragging.current = false;
+        scrollRef.current.style.scrollBehavior = 'smooth';
+
+        // Snap to nearest slide with considered velocity
+        const slideWidth = getSlideWidth();
+        const gap = 16;
+        const totalWidth = slideWidth + gap;
+        const currentScroll = scrollRef.current.scrollLeft;
+        
+        // Consider velocity for flick gestures
+        let targetIndex = Math.round(currentScroll / totalWidth);
+        if (Math.abs(velX.current) > 1) {
+            targetIndex += velX.current > 0 ? -1 : 1;
+        }
+        
+        targetIndex = Math.max(0, Math.min(targetIndex, images.length - 1));
+        const targetScroll = targetIndex * totalWidth;
+        const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
+
+        scrollRef.current.scrollTo({
+            left: Math.max(0, Math.min(targetScroll, maxScroll)),
+            behavior: 'smooth'
+        });
+        
+        setCurrentIndex(targetIndex);
+    };
 
     return (
         <AppLayout>
@@ -480,19 +574,22 @@ const PropertyDetail = () => {
                         </h2>
                     </div>
 
-                    <div className="group relative px-4 md:px-[5vw]">
+                    <div className="container mx-auto max-w-6xl px-4">
+                        <div className="group relative">
                         {/* FLOATING ARROWS */}
                         <button
                             onClick={() => scrollToIndex('prev')}
-                            className="absolute top-1/2 left-8 z-40 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-0 backdrop-blur-md transition-all group-hover:opacity-100 hover:bg-primary hover:text-black"
+                            className="group/btn absolute top-1/2 left-4 z-40 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 hover:border-primary/50 hover:bg-primary hover:text-black"
+                            aria-label="Previous slide"
                         >
-                            <ChevronLeft className="h-6 w-6" />
+                            <ChevronLeft className="h-6 w-6 transition-transform duration-300 group-hover/btn:scale-110" />
                         </button>
                         <button
                             onClick={() => scrollToIndex('next')}
-                            className="absolute top-1/2 right-8 z-40 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-0 backdrop-blur-md transition-all group-hover:opacity-100 hover:bg-primary hover:text-black"
+                            className="group/btn absolute top-1/2 right-4 z-40 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 hover:border-primary/50 hover:bg-primary hover:text-black"
+                            aria-label="Next slide"
                         >
-                            <ChevronRight className="h-6 w-6" />
+                            <ChevronRight className="h-6 w-6 transition-transform duration-300 group-hover/btn:scale-110" />
                         </button>
 
                         <div
@@ -501,48 +598,65 @@ const PropertyDetail = () => {
                             onMouseMove={handleMouseMove}
                             onMouseUp={handleMouseUp}
                             onMouseLeave={handleMouseUp}
+                            onTouchStart={handleTouchStart}
+                            onTouchMove={handleTouchMove}
+                            onTouchEnd={handleTouchEnd}
                             onScroll={(e) => {
-                                const index = Math.round(
-                                    e.currentTarget.scrollLeft /
-                                        (e.currentTarget.offsetWidth * 0.7),
-                                );
-                                if (index !== currentIndex)
+                                if (isDragging.current) return; // Don't update index while dragging
+                                const index = calculateCurrentIndex(e.currentTarget.scrollLeft);
+                                if (index !== currentIndex) {
                                     setCurrentIndex(index);
+                                }
                             }}
-                            className="no-scrollbar flex cursor-grab snap-x snap-mandatory gap-6 overflow-x-auto pb-10 select-none"
+                            className="no-scrollbar flex max-h-screen cursor-grab touch-pan-x snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 select-none sm:gap-6"
                             style={{
                                 scrollbarWidth: 'none',
                                 msOverflowStyle: 'none',
-                                willChange: 'scroll-position', // GPU hint
+                                WebkitOverflowScrolling: 'touch',
                             }}
                         >
-                            <style>{`.no-scrollbar::-webkit-scrollbar { display: none; }`}</style>
+                            <style>{`
+                                .no-scrollbar::-webkit-scrollbar { display: none; }
+                                .gallery-slide {
+                                    scroll-snap-align: center;
+                                    scroll-snap-stop: always;
+                                }
+                            `}</style>
                             {images.map((img, i) => (
-                                <div
+                                <motion.div
                                     key={i}
-                                    className="relative aspect-[21/9] min-w-[75vw] snap-center overflow-hidden rounded-[2rem] border border-white/5 bg-white/5 md:min-w-[60vw]"
+                                    initial={{ opacity: 0, scale: 0.95 }}
+                                    whileInView={{ opacity: 1, scale: 1 }}
+                                    viewport={{ once: true, margin: "-100px" }}
+                                    transition={{ duration: 0.5, delay: i * 0.05 }}
+                                    className="gallery-slide group relative h-full max-h-screen w-full flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:border-primary/30"
                                 >
                                     <img
                                         src={img}
-                                        className="pointer-events-none h-full w-full object-cover"
-                                        alt={`Gallery ${i}`}
+                                        className="h-full w-full object-cover"
+                                        alt={`Gallery ${i + 1}`}
+                                        draggable={false}
                                     />
-                                    <div className="absolute bottom-6 left-6 rounded-full border border-white/10 bg-black/40 px-4 py-2 backdrop-blur-md">
-                                        <span className="font-mono text-[10px] tracking-widest text-white/60 uppercase">
-                                            Perspective 0{i + 1}
+                                    {/* Subtle gradient overlay */}
+                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover:from-black/30" />
+                                    <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-md transition-all duration-300 sm:bottom-6 sm:left-6 group-hover:border-primary/30 group-hover:bg-black/50">
+                                        <span className="text-[10px] font-medium tracking-wider text-white/70 uppercase transition-colors duration-300 group-hover:text-primary/80">
+                                            {String(i + 1).padStart(2, '0')} / {String(totalImages).padStart(2, '0')}
                                         </span>
                                     </div>
-                                </div>
+                                </motion.div>
                             ))}
                         </div>
                     </div>
+                    </div>
 
-                    <div className="container mx-auto max-w-4xl px-4">
-                        <div className="relative h-[1px] w-full bg-white/10">
+                    <div className="container mx-auto max-w-6xl px-4 mt-6">
+                        <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/5">
                             <motion.div
-                                className="absolute top-0 left-0 h-full bg-primary"
+                                className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary via-primary to-sky-400"
                                 animate={{ width: `${progress}%` }}
-                                transition={{ type: 'spring', stiffness: 100 }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 30 }}
+                                style={{ boxShadow: '0 0 20px rgba(6, 182, 212, 0.5)' }}
                             />
                         </div>
                     </div>

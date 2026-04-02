@@ -1,43 +1,132 @@
-import React from 'react';
+import React, { useState } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
+import { MapPin, Navigation, ExternalLink, Maximize2 } from 'lucide-react';
 
-// Define PropTypes for clarity and safety (optional but recommended)
-// import PropTypes from 'prop-types';
 interface MapComponentProps {
     width?: string;
     height?: string;
     src: string;
+    locationName?: string;
 }
 
-/**
- * A responsive Google Maps iframe component.
- * @param {object} props - The component props.
- * @param {string} [props.width='100%'] - The width of the map container (e.g., '100%', '500px').
- * @param {string} [props.height='450px'] - The height of the map container (e.g., '450px', '50vh').
- */
-const MapComponent = ({ width = '100%', height = '450px', src }: MapComponentProps) => {
-  return (
-    // The container controls the dimensions
-    <div
-      className="relative overflow-hidden rounded-lg shadow-lg" // Added some basic styling
-      style={{ width, height }}
-    >
-      <iframe
-        src={src}
-        className="absolute top-0 left-0 w-full h-full border-0"
-        allowFullScreen
-        loading="lazy"
-        referrerPolicy="no-referrer-when-downgrade"
-        title="Alliance Builders Ltd Location"
-      />
-    </div>
-  );
-};
+const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Project Location' }: MapComponentProps) => {
+    const [isLoaded, setIsLoaded] = useState(false);
+    const [showOverlay, setShowOverlay] = useState(true);
 
-/* Optional: Add PropTypes validation
-ResponsiveMap.propTypes = {
-  width: PropTypes.string,
-  height: PropTypes.string,
+    const handleMapClick = () => {
+        setShowOverlay(false);
+    };
+
+    const handleOpenInMaps = () => {
+        window.open(src, '_blank', 'noopener,noreferrer');
+    };
+
+    return (
+        <div
+            className="group relative h-full w-full overflow-hidden rounded-xl"
+            style={{ width, height }}
+        >
+            {/* Loading skeleton */}
+            {!isLoaded && (
+                <div className="absolute inset-0 animate-pulse bg-white/[0.03]" />
+            )}
+
+            {/* Map iframe */}
+            <iframe
+                src={src}
+                className="absolute inset-0 h-full w-full border-0 transition-opacity duration-500"
+                style={{
+                    filter: 'grayscale(100%) invert(92%) contrast(83%)',
+                    opacity: isLoaded ? 1 : 0,
+                }}
+                allowFullScreen
+                loading="lazy"
+                referrerPolicy="no-referrer-when-downgrade"
+                title="Location Map"
+                onLoad={() => setIsLoaded(true)}
+            />
+
+            {/* Beautiful gradient overlays */}
+            {/* Top gradient - for nav blend */}
+            <div className="pointer-events-none absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0a0a] to-transparent" />
+
+            {/* Bottom gradient - for content blend */}
+            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
+
+            {/* Side gradients */}
+            <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#0a0a0a] to-transparent" />
+            <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#0a0a0a] to-transparent" />
+
+            {/* Click overlay - shows on hover/first view */}
+            <AnimatePresence>
+                {showOverlay && (
+                    <motion.div
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        exit={{ opacity: 0 }}
+                        className="absolute inset-0 flex cursor-pointer items-center justify-center bg-black/20 backdrop-blur-[1px] transition-colors hover:bg-black/10"
+                        onClick={handleMapClick}
+                    >
+                        <div className="flex flex-col items-center gap-3 rounded-2xl border border-white/10 bg-black/60 px-8 py-6 backdrop-blur-md">
+                            <div className="flex h-12 w-12 items-center justify-center rounded-full bg-white/10">
+                                <MapPin className="h-5 w-5 text-primary" />
+                            </div>
+                            <span className="text-sm font-medium text-white/80">Click to explore map</span>
+                        </div>
+                    </motion.div>
+                )}
+            </AnimatePresence>
+
+            {/* Location info card - positioned bottom-left */}
+            <div className="absolute bottom-6 left-6 z-10 max-w-xs">
+                <div className="rounded-xl border border-white/10 bg-[#0a0a0a]/90 p-4 shadow-2xl backdrop-blur-md">
+                    <div className="flex items-start gap-3">
+                        <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/20">
+                            <MapPin className="h-4 w-4 text-primary" />
+                        </div>
+                        <div className="min-w-0">
+                            <h4 className="text-sm font-medium text-white">{locationName}</h4>
+                            <p className="mt-0.5 text-xs text-white/50">View location on map</p>
+                        </div>
+                    </div>
+
+                    <div className="mt-3 flex gap-2">
+                        <button
+                            onClick={handleOpenInMaps}
+                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg bg-primary px-3 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary/90"
+                        >
+                            <ExternalLink className="h-3 w-3" />
+                            Open Maps
+                        </button>
+                        <button
+                            onClick={() => setShowOverlay(true)}
+                            className="flex flex-1 items-center justify-center gap-1.5 rounded-lg border border-white/10 bg-white/5 px-3 py-2 text-xs font-medium text-white/70 transition-colors hover:bg-white/10"
+                        >
+                            <Maximize2 className="h-3 w-3" />
+                            Overlay
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            {/* Map controls - positioned bottom-right */}
+            <div className="absolute bottom-6 right-6 z-10 flex flex-col gap-2">
+                <button
+                    onClick={handleOpenInMaps}
+                    className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#0a0a0a]/90 text-white/70 shadow-lg backdrop-blur-md transition-all hover:scale-110 hover:bg-primary hover:text-white"
+                    title="Get directions"
+                >
+                    <Navigation className="h-4 w-4" />
+                </button>
+            </div>
+
+            {/* Corner accents */}
+            <div className="pointer-events-none absolute top-4 left-4 h-8 w-8 border-l-2 border-t-2 border-primary/30" />
+            <div className="pointer-events-none absolute top-4 right-4 h-8 w-8 border-r-2 border-t-2 border-primary/30" />
+            <div className="pointer-events-none absolute bottom-4 left-4 h-8 w-8 border-l-2 border-b-2 border-primary/30" />
+            <div className="pointer-events-none absolute bottom-4 right-4 h-8 w-8 border-r-2 border-b-2 border-primary/30" />
+        </div>
+    );
 };
-*/
 
 export default MapComponent;
