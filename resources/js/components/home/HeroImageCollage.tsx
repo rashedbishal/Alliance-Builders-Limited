@@ -99,7 +99,7 @@ const HeroImageCollage = () => {
 
                       {/* Text Overlay */}
                       <div
-                          className={`absolute right-0 bottom-0 left-0 z-30 bg-gradient-to-t from-black/80 to-transparent p-10 transition-transform duration-[1200ms] ${
+                          className={`absolute right-0 bottom-0 left-0 z-30 bg-gradient-to-t from-black/80 to-transparent px-10 py-20 sm:py-10 transition-transform duration-[1200ms] ${
                               activeIndex === index
                                   ? 'translate-y-0'
                                   : 'translate-y-full'
