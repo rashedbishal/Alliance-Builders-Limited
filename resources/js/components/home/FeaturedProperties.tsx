@@ -38,9 +38,25 @@ const FeaturedProperties = () => {
         <ScrollAnimation>
           <div className="text-center mb-20">
             <div className="inline-block">
-              <h2 className="pb-4 text-5xl lg:text-7xl font-medium tracking-wide mb-6">
+              <h2 className="hidden sm:block pb-4 text-5xl lg:text-7xl font-medium tracking-wide mb-6">
                 <SmoothRandomTextScale
                   text="Featured Properties"
+                  className="text-white"
+                  duration={1.2}
+                  delay={.6}
+                />
+              </h2>
+              <h2 className="sm:hidden pb-4 text-5xl lg:text-7xl font-medium tracking-wide mb-6">
+                <SmoothRandomTextScale
+                  text="Featured"
+                  className="text-white"
+                  duration={1.2}
+                  delay={.6}
+                />
+              </h2>
+              <h2 className="sm:hidden pb-4 text-5xl lg:text-7xl font-medium tracking-wide mb-6">
+                <SmoothRandomTextScale
+                  text="Properties"
                   className="text-white"
                   duration={1.2}
                   delay={.6}
