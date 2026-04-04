@@ -51,7 +51,7 @@ const About = () => {
                     }}
                     className="relative h-screen overflow-hidden pt-32 pb-20"
                 >
-                    <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
+                    <div className="bg-black absolute inset-0 opacity-80"></div>
                     <div className="relative z-10 container mx-auto px-4">
                         <ScrollAnimation delay={0.1} className="md:w-[80%] lg:w-[75%]">
                             <SplittingText
@@ -70,7 +70,7 @@ const About = () => {
                         <ScrollAnimation delay={0.2} className="md:w-[80%] lg:w-[60%]">
                             <p>
                                 <WritingText
-                                    className="max-w-3xl text-lg sm:text-xl text-black text-white-shadow   "
+                                    className="max-w-3xl text-2xl sm:text-3xl text-black text-white-shadow   "
                                     text="Founded in 2003, EstateElite began with a simple mission: to revolutionize the real estate experience by putting people first. What started as a small team of passionate realtors has grown into one of the most trusted names in luxury real estate."
                                     spacing={4}
                                 />
@@ -80,16 +80,11 @@ const About = () => {
                 </section>
 
                 {/* Stats Section */}
-                <section className="mx-auto w-full bg-gradient-navy py-20">
-                    <div
-                        className="container mx-auto
-                                  rounded-3xl
-                                  bg-gradient-to-br from-slate-950/80 via-black/90 to-slate-950/80
+                <section className="mx-auto w-full bg-gradient-to-br from-slate-950/80 via-black/90 to-slate-950/80
                                   p-10 px-5
                                   backdrop-blur-xl
-                                  border border-white/5
-                                  shadow-2xl shadow-black/70"
-                    >
+                                  shadow-2xl shadow-black/70">
+                    
                         <div className="grid grid-cols-1 sm:grid-cols-2 gap-6 sm:gap-8 lg:grid-cols-4">
                             {stats.map((stat, index) => (
                                 <ScrollAnimation key={index} delay={index * 0.12}>
@@ -170,7 +165,6 @@ const About = () => {
                                 </ScrollAnimation>
                             ))}
                         </div>
-                    </div>
                 </section>
 
                 {/* Our Story */}
