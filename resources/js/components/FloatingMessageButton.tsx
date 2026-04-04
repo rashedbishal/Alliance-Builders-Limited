@@ -16,7 +16,7 @@ const FloatingMessageButton = () => {
     return (
         <>
             {/* Floating Button Drawer */}
-            <div className="fixed bottom-3 sm:bottom-6 left-4 z-40">
+            <div className="fixed bottom-6 left-4 z-40">
                 {/* Drawer Container */}
                 <div className={`flex flex-col items-center gap-2 sm:gap-3 transition-all duration-300 ${isOpen ? 'opacity-100' : 'opacity-0 pointer-events-none'}`}>
                     {/* Messenger Button */}
