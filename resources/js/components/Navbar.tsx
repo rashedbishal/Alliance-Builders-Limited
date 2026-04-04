@@ -627,11 +627,11 @@ const Navbar = () => {
                             </Link>
 
                             {/* Mobile menu button - only < lg */}
-                            <div className="rounded-full bg-white/70">
+                            <div className="rounded-full bg-white/90">
                                 <Button
                                     ref={buttonRef} // Add this ref
                                     variant="ghost"
-                                    className="p-2 hover:bg-white/10 xl:hidden"
+                                    className="p-3 hover:bg-white/10 xl:hidden"
                                     onClick={() => {
                                         if (isMobileMenuOpen) {
                                             setIsClosing(true);
@@ -647,7 +647,7 @@ const Navbar = () => {
                                     {isMobileMenuOpen ? (
                                         <X className="h-6 w-6" />
                                     ) : (
-                                        <Menu className="h-6 w-6" />
+                                        <Menu className="h-6 w-8" />
                                     )}
                                 </Button>
                             </div>
