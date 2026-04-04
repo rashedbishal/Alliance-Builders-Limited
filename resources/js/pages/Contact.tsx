@@ -420,12 +420,10 @@ const Contact = () => {
 
                                 {/* Office card */}
                                 <ScrollAnimation delay={0.25}>
-                                    <div className="relative overflow-hidden rounded-3xl border border-white/10">
+                                    <div className="relative overflow-hidden rounded-3xl border border-white/10 h-96">
                                         <div className="bg-gradient-navy absolute inset-0" />
                                         <div className="absolute -right-10 -bottom-10 h-48 w-48 rounded-full bg-primary/20 blur-3xl" />
-                                        <MapComponent src={mapUrl}>
-
-                                        </MapComponent>
+                                        <MapComponent width="100%" height="100%" src={mapUrl} />
                                     </div>
                                 </ScrollAnimation>
                             </div>
