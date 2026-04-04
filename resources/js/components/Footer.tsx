@@ -36,11 +36,11 @@ const Footer = () => {
   ];
 
   const socialLinks = [
-    { icon: Facebook, href: "#facebook", label: "Facebook" },
-    { icon: Twitter, href: "#twitter", label: "Twitter" },
-    { icon: Instagram, href: "#instagram", label: "Instagram" },
-    { icon: Linkedin, href: "#linkedin", label: "LinkedIn" },
-    { icon: Youtube, href: "#youtube", label: "YouTube" }
+    { icon: Facebook, href: "https://www.facebook.com/alliancebuilderslimited/", label: "Facebook" },
+    { icon: Twitter, href: "https://x.com/alliancedhaka", label: "Twitter" },
+    { icon: Instagram, href: "https://www.instagram.com/allianceconstructionbd/", label: "Instagram" },
+    { icon: Linkedin, href: "https://www.linkedin.com/company/alliance-builders-ltd/?originalSubdomain=bd", label: "LinkedIn" },
+    { icon: Youtube, href: "https://www.youtube.com/@shahid549", label: "YouTube" }
   ];
 
   return (
