@@ -141,10 +141,10 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                     animate={controls}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 p-1.5 sm:pr-5 shadow-2xl transition-shadow hover:shadow-blue-500/25"
+                    className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 p-1 sm:p-1.5 sm:pr-5 shadow-2xl transition-shadow hover:shadow-blue-500/25"
                 >
                     {/* Avatar Container */}
-                    <div className="relative h-12 w-12 flex-shrink-0 overflow-hidden rounded-full bg-white">
+                    <div className="relative h-8 w-8 sm:h-12 sm:w-12 flex-shrink-0 overflow-hidden rounded-full bg-white">
                         {/* Animated gradient background */}
                         <motion.div
                             className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500"
@@ -250,7 +250,7 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                         initial={{ opacity: 0, y: -5 }}
                         animate={{ opacity: 1, y: 0 }}
                         exit={{ opacity: 0, y: -5 }}
-                        className="mt-2 text-[10px] font-medium tracking-wide text-white/40"
+                        className="hidden sm:block mt-2 text-[10px] font-medium tracking-wide text-white/40"
                     >
                         Click to chat
                     </motion.div>
