@@ -122,4 +122,14 @@ class PageController extends Controller
         // The React component handles the success popup itself.
         return back();
     }
+
+    public function privacyPolicy()
+    {
+        return Inertia::render('PrivacyPolicy');
+    }
+
+    public function termsOfService()
+    {
+        return Inertia::render('TermsOfService');
+    }
 }

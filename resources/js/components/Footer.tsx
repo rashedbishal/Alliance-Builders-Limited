@@ -12,6 +12,8 @@ import {
   Clock
 } from "lucide-react";
 import React from 'react';
+import { Link } from '@inertiajs/react';
+import { route } from 'ziggy-js';
 import abstractBg2 from "@/assets/images/backgrounds/city-7.webp";
 import logo from "@/assets/images/logo/alliance logo.webp";
 import { Button } from "@/components/ui/button";
@@ -20,27 +22,17 @@ import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
   const quickLinks = [
-    { label: "Home", href: "#home" },
-    { label: "About Us", href: "#about" },
-    { label: "Properties", href: "#properties" },
-    { label: "Services", href: "#services" },
-    { label: "Contact", href: "#contact" }
+    { label: "Home", href: "/" },
+    { label: "About Us", href: "/about" },
+    { label: "Gallery", href: "/gallery" },
+    { label: "Contact", href: "/contact" }
   ];
 
-  const properties = [
-    { label: "Residential Properties", href: "#residential" },
-    { label: "Commercial Spaces", href: "#commercial" },
-    { label: "Luxury Estates", href: "#luxury" },
-    { label: "Investment Opportunities", href: "#investment" },
-    { label: "Pre-Launch Projects", href: "#prelaunch" }
-  ];
-
-  const services = [
-    { label: "Property Development", href: "#development" },
-    { label: "Real Estate Consulting", href: "#consulting" },
-    { label: "Property Management", href: "#management" },
-    { label: "Investment Advisory", href: "#advisory" },
-    { label: "Legal Documentation", href: "#legal" }
+  const projectStatus = [
+    { label: "Handover", href: "/handover" },
+    { label: "Ongoing", href: "/ongoing" },
+    { label: "Upcoming", href: "/upcoming" },
+    { label: "All Projects", href: "/projects" }
   ];
 
   const socialLinks = [
@@ -61,7 +53,7 @@ const Footer = () => {
       <div className="container mx-auto px-4 lg:px-8 relative z-10">
         {/* Main Footer Content */}
         <div className="pt-16 pb-8">
-          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-12">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-12">
             {/* Company Info */}
             <div className="lg:col-span-1 space-y-6">
               <div className="flex items-center space-x-3">
@@ -81,7 +73,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">24/7 Hotline</div>
-                    <div className="text-white/80 drop-shadow-sm">+1 (555) 123-4567</div>
+                    <div className="text-white/80 drop-shadow-sm">+88-01928568853</div>
                   </div>
                 </div>
 
@@ -91,7 +83,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">Email Us</div>
-                    <div className="text-white/80 drop-shadow-sm">info@estateeelite.com</div>
+                    <div className="text-white/80 drop-shadow-sm">asad@alliancebuildersltd.org</div>
                   </div>
                 </div>
 
@@ -101,7 +93,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">Visit Our Office</div>
-                    <div className="text-white/80 drop-shadow-sm">123 Business Ave, Suite 100<br />Downtown District, NY 10001</div>
+                    <div className="text-white/80 drop-shadow-sm">House# 640 (1st Floor)<br />West Kazipara Mirpur, Dhaka-1216</div>
                   </div>
                 </div>
               </div>
@@ -113,13 +105,13 @@ const Footer = () => {
               <ul className="space-y-3">
                 {quickLinks.map((link) => (
                   <li key={link.label}>
-                    <a
+                    <Link
                       href={link.href}
                       className="text-white/80 hover:text-accent transition-colors duration-300 flex items-center group drop-shadow-sm"
                     >
                       <ArrowUpRight className="h-4 w-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       {link.label}
-                    </a>
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -131,44 +123,25 @@ const Footer = () => {
                   Office Hours
                 </h4>
                 <div className="text-sm text-white/80 space-y-1 drop-shadow-sm">
-                  <div>Monday - Friday: 9:00 AM - 7:00 PM</div>
-                  <div>Saturday: 9:00 AM - 5:00 PM</div>
-                  <div>Sunday: 10:00 AM - 4:00 PM</div>
+                  <div>Wed - Mon: 11:00 AM - 7:00 PM</div>
+                  <div>Tuesday: Closed</div>
                 </div>
               </div>
             </div>
 
-            {/* Properties */}
-            <div className="space-y-6">
-              <h3 className="text-xl font-bold text-white">Properties</h3>
+            {/* Projects */}
+            <div className="space-y-6 lg:col-span-1">
+              <h3 className="text-xl font-bold text-white">Our Projects</h3>
               <ul className="space-y-3">
-                {properties.map((property) => (
-                  <li key={property.label}>
-                    <a
-                      href={property.href}
+                {projectStatus.map((project) => (
+                  <li key={project.label}>
+                    <Link
+                      href={project.href}
                       className="text-white/80 hover:text-accent transition-colors duration-300 flex items-center group drop-shadow-sm"
                     >
                       <Building2 className="h-4 w-4 mr-2 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
-                      {property.label}
-                    </a>
-                  </li>
-                ))}
-              </ul>
-            </div>
-
-            {/* Services & Newsletter */}
-            <div className="space-y-6 lg:col-span-1">
-              <h3 className="text-xl font-bold text-white">Services</h3>
-              <ul className="space-y-3">
-                {services.map((service) => (
-                  <li key={service.label}>
-                    <a
-                      href={service.href}
-                      className="text-white/80 hover:text-accent transition-colors duration-300 flex items-center group drop-shadow-sm"
-                    >
-                      <ArrowUpRight className="h-4 w-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-                      {service.label}
-                    </a>
+                      {project.label}
+                    </Link>
                   </li>
                 ))}
               </ul>
@@ -231,8 +204,8 @@ const Footer = () => {
             <div className="text-center lg:text-left">
               <p className="text-white/90 drop-shadow-sm">
                 © 2024 Alliance Builders Ltd. All rights reserved. |
-                <a href="#privacy" className="text-white hover:text-accent-light ml-1">Privacy Policy</a> |
-                <a href="#terms" className="text-white hover:text-accent-light ml-1">Terms of Service</a>
+                <Link href="/privacy-policy" className="text-white hover:text-accent-light ml-1">Privacy Policy</Link> |
+                <Link href="/terms-of-service" className="text-white hover:text-accent-light ml-1">Terms of Service</Link>
               </p>
               <p className="text-sm text-white/70 mt-1 drop-shadow-sm">
                 A proud member of REHAB | ISO 9001 : 2015 QMS Certified
@@ -240,16 +213,16 @@ const Footer = () => {
             </div>
 
             {/* Social Links */}
-            <div className="flex items-center space-x-4">
+            <div className="flex items-center space-x-2 sm:space-x-4">
               <span className="text-white/80 text-sm mr-2 drop-shadow-sm">Follow Us:</span>
               {socialLinks.map((social) => (
                 <a
                   key={social.label}
                   href={social.href}
-                  className="p-3 bg-white/10 hover:bg-accent/20 border border-white/20 hover:border-accent/50 rounded-lg transition-all duration-300 group"
+                  className="p-2 sm:p-3 bg-white/10 hover:bg-accent/20 border border-white/20 hover:border-accent/50 rounded-lg transition-all duration-300 group"
                   aria-label={social.label}
                 >
-                  <social.icon className="h-5 w-5 text-white/80 group-hover:text-accent transition-colors duration-300" />
+                  <social.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white/80 group-hover:text-accent transition-colors duration-300" />
                 </a>
               ))}
             </div>

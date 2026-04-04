@@ -80,6 +80,8 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
     Route::get('/ongoing', 'properties')->name('ongoing-properties');
     Route::get('/upcoming', 'properties')->name('upcoming-properties');
     Route::get('/hotels-resorts/{project:slug}', 'hotelDetails')->name('hotel-details');
+    Route::get('/privacy-policy', 'privacyPolicy')->name('privacy-policy');
+    Route::get('/terms-of-service', 'termsOfService')->name('terms-of-service');
     Route::post('/contact', 'storeContact')->name('contact.store');
     Route::get('{project:slug}', 'propertyDetails')->name('propertyDetails');
 
