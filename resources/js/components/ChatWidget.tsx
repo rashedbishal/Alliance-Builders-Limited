@@ -72,7 +72,7 @@ export default function ChatWidget() {
     return (
         <div className="fixed bottom-0 right-0 z-50">
             {/* Immersive Trigger Button */}
-            <div className="absolute bottom-6 right-6">
+            <div className="absolute bottom-3 right-3 sm:bottom-6 sm:right-6">
                 <ImmersiveChatTrigger onClick={() => setOpen(!open)} isOpen={open} />
             </div>
 
@@ -84,10 +84,10 @@ export default function ChatWidget() {
                         animate={{ opacity: 1, y: 0, scale: 1 }}
                         exit={{ opacity: 0, y: 20, scale: 0.95 }}
                         transition={{ type: "spring", stiffness: 300, damping: 25 }}
-                        className="absolute bottom-24 right-6 w-[380px] overflow-hidden rounded-2xl border border-white/10 bg-[#0d1320]/95 shadow-2xl backdrop-blur-xl"
+                        className="absolute bottom-16 sm:bottom-20 right-2 sm:right-6 w-[calc(100vw-16px)] sm:w-[360px] max-w-[360px] overflow-hidden rounded-2xl border border-white/10 bg-[#0d1320]/95 shadow-2xl backdrop-blur-xl max-h-[calc(100vh-120px)] sm:max-h-[500px]"
                     >
                         {/* Header */}
-                        <div className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 px-5 py-4">
+                        <div className="relative bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 px-3 sm:px-5 py-2 sm:py-4">
                             {/* Decorative elements */}
                             <div className="absolute top-0 right-0 h-full w-1/2 bg-gradient-to-l from-white/10 to-transparent" />
 
@@ -119,7 +119,7 @@ export default function ChatWidget() {
                         </div>
 
                         {/* Messages Area */}
-                        <div className="h-[350px] overflow-y-auto bg-[#0a0e15] p-4">
+                        <div className="h-[180px] sm:h-[250px] overflow-y-auto bg-[#0a0e15] p-2 sm:p-4">
                             {messages.length === 1 && (
                                 <div className="mb-4 rounded-xl border border-white/5 bg-white/[0.02] p-3">
                                     <p className="mb-2 text-[10px] font-medium uppercase tracking-wider text-white/40">
@@ -208,7 +208,7 @@ export default function ChatWidget() {
                         </div>
 
                         {/* Input Area */}
-                        <div className="border-t border-white/10 bg-[#0d1320] p-3">
+                        <div className="border-t border-white/10 bg-[#0d1320] p-2 sm:p-3">
                             <div className="flex gap-2">
                                 <div className="relative flex-1">
                                     <input
