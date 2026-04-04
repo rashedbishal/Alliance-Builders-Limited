@@ -159,18 +159,23 @@ const Contact = () => {
                 )}
 
                 {/* ── Hero ── */}
-                <section className="relative overflow-hidden h-screen pt-58 pb-24">
+                <section 
+                    className="relative overflow-hidden h-screen pt-58 pb-24"
+                    style={{
+                        backgroundImage: 'url(https://images.unsplash.com/photo-1552664730-d307ca884978?w=1200&h=800&fit=crop)',
+                        backgroundSize: 'cover',
+                        backgroundPosition: 'center',
+                    }}
+                >
+                    {/* Dark overlay for blend */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/70 via-black/60 to-black/70" />
+                    
                     <div className="bg-gradient-hero absolute inset-0 opacity-10" />
                     {/* Decorative blobs */}
                     <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
                     <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-secondary/10 blur-[100px]" />
 
                     <div className="relative z-10 container mx-auto px-4">
-                        <ScrollAnimation>
-                            <Badge className="bg-gradient-primary shadow-elegant mb-6 text-white">
-                                Contact Us
-                            </Badge>
-                        </ScrollAnimation>
                         <ScrollAnimation delay={0.1}>
                             <h1 className="mb-6 text-5xl leading-tight font-bold text-white md:text-7xl">
                                 Let's Start a<br />
