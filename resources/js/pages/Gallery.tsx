@@ -185,15 +185,15 @@ const Lightbox = ({
                 animate={{ opacity: 1, scale: 1 }}
                 exit={{ opacity: 0, scale: 0.95 }}
                 transition={{ duration: 0.35, ease: [0.25, 0.46, 0.45, 0.94] }}
-                className="relative w-full max-w-6xl px-20"
+                className="relative w-full max-w-6xl px-3 sm:px-8 md:px-20"
                 onClick={(e) => e.stopPropagation()}
             >
                 {item.type === 'video' ? (
                     <video
                         controls
                         autoPlay
-                        className="w-full rounded-2xl shadow-2xl"
-                        style={{ maxHeight: '75vh', objectFit: 'contain' }}
+                        className="w-full rounded-lg sm:rounded-2xl shadow-2xl"
+                        style={{ maxHeight: 'calc(100vh - 140px)', objectFit: 'contain' }}
                     >
                         <source src={item.src} type="video/mp4" />
                     </video>
@@ -201,8 +201,8 @@ const Lightbox = ({
                     <img
                         src={item.src}
                         alt={item.title}
-                        className="w-full rounded-2xl shadow-2xl"
-                        style={{ maxHeight: '75vh', objectFit: 'contain' }}
+                        className="w-full rounded-lg sm:rounded-2xl shadow-2xl"
+                        style={{ maxHeight: 'calc(100vh - 140px)', objectFit: 'contain' }}
                     />
                 )}
             </motion.div>
@@ -213,18 +213,20 @@ const Lightbox = ({
                     e.stopPropagation();
                     onPrev();
                 }}
-                className="absolute top-1/2 left-4 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-all hover:scale-110 hover:bg-white/15 hover:text-white"
+                className="absolute top-1/2 left-2 sm:left-4 flex h-10 w-10 sm:h-14 sm:w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-all hover:scale-110 hover:bg-white/15 hover:text-white"
             >
-                <ChevronLeft size={22} />
+                <ChevronLeft size={16} className="sm:hidden" />
+                <ChevronLeft size={22} className="hidden sm:block" />
             </button>
             <button
                 onClick={(e) => {
                     e.stopPropagation();
                     onNext();
                 }}
-                className="absolute top-1/2 right-4 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-all hover:scale-110 hover:bg-white/15 hover:text-white"
+                className="absolute top-1/2 right-2 sm:right-4 flex h-10 w-10 sm:h-14 sm:w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-white/5 text-white/60 transition-all hover:scale-110 hover:bg-white/15 hover:text-white"
             >
-                <ChevronRight size={22} />
+                <ChevronRight size={16} className="sm:hidden" />
+                <ChevronRight size={22} className="hidden sm:block" />
             </button>
 
             {/* Bottom strip thumbnails */}
