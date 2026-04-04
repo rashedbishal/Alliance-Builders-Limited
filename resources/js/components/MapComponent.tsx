@@ -48,14 +48,14 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
 
             {/* Beautiful gradient overlays */}
             {/* Top gradient - for nav blend */}
-            <div className="pointer-events-none absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0a0a] to-transparent" />
+            {/* <div className="pointer-events-none absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0a0a] to-transparent" />
 
             {/* Bottom gradient - for content blend */}
-            <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" />
+            {/* <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" /> */}
 
             {/* Side gradients */}
-            <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#0a0a0a] to-transparent" />
-            <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#0a0a0a] to-transparent" />
+            {/* <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#0a0a0a] to-transparent" />
+            <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#0a0a0a] to-transparent" /> */} */}
 
             {/* Click overlay - shows on hover/first view */}
             <AnimatePresence>
@@ -78,7 +78,7 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
             </AnimatePresence>
 
             {/* Location info card - positioned bottom-left */}
-            <div className="absolute bottom-6 left-6 z-10 max-w-xs">
+            {/* <div className="absolute bottom-6 left-6 z-10 max-w-xs">
                 <div className="rounded-xl border border-white/10 bg-[#0a0a0a]/90 p-4 shadow-2xl backdrop-blur-md">
                     <div className="flex items-start gap-3">
                         <div className="flex h-10 w-10 flex-shrink-0 items-center justify-center rounded-full bg-primary/20">
@@ -107,10 +107,10 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
                         </button>
                     </div>
                 </div>
-            </div>
+            </div> */}
 
             {/* Map controls - positioned bottom-right */}
-            <div className="absolute bottom-6 right-6 z-10 flex flex-col gap-2">
+            {/* <div className="absolute bottom-6 right-6 z-10 flex flex-col gap-2">
                 <button
                     onClick={handleOpenInMaps}
                     className="flex h-10 w-10 items-center justify-center rounded-full border border-white/10 bg-[#0a0a0a]/90 text-white/70 shadow-lg backdrop-blur-md transition-all hover:scale-110 hover:bg-primary hover:text-white"
@@ -118,7 +118,7 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
                 >
                     <Navigation className="h-4 w-4" />
                 </button>
-            </div>
+            </div> */}
 
             {/* Corner accents */}
             <div className="pointer-events-none absolute top-4 left-4 h-8 w-8 border-l-2 border-t-2 border-primary/30" />

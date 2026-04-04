@@ -748,15 +748,19 @@ const PropertyDetail = () => {
                         </div>
                     </div>
 
-                    {/* Map Container - Now Unblocked */}
-                    <div className="relative h-[65vh] w-full overflow-hidden border-y border-white/5">
-                        <div className="h-full w-full contrast-[1.1] grayscale invert-[0.05] transition-all duration-1000 ease-in-out hover:grayscale-0">
-                            <MapComponent width="100%" height="100%" src={projectDetails.google_map_url} />
-                        </div>
+                    {/* Map Container - Enhanced Visual Design */}
+                    <div className="container mx-auto px-4">
+                        <div className="group relative">
+                            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 via-sky-500/10 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                            <div className="relative h-[65vh] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30">
+                                <div className="h-full w-full contrast-[1.1] grayscale invert-[0.05] transition-all duration-1000 ease-in-out group-hover:grayscale-0 group-hover:invert-[0.02]">
+                                    <MapComponent width="100%" height="100%" src={projectDetails.google_map_url} />
+                                </div>
 
-                        {/* Decorative corner accents instead of full overlays */}
-                        <div className="pointer-events-none absolute top-0 left-0 h-32 w-32 bg-gradient-to-br from-black to-transparent" />
-                        <div className="pointer-events-none absolute right-0 bottom-0 h-32 w-32 bg-gradient-to-tl from-black to-transparent" />
+                                {/* Subtle top-left fade for depth */}
+                                <div className="pointer-events-none absolute top-0 left-0 w-1/3 h-1/3 bg-gradient-to-br from-black/20 to-transparent rounded-full blur-2xl" />
+                            </div>
+                        </div>
                     </div>
                 </section>
             </div>
