@@ -15,6 +15,7 @@ import {about, directors, home, services, managingDirector, contact, media, gall
 const Navbar = () => {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+    const [isClosing, setIsClosing] = useState(false);
     const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
     const [rotation, setRotation] = useState({x: 0, y: 0});
     const navRef = useRef<HTMLDivElement>(null);
@@ -74,7 +75,11 @@ const Navbar = () => {
                 !navContainer.contains(target) &&
                 buttonElement && !buttonElement.contains(target) // Ignore the button itself
             ) {
-                setIsMobileMenuOpen(false);
+                setIsClosing(true);
+                setTimeout(() => {
+                    setIsMobileMenuOpen(false);
+                    setIsClosing(false);
+                }, 250);
             }
         };
 
@@ -669,9 +674,17 @@ const Navbar = () => {
                                     ref={buttonRef} // Add this ref
                                     variant="ghost"
                                     className="p-2 hover:bg-white/10 xl:hidden"
-                                    onClick={() =>
-                                        setIsMobileMenuOpen(!isMobileMenuOpen)
-                                    }
+                                    onClick={() => {
+                                        if (isMobileMenuOpen) {
+                                            setIsClosing(true);
+                                            setTimeout(() => {
+                                                setIsMobileMenuOpen(false);
+                                                setIsClosing(false);
+                                            }, 250);
+                                        } else {
+                                            setIsMobileMenuOpen(true);
+                                        }
+                                    }}
                                 >
                                     {isMobileMenuOpen ? (
                                         <X className="h-6 w-6" />
@@ -690,7 +703,7 @@ const Navbar = () => {
                         <div
                             ref={mobileMenuRef}
                             onClick={(e) => e.stopPropagation()}
-                            className="bg-navbar-gradient shadow-navbar animate-fade-in mt-0 inline-block max-h-[calc(100vh-100px)] w-auto min-w-60 overflow-y-auto rounded-2xl border-2 border-blue-300/60 backdrop-blur-xl sm:w-sm md:w-md xl:hidden"
+                            className={`bg-navbar-gradient shadow-navbar mt-0 inline-block max-h-[calc(100vh-100px)] w-auto min-w-60 overflow-y-auto rounded-2xl border-2 border-blue-300/60 backdrop-blur-xl sm:w-sm md:w-md xl:hidden ${isClosing ? 'animate-fade-out' : 'animate-fade-in'}`}
                         >
                             <div className="space-y-0">
                                 <Link
@@ -932,6 +945,17 @@ const Navbar = () => {
             }
         }
 
+        @keyframes fade-out {
+            0% {
+                opacity: 1;
+                transform: translateY(0);
+            }
+            100% {
+                opacity: 0;
+                transform: translateY(-10px);
+            }
+        }
+
         @keyframes pulse-dot {
             0%, 100% {
                 transform: scale(1);
@@ -954,6 +978,10 @@ const Navbar = () => {
 
         .animate-fade-in {
             animation: fade-in 0.3s ease-out forwards;
+        }
+
+        .animate-fade-out {
+            animation: fade-out 0.25s ease-in forwards;
         }
 
         /* ─── Nav Links Styling ─── */
