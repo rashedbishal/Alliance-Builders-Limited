@@ -45,7 +45,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="text-primary-foreground relative overflow-hidden bg-cover bg-center bg-no-repeat"
+      className="text-primary-foreground relative overflow-hidden bg-cover bg-center bg-no-repeat pb-12"
       style={{ backgroundImage: `url(${abstractBg2})`, backgroundAttachment: 'fixed', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
     >
       <div className="absolute inset-0 bg-black/40" />
