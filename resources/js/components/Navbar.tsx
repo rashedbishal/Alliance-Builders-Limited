@@ -228,58 +228,16 @@ const Navbar = () => {
                     {/* ─── DESKTOP ─── */}
                     <div className="relative mx-auto max-w-7xl">
                         <style>{`
-                            @keyframes shimmer {
-                                0% {
-                                    background-position: -1000px 0;
-                                }
-                                100% {
-                                    background-position: 1000px 0;
-                                }
-                            }
-
-                            @keyframes glow {
-                                0%, 100% {
-                                    box-shadow: 0 0 20px rgba(6, 182, 212, 0.6),
-                                                0 0 40px rgba(59, 130, 246, 0.4),
-                                                inset 0 0 20px rgba(255, 255, 255, 0.3);
-                                }
-                                50% {
-                                    box-shadow: 0 0 30px rgba(6, 182, 212, 0.8),
-                                                0 0 60px rgba(59, 130, 246, 0.6),
-                                                inset 0 0 40px rgba(255, 255, 255, 0.5);
-                                }
-                            }
-
-                            .logo-container {
-                                animation: glow 3s ease-in-out infinite;
-                            }
-
-                            .logo-shimmer {
-                                background: linear-gradient(
-                                    90deg,
-                                    rgba(6, 182, 212, 0.8),
-                                    rgba(59, 130, 246, 0.8),
-                                    rgba(139, 92, 246, 0.8),
-                                    rgba(59, 130, 246, 0.8),
-                                    rgba(6, 182, 212, 0.8)
-                                );
-                                background-size: 1000px 100%;
-                                animation: shimmer 3s linear infinite;
-                            }
                         `}</style>
                         {/* Logo - always visible, left aligned */}
-                        <div className="logo-container absolute top-4 left-4 z-30 -translate-y-1/2 rounded-3xl border-2 border-white/50 p-1.5 lg:left-6 xl:top-8 xl:left-8 bg-white backdrop-blur-lg">
-                            <div className="relative">
-                                <Link href={home.url()}>
-                                    <img
-                                        className="h-14 w-auto object-contain drop-shadow-lg md:h-16 lg:h-18 relative z-10"
-                                        src={logo}
-                                        alt="Alliance Logo"
-                                    />
-                                </Link>
-                                {/* Subtle background glow layer */}
-                                <div className="absolute inset-0 -z-10 rounded-lg blur-xl bg-gradient-to-r from-white/30 to-white/30" />
-                            </div>
+                        <div className="absolute top-4 left-4 z-30 -translate-y-1/2 lg:left-6 xl:top-8 xl:left-8">
+                            <Link href={home.url()}>
+                                <img
+                                    className="h-14 w-auto object-contain md:h-16 lg:h-18"
+                                    src={logo}
+                                    alt="Alliance Logo"
+                                />
+                            </Link>
                         </div>
 
                         {/* Central nav bar — only nav items — wider on large screens */}
