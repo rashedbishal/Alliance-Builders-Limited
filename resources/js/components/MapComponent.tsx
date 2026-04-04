@@ -12,6 +12,7 @@ interface MapComponentProps {
 const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Project Location' }: MapComponentProps) => {
     const [isLoaded, setIsLoaded] = useState(false);
     const [showOverlay, setShowOverlay] = useState(true);
+    const [hasError, setHasError] = useState(false);
 
     const handleMapClick = () => {
         setShowOverlay(false);
@@ -19,6 +20,11 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
 
     const handleOpenInMaps = () => {
         window.open(src, '_blank', 'noopener,noreferrer');
+    };
+
+    const handleIframeError = () => {
+        setHasError(true);
+        setIsLoaded(true);
     };
 
     return (
@@ -37,13 +43,14 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
                 className="absolute inset-0 h-full w-full border-0 transition-opacity duration-500"
                 style={{
                     filter: 'brightness(0.85) contrast(1.15) saturate(1.35)',
-                    opacity: isLoaded ? 1 : 0,
+                    opacity: isLoaded && !hasError ? 1 : 0,
                 }}
                 allowFullScreen
                 loading="lazy"
                 referrerPolicy="no-referrer-when-downgrade"
                 title="Location Map"
                 onLoad={() => setIsLoaded(true)}
+                onError={handleIframeError}
             />
 
             {/* Beautiful gradient overlays */}
@@ -59,7 +66,7 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
 
             {/* Click overlay - shows on hover/first view */}
             <AnimatePresence>
-                {showOverlay && (
+                {showOverlay && !hasError && (
                     <motion.div
                         initial={{ opacity: 0 }}
                         animate={{ opacity: 1 }}
@@ -76,6 +83,24 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
                     </motion.div>
                 )}
             </AnimatePresence>
+
+            {/* Error state */}
+            {hasError && (
+                <div className="absolute inset-0 flex flex-col items-center justify-center gap-4 bg-gradient-to-b from-slate-950/50 to-slate-950/80 backdrop-blur-sm">
+                    <div className="text-center">
+                        <MapPin className="mx-auto mb-3 h-8 w-8 text-primary/50" />
+                        <h3 className="text-sm font-medium text-white/80">Map unavailable</h3>
+                        <p className="mt-1 text-xs text-white/50">Open in Google Maps for full details</p>
+                    </div>
+                    <button
+                        onClick={handleOpenInMaps}
+                        className="mt-2 rounded-lg bg-primary/80 px-4 py-2 text-xs font-medium text-primary-foreground transition-colors hover:bg-primary"
+                    >
+                        <ExternalLink className="mr-2 inline h-3 w-3" />
+                        Open in Google Maps
+                    </button>
+                </div>
+            )}
 
             {/* Location info card - positioned bottom-left */}
             {/* <div className="absolute bottom-6 left-6 z-10 max-w-xs">

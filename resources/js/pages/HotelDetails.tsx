@@ -455,14 +455,20 @@ const HotelDetails = () => {
                                                 </p>
                                             </div>
                                         </div>
-                                        <div className="overflow-hidden rounded-2xl border border-cyan-200/15">
-                                            <MapComponent
-                                                width="100%"
-                                                src={
-                                                    projectDetails.google_map_url ??
-                                                    ''
-                                                }
-                                            />
+                                        <div className="group relative">
+                                            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 via-sky-500/10 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                            <div className="relative h-[65vh] w-full overflow-hidden rounded-2xl border border-cyan-200/15 bg-slate-950/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30">
+                                                <div className="h-full w-full transition-all duration-1000 ease-in-out group-hover:brightness-110">
+                                                    <MapComponent
+                                                        width="100%"
+                                                        height="100%"
+                                                        src={
+                                                            projectDetails.google_map_url ??
+                                                            ''
+                                                        }
+                                                    />
+                                                </div>
+                                            </div>
                                         </div>
                                     </CardContent>
                                 </Card>
