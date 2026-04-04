@@ -36,7 +36,7 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
                 src={src}
                 className="absolute inset-0 h-full w-full border-0 transition-opacity duration-500"
                 style={{
-                    filter: 'grayscale(100%) invert(92%) contrast(83%)',
+                    filter: 'brightness(0.85) contrast(1.15) saturate(1.35)',
                     opacity: isLoaded ? 1 : 0,
                 }}
                 allowFullScreen
