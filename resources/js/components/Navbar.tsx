@@ -1,23 +1,23 @@
 import { Link, usePage } from '@inertiajs/react';
-import {ChevronDown, Menu, X, Phone, Heart} from 'lucide-react';
-import React, {useState, useRef, useEffect} from 'react';
+import { ChevronDown, Menu, X, Phone, Heart } from 'lucide-react';
+import React, { useState, useRef, useEffect } from 'react';
 import logo from '@/assets/images/logo/alliance logo.webp'
-import {Button} from '@/components/ui/button';
+import { Button } from '@/components/ui/button';
 import {
     DropdownMenu,
     DropdownMenuContent,
     DropdownMenuItem,
     DropdownMenuTrigger,
 } from '@/components/ui/dropdown-menu';
-import {useFavorites} from '@/hooks/useFavorites';
-import {about, directors, home, services, managingDirector, contact, media, gallery, properties} from "@/routes";
+import { useFavorites } from '@/hooks/useFavorites';
+import { about, directors, home, services, managingDirector, contact, media, gallery, properties } from "@/routes";
 
 const Navbar = () => {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
     const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
     const [isClosing, setIsClosing] = useState(false);
     const [openMobileSubmenu, setOpenMobileSubmenu] = useState<string | null>(null);
-    const [rotation, setRotation] = useState({x: 0, y: 0});
+    const [rotation, setRotation] = useState({ x: 0, y: 0 });
     const navRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
     const { favorites } = useFavorites();
@@ -45,7 +45,7 @@ const Navbar = () => {
         };
 
         const handleMouseLeave = () => {
-            setRotation({x: 0, y: 0});
+            setRotation({ x: 0, y: 0 });
         };
 
         const wrapper = navRef.current?.parentElement;
@@ -128,11 +128,11 @@ const Navbar = () => {
     };
 
     const projectItems = [
-        {label: 'All Properties', href: '/properties', icon: <svg className="h-full w-full" id="Layer_1" enable-background="new 0 0 4000 4000" viewBox="0 0 4000 4000" xmlns="http://www.w3.org/2000/svg"><g><g><g><path d="m1888 2448v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60"/></g><g><path d="m1888 1216v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60"/></g></g><g><g><path d="m3120 2448v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60"/></g><g><path d="m3120 1216v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60"/></g></g></g></svg>},
-        {label: 'Upcoming', href: '/upcoming', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 9l4-4 4 4m0 6v4m-4-4v4m-4-4v4"/><path d="M3 20h18"/></svg>},
-        {label: 'Ongoing', href: '/ongoing', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>},
-        {label: 'Handover', href: '/handover', icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-4" fill="currentColor" aria-hidden="true"><path d="M497.36 69.995c-7.532-7.545-19.753-7.558-27.285-.032L238.582 300.845l-83.522-90.713c-7.217-7.834-19.419-8.342-27.266-1.126-7.841 7.217-8.343 19.425-1.126 27.266l97.126 105.481c3.557 3.866 8.535 6.111 13.784 6.22.141.006.277.006.412.006 5.101 0 10.008-2.026 13.623-5.628L497.322 97.286c7.551-7.525 7.564-19.746.038-27.291z" opacity="0.95"/><path d="M492.703 236.703c-10.658 0-19.296 8.638-19.296 19.297 0 119.883-97.524 217.407-217.407 217.407-119.876 0-217.407-97.524-217.407-217.407 0-119.876 97.531-217.407 217.407-217.407 10.658 0 19.297-8.638 19.297-19.296C275.297 8.638 266.658 0 256 0 114.84 0 0 114.84 0 256c0 141.154 114.84 256 256 256 141.154 0 256-114.846 256-256 0-10.658-8.638-19.297-19.297-19.297z" opacity="0.95"/> </svg>},
-        {label: 'Favorites', href: '/properties?tab=favorites', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" opacity="0.95"/></svg>},
+        { label: 'All Properties', href: '/properties', icon: <svg className="h-full w-full" id="Layer_1" enable-background="new 0 0 4000 4000" viewBox="0 0 4000 4000" xmlns="http://www.w3.org/2000/svg"><g><g><g><path d="m1888 2448v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g><g><path d="m1888 1216v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g></g><g><g><path d="m3120 2448v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g><g><path d="m3120 1216v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g></g></g></svg> },
+        { label: 'Upcoming', href: '/upcoming', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><path d="M8 9l4-4 4 4m0 6v4m-4-4v4m-4-4v4" /><path d="M3 20h18" /></svg> },
+        { label: 'Ongoing', href: '/ongoing', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"><circle cx="12" cy="12" r="10" /><polyline points="12 6 12 12 16 14" /></svg> },
+        { label: 'Handover', href: '/handover', icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" className="h-4" fill="currentColor" aria-hidden="true"><path d="M497.36 69.995c-7.532-7.545-19.753-7.558-27.285-.032L238.582 300.845l-83.522-90.713c-7.217-7.834-19.419-8.342-27.266-1.126-7.841 7.217-8.343 19.425-1.126 27.266l97.126 105.481c3.557 3.866 8.535 6.111 13.784 6.22.141.006.277.006.412.006 5.101 0 10.008-2.026 13.623-5.628L497.322 97.286c7.551-7.525 7.564-19.746.038-27.291z" opacity="0.95" /><path d="M492.703 236.703c-10.658 0-19.296 8.638-19.296 19.297 0 119.883-97.524 217.407-217.407 217.407-119.876 0-217.407-97.524-217.407-217.407 0-119.876 97.531-217.407 217.407-217.407 10.658 0 19.297-8.638 19.297-19.296C275.297 8.638 266.658 0 256 0 114.84 0 0 114.84 0 256c0 141.154 114.84 256 256 256 141.154 0 256-114.846 256-256 0-10.658-8.638-19.297-19.297-19.297z" opacity="0.95" /> </svg> },
+        { label: 'Favorites', href: '/properties?tab=favorites', icon: <svg className="h-full w-full" viewBox="0 0 24 24" fill="currentColor"><path d="M12 21.35l-1.45-1.32C5.4 15.36 2 12.28 2 8.5 2 5.42 4.42 3 7.5 3c1.74 0 3.41.81 4.5 2.09C13.09 3.81 14.76 3 16.5 3 19.58 3 22 5.42 22 8.5c0 3.78-3.4 6.86-8.55 11.54L12 21.35z" opacity="0.95" /></svg> },
     ];
 
     const hotelsResortsItems: MobileSubmenuItem[] = (navHotels ?? []).map(
@@ -143,7 +143,7 @@ const Navbar = () => {
     );
 
     const contactItems = [
-        {label: 'Customer Inquiry', href: contact.url(), icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" className="h-4" fill="currentColor" aria-hidden="true"><path d="m32.991 24.801h46.908l-25.624 20.122c-.543.426-1.189.634-1.775.691-.59-.058-1.238-.266-1.787-.691l-18.312-14.385c-.194-.156-.413-.275-.654-.349.862-1.216 1.354-2.687 1.328-4.272-.005-.363-.037-.737-.084-1.116zm-11.929-12.941c.059.01.156.047.367.145.417.198 1.08.708 1.729 1.419 1.307 1.424 2.613 3.581 3.291 5.005.021.042.043.088.063.135 1.924 3.301 2.754 5.826 2.779 7.41.027 1.591-.4 2.276-1.749 3.051l-3.48 2.006c-2.267 1.305-3.338 3.644-3.604 5.826-.267 2.183.126 4.304 1.097 5.981l8.59 14.805c.973 1.676 2.634 3.078 4.665 3.939 2.033.863 4.604 1.107 6.871-.195l3.48-2.002c1.348-.773 2.163-.789 3.532.025 1.373.816 3.156 2.787 5.072 6.09.027.049.053.09.084.137.898 1.295 2.121 3.492 2.711 5.332.293.914.408 1.74.371 2.197-.041.459-.051.412-.172.484l-2.648 1.518c-6.652 2.885-12.749 2.234-18.198-.592-5.459-2.838-10.204-7.963-13.512-13.98-.011-.012-.016-.027-.025-.035l-7.246-12.488c-.012-.012-.017-.023-.027-.039-3.585-5.86-5.674-12.513-5.412-18.634.262-6.112 2.742-11.684 8.584-15.971l2.649-1.513c.061-.035.081-.062.138-.056zm.027-3.721c-.701-.011-1.416.136-2.059.509l-2.801 1.611c-.063.036-.121.073-.178.109-6.739 4.932-9.842 11.798-10.145 18.875-.303 7.074 2.059 14.375 5.961 20.758l7.222 12.445-.017-.037c3.605 6.551 8.771 12.234 15.084 15.508 6.316 3.279 13.84 4.039 21.504.697.063-.027.127-.057.184-.092l2.805-1.611c1.297-.738 1.949-2.174 2.055-3.428.109-1.25-.146-2.467-.533-3.666-.758-2.371-2.08-4.674-3.172-6.254-2.063-3.549-4.055-6.012-6.357-7.389-2.32-1.383-5.105-1.363-7.377-.057l-3.48 2.006c-1.028.592-2.23.523-3.495-.012-1.259-.535-2.425-1.605-2.858-2.355l-8.59-14.804c-.434-.754-.789-2.292-.621-3.648.162-1.352.711-2.411 1.74-3.004l3.381-1.944c.088.453.344.864.715 1.14l18.313 14.388c1.191.936 2.602 1.457 4.023 1.539.072.004.146.004.219 0 1.422-.082 2.826-.604 4.018-1.539l25.222-19.814v32.734c0 .498-.568 1.154-1.682 1.154h-17.461c-1.051-.006-1.902.842-1.902 1.887 0 1.043.852 1.891 1.902 1.885h17.461c2.854 0 5.477-2.063 5.477-4.926v-34.849c0-2.865-2.623-4.927-5.477-4.927h-48.218c-.534-1.335-1.239-2.75-2.127-4.288-.831-1.73-2.179-4.017-3.866-5.856-.852-.932-1.771-1.758-2.92-2.292v.005c-.571-.27-1.25-.443-1.95-.458z"/></svg>},
+        { label: 'Customer Inquiry', href: contact.url(), icon: <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 90 90" className="h-4" fill="currentColor" aria-hidden="true"><path d="m32.991 24.801h46.908l-25.624 20.122c-.543.426-1.189.634-1.775.691-.59-.058-1.238-.266-1.787-.691l-18.312-14.385c-.194-.156-.413-.275-.654-.349.862-1.216 1.354-2.687 1.328-4.272-.005-.363-.037-.737-.084-1.116zm-11.929-12.941c.059.01.156.047.367.145.417.198 1.08.708 1.729 1.419 1.307 1.424 2.613 3.581 3.291 5.005.021.042.043.088.063.135 1.924 3.301 2.754 5.826 2.779 7.41.027 1.591-.4 2.276-1.749 3.051l-3.48 2.006c-2.267 1.305-3.338 3.644-3.604 5.826-.267 2.183.126 4.304 1.097 5.981l8.59 14.805c.973 1.676 2.634 3.078 4.665 3.939 2.033.863 4.604 1.107 6.871-.195l3.48-2.002c1.348-.773 2.163-.789 3.532.025 1.373.816 3.156 2.787 5.072 6.09.027.049.053.09.084.137.898 1.295 2.121 3.492 2.711 5.332.293.914.408 1.74.371 2.197-.041.459-.051.412-.172.484l-2.648 1.518c-6.652 2.885-12.749 2.234-18.198-.592-5.459-2.838-10.204-7.963-13.512-13.98-.011-.012-.016-.027-.025-.035l-7.246-12.488c-.012-.012-.017-.023-.027-.039-3.585-5.86-5.674-12.513-5.412-18.634.262-6.112 2.742-11.684 8.584-15.971l2.649-1.513c.061-.035.081-.062.138-.056zm.027-3.721c-.701-.011-1.416.136-2.059.509l-2.801 1.611c-.063.036-.121.073-.178.109-6.739 4.932-9.842 11.798-10.145 18.875-.303 7.074 2.059 14.375 5.961 20.758l7.222 12.445-.017-.037c3.605 6.551 8.771 12.234 15.084 15.508 6.316 3.279 13.84 4.039 21.504.697.063-.027.127-.057.184-.092l2.805-1.611c1.297-.738 1.949-2.174 2.055-3.428.109-1.25-.146-2.467-.533-3.666-.758-2.371-2.08-4.674-3.172-6.254-2.063-3.549-4.055-6.012-6.357-7.389-2.32-1.383-5.105-1.363-7.377-.057l-3.48 2.006c-1.028.592-2.23.523-3.495-.012-1.259-.535-2.425-1.605-2.858-2.355l-8.59-14.804c-.434-.754-.789-2.292-.621-3.648.162-1.352.711-2.411 1.74-3.004l3.381-1.944c.088.453.344.864.715 1.14l18.313 14.388c1.191.936 2.602 1.457 4.023 1.539.072.004.146.004.219 0 1.422-.082 2.826-.604 4.018-1.539l25.222-19.814v32.734c0 .498-.568 1.154-1.682 1.154h-17.461c-1.051-.006-1.902.842-1.902 1.887 0 1.043.852 1.891 1.902 1.885h17.461c2.854 0 5.477-2.063 5.477-4.926v-34.849c0-2.865-2.623-4.927-5.477-4.927h-48.218c-.534-1.335-1.239-2.75-2.127-4.288-.831-1.73-2.179-4.017-3.866-5.856-.852-.932-1.771-1.758-2.92-2.292v.005c-.571-.27-1.25-.443-1.95-.458z" /></svg> },
     ];
 
     // Mobile submenu component
@@ -153,7 +153,7 @@ const Navbar = () => {
         icon?: React.ReactNode;
     };
 
-    const MobileSubmenu = ({title, icon, items, delay}: {
+    const MobileSubmenu = ({ title, icon, items, delay }: {
         title: string;
         icon: React.ReactNode;
         items: MobileSubmenuItem[];
@@ -319,12 +319,11 @@ const Navbar = () => {
                                                         </svg>
                                                         Projects
                                                         <ChevronDown
-                                                            className={`h-4 transition-transform duration-300 ${
-                                                                openMenu ===
-                                                                'projects'
+                                                            className={`h-4 transition-transform duration-300 ${openMenu ===
+                                                                    'projects'
                                                                     ? 'rotate-180'
                                                                     : 'rotate-0'
-                                                            }`}
+                                                                }`}
                                                         />
                                                     </span>
                                                 </Button>
@@ -343,7 +342,7 @@ const Navbar = () => {
                                                             preserveScroll
                                                             replace={true} // replace history entry (cleaner back button)
                                                             className="flex w-full items-center justify-between gap-2"
-                                                            // preserveState={item.label !== 'All Projects'} // optional: preserve filters except maybe "All"
+                                                        // preserveState={item.label !== 'All Projects'} // optional: preserve filters except maybe "All"
                                                         >
                                                             <span className="flex items-center gap-2">
                                                                 {item.icon && (
@@ -358,10 +357,10 @@ const Navbar = () => {
                                                             {item.label ===
                                                                 'Favorites' &&
                                                                 favorites.length >
-                                                                    0 && (
+                                                                0 && (
                                                                     <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
                                                                         {favorites.length >
-                                                                        9
+                                                                            9
                                                                             ? '9+'
                                                                             : favorites.length}
                                                                     </span>
@@ -416,12 +415,11 @@ const Navbar = () => {
                                                         </svg>
                                                         Media & Gallery
                                                         <ChevronDown
-                                                            className={`h-4 transition-transform duration-300 ${
-                                                                openMenu ===
-                                                                'mediaGallery'
+                                                            className={`h-4 transition-transform duration-300 ${openMenu ===
+                                                                    'mediaGallery'
                                                                     ? 'rotate-180'
                                                                     : 'rotate-0'
-                                                            }`}
+                                                                }`}
                                                         />
                                                     </span>
                                                 </Button>
@@ -487,12 +485,11 @@ const Navbar = () => {
                                                         </svg>
                                                         Hotels &amp; Resorts
                                                         <ChevronDown
-                                                            className={`h-4 transition-transform duration-300 ${
-                                                                openMenu ===
-                                                                'hotelsResorts'
+                                                            className={`h-4 transition-transform duration-300 ${openMenu ===
+                                                                    'hotelsResorts'
                                                                     ? 'rotate-180'
                                                                     : 'rotate-0'
-                                                            }`}
+                                                                }`}
                                                         />
                                                     </span>
                                                 </Button>
@@ -562,12 +559,11 @@ const Navbar = () => {
                                                         </svg>
                                                         Contact Us
                                                         <ChevronDown
-                                                            className={`h-4 w-4 transition-transform duration-300 ${
-                                                                openMenu ===
-                                                                'contact'
+                                                            className={`h-4 w-4 transition-transform duration-300 ${openMenu ===
+                                                                    'contact'
                                                                     ? 'rotate-180'
                                                                     : 'rotate-0'
-                                                            }`}
+                                                                }`}
                                                         />
                                                     </span>
                                                 </Button>
