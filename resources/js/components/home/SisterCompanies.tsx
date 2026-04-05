@@ -115,8 +115,8 @@ const SisterCompanies = () => {
               <CardContent className="p-8 relative z-10">
                 {/* Logo and Header */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className={`p-4 rounded-2xl ${company.color} shadow-elegant group-hover:scale-110 transition-transform duration-300`}>
-                    <img src={company.logo} className="h-8 w-8 text-white" />
+                  <div className={`p-2 rounded-2xl ${company.color} shadow-elegant group-hover:scale-110 transition-transform duration-300`}>
+                    <img src={company.logo} className="h-16 w-16 text-white" />
                   </div>
                   <Button
                     size="sm"
