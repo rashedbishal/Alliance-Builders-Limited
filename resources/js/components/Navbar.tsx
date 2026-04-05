@@ -231,12 +231,13 @@ const Navbar = () => {
                         `}</style>
                         {/* Logo - always visible, left aligned */}
                         <div className="absolute top-4 left-4 z-30 -translate-y-1/2 lg:left-6 xl:top-8 xl:left-8">
-                            <Link href={home.url()}>
+                            <Link href={home.url()} className="logo-sweep-container relative block overflow-hidden rounded-lg">
                                 <img
-                                    className="h-14 w-auto object-contain md:h-16 lg:h-18"
+                                    className="h-14 w-auto object-contain md:h-16 lg:h-18 relative z-10"
                                     src={logo}
                                     alt="Alliance Logo"
                                 />
+                                <div className="logo-sweep"></div>
                             </Link>
                         </div>
 
@@ -1108,6 +1109,47 @@ const Navbar = () => {
             transform-style: preserve-3d;
         }
 
+        /* ─── Logo Light Sweep Effect ─── */
+        .logo-sweep-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .logo-sweep {
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 50%;
+            height: 100%;
+            background: linear-gradient(
+                90deg,
+                transparent 0%,
+                rgba(255, 255, 255, 0) 0%,
+                rgba(255, 255, 255, 0.6) 50%,
+                rgba(255, 255, 255, 0) 100%
+            );
+            transform: skewX(-25deg);
+            animation: light-sweep 4s ease-in-out infinite;
+            pointer-events: none;
+            z-index: 20;
+        }
+
+        @keyframes light-sweep {
+            0% {
+                left: -100%;
+            }
+            20% {
+                left: 150%;
+            }
+            100% {
+                left: 150%;
+            }
+        }
+
+        /* Pause animation when not hovering for a subtler effect */
+        .logo-sweep-container:hover .logo-sweep {
+            animation-duration: 2s;
+        }
 
       `}</style>
             </div>
