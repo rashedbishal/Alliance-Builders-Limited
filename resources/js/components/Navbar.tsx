@@ -215,298 +215,406 @@ const Navbar = () => {
             />
 
             <div
-                className="fixed top-0 right-0 left-0 z-50 px-4 py-4 transition-transform duration-300 ease-in-out"
+                className="fixed top-0 right-0 left-0 z-50 px-6 py-3 transition-transform duration-300 ease-in-out"
                 style={{
                     perspective: '1200px',
                     transform: isVisible
                         ? 'translateY(0)'
                         : 'translateY(-120%)',
+                    background: 'none',
                 }}
             >
                 {/* Add top padding wrapper – especially helpful for iOS notch */}
                 <div className="pt-3 pb-4 xl:pt-0 xl:pb-0">
                     {/* ─── DESKTOP ─── */}
-                    <div className="relative mx-auto max-w-7xl">
-                        <style>{`
-                        `}</style>
-                        {/* Logo - always visible, left aligned */}
-                        <div className="absolute top-4 left-4 z-30 -translate-y-1/2 lg:left-6 xl:top-8 xl:left-8">
-                            <Link href={home.url()} className="logo-sweep-container relative block overflow-hidden rounded-lg">
-                                <img
-                                    className="h-14 w-auto object-contain md:h-16 lg:h-18 relative z-10"
-                                    src={logo}
-                                    alt="Alliance Logo"
-                                />
-                                <div className="logo-sweep"></div>
-                            </Link>
-                        </div>
+                    <div className="relative mx-auto max-w-[1600px]">
+                        {/* 3-column flex row: logo | nav | CTA */}
+                        <div className="hidden xl:flex xl:items-center xl:justify-between xl:gap-4">
+                            {/* LEFT: Logo */}
+                            <div className="flex-shrink-0 pl-2">
+                                <Link
+                                    href={home.url()}
+                                    className="logo-sweep-container relative block overflow-hidden rounded-lg"
+                                >
+                                    <img
+                                        className="relative z-10 h-14 w-auto object-contain lg:h-16"
+                                        src={logo}
+                                        alt="Alliance Logo"
+                                    />
+                                    <div className="logo-sweep"></div>
+                                </Link>
+                            </div>
 
-                        {/* Central nav bar — only nav items — wider on large screens */}
-                        <div className="hidden xl:flex xl:justify-center">
-                            <nav
-                                ref={navRef}
-                                className={`navbar-container shadow-[0_8px_32px_rgba(31,38,135,0.25), 0_4px_12px_rgba(0,0,0,0.08), 0_2px_4px_rgba(0,0,0,0.05), inset_0_1px_0_rgba(255,255,255,0.9), inset_0_-1px_0_rgba(255,255,255,0.4)] relative flex h-12 items-center justify-center gap-2 overflow-hidden rounded-2xl border border-white/70 border-b-slate-300/50 bg-white/92 backdrop-blur-[50px] backdrop-saturate-[2] transition-all duration-400 before:pointer-events-none before:absolute before:inset-0 before:z-[-1] before:bg-gradient-to-b before:from-white/60 before:via-white/20 before:to-transparent before:content-[''] after:pointer-events-none after:absolute after:left-0 after:right-0 after:top-0 after:h-[1px] after:bg-gradient-to-r after:from-transparent after:via-white/95 after:to-transparent after:content-['']`}
-                                style={{
-                                    transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
-                                    // Remove conflicting background from style — keep it in className
-                                }}
-                            >
-                                {/* Desktop Navigation */}
-                                <div className="hidden items-center gap-1 lg:flex">
-                                    {/* About Us */}
-                                    <Link
-                                        href={about.url()}
-                                        className="nav-link group"
-                                    >
-                                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                                            <svg
-                                                className="h-3"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                                viewBox="0 0 330 330"
-                                            >
-                                                <path d="M165 0C74.019 0 0 74.02 0 165.001S74.019 330 165 330s165-74.018 165-164.999S255.981 0 165 0m0 300c-74.44 0-135-60.56-135-134.999S90.56 30 165 30s135 60.562 135 135.001S239.439 300 165 300" />
-                                                <path d="M164.998 70c-11.026 0-19.996 8.976-19.996 20.009 0 11.023 8.97 19.991 19.996 19.991s19.996-8.968 19.996-19.991c0-11.033-8.97-20.009-19.996-20.009m.002 70c-8.284 0-15 6.716-15 15v90c0 8.284 6.716 15 15 15s15-6.716 15-15v-90c0-8.284-6.716-15-15-15" />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                                <g />
-                                            </svg>
-                                            About Us
-                                        </span>
-                                    </Link>
+                            {/* CENTER: Nav items — takes all remaining space, centered */}
+                            <div className="flex flex-1 justify-center">
+                                <nav
+                                    ref={navRef}
+                                    className="navbar-container relative flex items-center justify-center transition-all duration-300"
+                                    style={{
+                                        transform: `perspective(1000px) rotateX(${rotation.x}deg) rotateY(${rotation.y}deg)`,
+                                        background: 'none',
+                                        border: 'none',
+                                        boxShadow: 'none',
+                                    }}
+                                >
+                                    <div className="flex items-center gap-1">
+                                        {/* About Us */}
+                                        <Link
+                                            href={about.url()}
+                                            className="nav-link group"
+                                        >
+                                            <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                                <svg
+                                                    className="h-3"
+                                                    xmlns="http://www.w3.org/2000/svg"
+                                                    viewBox="0 0 330 330"
+                                                >
+                                                    <path d="M165 0C74.019 0 0 74.02 0 165.001S74.019 330 165 330s165-74.018 165-164.999S255.981 0 165 0m0 300c-74.44 0-135-60.56-135-134.999S90.56 30 165 30s135 60.562 135 135.001S239.439 300 165 300" />
+                                                    <path d="M164.998 70c-11.026 0-19.996 8.976-19.996 20.009 0 11.023 8.97 19.991 19.996 19.991s19.996-8.968 19.996-19.991c0-11.033-8.97-20.009-19.996-20.009m.002 70c-8.284 0-15 6.716-15 15v90c0 8.284 6.716 15 15 15s15-6.716 15-15v-90c0-8.284-6.716-15-15-15" />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                    <g />
+                                                </svg>
+                                                About Us
+                                            </span>
+                                        </Link>
 
-                                    {/* Projects Dropdown */}
-                                    <div
-                                        className="relative"
-                                        onMouseEnter={() =>
-                                            setOpenMenu('projects')
-                                        }
-                                        onMouseLeave={() => setOpenMenu(null)}
-                                    >
-                                        <DropdownMenu
-                                            open={openMenu === 'projects'}
-                                            onOpenChange={(open) =>
-                                                handleDropdownChange(
-                                                    'projects',
-                                                    open,
-                                                )
+                                        {/* Projects Dropdown */}
+                                        <div
+                                            className="relative"
+                                            onMouseEnter={() =>
+                                                setOpenMenu('projects')
+                                            }
+                                            onMouseLeave={() =>
+                                                setOpenMenu(null)
                                             }
                                         >
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    className="nav-link group"
-                                                >
-                                                    <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                                                        <svg
-                                                            className="h-3"
-                                                            id="Layer_1"
-                                                            viewBox="0 0 512 512"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            data-name="Layer 1"
-                                                        >
-                                                            <path d="m293.97 118.205c1.019.707 2.215 1.071 3.423 1.071.705 0 1.415-.125 2.095-.378l24.296-9.058c2.348-.875 3.904-3.117 3.904-5.622v-42.831c0-2.018-1.014-3.899-2.698-5.01-1.686-1.11-3.816-1.301-5.667-.504l-24.303 10.427c-2.206.946-3.635 3.115-3.635 5.515l.007 41.463c0 1.966.964 3.807 2.578 4.928zm21.718-47.715v29.562l-12.297 4.585-.005-28.869 12.302-5.277zm9.495 55.124c-1.57-1.125-3.587-1.429-5.422-.805l-24.296 8.239c-2.436.825-4.073 3.11-4.073 5.682v44.271c0 1.878.879 3.647 2.375 4.781 1.056.8 2.331 1.219 3.625 1.219.542 0 1.087-.073 1.62-.223l24.296-6.815c2.59-.727 4.38-3.088 4.38-5.777v-45.695c0-1.935-.933-3.75-2.505-4.877zm-9.495 46.023-12.296 3.449v-32.056l12.296-4.17v32.776zm9.905 98.271c-1.329-1.141-3.087-1.638-4.821-1.375l-24.296 3.753c-2.925.452-5.084 2.97-5.084 5.93v44.271c0 1.69.714 3.304 1.965 4.44 1.109 1.008 2.55 1.56 4.035 1.56.19 0 .382-.009.572-.027l24.296-2.329c3.078-.295 5.428-2.881 5.428-5.973v-45.695c0-1.751-.766-3.415-2.095-4.555zm-9.905 44.798-12.296 1.179v-32.524l12.296-1.899v33.245zm9.699-116.935c-1.452-1.138-3.345-1.544-5.137-1.102l-24.296 5.995c-2.68.661-4.562 3.065-4.562 5.825v44.236c0 1.785.795 3.479 2.17 4.618 1.085.9 2.442 1.382 3.83 1.382.369 0 .741-.034 1.109-.104l24.296-4.572c2.836-.534 4.891-3.011 4.891-5.896v-45.659c0-1.845-.849-3.586-2.301-4.724zm-9.699 45.406-12.296 2.314v-32.303l12.296-3.034v33.022zm-65.527 22.369c1.086.901 2.443 1.383 3.831 1.383.368 0 .739-.034 1.107-.104l21.568-4.052c2.837-.532 4.893-3.01 4.893-5.896v-43.026c0-1.844-.848-3.586-2.3-4.723-1.451-1.138-3.346-1.545-5.136-1.103l-21.568 5.316c-2.681.66-4.564 3.064-4.564 5.825v41.762c0 1.785.795 3.478 2.169 4.617zm9.831-41.679 9.568-2.358v30.391l-9.568 1.797v-29.829zm-6 108.749c.189 0 .381-.009.572-.027l21.562-2.064c3.078-.295 5.428-2.881 5.428-5.973v-42.923c0-1.751-.765-3.415-2.094-4.555-1.329-1.139-3.087-1.641-4.82-1.375l-21.562 3.325c-2.927.451-5.086 2.969-5.086 5.93v41.662c0 1.69.714 3.303 1.965 4.44 1.109 1.008 2.55 1.56 4.035 1.56zm6-42.517 9.562-1.475v30.474l-9.562.916zm-9.626-90.11c1.056.801 2.331 1.22 3.626 1.22.541 0 1.086-.073 1.618-.223l21.568-6.042c2.591-.726 4.382-3.087 4.382-5.777v-43.025c0-1.934-.932-3.749-2.504-4.876-1.57-1.126-3.588-1.429-5.421-.807l-21.568 7.305c-2.436.825-4.075 3.11-4.075 5.683v41.763c0 1.877.879 3.646 2.374 4.78zm9.626-42.24 9.568-3.24v30.108l-9.568 2.68zm-9.427-23.402c1.02.71 2.218 1.075 3.428 1.075.702 0 1.408-.123 2.085-.374l21.568-7.998c2.353-.873 3.914-3.116 3.914-5.625l.007-40.265c0-2.017-1.013-3.899-2.697-5.01-1.684-1.11-3.812-1.3-5.667-.506l-21.575 9.248c-2.205.945-3.636 3.114-3.636 5.515v39.015c0 1.964.961 3.804 2.573 4.925zm9.427-39.983 9.573-4.104-.004 26.989-9.569 3.549v-26.435zm-185.024 143.24c1.026.726 2.239 1.101 3.464 1.101.673 0 1.35-.113 2-.344l17.555-6.208c2.397-.848 4-3.113 4-5.655l.005-32.739c0-2.011-1.006-3.888-2.682-4.999-1.675-1.113-3.796-1.312-5.647-.531l-17.56 7.396c-2.225.937-3.671 3.115-3.671 5.529v31.551c0 1.948.945 3.774 2.536 4.899zm9.464-32.467 5.559-2.342-.003 19.459-5.556 1.964zm26.033 19.88c1.025.724 2.236 1.098 3.459 1.098.677 0 1.357-.114 2.012-.348l20.218-7.196c2.392-.851 3.988-3.114 3.988-5.652v-35.271c0-2.013-1.009-3.891-2.687-5.002-1.68-1.112-3.803-1.307-5.654-.522l-20.218 8.567c-2.219.939-3.659 3.115-3.659 5.524v33.9c0 1.95.948 3.778 2.541 4.902zm9.459-34.829 8.218-3.482v21.979l-8.218 2.926zm18.008 98.968c-1.399-1.14-3.239-1.589-5.003-1.225l-20.211 4.171c-2.787.575-4.787 3.029-4.787 5.876v36.178c0 1.734.75 3.384 2.058 4.523 1.1.958 2.502 1.477 3.942 1.477.272 0 .546-.019.819-.057l20.211-2.785c2.969-.409 5.181-2.946 5.181-5.943v-37.563c0-1.804-.812-3.512-2.21-4.651zm-9.79 36.985-8.211 1.131v-24.406l8.211-1.694v24.97zm-48.896 18.846 17.549-2.403c2.971-.407 5.186-2.945 5.186-5.944v-34.981c0-1.803-.811-3.511-2.208-4.649-1.397-1.142-3.237-1.594-4.999-1.228l-17.549 3.604c-2.79.573-4.793 3.028-4.793 5.877v33.78c0 1.733.75 3.382 2.056 4.521 1.1.959 2.503 1.479 3.944 1.479.271 0 .543-.019.814-.056zm5.186-34.832 5.549-1.14v22.39l-5.549.76zm-9.701-19.538c1.066.837 2.373 1.278 3.701 1.278.479 0 .959-.058 1.433-.174l17.549-4.316c2.683-.659 4.567-3.064 4.567-5.826v-34.981c0-1.91-.91-3.707-2.45-4.837-1.54-1.131-3.527-1.462-5.35-.887l-17.549 5.518c-2.5.786-4.2 3.104-4.2 5.724v33.78c0 1.844.848 3.585 2.299 4.722zm9.701-34.099 5.549-1.745v22.103l-5.549 1.365zm53.256-26.81c-1.543-1.13-3.53-1.458-5.354-.881l-20.211 6.388c-2.495.788-4.191 3.104-4.191 5.721v36.199c0 1.844.848 3.586 2.3 4.723 1.066.836 2.372 1.277 3.7 1.277.479 0 .961-.058 1.436-.174l20.211-4.979c2.681-.661 4.564-3.065 4.564-5.826v-37.607c0-1.912-.911-3.71-2.454-4.84zm-9.546 37.746-8.211 2.023v-24.146l8.211-2.596v24.718zm372.304 202.535h-35.498v-410.226c0-2.402-1.433-4.573-3.642-5.517l-114.071-48.763c-1.506-.645-3.211-.645-4.717 0l-114.072 48.763c-2.209.943-3.642 3.114-3.642 5.517v85.121l-50.608-21.634c-1.506-.645-3.211-.645-4.717 0l-118.785 50.777c-2.209.943-3.642 3.114-3.642 5.517v290.445h-35.498c-3.313 0-6 2.687-6 6v25.011c0 3.313 2.687 6 6 6h488.892c3.313 0 6-2.687 6-6v-25.011c0-3.313-2.687-6-6-6zm-47.498 0h-102.071v-449.899l102.071 43.632zm-114.072-449.899v449.899h-22.729v-95.769l3.167-.301c3.299-.313 5.719-3.242 5.404-6.541-.313-3.299-3.231-5.718-6.541-5.404l-61.812 5.883c-3.299.313-5.719 3.242-5.404 6.541.295 3.105 2.908 5.432 5.966 5.432.189 0 .382-.009.575-.027l2.031-.193v90.381h-22.729v-406.268l102.072-43.632zm-34.729 355.272v94.627h-32.613v-91.523zm-79.343 94.627h-46.967v-332.132l46.967 20.077zm-165.752-286.485 106.785-45.647v332.132h-25.086v-76.769l3.168-.302c3.299-.313 5.719-3.242 5.404-6.541-.313-3.299-3.246-5.727-6.541-5.404l-61.812 5.884c-3.299.313-5.719 3.242-5.404 6.541.295 3.105 2.908 5.432 5.966 5.432.19 0 .382-.009.575-.027l2.031-.193v71.38h-25.086zm69.699 210.859v75.626h-32.613v-72.522zm365.694 100.637h-476.891v-13.011h476.892v13.011zm-98.534-49.997v-369.405c0-3.313 2.687-6 6-6s6 2.687 6 6v369.405c0 3.313-2.687 6-6 6s-6-2.687-6-6zm28.519 0v-357.214c0-3.313 2.687-6 6-6s6 2.687 6 6v357.214c0 3.313-2.687 6-6 6s-6-2.687-6-6zm-57.036 0v-381.595c0-3.313 2.687-6 6-6s6 2.687 6 6v381.595c0 3.313-2.687 6-6 6s-6-2.687-6-6z" />
-                                                        </svg>
-                                                        Projects
-                                                        <ChevronDown
-                                                            className={`h-4 transition-transform duration-300 ${openMenu ===
-                                                                    'projects'
-                                                                    ? 'rotate-180'
-                                                                    : 'rotate-0'
-                                                                }`}
-                                                        />
-                                                    </span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="dropdown-content">
-                                                {projectItems.map((item) => (
-                                                    <DropdownMenuItem
-                                                        key={item.label}
-                                                        className="dropdown-item"
+                                            <DropdownMenu
+                                                open={openMenu === 'projects'}
+                                                onOpenChange={(open) =>
+                                                    handleDropdownChange(
+                                                        'projects',
+                                                        open,
+                                                    )
+                                                }
+                                            >
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="nav-link group"
                                                     >
-                                                        <Link
-                                                            href={item.href}
-                                                            preserveState={
-                                                                false
-                                                            } // ← force no preservation → fresh state
-                                                            preserveScroll
-                                                            replace={true} // replace history entry (cleaner back button)
-                                                            className="flex w-full items-center justify-between gap-2"
-                                                        // preserveState={item.label !== 'All Projects'} // optional: preserve filters except maybe "All"
-                                                        >
-                                                            <span className="flex items-center gap-2">
-                                                                {item.icon && (
-                                                                    <span className="h-5 w-5 flex-shrink-0 text-blue-600 dark:text-blue-400 flex items-center justify-center">
+                                                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                                            <svg
+                                                                className="h-3"
+                                                                id="Layer_1"
+                                                                viewBox="0 0 512 512"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                data-name="Layer 1"
+                                                            >
+                                                                <path d="m293.97 118.205c1.019.707 2.215 1.071 3.423 1.071.705 0 1.415-.125 2.095-.378l24.296-9.058c2.348-.875 3.904-3.117 3.904-5.622v-42.831c0-2.018-1.014-3.899-2.698-5.01-1.686-1.11-3.816-1.301-5.667-.504l-24.303 10.427c-2.206.946-3.635 3.115-3.635 5.515l.007 41.463c0 1.966.964 3.807 2.578 4.928zm21.718-47.715v29.562l-12.297 4.585-.005-28.869 12.302-5.277zm9.495 55.124c-1.57-1.125-3.587-1.429-5.422-.805l-24.296 8.239c-2.436.825-4.073 3.11-4.073 5.682v44.271c0 1.878.879 3.647 2.375 4.781 1.056.8 2.331 1.219 3.625 1.219.542 0 1.087-.073 1.62-.223l24.296-6.815c2.59-.727 4.38-3.088 4.38-5.777v-45.695c0-1.935-.933-3.75-2.505-4.877zm-9.495 46.023-12.296 3.449v-32.056l12.296-4.17v32.776zm9.905 98.271c-1.329-1.141-3.087-1.638-4.821-1.375l-24.296 3.753c-2.925.452-5.084 2.97-5.084 5.93v44.271c0 1.69.714 3.304 1.965 4.44 1.109 1.008 2.55 1.56 4.035 1.56.19 0 .382-.009.572-.027l24.296-2.329c3.078-.295 5.428-2.881 5.428-5.973v-45.695c0-1.751-.766-3.415-2.095-4.555zm-9.905 44.798-12.296 1.179v-32.524l12.296-1.899v33.245zm9.699-116.935c-1.452-1.138-3.345-1.544-5.137-1.102l-24.296 5.995c-2.68.661-4.562 3.065-4.562 5.825v44.236c0 1.785.795 3.479 2.17 4.618 1.085.9 2.442 1.382 3.83 1.382.369 0 .741-.034 1.109-.104l24.296-4.572c2.836-.534 4.891-3.011 4.891-5.896v-45.659c0-1.845-.849-3.586-2.301-4.724zm-9.699 45.406-12.296 2.314v-32.303l12.296-3.034v33.022zm-65.527 22.369c1.086.901 2.443 1.383 3.831 1.383.368 0 .739-.034 1.107-.104l21.568-4.052c2.837-.532 4.893-3.01 4.893-5.896v-43.026c0-1.844-.848-3.586-2.3-4.723-1.451-1.138-3.346-1.545-5.136-1.103l-21.568 5.316c-2.681.66-4.564 3.064-4.564 5.825v41.762c0 1.785.795 3.478 2.169 4.617zm9.831-41.679 9.568-2.358v30.391l-9.568 1.797v-29.829zm-6 108.749c.189 0 .381-.009.572-.027l21.562-2.064c3.078-.295 5.428-2.881 5.428-5.973v-42.923c0-1.751-.765-3.415-2.094-4.555-1.329-1.139-3.087-1.641-4.82-1.375l-21.562 3.325c-2.927.451-5.086 2.969-5.086 5.93v41.662c0 1.69.714 3.303 1.965 4.44 1.109 1.008 2.55 1.56 4.035 1.56zm6-42.517 9.562-1.475v30.474l-9.562.916zm-9.626-90.11c1.056.801 2.331 1.22 3.626 1.22.541 0 1.086-.073 1.618-.223l21.568-6.042c2.591-.726 4.382-3.087 4.382-5.777v-43.025c0-1.934-.932-3.749-2.504-4.876-1.57-1.126-3.588-1.429-5.421-.807l-21.568 7.305c-2.436.825-4.075 3.11-4.075 5.683v41.763c0 1.877.879 3.646 2.374 4.78zm9.626-42.24 9.568-3.24v30.108l-9.568 2.68zm-9.427-23.402c1.02.71 2.218 1.075 3.428 1.075.702 0 1.408-.123 2.085-.374l21.568-7.998c2.353-.873 3.914-3.116 3.914-5.625l.007-40.265c0-2.017-1.013-3.899-2.697-5.01-1.684-1.11-3.812-1.3-5.667-.506l-21.575 9.248c-2.205.945-3.636 3.114-3.636 5.515v39.015c0 1.964.961 3.804 2.573 4.925zm9.427-39.983 9.573-4.104-.004 26.989-9.569 3.549v-26.435zm-185.024 143.24c1.026.726 2.239 1.101 3.464 1.101.673 0 1.35-.113 2-.344l17.555-6.208c2.397-.848 4-3.113 4-5.655l.005-32.739c0-2.011-1.006-3.888-2.682-4.999-1.675-1.113-3.796-1.312-5.647-.531l-17.56 7.396c-2.225.937-3.671 3.115-3.671 5.529v31.551c0 1.948.945 3.774 2.536 4.899zm9.464-32.467 5.559-2.342-.003 19.459-5.556 1.964zm26.033 19.88c1.025.724 2.236 1.098 3.459 1.098.677 0 1.357-.114 2.012-.348l20.218-7.196c2.392-.851 3.988-3.114 3.988-5.652v-35.271c0-2.013-1.009-3.891-2.687-5.002-1.68-1.112-3.803-1.307-5.654-.522l-20.218 8.567c-2.219.939-3.659 3.115-3.659 5.524v33.9c0 1.95.948 3.778 2.541 4.902zm9.459-34.829 8.218-3.482v21.979l-8.218 2.926zm18.008 98.968c-1.399-1.14-3.239-1.589-5.003-1.225l-20.211 4.171c-2.787.575-4.787 3.029-4.787 5.876v36.178c0 1.734.75 3.384 2.058 4.523 1.1.958 2.502 1.477 3.942 1.477.272 0 .546-.019.819-.057l20.211-2.785c2.969-.409 5.181-2.946 5.181-5.943v-37.563c0-1.804-.812-3.512-2.21-4.651zm-9.79 36.985-8.211 1.131v-24.406l8.211-1.694v24.97zm-48.896 18.846 17.549-2.403c2.971-.407 5.186-2.945 5.186-5.944v-34.981c0-1.803-.811-3.511-2.208-4.649-1.397-1.142-3.237-1.594-4.999-1.228l-17.549 3.604c-2.79.573-4.793 3.028-4.793 5.877v33.78c0 1.733.75 3.382 2.056 4.521 1.1.959 2.503 1.479 3.944 1.479.271 0 .543-.019.814-.056zm5.186-34.832 5.549-1.14v22.39l-5.549.76zm-9.701-19.538c1.066.837 2.373 1.278 3.701 1.278.479 0 .959-.058 1.433-.174l17.549-4.316c2.683-.659 4.567-3.064 4.567-5.826v-34.981c0-1.91-.91-3.707-2.45-4.837-1.54-1.131-3.527-1.462-5.35-.887l-17.549 5.518c-2.5.786-4.2 3.104-4.2 5.724v33.78c0 1.844.848 3.585 2.299 4.722zm9.701-34.099 5.549-1.745v22.103l-5.549 1.365zm53.256-26.81c-1.543-1.13-3.53-1.458-5.354-.881l-20.211 6.388c-2.495.788-4.191 3.104-4.191 5.721v36.199c0 1.844.848 3.586 2.3 4.723 1.066.836 2.372 1.277 3.7 1.277.479 0 .961-.058 1.436-.174l20.211-4.979c2.681-.661 4.564-3.065 4.564-5.826v-37.607c0-1.912-.911-3.71-2.454-4.84zm-9.546 37.746-8.211 2.023v-24.146l8.211-2.596v24.718zm372.304 202.535h-35.498v-410.226c0-2.402-1.433-4.573-3.642-5.517l-114.071-48.763c-1.506-.645-3.211-.645-4.717 0l-114.072 48.763c-2.209.943-3.642 3.114-3.642 5.517v85.121l-50.608-21.634c-1.506-.645-3.211-.645-4.717 0l-118.785 50.777c-2.209.943-3.642 3.114-3.642 5.517v290.445h-35.498c-3.313 0-6 2.687-6 6v25.011c0 3.313 2.687 6 6 6h488.892c3.313 0 6-2.687 6-6v-25.011c0-3.313-2.687-6-6-6zm-47.498 0h-102.071v-449.899l102.071 43.632zm-114.072-449.899v449.899h-22.729v-95.769l3.167-.301c3.299-.313 5.719-3.242 5.404-6.541-.313-3.299-3.231-5.718-6.541-5.404l-61.812 5.883c-3.299.313-5.719 3.242-5.404 6.541.295 3.105 2.908 5.432 5.966 5.432.189 0 .382-.009.575-.027l2.031-.193v90.381h-22.729v-406.268l102.072-43.632zm-34.729 355.272v94.627h-32.613v-91.523zm-79.343 94.627h-46.967v-332.132l46.967 20.077zm-165.752-286.485 106.785-45.647v332.132h-25.086v-76.769l3.168-.302c3.299-.313 5.719-3.242 5.404-6.541-.313-3.299-3.246-5.727-6.541-5.404l-61.812 5.884c-3.299.313-5.719 3.242-5.404 6.541.295 3.105 2.908 5.432 5.966 5.432.19 0 .382-.009.575-.027l2.031-.193v71.38h-25.086zm69.699 210.859v75.626h-32.613v-72.522zm365.694 100.637h-476.891v-13.011h476.892v13.011zm-98.534-49.997v-369.405c0-3.313 2.687-6 6-6s6 2.687 6 6v369.405c0 3.313-2.687 6-6 6s-6-2.687-6-6zm28.519 0v-357.214c0-3.313 2.687-6 6-6s6 2.687 6 6v357.214c0 3.313-2.687 6-6 6s-6-2.687-6-6zm-57.036 0v-381.595c0-3.313 2.687-6 6-6s6 2.687 6 6v381.595c0 3.313-2.687 6-6 6s-6-2.687-6-6z" />
+                                                            </svg>
+                                                            Projects
+                                                            <ChevronDown
+                                                                className={`h-4 transition-transform duration-300 ${
+                                                                    openMenu ===
+                                                                    'projects'
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
+                                                                }`}
+                                                            />
+                                                        </span>
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="dropdown-content">
+                                                    {projectItems.map(
+                                                        (item) => (
+                                                            <DropdownMenuItem
+                                                                key={item.label}
+                                                                className="dropdown-item"
+                                                            >
+                                                                <Link
+                                                                    href={
+                                                                        item.href
+                                                                    }
+                                                                    preserveState={
+                                                                        false
+                                                                    } // ← force no preservation → fresh state
+                                                                    preserveScroll
+                                                                    replace={
+                                                                        true
+                                                                    } // replace history entry (cleaner back button)
+                                                                    className="flex w-full items-center justify-between gap-2"
+                                                                    // preserveState={item.label !== 'All Projects'} // optional: preserve filters except maybe "All"
+                                                                >
+                                                                    <span className="flex items-center gap-2">
+                                                                        {item.icon && (
+                                                                            <span className="flex h-5 w-5 flex-shrink-0 items-center justify-center text-blue-600 dark:text-blue-400">
+                                                                                {
+                                                                                    item.icon
+                                                                                }
+                                                                            </span>
+                                                                        )}
                                                                         {
-                                                                            item.icon
+                                                                            item.label
                                                                         }
                                                                     </span>
-                                                                )}
-                                                                {item.label}
-                                                            </span>
-                                                            {item.label ===
-                                                                'Favorites' &&
-                                                                favorites.length >
-                                                                0 && (
-                                                                    <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
-                                                                        {favorites.length >
-                                                                            9
-                                                                            ? '9+'
-                                                                            : favorites.length}
-                                                                    </span>
-                                                                )}
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
+                                                                    {item.label ===
+                                                                        'Favorites' &&
+                                                                        favorites.length >
+                                                                            0 && (
+                                                                            <span className="ml-2 rounded-full bg-red-500 px-2 py-0.5 text-xs font-bold text-white">
+                                                                                {favorites.length >
+                                                                                9
+                                                                                    ? '9+'
+                                                                                    : favorites.length}
+                                                                            </span>
+                                                                        )}
+                                                                </Link>
+                                                            </DropdownMenuItem>
+                                                        ),
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
 
-                                    {/* Media & Gallery Dropdown */}
-                                    <div
-                                        className="relative"
-                                        onMouseEnter={() =>
-                                            setOpenMenu('mediaGallery')
-                                        }
-                                        onMouseLeave={() => setOpenMenu(null)}
-                                    >
-                                        <DropdownMenu
-                                            open={openMenu === 'mediaGallery'}
-                                            onOpenChange={(open) =>
-                                                handleDropdownChange(
-                                                    'mediaGallery',
-                                                    open,
-                                                )
+                                        {/* Media & Gallery Dropdown */}
+                                        <div
+                                            className="relative"
+                                            onMouseEnter={() =>
+                                                setOpenMenu('mediaGallery')
+                                            }
+                                            onMouseLeave={() =>
+                                                setOpenMenu(null)
                                             }
                                         >
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    className="nav-link group"
-                                                >
-                                                    <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                                                        <svg
-                                                            className="h-3"
-                                                            xmlns="http://www.w3.org/2000/svg"
-                                                            viewBox="0 0 24 24"
+                                            <DropdownMenu
+                                                open={
+                                                    openMenu === 'mediaGallery'
+                                                }
+                                                onOpenChange={(open) =>
+                                                    handleDropdownChange(
+                                                        'mediaGallery',
+                                                        open,
+                                                    )
+                                                }
+                                            >
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="nav-link group"
+                                                    >
+                                                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                                            <svg
+                                                                className="h-3"
+                                                                xmlns="http://www.w3.org/2000/svg"
+                                                                viewBox="0 0 24 24"
+                                                            >
+                                                                <path
+                                                                    d="M4 5h16v14H4z"
+                                                                    fill="none"
+                                                                    stroke="currentColor"
+                                                                    strokeWidth="2"
+                                                                />
+                                                                <circle
+                                                                    cx="8"
+                                                                    cy="9"
+                                                                    r="1.5"
+                                                                />
+                                                                <path d="M21 15l-5-5L5 21" />
+                                                            </svg>
+                                                            Media & Gallery
+                                                            <ChevronDown
+                                                                className={`h-4 transition-transform duration-300 ${
+                                                                    openMenu ===
+                                                                    'mediaGallery'
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
+                                                                }`}
+                                                            />
+                                                        </span>
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+
+                                                <DropdownMenuContent className="dropdown-content">
+                                                    <DropdownMenuItem className="dropdown-item">
+                                                        <Link
+                                                            href={media.url()}
+                                                            className="flex w-full items-center gap-2"
                                                         >
-                                                            <path
-                                                                d="M4 5h16v14H4z"
+                                                            Media Coverage
+                                                        </Link>
+                                                    </DropdownMenuItem>
+
+                                                    <DropdownMenuItem className="dropdown-item">
+                                                        <Link
+                                                            href={gallery.url()}
+                                                            className="flex w-full items-center gap-2"
+                                                        >
+                                                            Photos & Videos
+                                                        </Link>
+                                                    </DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
+
+                                        {/* Hotels & Resorts Dropdown (hardcoded URLs for now) */}
+                                        <div
+                                            className="relative"
+                                            onMouseEnter={() =>
+                                                setOpenMenu('hotelsResorts')
+                                            }
+                                            onMouseLeave={() =>
+                                                setOpenMenu(null)
+                                            }
+                                        >
+                                            <DropdownMenu
+                                                open={
+                                                    openMenu === 'hotelsResorts'
+                                                }
+                                                onOpenChange={(open) =>
+                                                    handleDropdownChange(
+                                                        'hotelsResorts',
+                                                        open,
+                                                    )
+                                                }
+                                            >
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="nav-link group"
+                                                    >
+                                                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                                            <svg
+                                                                className="h-3"
+                                                                viewBox="0 0 24 24"
                                                                 fill="none"
                                                                 stroke="currentColor"
                                                                 strokeWidth="2"
-                                                            />
-                                                            <circle
-                                                                cx="8"
-                                                                cy="9"
-                                                                r="1.5"
-                                                            />
-                                                            <path d="M21 15l-5-5L5 21" />
-                                                        </svg>
-                                                        Media & Gallery
-                                                        <ChevronDown
-                                                            className={`h-4 transition-transform duration-300 ${openMenu ===
-                                                                    'mediaGallery'
-                                                                    ? 'rotate-180'
-                                                                    : 'rotate-0'
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
+                                                            >
+                                                                <path d="M7 22V10h10v12" />
+                                                                <path d="M5 10l7-7 7 7" />
+                                                                <path d="M4 22h16" />
+                                                            </svg>
+                                                            Hotels &amp; Resorts
+                                                            <ChevronDown
+                                                                className={`h-4 transition-transform duration-300 ${
+                                                                    openMenu ===
+                                                                    'hotelsResorts'
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
                                                                 }`}
-                                                        />
-                                                    </span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
+                                                            />
+                                                        </span>
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="dropdown-content">
+                                                    {hotelsResortsItems.map(
+                                                        (item) => (
+                                                            <DropdownMenuItem
+                                                                key={item.label}
+                                                                className="dropdown-item"
+                                                            >
+                                                                <Link
+                                                                    href={
+                                                                        item.href
+                                                                    }
+                                                                    className="flex w-full items-center justify-between gap-2"
+                                                                >
+                                                                    <span className="flex items-center gap-2">
+                                                                        {item.icon && (
+                                                                            <span className="h-4 w-4 flex-shrink-0">
+                                                                                {
+                                                                                    item.icon
+                                                                                }
+                                                                            </span>
+                                                                        )}
+                                                                        {
+                                                                            item.label
+                                                                        }
+                                                                    </span>
+                                                                </Link>
+                                                            </DropdownMenuItem>
+                                                        ),
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
 
-                                            <DropdownMenuContent className="dropdown-content">
-                                                <DropdownMenuItem className="dropdown-item">
-                                                    <Link
-                                                        href={media.url()}
-                                                        className="flex w-full items-center gap-2"
-                                                    >
-                                                        Media Coverage
-                                                    </Link>
-                                                </DropdownMenuItem>
-
-                                                <DropdownMenuItem className="dropdown-item">
-                                                    <Link
-                                                        href={gallery.url()}
-                                                        className="flex w-full items-center gap-2"
-                                                    >
-                                                        Photos & Videos
-                                                    </Link>
-                                                </DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-
-                                    {/* Hotels & Resorts Dropdown (hardcoded URLs for now) */}
-                                    <div
-                                        className="relative"
-                                        onMouseEnter={() =>
-                                            setOpenMenu('hotelsResorts')
-                                        }
-                                        onMouseLeave={() => setOpenMenu(null)}
-                                    >
-                                        <DropdownMenu
-                                            open={openMenu === 'hotelsResorts'}
-                                            onOpenChange={(open) =>
-                                                handleDropdownChange(
-                                                    'hotelsResorts',
-                                                    open,
-                                                )
+                                        {/* Contact Us Dropdown */}
+                                        <div
+                                            className="relative"
+                                            onMouseEnter={() =>
+                                                setOpenMenu('contact')
+                                            }
+                                            onMouseLeave={() =>
+                                                setOpenMenu(null)
                                             }
                                         >
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    className="nav-link group"
-                                                >
-                                                    <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                                                        <svg
-                                                            className="h-3"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        >
-                                                            <path d="M7 22V10h10v12" />
-                                                            <path d="M5 10l7-7 7 7" />
-                                                            <path d="M4 22h16" />
-                                                        </svg>
-                                                        Hotels &amp; Resorts
-                                                        <ChevronDown
-                                                            className={`h-4 transition-transform duration-300 ${openMenu ===
-                                                                    'hotelsResorts'
-                                                                    ? 'rotate-180'
-                                                                    : 'rotate-0'
-                                                                }`}
-                                                        />
-                                                    </span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="dropdown-content">
-                                                {hotelsResortsItems.map(
-                                                    (item) => (
-                                                        <DropdownMenuItem
-                                                            key={item.label}
-                                                            className="dropdown-item"
-                                                        >
-                                                            <Link
-                                                                href={item.href}
-                                                                className="flex w-full items-center justify-between gap-2"
+                                            <DropdownMenu
+                                                open={openMenu === 'contact'}
+                                                onOpenChange={(open) =>
+                                                    handleDropdownChange(
+                                                        'contact',
+                                                        open,
+                                                    )
+                                                }
+                                            >
+                                                <DropdownMenuTrigger asChild>
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="nav-link group"
+                                                    >
+                                                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                                            <svg
+                                                                className="h-3"
+                                                                viewBox="0 0 24 24"
+                                                                fill="none"
+                                                                stroke="currentColor"
+                                                                strokeWidth="2"
+                                                                strokeLinecap="round"
+                                                                strokeLinejoin="round"
                                                             >
-                                                                <span className="flex items-center gap-2">
+                                                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                                                            </svg>
+                                                            Contact Us
+                                                            <ChevronDown
+                                                                className={`h-4 w-4 transition-transform duration-300 ${
+                                                                    openMenu ===
+                                                                    'contact'
+                                                                        ? 'rotate-180'
+                                                                        : 'rotate-0'
+                                                                }`}
+                                                            />
+                                                        </span>
+                                                    </Button>
+                                                </DropdownMenuTrigger>
+                                                <DropdownMenuContent className="dropdown-content">
+                                                    {contactItems.map(
+                                                        (item) => (
+                                                            <DropdownMenuItem
+                                                                key={item.label}
+                                                                className="dropdown-item"
+                                                            >
+                                                                <Link
+                                                                    href={
+                                                                        item.href
+                                                                    }
+                                                                    className="flex w-full items-center gap-2"
+                                                                >
                                                                     {item.icon && (
                                                                         <span className="h-4 w-4 flex-shrink-0">
                                                                             {
@@ -515,138 +623,94 @@ const Navbar = () => {
                                                                         </span>
                                                                     )}
                                                                     {item.label}
-                                                                </span>
-                                                            </Link>
-                                                        </DropdownMenuItem>
-                                                    ),
-                                                )}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
+                                                                </Link>
+                                                            </DropdownMenuItem>
+                                                        ),
+                                                    )}
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </div>
 
-                                    {/* Contact Us Dropdown */}
-                                    <div
-                                        className="relative"
-                                        onMouseEnter={() =>
-                                            setOpenMenu('contact')
-                                        }
-                                        onMouseLeave={() => setOpenMenu(null)}
-                                    >
-                                        <DropdownMenu
-                                            open={openMenu === 'contact'}
-                                            onOpenChange={(open) =>
-                                                handleDropdownChange(
-                                                    'contact',
-                                                    open,
-                                                )
-                                            }
+                                        {/* MD Message */}
+                                        <Link
+                                            href={managingDirector.url()}
+                                            className="nav-link group"
                                         >
-                                            <DropdownMenuTrigger asChild>
-                                                <Button
-                                                    variant="ghost"
-                                                    className="nav-link group"
+                                            <span className="inline-flex items-center gap-1 transition-transform duration-300">
+                                                <svg
+                                                    className="h-4"
+                                                    viewBox="0 0 512 512"
+                                                    xmlns="http://www.w3.org/2000/svg"
                                                 >
-                                                    <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                                                        <svg
-                                                            className="h-3"
-                                                            viewBox="0 0 24 24"
-                                                            fill="none"
-                                                            stroke="currentColor"
-                                                            strokeWidth="2"
-                                                            strokeLinecap="round"
-                                                            strokeLinejoin="round"
-                                                        >
-                                                            <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
-                                                        </svg>
-                                                        Contact Us
-                                                        <ChevronDown
-                                                            className={`h-4 w-4 transition-transform duration-300 ${openMenu ===
-                                                                    'contact'
-                                                                    ? 'rotate-180'
-                                                                    : 'rotate-0'
-                                                                }`}
-                                                        />
-                                                    </span>
-                                                </Button>
-                                            </DropdownMenuTrigger>
-                                            <DropdownMenuContent className="dropdown-content">
-                                                {contactItems.map((item) => (
-                                                    <DropdownMenuItem
-                                                        key={item.label}
-                                                        className="dropdown-item"
-                                                    >
-                                                        <Link
-                                                            href={item.href}
-                                                            className="flex w-full items-center gap-2"
-                                                        >
-                                                            {item.icon && (
-                                                                <span className="h-4 w-4 flex-shrink-0">
-                                                                    {item.icon}
-                                                                </span>
-                                                            )}
-                                                            {item.label}
-                                                        </Link>
-                                                    </DropdownMenuItem>
-                                                ))}
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
+                                                    <path d="M424.323 435.887c43.934 0 79.677-35.743 79.677-79.677s-35.743-79.677-79.677-79.677c-6.837 0-13.475.867-19.812 2.495V153.521c0-37.767-30.726-68.493-68.493-68.493h-15.459c-15.377-31.107-47.442-52.553-84.426-52.553s-69.05 21.446-84.427 52.553h-15.46c-37.768 0-68.494 30.726-68.494 68.493v156.387H31.893c-8.653 0-15.692 7.04-15.692 15.692v37.812c0 8.653 7.04 15.693 15.692 15.693h26.242v84.42H16a8 8 0 0 0 0 16h440.778a8 8 0 0 0 0-16h-42.074v-28.24a80 80 0 0 0 9.619.602M488 356.21c0 35.111-28.565 63.677-63.677 63.677s-63.677-28.565-63.677-63.677 28.565-63.677 63.677-63.677S488 321.099 488 356.21m-300.073-46.303h-96.76c23.924-47.508 69.207-79.899 121.331-87.485l-25.61 80.524a8 8 0 0 0 1.039 6.961m21.288 0-5.703-6.44 26.28-82.633q3.137-.12 6.296-.123h.078c2.109 0 4.212.055 6.31.138l26.275 82.617-5.704 6.44zm76.16-6.96-25.591-80.463c46.055 6.848 87.599 33.402 113.035 73.004a80.3 80.3 0 0 0-13.277 14.42h-75.207a8 8 0 0 0 1.04-6.961m50.643-201.919c28.945 0 52.493 23.548 52.493 52.493v131.548c-.849.429-1.695.862-2.526 1.32-15.128-23.405-35.615-43.095-59.688-57.232-14.62-8.585-30.383-14.974-46.754-19.073 30.107-15.718 50.708-47.241 50.708-83.49a94 94 0 0 0-3.53-25.566zm-99.885-52.554c43.075 0 78.119 35.044 78.119 78.119 0 43.068-35.032 78.106-78.096 78.119h-.051c-43.062-.016-78.091-35.053-78.091-78.118 0-43.076 35.044-78.12 78.119-78.12m-99.887 52.554h9.298a94 94 0 0 0-3.53 25.566c0 36.223 20.573 67.728 50.644 83.457-20.164 5.048-39.344 13.62-56.775 25.49-21.262 14.479-38.948 33.158-52.131 54.835V153.521c0-28.945 23.549-52.493 52.494-52.493M32.201 325.907h318.447a79.2 79.2 0 0 0-6.002 30.303c0 2.325.121 4.621.318 6.896H32.201zm366.503 137.619H74.135v-84.42h273.879c7.406 24.635 26.434 44.27 50.69 52.531zm-21.66-121.728c-8.048 8.049-8.048 21.146 0 29.196l19.668 19.668c4.124 4.124 9.198 6.825 14.286 7.605q1.58.241 3.126.241c5.259 0 10.185-2.077 14.117-6.009l43.361-43.36c8.049-8.05 8.048-21.147 0-29.197-8.05-8.049-21.146-8.047-29.196 0l-29.009 29.01-7.155-7.155c-8.051-8.049-21.148-8.05-29.198.001q0-.002 0 0m11.314 11.313c1.78-1.779 4.789-1.78 6.569.001l12.812 12.812a8 8 0 0 0 11.313 0l34.666-34.666c1.78-1.78 4.789-1.782 6.57 0 1.78 1.78 1.78 4.789 0 6.569l-43.361 43.36c-1.111 1.11-2.128 1.478-3.504 1.266-1.696-.26-3.714-1.42-5.397-3.104l-19.668-19.667c-1.781-1.782-1.781-4.79 0-6.571" />
+                                                </svg>
+                                                MD's Message
+                                            </span>
+                                        </Link>
                                     </div>
+                                </nav>
+                            </div>
 
-                                    {/* MD Message */}
-                                    <Link
-                                        href={managingDirector.url()}
-                                        className="nav-link group"
-                                    >
-                                        <span className="inline-flex items-center gap-1 transition-transform duration-300">
-                                            <svg
-                                                className="h-4"
-                                                viewBox="0 0 512 512"
-                                                xmlns="http://www.w3.org/2000/svg"
-                                            >
-                                                <path d="M424.323 435.887c43.934 0 79.677-35.743 79.677-79.677s-35.743-79.677-79.677-79.677c-6.837 0-13.475.867-19.812 2.495V153.521c0-37.767-30.726-68.493-68.493-68.493h-15.459c-15.377-31.107-47.442-52.553-84.426-52.553s-69.05 21.446-84.427 52.553h-15.46c-37.768 0-68.494 30.726-68.494 68.493v156.387H31.893c-8.653 0-15.692 7.04-15.692 15.692v37.812c0 8.653 7.04 15.693 15.692 15.693h26.242v84.42H16a8 8 0 0 0 0 16h440.778a8 8 0 0 0 0-16h-42.074v-28.24a80 80 0 0 0 9.619.602M488 356.21c0 35.111-28.565 63.677-63.677 63.677s-63.677-28.565-63.677-63.677 28.565-63.677 63.677-63.677S488 321.099 488 356.21m-300.073-46.303h-96.76c23.924-47.508 69.207-79.899 121.331-87.485l-25.61 80.524a8 8 0 0 0 1.039 6.961m21.288 0-5.703-6.44 26.28-82.633q3.137-.12 6.296-.123h.078c2.109 0 4.212.055 6.31.138l26.275 82.617-5.704 6.44zm76.16-6.96-25.591-80.463c46.055 6.848 87.599 33.402 113.035 73.004a80.3 80.3 0 0 0-13.277 14.42h-75.207a8 8 0 0 0 1.04-6.961m50.643-201.919c28.945 0 52.493 23.548 52.493 52.493v131.548c-.849.429-1.695.862-2.526 1.32-15.128-23.405-35.615-43.095-59.688-57.232-14.62-8.585-30.383-14.974-46.754-19.073 30.107-15.718 50.708-47.241 50.708-83.49a94 94 0 0 0-3.53-25.566zm-99.885-52.554c43.075 0 78.119 35.044 78.119 78.119 0 43.068-35.032 78.106-78.096 78.119h-.051c-43.062-.016-78.091-35.053-78.091-78.118 0-43.076 35.044-78.12 78.119-78.12m-99.887 52.554h9.298a94 94 0 0 0-3.53 25.566c0 36.223 20.573 67.728 50.644 83.457-20.164 5.048-39.344 13.62-56.775 25.49-21.262 14.479-38.948 33.158-52.131 54.835V153.521c0-28.945 23.549-52.493 52.494-52.493M32.201 325.907h318.447a79.2 79.2 0 0 0-6.002 30.303c0 2.325.121 4.621.318 6.896H32.201zm366.503 137.619H74.135v-84.42h273.879c7.406 24.635 26.434 44.27 50.69 52.531zm-21.66-121.728c-8.048 8.049-8.048 21.146 0 29.196l19.668 19.668c4.124 4.124 9.198 6.825 14.286 7.605q1.58.241 3.126.241c5.259 0 10.185-2.077 14.117-6.009l43.361-43.36c8.049-8.05 8.048-21.147 0-29.197-8.05-8.049-21.146-8.047-29.196 0l-29.009 29.01-7.155-7.155c-8.051-8.049-21.148-8.05-29.198.001q0-.002 0 0m11.314 11.313c1.78-1.779 4.789-1.78 6.569.001l12.812 12.812a8 8 0 0 0 11.313 0l34.666-34.666c1.78-1.78 4.789-1.782 6.57 0 1.78 1.78 1.78 4.789 0 6.569l-43.361 43.36c-1.111 1.11-2.128 1.478-3.504 1.266-1.696-.26-3.714-1.42-5.397-3.104l-19.668-19.667c-1.781-1.782-1.781-4.79 0-6.571" />
-                                            </svg>
-                                            MD's Message
-                                        </span>
-                                    </Link>
-                                </div>
-                            </nav>
+                            {/* RIGHT: Call Now + mobile hamburger */}
+                            <div className="flex flex-shrink-0 items-center gap-3 pr-2">
+                                {/* Call Now - always visible */}
+                                <Link
+                                    href="tel:+1234567890"
+                                    className="btn-primary flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-300"
+                                >
+                                    <Phone className="h-4 w-4" />
+                                    Call Now
+                                </Link>
+                            </div>
                         </div>
 
-                        {/* Right side CTA + mobile hamburger */}
-                        <div className="absolute top-2 right-2 z-30 flex -translate-y-1/2 items-center gap-3 lg:right-4 xl:top-6 xl:right-6">
-                            {/* Call Now - always visible */}
-                            <Link
-                                href="tel:+1234567890"
-                                className={`btn-primary flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300 md:rounded-xl md:px-4 md:text-base`}
-                            >
-                                <Phone className="h-4 w-4" />
-                                Call Now
-                            </Link>
-
-                            {/* Mobile menu button - only < lg */}
-                            <div className="rounded-full bg-white/90">
-                                <Button
-                                    ref={buttonRef} // Add this ref
-                                    variant="ghost"
-                                    className="p-3 hover:bg-white/10 xl:hidden"
-                                    onClick={() => {
-                                        if (isMobileMenuOpen) {
-                                            setIsClosing(true);
-                                            setTimeout(() => {
-                                                setIsMobileMenuOpen(false);
-                                                setIsClosing(false);
-                                            }, 250);
-                                        } else {
-                                            setIsMobileMenuOpen(true);
-                                        }
-                                    }}
+                        {/* Mobile-only row: logo left, hamburger right */}
+                        <div className="flex items-center justify-between xl:hidden">
+                            <div className="pl-2">
+                                <Link
+                                    href={home.url()}
+                                    className="logo-sweep-container relative block overflow-hidden rounded-lg"
                                 >
-                                    {isMobileMenuOpen ? (
-                                        <X className="h-6 w-6" />
-                                    ) : (
-                                        <Menu className="h-6 w-8" />
-                                    )}
-                                </Button>
+                                    <img
+                                        className="relative z-10 h-14 w-auto object-contain"
+                                        src={logo}
+                                        alt="Alliance Logo"
+                                    />
+                                    <div className="logo-sweep"></div>
+                                </Link>
+                            </div>
+                            <div className="flex items-center gap-2 pr-2">
+                                <Link
+                                    href="tel:+1234567890"
+                                    className="btn-primary flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300"
+                                >
+                                    <Phone className="h-4 w-4" />
+                                    Call Now
+                                </Link>
+                                <div className="rounded-full bg-white/90">
+                                    <Button
+                                        ref={buttonRef}
+                                        variant="ghost"
+                                        className="p-3 hover:bg-white/10"
+                                        onClick={() => {
+                                            if (isMobileMenuOpen) {
+                                                setIsClosing(true);
+                                                setTimeout(() => {
+                                                    setIsMobileMenuOpen(false);
+                                                    setIsClosing(false);
+                                                }, 250);
+                                            } else {
+                                                setIsMobileMenuOpen(true);
+                                            }
+                                        }}
+                                    >
+                                        {isMobileMenuOpen ? (
+                                            <X className="h-6 w-6" />
+                                        ) : (
+                                            <Menu className="h-6 w-8" />
+                                        )}
+                                    </Button>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -804,55 +868,24 @@ const Navbar = () => {
                 )}
 
                 <style>{`
-        /* ─── Navbar Background Gradient ─── */
+        /* ─── Navbar container — fully transparent, no background, no shimmer ─── */
         .navbar-container::before {
-            content: '';
-            position: absolute;
-            inset: 0;
-            border-radius: inherit;
-            background: linear-gradient(135deg, rgba(255, 255, 255, 0.5) 0%, rgba(255, 255, 255, 0.15) 40%, rgba(59, 130, 246, 0.1) 100%);
-            pointer-events: none;
-            z-index: 1;
+            content: none !important;
         }
 
-        /* Bottom edge shadow for depth */
+        .navbar-container::after {
+            content: none !important;
+        }
+
         .navbar-container {
             position: relative;
+            transform-style: preserve-3d;
+            transition: background 0.3s ease;
         }
 
         .navbar-container > * {
             position: relative;
             z-index: 3;
-        }
-
-        /* ─── Glossy shine line on navbar ─── */
-        .navbar-container::after {
-            content: '';
-            position: absolute;
-            top: 0;
-            left: 5%;
-            right: 5%;
-            height: 2px;
-            background: linear-gradient(90deg,
-                transparent 0%,
-                rgba(255, 255, 255, 0.5) 20%,
-                rgba(255, 255, 255, 1) 50%,
-                rgba(255, 255, 255, 0.5) 80%,
-                transparent 100%);
-            border-radius: 2px;
-            animation: shimmer-nav 3s ease-in-out infinite;
-            z-index: 2;
-            box-shadow: 0 1px 10px rgba(255, 255, 255, 0.6);
-        }
-
-        /* Extra bottom shadow for contrast on bright backgrounds */
-        .navbar-container {
-            box-shadow: 0 8px 32px rgba(31, 38, 135, 0.25),
-                        0 4px 12px rgba(0, 0, 0, 0.08),
-                        0 2px 4px rgba(0, 0, 0, 0.05),
-                        inset 0 1px 0 rgba(255, 255, 255, 0.9),
-                        inset 0 -1px 0 rgba(255, 255, 255, 0.4),
-                        0 1px 0 rgba(0, 0, 0, 0.05) !important;
         }
 
         /* ─── Keyframe Animations ─── */
@@ -939,61 +972,120 @@ const Navbar = () => {
             animation: fade-out 0.25s ease-in forwards;
         }
 
-        /* ─── Nav Links Styling ─── */
+        /* ─── Nav Links Styling — boundless shadow bloom ─── */
         .nav-link {
+            backdrop-filter: blur(12px);
             display: block;
-            padding: 6px 12px;
-            font-size: 14px;
-            font-weight: 600;
-            letter-spacing: 0.3px;
-            color: rgba(15, 23, 42, 0.95) !important;
+            padding: 8px 20px;
+            font-size: 17px;
+            font-weight: 700;
+            letter-spacing: 0.2px;
+            color: rgba(200, 210, 230, 0.95) !important;
             text-decoration: none;
-            border-radius: 10px;
+            border-radius: 999px;
             position: relative;
             transition: all 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
-            background: transparent;
-            border: none;
             cursor: pointer;
-            text-shadow: 0 0.5px 0.5px rgba(255, 255, 255, 0.5);
+            /* Oversized radial bloom — extends far beyond the element bounds */
+            background: radial-gradient(
+            ellipse 160% 280% at 50% 50%,
+                rgba(10, 20, 70, 1) 0%,
+                rgba(8, 16, 55, 0.95) 30%,
+                rgba(5, 10, 40, 0.9) 60%,
+                rgba(0, 0, 0, 0.85) 100%
+                ) !important;
+            border: none;
+            box-shadow: none;
+            text-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.9),
+                0 2px 10px rgba(0, 0, 0, 0.65);
         }
 
         /* Override for Button components with nav-link class */
         button.nav-link {
-            color: rgba(15, 23, 42, 0.95) !important;
-            font-weight: 600 !important;
-        }
+        backdrop-filter: blur(12px);
+    color: rgba(200, 210, 230, 0.95) !important;
+    font-weight: 700 !important;
+    font-size: 17px !important;
+
+    background: radial-gradient(
+        ellipse 160% 280% at 50% 50%,
+        rgba(10, 20, 70, 1) 0%,
+        rgba(8, 16, 55, 0.95) 30%,
+        rgba(5, 10, 40, 0.9) 60%,
+        rgba(0, 0, 0, 0.85) 100%
+    ) !important;
+
+    border: none !important;
+    box-shadow: none !important;
+}
 
         button.nav-link > span,
         button.nav-link * {
             color: inherit !important;
         }
 
-        .nav-link::before {
+        /* Glowing underline on hover */
+        .nav-link::after {
             content: '';
             position: absolute;
-            inset: 0;
-            border-radius: 10px;
-            background: linear-gradient(135deg, rgba(59, 130, 246, 0.1), rgba(59, 130, 246, 0.05));
-            border: 1px solid rgba(59, 130, 246, 0.2);
-            opacity: 0;
-            transform: scale(0.8);
-            transition: all 0.35s cubic-bezier(0.34, 1.56, 0.64, 1);
-            box-shadow: 0 4px 16px rgba(59, 130, 246, 0.15), 0 1px 0 rgba(255, 255, 255, 0.08) inset;
-            z-index: -1;
+            bottom: 5px;
+            left: 50%;
+            transform: translateX(-50%) scaleX(0);
+            width: calc(100% - 20px);
+            height: 2px;
+            border-radius: 2px;
+            background: linear-gradient(90deg, transparent, rgba(160, 200, 255, 0.9), transparent);
+            box-shadow:
+                0 0 6px rgba(100, 160, 255, 0.8),
+                0 0 18px rgba(80, 140, 255, 0.5);
+            transition: transform 0.3s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .nav-link::before {
+            content: none;
         }
 
         .nav-link:hover {
-            color: #0f172a !important;
-            transform: translateY(-1px);
+            color: rgba(230, 238, 255, 1) !important;
+            transform: translateY(-2px);
+            background: radial-gradient(
+                ellipse 200% 360% at 50% 50%,
+                rgba(15, 30, 100, 0.85) 0%,
+                rgba(12, 22, 75, 0.55) 25%,
+                rgba(8, 15, 55, 0.22) 50%,
+                transparent 70%
+            ) !important;
+            border: none !important;
+            box-shadow: none !important;
+            text-shadow:
+                0 1px 3px rgba(0, 0, 0, 0.95),
+                0 2px 10px rgba(0, 0, 0, 0.7),
+                0 0 24px rgba(120, 170, 255, 0.2);
+        }
+
+        .nav-link:hover::after {
+            transform: translateX(-50%) scaleX(1);
         }
 
         button.nav-link:hover {
-            color: #0f172a !important;
+            color: rgba(230, 238, 255, 1) !important;
+            background: radial-gradient(
+                ellipse 200% 360% at 50% 50%,
+                rgba(15, 30, 100, 0.85) 0%,
+                rgba(12, 22, 75, 0.55) 25%,
+                rgba(8, 15, 55, 0.22) 50%,
+                transparent 70%
+            ) !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
-        .nav-link:hover::before {
-            opacity: 1;
-            transform: scale(1);
+        /* ─── Nav link SVG icons inherit white ─── */
+        .nav-link svg {
+            fill: currentColor;
+            color: rgba(255, 255, 255, 0.85);
+            filter: drop-shadow(0 1px 2px rgba(0,0,0,0.5));
         }
 
         /* ─── Primary Button Styling ─── */
@@ -1107,6 +1199,9 @@ const Navbar = () => {
         /* ─── Preserve 3D for transforms ─── */
         .navbar-container {
             transform-style: preserve-3d;
+            background: none !important;
+            border: none !important;
+            box-shadow: none !important;
         }
 
         /* ─── Logo Light Sweep Effect ─── */
