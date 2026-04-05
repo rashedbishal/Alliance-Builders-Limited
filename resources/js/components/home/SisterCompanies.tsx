@@ -17,72 +17,98 @@ import ScrollAnimation from '../ScrollAnimation';
 
 const SisterCompanies = () => {
   const companies = [
-    {
-      id: 1,
-      name: "Alliance Brokerage Ltd.",
-      logo: brokerage,
-      description: "Premier construction services specializing in residential and commercial projects with cutting-edge technology.",
-      services: ["Construction Management", "Project Development", "Quality Assurance"],
-      founded: "2010",
-      projects: "200+",
-      color: "bg-gradient-to-br from-primary to-primary-light",
-      website: "#construction"
-    },
-    {
-      id: 2,
-      name: "Alliance Beverage Agro",
-      logo: beverage,
-      description: "Innovative landscape architecture and sustainable urban planning solutions for modern developments.",
-      services: ["Landscape Design", "Urban Planning", "Sustainability Consulting"],
-      founded: "2012",
-      projects: "300+",
-      color: "bg-black",
-      website: "#landscaping"
-    },
-    {
-      id: 3,
-      name: "Alliance Construction",
-      logo: construction,
-      description: "Cutting-edge home automation and smart building solutions for residential and commercial properties.",
-      services: ["Home Automation", "Security Systems", "Energy Management"],
-      founded: "2015",
-      projects: "500+",
-      color: "bg-gradient-to-br from-accent to-accent-light",
-      website: "#smarthome"
-    },
-    {
-      id: 4,
-      name: "Alliance Success Builders",
-      logo: success,
-      description: "Comprehensive security solutions and property management services for residential and commercial clients.",
-      services: ["Property Security", "Facility Management", "Risk Assessment"],
-      founded: "2008",
-      projects: "400+",
-      color: "bg-black",
-      website: "#security"
-    },
-    {
-      id: 5,
-      name: "Hotel Jana",
-      logo: jana,
-      description: "Modern transportation and parking solutions designed for urban developments and commercial complexes.",
-      services: ["Parking Solutions", "Transport Planning", "Mobility Consulting"],
-      founded: "2018",
-      projects: "150+",
-      color: "bg-black",
-      website: "#mobility"
-    },
-    {
-      id: 6,
-      name: "Opticore Solutions Ltd.",
-      logo: opticore,
-      description: "Luxury interior design and custom craftsmanship for high-end residential and commercial spaces.",
-      services: ["Interior Design", "Custom Furniture", "Luxury Finishes"],
-      founded: "2014",
-      projects: "250+",
-      color: "bg-black",
-      website: "#interiors"
-    }
+      {
+          id: 1,
+          name: 'Alliance Brokerage Ltd.',
+          logo: brokerage,
+          description:
+              'Premier construction services specializing in residential and commercial projects with cutting-edge technology.',
+          services: [
+              'Construction Management',
+              'Project Development',
+              'Quality Assurance',
+          ],
+          founded: '2010',
+          projects: '200+',
+          color: 'bg-gradient-to-br from-tertiary-foreground to-tertiary-light',
+          website: '#construction',
+      },
+      {
+          id: 2,
+          name: 'Alliance Beverage Agro',
+          logo: beverage,
+          description:
+              'Innovative landscape architecture and sustainable urban planning solutions for modern developments.',
+          services: [
+              'Landscape Design',
+              'Urban Planning',
+              'Sustainability Consulting',
+          ],
+          founded: '2012',
+          projects: '300+',
+          color: 'bg-gradient-to-br from-success to-success-foreground',
+          website: '#landscaping',
+      },
+      {
+          id: 3,
+          name: 'Alliance Construction',
+          logo: construction,
+          description:
+              'Cutting-edge home automation and smart building solutions for residential and commercial properties.',
+          services: [
+              'Home Automation',
+              'Security Systems',
+              'Energy Management',
+          ],
+          founded: '2015',
+          projects: '500+',
+          color: 'bg-gradient-to-br from-neutral to-neutral-light',
+          website: '#smarthome',
+      },
+      {
+          id: 4,
+          name: 'Alliance Success Builders',
+          logo: success,
+          description:
+              'Comprehensive security solutions and property management services for residential and commercial clients.',
+          services: [
+              'Property Security',
+              'Facility Management',
+              'Risk Assessment',
+          ],
+          founded: '2008',
+          projects: '400+',
+          color: 'bg--gradient-to-br from-neutral to-neutral-light',
+          website: '#security',
+      },
+      {
+          id: 5,
+          name: 'Hotel Jana',
+          logo: jana,
+          description:
+              'Modern transportation and parking solutions designed for urban developments and commercial complexes.',
+          services: [
+              'Parking Solutions',
+              'Transport Planning',
+              'Mobility Consulting',
+          ],
+          founded: '2018',
+          projects: '150+',
+          color: 'bg-gradient-to-br from-tertiary-foreground to-tertiary-light',
+          website: '#mobility',
+      },
+      {
+          id: 6,
+          name: 'Opticore Solutions Ltd.',
+          logo: opticore,
+          description:
+              'Luxury interior design and custom craftsmanship for high-end residential and commercial spaces.',
+          services: ['Interior Design', 'Custom Furniture', 'Luxury Finishes'],
+          founded: '2014',
+          projects: '250+',
+          color: 'bg-gradient-to-br from-tertiary-foreground to-tertiary-light',
+          website: '#interiors',
+      },
   ];
 
   return (
@@ -115,8 +141,8 @@ const SisterCompanies = () => {
               <CardContent className="p-8 relative z-10">
                 {/* Logo and Header */}
                 <div className="flex items-center justify-between mb-6">
-                  <div className={`p-2 rounded-2xl ${company.color} shadow-elegant group-hover:scale-110 transition-transform duration-300`}>
-                    <img src={company.logo} className="h-16 w-16 text-white" />
+                  <div className={`shadow-black/70 shadow-2xl p-2 rounded-2xl ${company.color} group-hover:scale-110 transition-transform duration-300`}>
+                    <img src={company.logo} className="h-32 text-white" />
                   </div>
                   <Button
                     size="sm"
