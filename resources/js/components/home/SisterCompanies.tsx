@@ -1,13 +1,16 @@
 import {
-  Building2,
-  Hammer,
-  TreePine,
-  Zap,
-  Shield,
-  Car,
   ExternalLink
 } from "lucide-react";
 import React from 'react';
+
+// import logo images
+// import alliance from "@/assets/images/logo/alliance logo.webp"
+import beverage from "@/assets/images/logo/alliance-beverage-agro.svg"
+import brokerage from "@/assets/images/logo/alliance-brokerage.svg"
+import construction from "@/assets/images/logo/alliance-construction.svg"
+import success from "@/assets/images/logo/alliance-success-builders.svg"
+import jana from "@/assets/images/logo/jana.png"
+import opticore from "@/assets/images/logo/opticore-solutions.svg"
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ScrollAnimation from '../ScrollAnimation';
@@ -16,8 +19,8 @@ const SisterCompanies = () => {
   const companies = [
     {
       id: 1,
-      name: "EliteConstruction",
-      logo: Building2,
+      name: "Alliance Brokerage Ltd.",
+      logo: brokerage,
       description: "Premier construction services specializing in residential and commercial projects with cutting-edge technology.",
       services: ["Construction Management", "Project Development", "Quality Assurance"],
       founded: "2010",
@@ -27,8 +30,8 @@ const SisterCompanies = () => {
     },
     {
       id: 2,
-      name: "GreenSpaces Design",
-      logo: TreePine,
+      name: "Alliance Beverage Agro",
+      logo: beverage,
       description: "Innovative landscape architecture and sustainable urban planning solutions for modern developments.",
       services: ["Landscape Design", "Urban Planning", "Sustainability Consulting"],
       founded: "2012",
@@ -38,8 +41,8 @@ const SisterCompanies = () => {
     },
     {
       id: 3,
-      name: "SmartHome Tech",
-      logo: Zap,
+      name: "Alliance Construction",
+      logo: construction,
       description: "Cutting-edge home automation and smart building solutions for residential and commercial properties.",
       services: ["Home Automation", "Security Systems", "Energy Management"],
       founded: "2015",
@@ -49,8 +52,8 @@ const SisterCompanies = () => {
     },
     {
       id: 4,
-      name: "SecureGuard Services",
-      logo: Shield,
+      name: "Alliance Success Builders",
+      logo: success,
       description: "Comprehensive security solutions and property management services for residential and commercial clients.",
       services: ["Property Security", "Facility Management", "Risk Assessment"],
       founded: "2008",
@@ -60,8 +63,8 @@ const SisterCompanies = () => {
     },
     {
       id: 5,
-      name: "UrbanMobility Solutions",
-      logo: Car,
+      name: "Hotel Jana",
+      logo: jana,
       description: "Modern transportation and parking solutions designed for urban developments and commercial complexes.",
       services: ["Parking Solutions", "Transport Planning", "Mobility Consulting"],
       founded: "2018",
@@ -71,8 +74,8 @@ const SisterCompanies = () => {
     },
     {
       id: 6,
-      name: "CraftMaster Interiors",
-      logo: Hammer,
+      name: "Opticore Solutions Ltd.",
+      logo: opticore,
       description: "Luxury interior design and custom craftsmanship for high-end residential and commercial spaces.",
       services: ["Interior Design", "Custom Furniture", "Luxury Finishes"],
       founded: "2014",
@@ -94,7 +97,7 @@ const SisterCompanies = () => {
               Our Corporate Umbrella
             </h2>
             <p className="text-lg text-white max-w-3xl mx-auto leading-relaxed">
-              EstateElite is part of a comprehensive network of specialized companies, each bringing unique expertise
+              Alliance Builders Ltd. is part of a comprehensive network of specialized companies, each bringing unique expertise
               to deliver complete real estate and construction solutions under one trusted umbrella.
             </p>
           </div>
@@ -113,7 +116,7 @@ const SisterCompanies = () => {
                 {/* Logo and Header */}
                 <div className="flex items-center justify-between mb-6">
                   <div className={`p-4 rounded-2xl ${company.color} shadow-elegant group-hover:scale-110 transition-transform duration-300`}>
-                    <company.logo className="h-8 w-8 text-white" />
+                    <img src={company.logo} className="h-8 w-8 text-white" />
                   </div>
                   <Button
                     size="sm"
