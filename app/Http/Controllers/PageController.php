@@ -23,7 +23,7 @@ class PageController extends Controller
         $locations = Location::select('id', 'name')->get();
         $projectTypes = ProjectType::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
-        $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->where('isFeatured', true)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
+        $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->where('isFeatured', true)->where('project_type_id', '!=', 4)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
 
         return Inertia::render('Home', ['carousels' => $carousels, 'locations' => $locations, 'projectTypes' => $projectTypes, 'tags' => $tags, 'projects' => $projects]);
     }
