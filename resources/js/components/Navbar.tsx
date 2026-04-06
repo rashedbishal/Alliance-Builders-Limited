@@ -258,7 +258,7 @@ const Navbar = () => {
                                     className="logo-sweep-container relative block overflow-hidden rounded-lg"
                                 >
                                     <img
-                                        className="relative z-10 h-14 w-auto object-contain lg:h-16"
+                                        className="relative z-10 h-16 w-auto object-contain lg:h-18 hover:scale-105 transition duration-500"
                                         src={logo}
                                         alt="Alliance Logo"
                                     />
