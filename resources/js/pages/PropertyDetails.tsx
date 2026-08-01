@@ -46,11 +46,20 @@ const PropertyDetail = () => {
     const velX = useRef(0);
     const lastX = useRef(0);
     const animFrame = useRef<number>(0);
-    if (!projectDetails) return null;
-
     // --- DATA HELPERS ---
-    const images = projectDetails.project_images?.map((img) => `/${img.image}`) ?? [];
+    const images = projectDetails?.project_images?.map((img) => `/${img.image}`) ?? [];
     const primaryImage = images[0] ?? '/placeholder-property.jpg';
+
+    // Auto-advance the hero image on mobile, where it behaves as a carousel (no side thumbnails)
+    useEffect(() => {
+        if (images.length <= 1) return;
+        const timer = setInterval(() => {
+            setActiveImage((prev) => (prev + 1) % images.length);
+        }, 4000);
+        return () => clearInterval(timer);
+    }, [images.length]);
+
+    if (!projectDetails) return null;
 
     const formatDate = (dateString: string | null) => {
         if (!dateString) return 'TBA';
@@ -260,16 +269,16 @@ const PropertyDetail = () => {
             <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
 
                 {/* Hero + Gallery */}
-                <section className="container mx-auto px-4 pt-24 pb-12 h-full">
+                <section className="container mx-auto px-4 pt-24 pb-12">
                     <ScrollAnimation>
-                        <div className="grid grid-cols-1 gap-6 lg:grid-cols-4">
-                            <div className="grid grid-cols-3 gap-3 lg:flex lg:flex-col">
+                        <div className="grid grid-cols-1 gap-6 lg:h-[min(80vh,46rem)] lg:grid-cols-4">
+                            <div className="hidden lg:flex lg:h-full lg:flex-col lg:justify-between lg:gap-3">
                                 {images.slice(0, 3).map((img, index) => (
                                     <motion.button
                                         key={index}
                                         type="button"
                                         onClick={() => setActiveImage(index)}
-                                        className={`relative h-28 overflow-hidden rounded-2xl border transition-all duration-300 ${
+                                        className={`relative flex-1 overflow-hidden rounded-2xl border transition-all duration-300 ${
                                             activeImage === index
                                                 ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
                                                 : 'border-white/10 hover:border-sky-400/50'
@@ -279,7 +288,7 @@ const PropertyDetail = () => {
                                         <img
                                             src={img}
                                             alt={`Property view ${index + 1}`}
-                                            className=" w-full object-cover"
+                                            className="h-full w-full object-cover"
                                         />
                                         {activeImage === index && (
                                             <div className="pointer-events-none absolute inset-0 bg-sky-500/20" />
@@ -288,9 +297,9 @@ const PropertyDetail = () => {
                                 ))}
                             </div>
 
-                            <div className="relative overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 lg:col-span-3">
+                            <div className="relative h-[60vh] max-h-[26rem] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 lg:col-span-3 lg:h-full lg:max-h-none">
                                 <motion.div
-                                    className="relative h-[32rem] w-full overflow-hidden md:h-[36rem] lg:h-[42rem]"
+                                    className="relative h-full w-full overflow-hidden"
                                     initial={{ scale: 1.02, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     transition={{ duration: 0.6 }}
@@ -305,6 +314,24 @@ const PropertyDetail = () => {
                                     )}
                                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
                                 </motion.div>
+
+                                {images.length > 1 && (
+                                    <div className="absolute bottom-3 left-1/2 z-10 flex -translate-x-1/2 gap-2 lg:hidden">
+                                        {images.map((_, index) => (
+                                            <button
+                                                key={index}
+                                                type="button"
+                                                onClick={() => setActiveImage(index)}
+                                                aria-label={`Go to image ${index + 1}`}
+                                                className={`h-1.5 rounded-full transition-all duration-300 ${
+                                                    activeImage === index
+                                                        ? 'w-6 bg-cyan-300'
+                                                        : 'w-1.5 bg-white/40'
+                                                }`}
+                                            />
+                                        ))}
+                                    </div>
+                                )}
 
                                 <div className="pointer-events-none absolute inset-0">
                                     <div className="absolute -left-32 top-10 h-64 w-64 rounded-full bg-cyan-400/25 blur-3xl" />
