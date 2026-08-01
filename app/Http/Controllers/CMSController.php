@@ -120,7 +120,7 @@ class CMSController extends Controller
     public function updateCarousel(Request $request)
     {
         $carouselData = $request->validate(
-            ['image' => 'required|image|mimes:png']
+            ['image' => 'nullable|file|mimes:webp']
         );
         switch ($request->input('position')) {
             case '1':
@@ -151,7 +151,7 @@ class CMSController extends Controller
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
 
-                $sanitizedName = "carousel-image-{$request->input('position')}.".$imageFile->getaDDriginalExtension();
+                $sanitizedName = "carousel-image-{$request->input('position')}.".$imageFile->getClientOriginalExtension();
 
                 Storage::disk('public')->delete("home/carousel/{$sanitizedName}"); // safe even aDDing
 
@@ -171,8 +171,12 @@ class CMSController extends Controller
 
     public function saveProject(Request $request)
     {
-        try {
+        $request->validate([
+            'thumbnail' => 'nullable|file|mimes:webp',
+            'project_images.*' => 'nullable|file|mimes:webp',
+        ]);
 
+        try {
             DB::transaction(function () use ($request) {
                 $project = new Project;
                 $project->name = $request->input('name');
@@ -217,7 +221,9 @@ class CMSController extends Controller
                 if ($request->hasFile('thumbnail')) {
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                    $imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public');
+                    if ($imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public') === false) {
+                        throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
+                    }
 
                     $image = new Image;
                     $image->path = $sanitizedName;
@@ -240,7 +246,9 @@ class CMSController extends Controller
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
-                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+                        if ($imageFile->storeAs($storagePath, $sanitizedName, 'public') === false) {
+                            throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
+                        }
 
                         // Save each image to Image model
                         $image = new ProjectImage;
@@ -259,6 +267,11 @@ class CMSController extends Controller
 
     public function updateProject(Request $request)
     {
+        $request->validate([
+            'thumbnail' => 'nullable|file|mimes:webp',
+            'project_images.*' => 'nullable|file|mimes:webp',
+        ]);
+
         try {
             DB::transaction(function () use ($request) {
                 $project = Project::findOrFail($request->input('project_id_db'));
@@ -304,7 +317,9 @@ class CMSController extends Controller
 
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                    $imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public');
+                    if ($imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public') === false) {
+                        throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
+                    }
 
                     $image = new Image;
                     $image->path = $sanitizedName;
@@ -327,7 +342,9 @@ class CMSController extends Controller
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
-                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+                        if ($imageFile->storeAs($storagePath, $sanitizedName, 'public') === false) {
+                            throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
+                        }
 
                         // Save each image to Image model
                         $image = new ProjectImage;
@@ -351,7 +368,7 @@ class CMSController extends Controller
             DB::transaction(function () use ($request) {
                 $image = ProjectImage::with('project')->findOrFail($request->input('image_id'));
 
-                $storagePath = match ($image->project->project_type_id) {
+                $storagePath = match ($image->project?->project_type_id) {
                     1 => 'properties/handoverProject',
                     2 => 'properties/ongoingProject',
                     3 => 'properties/upcomingProject',
@@ -379,7 +396,7 @@ class CMSController extends Controller
         try {
             DB::transaction(function () use ($request) {
                 $project = Project::findOrFail($request->input('project_db_id'));
-                if (Storage::disk('public')->exists(path: 'properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'))) {
+                if ($project->image && Storage::disk('public')->exists(path: 'properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'))) {
                     Storage::disk('public')->delete('properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'));
                 }
 
@@ -408,6 +425,10 @@ class CMSController extends Controller
 
     public function saveMedia(Request $request)
     {
+        $request->validate([
+            'image' => 'nullable|file|mimes:webp',
+        ]);
+
         try {
             DB::transaction(function () use ($request) {
                 $media = new MediaCoverage;
@@ -441,7 +462,7 @@ class CMSController extends Controller
             DB::transaction(function () use ($request) {
                 $item = MediaCoverage::findOrFail($request->input('media_item_id'));
 
-                if (Storage::disk('public')->exists(path: 'media'.'/'.$item->image->getRawOriginal('path'))) {
+                if ($item->image && Storage::disk('public')->exists(path: 'media'.'/'.$item->image->getRawOriginal('path'))) {
                     Storage::disk('public')->delete('media'.'/'.$item->image->getRawOriginal('path'));
                 }
 
@@ -457,6 +478,12 @@ class CMSController extends Controller
 
     public function saveGallery(Request $request)
     {
+        $request->validate([
+            'gallery_content' => $request->input('media_type') == '1'
+                ? 'required|file|mimes:webp'
+                : 'required|file',
+        ]);
+
         try {
             DB::transaction(function () use ($request) {
                 if ($request->hasFile('gallery_content')) {
@@ -512,7 +539,7 @@ class CMSController extends Controller
             DB::transaction(function () use ($request) {
                 if ($request->input('media_type') == '1') {
                     $image = Image::findOrFail($request->input('gallery_item_id'));
-                    $storagePath = match ($image->gallery->id) {
+                    $storagePath = match ($image->gallery?->id) {
                         1 => 'gallery/project-handover',
                         2 => 'gallery/project-inauguration',
                         3 => 'gallery/construction-images',
@@ -528,7 +555,7 @@ class CMSController extends Controller
 
                 } else {
                     $video = Video::findOrFail($request->input('gallery_item_id'));
-                    $storagePath = match ($video->gallery->id) {
+                    $storagePath = match ($video->gallery?->id) {
                         1 => 'video/project-handover',
                         2 => 'video/project-inauguration',
                         3 => 'video/construction-images',
@@ -552,6 +579,10 @@ class CMSController extends Controller
 
     public function savePopup(Request $request)
     {
+        $request->validate([
+            'image' => 'nullable|file|mimes:webp',
+        ]);
+
         try {
             DB::transaction(function () use ($request) {
 

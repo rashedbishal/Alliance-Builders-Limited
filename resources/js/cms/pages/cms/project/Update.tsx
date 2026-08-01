@@ -4,6 +4,10 @@ import { route } from 'ziggy-js';
 import CMSLayout from '@/cms/layouts/CMSLayout';
 import type { ProjectType, Location, Facility, Tag, Project } from '@/cms/types/cms';
 
+const isWebp = (file: File) =>
+    file.type === 'image/webp' ||
+    file.name.toLowerCase().endsWith('.webp');
+
 interface Props {
   types: ProjectType[];
   locations: Location[];
@@ -19,7 +23,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
   const [loadingData, setLoadingData] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
     project_id_db: '',
     name: '', address: '', google_map_url: '', price: '',
     size: '', floors: '', construction_start_date: '', handover_date: '',
@@ -169,12 +173,29 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
   const handleThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!isWebp(file)) {
+        setError('thumbnail', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    clearErrors('thumbnail');
     setData('thumbnail', file);
     setThumbPreview(URL.createObjectURL(file));
   };
 
   const handleProjectImages = (e: React.ChangeEvent<HTMLInputElement>) => {
     const files = Array.from(e.target.files ?? []);
+    const rejected = files.some(f => !isWebp(f));
+
+    if (rejected) {
+        setError('project_images', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    clearErrors('project_images');
     setData('project_images', files);
     setProjectImagePreviews(files.map(f => URL.createObjectURL(f)));
   };
@@ -185,11 +206,13 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
         post(route('update-project'), {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => {
-                setSelectedType('');
-                setSelectedProjectId('');
-                setProjectOptions([]);
-                setLoaded(false);
+            onSuccess: (page) => {
+                if (!page.props.flash?.error) {
+                    setSelectedType('');
+                    setSelectedProjectId('');
+                    setProjectOptions([]);
+                    setLoaded(false);
+                }
             },
         });
     };
@@ -658,7 +681,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                   <input
                                       ref={thumbRef}
                                       type="file"
-                                      accept="image/*"
+                                      accept="image/webp"
                                       className="uploader-input"
                                       onChange={handleThumb}
                                   />
@@ -683,7 +706,28 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                           browse
                                       </span>
                                   </p>
+                                  <p
+                                      style={{
+                                          marginTop: 4,
+                                          fontSize: '0.72rem',
+                                          color: 'var(--muted)',
+                                          pointerEvents: 'none',
+                                      }}
+                                  >
+                                      WEBP only · Max 10MB
+                                  </p>
                               </div>
+                              {errors.thumbnail && (
+                                  <p
+                                      style={{
+                                          color: '#FF8080',
+                                          fontSize: '0.75rem',
+                                          marginTop: 5,
+                                      }}
+                                  >
+                                      {errors.thumbnail}
+                                  </p>
+                              )}
                           </div>
                           <div className="form-group">
                               <label>Thumbnail Preview</label>
@@ -806,7 +850,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               <input
                                   ref={imagesRef}
                                   type="file"
-                                  accept="image/*"
+                                  accept="image/webp"
                                   multiple
                                   className="uploader-input"
                                   onChange={handleProjectImages}
@@ -833,6 +877,17 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                   </span>
                               </p>
                           </div>
+                          {errors.project_images && (
+                              <p
+                                  style={{
+                                      color: '#FF8080',
+                                      fontSize: '0.75rem',
+                                      marginTop: 5,
+                                  }}
+                              >
+                                  {errors.project_images}
+                              </p>
+                          )}
                           {projectImagePreviews.length > 0 && (
                               <div
                                   style={{

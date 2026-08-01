@@ -4,12 +4,16 @@ import { route } from 'ziggy-js';
 import CMSLayout from '@/cms/layouts/CMSLayout';
 import type { Popup } from '@/cms/types/cms';
 
+const isWebp = (file: File) =>
+    file.type === 'image/webp' ||
+    file.name.toLowerCase().endsWith('.webp');
+
 interface Props {
   popup: Popup;
 }
 
 export default function PopupIndex({ popup }: Props) {
-  const { data, setData, post, processing, errors } = useForm({
+  const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
     isEnabled: popup.isEnabled ? '1' : '0',
     image: null as File | null,
   });
@@ -25,6 +29,14 @@ export default function PopupIndex({ popup }: Props) {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!isWebp(file)) {
+        setError('image', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    clearErrors('image');
     setData('image', file);
     setPreview(URL.createObjectURL(file));
   };
@@ -82,7 +94,7 @@ export default function PopupIndex({ popup }: Props) {
                 <input
                   ref={fileRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/webp"
                   className="uploader-input"
                   onChange={handleFile}
                 />
@@ -91,7 +103,7 @@ export default function PopupIndex({ popup }: Props) {
                   Drag & drop or <span style={{ color: 'var(--gold)' }}>browse</span>
                 </p>
                 <p style={{ marginTop: 4, fontSize: '0.72rem', color: 'var(--muted)', pointerEvents: 'none' }}>
-                  JPG, PNG, WEBP · Leave empty to keep current
+                  WEBP only · Leave empty to keep current
                 </p>
               </div>
               {errors.image && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.image}</p>}

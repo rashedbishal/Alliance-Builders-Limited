@@ -4,6 +4,10 @@ import { route } from 'ziggy-js';
 import CMSLayout from '@/cms/layouts/CMSLayout';
 import type { ProjectType, Location, Facility, Tag } from '@/cms/types/cms';
 
+const isWebp = (file: File) =>
+    file.type === 'image/webp' ||
+    file.name.toLowerCase().endsWith('.webp');
+
 interface Props {
     types: ProjectType[];
     locations: Location[];
@@ -17,7 +21,7 @@ export default function ProjectAdd({
     facilities,
     tags,
 }: Props) {
-    const { data, setData, post, processing, errors, reset } = useForm({
+    const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
         name: '',
         address: '',
         google_map_url: '',
@@ -77,12 +81,29 @@ export default function ProjectAdd({
     const handleThumb = (e: React.ChangeEvent<HTMLInputElement>) => {
         const file = e.target.files?.[0];
         if (!file) return;
+
+        if (!isWebp(file)) {
+            setError('thumbnail', 'Only WEBP images are allowed.');
+            e.target.value = '';
+            return;
+        }
+
+        clearErrors('thumbnail');
         setData('thumbnail', file);
         setThumbPreview(URL.createObjectURL(file));
     };
 
     const handleProjectImages = (e: React.ChangeEvent<HTMLInputElement>) => {
         const files = Array.from(e.target.files ?? []);
+        const rejected = files.some((f) => !isWebp(f));
+
+        if (rejected) {
+            setError('project_images', 'Only WEBP images are allowed.');
+            e.target.value = '';
+            return;
+        }
+
+        clearErrors('project_images');
         setData('project_images', files);
         setProjectImagePreviews(files.map((f) => URL.createObjectURL(f)));
     };
@@ -113,8 +134,10 @@ export default function ProjectAdd({
         post(route('save-project'), {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => {
-                handleReset();
+            onSuccess: (page) => {
+                if (!page.props.flash?.error) {
+                    handleReset();
+                }
             },
         });
     };
@@ -564,7 +587,7 @@ export default function ProjectAdd({
                                 <input
                                     ref={thumbRef}
                                     type="file"
-                                    accept="image/*"
+                                    accept="image/webp"
                                     className="uploader-input"
                                     onChange={handleThumb}
                                 />
@@ -597,7 +620,7 @@ export default function ProjectAdd({
                                         pointerEvents: 'none',
                                     }}
                                 >
-                                    JPG, PNG, WEBP · Max 10MB
+                                    WEBP only · Max 10MB
                                 </p>
                             </div>
                             {errors.thumbnail && (
@@ -654,7 +677,7 @@ export default function ProjectAdd({
                             <input
                                 ref={imagesRef}
                                 type="file"
-                                accept="image/*"
+                                accept="image/webp"
                                 multiple
                                 className="uploader-input"
                                 onChange={handleProjectImages}
@@ -681,6 +704,17 @@ export default function ProjectAdd({
                                 </span>
                             </p>
                         </div>
+                        {errors.project_images && (
+                            <p
+                                style={{
+                                    color: '#FF8080',
+                                    fontSize: '0.75rem',
+                                    marginTop: 5,
+                                }}
+                            >
+                                {errors.project_images}
+                            </p>
+                        )}
                         {projectImagePreviews.length > 0 && (
                             <div
                                 style={{

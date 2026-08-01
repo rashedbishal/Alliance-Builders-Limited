@@ -4,12 +4,16 @@ import { route } from 'ziggy-js';
 import CMSLayout from '@/cms/layouts/CMSLayout';
 import type { Carousel } from '@/cms/types/cms';
 
+const isWebp = (file: File) =>
+    file.type === 'image/webp' ||
+    file.name.toLowerCase().endsWith('.webp');
+
 interface Props {
   carousels: Carousel[];
 }
 
 function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }) {
-    const { data, setData, post, processing, errors } = useForm({
+    const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         position: String(index + 1),
         property_name: carousel.property_name ?? '',
         description: carousel.description ?? '',
@@ -24,6 +28,14 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!isWebp(file)) {
+        setError('image', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    clearErrors('image');
     setData('image', file);
     setPreview(URL.createObjectURL(file));
   };
@@ -74,7 +86,7 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
                           <input
                               ref={fileRef}
                               type="file"
-                              accept="image/*"
+                              accept="image/webp"
                               className="uploader-input"
                               onChange={handleFile}
                           />
@@ -107,7 +119,7 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
                                   pointerEvents: 'none',
                               }}
                           >
-                              JPG, PNG, WEBP · Leave empty to keep current
+                              WEBP only · Leave empty to keep current
                           </p>
                       </div>
                       {errors.image && (

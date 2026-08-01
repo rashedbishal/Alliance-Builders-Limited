@@ -3,8 +3,12 @@ import { useState, useRef } from 'react';
 import { route } from 'ziggy-js';
 import CMSLayout from '@/cms/layouts/CMSLayout';
 
+const isWebp = (file: File) =>
+    file.type === 'image/webp' ||
+    file.name.toLowerCase().endsWith('.webp');
+
 export default function MediaAdd() {
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
     media_title: '',
     media_type: '',
     news_hyperlink: '',
@@ -18,6 +22,14 @@ export default function MediaAdd() {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (!isWebp(file)) {
+        setError('image', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    clearErrors('image');
     setData('image', file);
     setPreview(URL.createObjectURL(file));
   };
@@ -41,8 +53,10 @@ export default function MediaAdd() {
         post(route('save-media'), {
             forceFormData: true,
             preserveScroll: true,
-            onSuccess: () => {
-                handleReset();
+            onSuccess: (page) => {
+                if (!page.props.flash?.error) {
+                    handleReset();
+                }
             },
         });
     };
@@ -120,7 +134,7 @@ export default function MediaAdd() {
                 <input
                   ref={fileRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/webp"
                   className="uploader-input"
                   onChange={handleFile}
                 />

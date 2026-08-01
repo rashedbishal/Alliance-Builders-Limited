@@ -4,12 +4,16 @@ import CMSLayout from '@/cms/layouts/CMSLayout';
 import { GalleryType } from '@/cms/types/cms';
 import { route } from 'ziggy-js';
 
+const isWebp = (file: File) =>
+    file.type === 'image/webp' ||
+    file.name.toLowerCase().endsWith('.webp');
+
 interface Props {
   types: GalleryType[];
 }
 
 export default function GalleryAdd({ types }: Props) {
-  const { data, setData, post, processing, errors, reset } = useForm({
+  const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
     gallery_type: '',
     media_type: '',
     title: '',
@@ -18,18 +22,19 @@ export default function GalleryAdd({ types }: Props) {
   });
 
   const [preview, setPreview] = useState<{ url: string; type: 'image' | 'video' } | null>(null);
-  const [fileTypeText, setFileTypeText] = useState('JPG, PNG, WEBP · Max 10MB');
+  const [fileTypeText, setFileTypeText] = useState('WEBP only · Max 10MB');
   const [uploadLabel, setUploadLabel] = useState('Upload Image');
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleMediaTypeChange = (val: string) => {
     setData('media_type', val);
     setPreview(null);
+    clearErrors('gallery_content');
     if (fileRef.current) fileRef.current.value = '';
     if (val === '1') {
       setUploadLabel('Upload Image');
-      setFileTypeText('JPG, PNG, WEBP · Max 10MB');
-      fileRef.current?.setAttribute('accept', 'image/*');
+      setFileTypeText('WEBP only · Max 10MB');
+      fileRef.current?.setAttribute('accept', 'image/webp');
     } else if (val === '2') {
       setUploadLabel('Upload Video');
       setFileTypeText('MP4, MOV, AVI · Max 50MB');
@@ -40,6 +45,14 @@ export default function GalleryAdd({ types }: Props) {
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
     if (!file) return;
+
+    if (data.media_type === '1' && !isWebp(file)) {
+        setError('gallery_content', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    clearErrors('gallery_content');
     setData('gallery_content', file);
     const url = URL.createObjectURL(file);
     if (file.type.startsWith('image/')) setPreview({ url, type: 'image' });
@@ -53,12 +66,12 @@ export default function GalleryAdd({ types }: Props) {
 
         reset();
         setPreview(null);
-        setFileTypeText('JPG, PNG, WEBP · Max 10MB');
+        setFileTypeText('WEBP only · Max 10MB');
         setUploadLabel('Upload Image');
 
         if (fileRef.current) {
             fileRef.current.value = '';
-            fileRef.current.setAttribute('accept', 'image/*');
+            fileRef.current.setAttribute('accept', 'image/webp');
         }
     };
 
@@ -67,8 +80,10 @@ export default function GalleryAdd({ types }: Props) {
       post(route('save-gallery'), {
           forceFormData: true,
           preserveScroll: true,
-          onSuccess: () => {
-              handleReset();
+          onSuccess: (page) => {
+              if (!page.props.flash?.error) {
+                  handleReset();
+              }
           },
       });
   };
@@ -150,7 +165,7 @@ export default function GalleryAdd({ types }: Props) {
                 <input
                   ref={fileRef}
                   type="file"
-                  accept="image/*"
+                  accept="image/webp"
                   className="uploader-input"
                   onChange={handleFile}
                 />
