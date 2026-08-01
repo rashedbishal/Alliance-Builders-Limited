@@ -53,17 +53,6 @@ const MapComponent = ({ width = '100%', height = '100%', src, locationName = 'Pr
                 onError={handleIframeError}
             />
 
-            {/* Beautiful gradient overlays */}
-            {/* Top gradient - for nav blend */}
-            {/* <div className="pointer-events-none absolute top-0 left-0 right-0 h-24 bg-gradient-to-b from-[#0a0a0a] to-transparent" />
-
-            {/* Bottom gradient - for content blend */}
-            {/* <div className="pointer-events-none absolute bottom-0 left-0 right-0 h-32 bg-gradient-to-t from-[#0a0a0a] via-[#0a0a0a]/50 to-transparent" /> */}
-
-            {/* Side gradients */}
-            {/* <div className="pointer-events-none absolute top-0 bottom-0 left-0 w-16 bg-gradient-to-r from-[#0a0a0a] to-transparent" />
-            <div className="pointer-events-none absolute top-0 bottom-0 right-0 w-16 bg-gradient-to-l from-[#0a0a0a] to-transparent" /> */} */}
-
             {/* Click overlay - shows on hover/first view */}
             <AnimatePresence>
                 {showOverlay && !hasError && (
