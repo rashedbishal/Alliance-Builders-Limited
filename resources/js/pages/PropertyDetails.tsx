@@ -290,7 +290,7 @@ const PropertyDetail = () => {
 
                             <div className="relative h-[80vh] max-h-[80vh] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 sm:h-[82vh] sm:max-h-[82vh] lg:h-[80vh] lg:max-h-[80vh]">
                                 <motion.div
-                                    className="relative h-full w-full overflow-hidden"
+                                    className="relative h-[32rem] w-full overflow-hidden md:h-[36rem] lg:h-[42rem]"
                                     initial={{ scale: 1.02, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     transition={{ duration: 0.6 }}
