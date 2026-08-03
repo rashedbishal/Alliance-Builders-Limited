@@ -471,7 +471,7 @@ const PropertyDetail = () => {
                 <section className="overflow-hidden border-t border-white/5 bg-black py-24">
                     <div className="container mx-auto px-4">
                         <div className="grid grid-cols-1 items-start gap-24 lg:grid-cols-2">
-                            <div className="h-fit lg:sticky lg:top-24">
+                            <div className="h-fit pb-40 lg:sticky lg:top-24">
                                 <div className="relative flex flex-col gap-6">
                                     <motion.div
                                         initial={{ x: -50, opacity: 0 }}
@@ -489,13 +489,15 @@ const PropertyDetail = () => {
                                         initial={{ x: 50, opacity: 0 }}
                                         whileInView={{ x: 0, opacity: 1 }}
                                         transition={{ duration: 1 }}
-                                        className="-right-12 -bottom-40 z-20 aspect-3/4 w-[70%] overflow-hidden rounded-4xl border-2 border-black shadow-2xl lg:absolute"
+                                        className="absolute -right-12 -bottom-40 z-20 aspect-3/4 w-[70%] rounded-4xl border-2 border-black shadow-2xl"
                                     >
-                                        <img
-                                            src={`/${projectDetails.project_images[1]?.image || projectDetails.project_images[0]?.image}`}
-                                            className="h-full w-full object-cover"
-                                            alt="Detail"
-                                        />
+                                        <div className="h-full w-full overflow-hidden rounded-[calc(var(--radius-4xl)-2px)]">
+                                            <img
+                                                src={`/${projectDetails.project_images[1]?.image || projectDetails.project_images[0]?.image}`}
+                                                className="h-full w-full object-cover"
+                                                alt="Detail"
+                                            />
+                                        </div>
                                     </motion.div>
                                 </div>
                             </div>
