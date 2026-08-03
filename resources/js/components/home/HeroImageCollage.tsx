@@ -8,7 +8,7 @@ import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
 const HeroImageCollage = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isHovered, setIsHovered] = useState(false);
-    const { carousels } = usePage<{ carousels: Carousel[] }>().props;
+    const { carousels = [] } = usePage<{ carousels?: Carousel[] }>().props;
 
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -18,13 +18,13 @@ const HeroImageCollage = () => {
         return () => window.removeEventListener('resize', handleResize);
     }, []);
 
-    const dynamicCarousels = isMobile ? carousels.slice(0,3) : carousels;
+    const dynamicCarousels = isMobile ? (carousels ?? []).slice(0, 3) : (carousels ?? []);
 
   return (
       <section
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="relative mb-4 flex min-h-[78svh] w-full items-center justify-center overflow-hidden sm:min-h-[82svh] lg:min-h-[80svh]"
+          className="relative flex h-screen min-h-screen w-full items-center justify-center overflow-hidden"
       >
           {/* Overlay */}
           {!isHovered && (
@@ -49,7 +49,7 @@ const HeroImageCollage = () => {
                       key={index}
                       className={`relative cursor-pointer overflow-hidden transition-all duration-1200 ease-in-out ${
                           activeIndex === index
-                              ? 'flex-6'
+                              ? 'flex-[6]'
                               : activeIndex !== null
                                 ? 'flex-[0.8]'
                                 : 'flex-1'
