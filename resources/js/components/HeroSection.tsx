@@ -1,22 +1,21 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Button } from "@/components/ui/button";
 import { Play, Pause, ChevronLeft, ChevronRight } from "lucide-react";
-import heroProperty1 from "@/assets/hero-property-1.jpg";
-import heroProperty2 from "@/assets/hero-property-2.jpg";
-import abstractBg1 from "../assets/abstract-bg-1.jpg";
-import abstractBg2 from "../assets/abstract-bg-2.jpg";
-import abstractBg3 from "../assets/abstract-bg-3.jpg";
-import houseVideo from "../assets/house.mp4";
-// Removed ParallaxBackground usage in hero; rendering media directly
+const heroProperty1 = '';
+const heroProperty2 = '';
+const abstractBg1 = '';
+const abstractBg2 = '';
+const abstractBg3 = '';
+const houseVideo = '';
 
-import interior from '../assets/interior.png';
-import skyView from '../assets/sky-view.png';
-import skyView2 from '../assets/sky-view2.png';
-import property from '../assets/property.jpg';
-import property2 from '../assets/property-2.jpg';
-import interiorVideo from '../assets/interior.mp4';
-import skyViewVideo from '../assets/sky-scraper.mp4';
-import cityBuilding from '../assets/city-building.mp4';
+const interior = '';
+const skyView = '';
+const skyView2 = '';
+const property = '';
+const property2 = '';
+const interiorVideo = '';
+const skyViewVideo = '';
+const cityBuilding = '';
 
 const HeroSection = () => {
   const [currentSlide, setCurrentSlide] = useState(0);

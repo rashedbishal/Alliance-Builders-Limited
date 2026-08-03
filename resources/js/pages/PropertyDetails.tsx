@@ -6,7 +6,6 @@ import {
     Building2,
     Car,
     CheckCircle2,
-    Compass,
     Hash,
     MapPin,
     Ruler,
@@ -64,14 +63,6 @@ const PropertyDetail = () => {
     const formatDate = (dateString: string | null) => {
         if (!dateString) return 'TBA';
         return new Date(dateString).toLocaleDateString('en-GB', { month: 'short', year: 'numeric' });
-    };
-
-    const formatCurrency = (value: number) => {
-        return new Intl.NumberFormat('en-BD', {
-            style: 'currency',
-            currency: 'BDT',
-            maximumFractionDigits: 0,
-        }).format(value);
     };
 
     const getFacilityIcon = (name: string) => {
@@ -269,16 +260,16 @@ const PropertyDetail = () => {
             <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
 
                 {/* Hero + Gallery */}
-                <section className="container mx-auto px-4 pt-24 pb-12">
+                <section className="container mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 pt-12 pb-10 mb-10 lg:pt-16 lg:pb-14">
                     <ScrollAnimation>
-                        <div className="grid grid-cols-1 gap-6 lg:h-[min(80vh,46rem)] lg:grid-cols-4">
-                            <div className="hidden lg:flex lg:h-full lg:flex-col lg:justify-between lg:gap-3">
+                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:min-h-[82vh] lg:items-start">
+                            <div className="hidden lg:grid lg:grid-rows-3 lg:gap-3">
                                 {images.slice(0, 3).map((img, index) => (
                                     <motion.button
                                         key={index}
                                         type="button"
                                         onClick={() => setActiveImage(index)}
-                                        className={`relative flex-1 overflow-hidden rounded-2xl border transition-all duration-300 ${
+                                        className={`relative h-40 overflow-hidden rounded-2xl border transition-all duration-300 ${
                                             activeImage === index
                                                 ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
                                                 : 'border-white/10 hover:border-sky-400/50'
@@ -297,7 +288,7 @@ const PropertyDetail = () => {
                                 ))}
                             </div>
 
-                            <div className="relative h-[60vh] max-h-[26rem] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 lg:col-span-3 lg:h-full lg:max-h-none">
+                            <div className="relative h-[48vh] max-h-[24rem] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 sm:h-[52vh] sm:max-h-[26rem] lg:h-[80vh] lg:max-h-[80vh]">
                                 <motion.div
                                     className="relative h-full w-full overflow-hidden"
                                     initial={{ scale: 1.02, opacity: 0 }}
@@ -339,85 +330,21 @@ const PropertyDetail = () => {
                                     <div className="absolute left-1/3 top-0 h-72 w-72 rounded-full bg-blue-500/10 blur-3xl" />
                                 </div>
 
-                                <div className="relative z-10 flex flex-col gap-4 px-6 pb-6 pt-4 md:px-10 md:pb-8">
-                                    <div className="flex flex-wrap items-center justify-between gap-4">
-                                        <div className="flex flex-wrap items-center gap-3">
-                                            <Badge className="bg-gradient-to-r from-cyan-300 to-sky-400 px-4 py-1.5 text-sm font-semibold text-slate-950">
-                                                {projectDetails.handover_date && new Date(projectDetails.handover_date) <= new Date() ? 'Ready to Move' : 'Under Construction'}
-                                            </Badge>
-                                            <Badge
-                                                variant="outline"
-                                                className="border-cyan-200/25 bg-slate-950/35 px-3 py-1 text-xs uppercase tracking-wide text-cyan-50/90"
-                                            >
-                                                {projectDetails.tags?.[0]?.name || 'Residential'}
-                                            </Badge>
-                                        </div>
-                                        {projectDetails.price && (
-                                            <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 ring-1 ring-cyan-200/10">
-                                                <span className="text-xs text-slate-200">Starting from</span>
-                                                <span className="text-sm font-semibold text-cyan-300">
-                                                    {formatCurrency(projectDetails.price)}
-                                                </span>
-                                            </div>
-                                        )}
-                                    </div>
+                                <div className="absolute inset-x-0 bottom-0 z-10 flex flex-col gap-3 px-6 pb-6 pt-20 md:px-10 md:pb-8">
+                                    <Badge className="w-fit bg-gradient-to-r from-cyan-300 to-sky-400 px-4 py-1.5 text-sm font-semibold text-slate-950">
+                                        {projectDetails.handover_date && new Date(projectDetails.handover_date) <= new Date() ? 'Ready to Move' : 'Under Construction'}
+                                    </Badge>
 
-                                    <div className="flex flex-col gap-4 md:flex-row md:items-end md:justify-between">
-                                        <div>
-                                            <h1 className="mb-2 text-3xl font-semibold tracking-tight md:text-4xl lg:text-5xl">
-                                                {projectDetails.name}
-                                            </h1>
-                                            <div className="flex items-center text-sm text-slate-200/80">
-                                                <MapPin className="mr-2 h-4 w-4 flex-shrink-0 text-sky-300" />
-                                                <span>
-                                                    {projectDetails.address ??
-                                                        'Address to be announced'}
-                                                </span>
-                                            </div>
-                                        </div>
-                                        <div className="flex flex-wrap gap-3">
-                                            {projectDetails.details
-                                                ?.bedroom && (
-                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
-                                                    <Bed className="h-4 w-4 text-cyan-200" />
-                                                    <span>
-                                                        {
-                                                            projectDetails
-                                                                .details
-                                                                .bedroom
-                                                        }{' '}
-                                                        Bedrooms
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {projectDetails.details
-                                                ?.bathroom && (
-                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
-                                                    <Bath className="h-4 w-4 text-cyan-200" />
-                                                    <span>
-                                                        {
-                                                            projectDetails
-                                                                .details
-                                                                .bathroom
-                                                        }{' '}
-                                                        Bathrooms
-                                                    </span>
-                                                </div>
-                                            )}
-                                            {projectDetails.details
-                                                ?.apartment_direction && (
-                                                <div className="flex items-center gap-2 rounded-full bg-slate-950/45 px-4 py-1.5 text-xs ring-1 ring-cyan-200/10">
-                                                    <Compass className="h-4 w-4 text-cyan-200" />
-                                                    <span>
-                                                        Facing{' '}
-                                                        {
-                                                            projectDetails
-                                                                .details
-                                                                .apartment_direction
-                                                        }
-                                                    </span>
-                                                </div>
-                                            )}
+                                    <div>
+                                        <h1 className="mb-2 text-2xl font-semibold tracking-tight md:text-3xl lg:text-4xl">
+                                            {projectDetails.name}
+                                        </h1>
+                                        <div className="flex items-center text-sm text-slate-200/90">
+                                            <MapPin className="mr-2 h-4 w-4 flex-shrink-0 text-sky-300" />
+                                            <span>
+                                                {projectDetails.address ??
+                                                    'Address to be announced'}
+                                            </span>
                                         </div>
                                     </div>
                                 </div>

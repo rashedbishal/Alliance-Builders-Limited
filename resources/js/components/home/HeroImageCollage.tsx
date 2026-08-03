@@ -24,7 +24,7 @@ const HeroImageCollage = () => {
       <section
           onMouseEnter={() => setIsHovered(true)}
           onMouseLeave={() => setIsHovered(false)}
-          className="relative flex h-screen w-full items-center justify-center overflow-hidden"
+          className="relative mb-4 flex min-h-[78svh] w-full items-center justify-center overflow-hidden sm:min-h-[82svh] lg:min-h-[80svh]"
       >
           {/* Overlay */}
           {!isHovered && (
@@ -43,7 +43,7 @@ const HeroImageCollage = () => {
                   />
               </motion.div>
           )}
-          <div className="relative flex h-screen w-full flex-row gap-0">
+          <div className="relative flex h-full w-full flex-row gap-0">
               {dynamicCarousels.map((carousel, index) => (
                   <div
                       key={index}

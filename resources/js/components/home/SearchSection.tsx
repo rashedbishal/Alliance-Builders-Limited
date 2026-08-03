@@ -30,7 +30,7 @@ const SearchSection = () => {
     };
 
     return (
-        <section className="py-20 bg-black from-muted to-secondary relative overflow-hidden">
+        <section className="relative overflow-hidden bg-black py-16 pb-20 sm:py-20">
             {/* Background Pattern */}
             <div className="absolute inset-0 opacity-5">
                 <div className="absolute top-10 left-10 w-32 h-32 bg-primary rounded-full animate-float"></div>
