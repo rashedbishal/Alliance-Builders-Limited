@@ -290,7 +290,7 @@ const PropertyDetail = () => {
 
                             <div className="relative overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 lg:col-span-3">
                                 <motion.div
-                                    className="relative h-80 w-full overflow-hidden"
+                                    className="relative h-[32rem] w-full overflow-hidden md:h-[36rem] lg:h-[42rem]"
                                     initial={{ scale: 1.02, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     transition={{ duration: 0.6 }}
@@ -300,7 +300,7 @@ const PropertyDetail = () => {
                                         <img
                                             src={images[activeImage]}
                                             alt={projectDetails.name}
-                                            className=" w-full object-cover"
+                                            className="h-full w-full object-cover"
                                         />
                                     )}
                                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
