@@ -288,7 +288,7 @@ const PropertyDetail = () => {
                                 ))}
                             </div>
 
-                            <div className="relative h-[48vh] max-h-[24rem] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 sm:h-[52vh] sm:max-h-[26rem] lg:h-[80vh] lg:max-h-[80vh]">
+                            <div className="relative h-[80vh] max-h-[80vh] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 sm:h-[82vh] sm:max-h-[82vh] lg:h-[80vh] lg:max-h-[80vh]">
                                 <motion.div
                                     className="relative h-full w-full overflow-hidden"
                                     initial={{ scale: 1.02, opacity: 0 }}
