@@ -260,21 +260,33 @@ const PropertyDetail = () => {
             <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
 
                 {/* Hero + Gallery */}
-                <section className="container mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 pt-12 pb-10 mb-10 lg:pt-16 lg:pb-14">
+                <section className="container mx-auto max-w-[1280px] px-4 sm:px-6 lg:px-8 pt-24 pb-4 mb-6 lg:pt-28 lg:pb-6 lg:mb-8">
                     <ScrollAnimation>
-                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:min-h-[82vh] lg:items-start">
-                            <div className="hidden lg:grid lg:grid-rows-3 lg:gap-3">
-                                {images.slice(0, 3).map((img, index) => (
+                        <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-stretch">
+                            <div className="hidden lg:grid lg:h-[min(calc(100dvh-9.5rem),540px)] lg:grid-rows-3 lg:gap-3 lg:overflow-hidden">
+                                {[0, 1, 2].map((index) => {
+                                    const img = images[index];
+                                    if (!img) {
+                                        return (
+                                            <div
+                                                key={`thumb-slot-${index}`}
+                                                className="h-full w-full min-h-0"
+                                                aria-hidden
+                                            />
+                                        );
+                                    }
+
+                                    return (
                                     <motion.button
                                         key={index}
                                         type="button"
                                         onClick={() => setActiveImage(index)}
-                                        className={`relative h-40 overflow-hidden rounded-2xl border transition-all duration-300 ${
+                                        className={`relative h-full w-full min-h-0 max-h-full overflow-hidden rounded-2xl border transition-all duration-300 ${
                                             activeImage === index
                                                 ? 'border-sky-400/80 shadow-lg shadow-sky-500/40'
                                                 : 'border-white/10 hover:border-sky-400/50'
                                         }`}
-                                        whileHover={{ scale: 1.03 }}
+                                        whileHover={{ scale: 1.02 }}
                                     >
                                         <img
                                             src={img}
@@ -285,12 +297,13 @@ const PropertyDetail = () => {
                                             <div className="pointer-events-none absolute inset-0 bg-sky-500/20" />
                                         )}
                                     </motion.button>
-                                ))}
+                                    );
+                                })}
                             </div>
 
-                            <div className="relative h-[80vh] max-h-[80vh] overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 sm:h-[82vh] sm:max-h-[82vh] lg:h-[80vh] lg:max-h-[80vh]">
+                            <div className="relative h-[calc(100dvh-9.5rem)] w-full overflow-hidden rounded-3xl border border-cyan-200/15 bg-gradient-to-br from-cyan-400/10 via-slate-900/60 to-slate-950/80 md:h-[calc(100dvh-9.5rem)] lg:h-[min(calc(100dvh-9.5rem),540px)]">
                                 <motion.div
-                                    className="relative h-[32rem] w-full overflow-hidden md:h-[36rem] lg:h-[42rem]"
+                                    className="relative h-full w-full overflow-hidden"
                                     initial={{ scale: 1.02, opacity: 0 }}
                                     animate={{ scale: 1, opacity: 1 }}
                                     transition={{ duration: 0.6 }}
@@ -300,10 +313,10 @@ const PropertyDetail = () => {
                                         <img
                                             src={images[activeImage]}
                                             alt={projectDetails.name}
-                                            className="h-full w-full object-cover object-top"
+                                            className="h-full w-full object-cover object-center"
                                         />
                                     )}
-                                    <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />
+                                    <div className="pointer-events-none absolute inset-0 bg-[linear-gradient(to_top,rgb(2_6_23/0.9)_0%,rgb(2_6_23/0.65)_16%,rgb(2_6_23/0.25)_32%,transparent_52%)]" />
                                 </motion.div>
 
                                 {images.length > 1 && (
