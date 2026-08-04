@@ -300,7 +300,7 @@ const PropertyDetail = () => {
                                         <img
                                             src={images[activeImage]}
                                             alt={projectDetails.name}
-                                            className="h-full w-full object-cover"
+                                            className="h-full w-full object-cover object-top"
                                         />
                                     )}
                                     <div className="pointer-events-none absolute inset-0 bg-gradient-to-t from-slate-950/85 via-slate-950/35 to-transparent" />

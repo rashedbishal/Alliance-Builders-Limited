@@ -17,6 +17,15 @@ interface PropertyCardProps {
     showEyeButton?: boolean;
 }
 
+const SAMPLE_BUILDING_IMAGES = [
+    'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1200&h=1500&q=80',
+    'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1200&h=1500&q=80',
+    'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1200&h=1500&q=80',
+    'https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1200&h=1500&q=80',
+    'https://images.unsplash.com/photo-1570129477492-45c003edd2be?auto=format&fit=crop&w=1200&h=1500&q=80',
+    'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&h=1500&q=80',
+];
+
 const PropertyCard = ({
     property,
     index,
@@ -27,6 +36,17 @@ const PropertyCard = ({
 }: PropertyCardProps) => {
     const [showSaved, setShowSaved] = useState(false);
     const { SAVED_EVENT } = useFavorites();
+
+    const fallbackImg = SAMPLE_BUILDING_IMAGES[index % SAMPLE_BUILDING_IMAGES.length];
+    const [imgSrc, setImgSrc] = useState<string>(property.image?.path || fallbackImg);
+
+    useEffect(() => {
+        if (property.image?.path) {
+            setImgSrc(property.image.path);
+        } else {
+            setImgSrc(fallbackImg);
+        }
+    }, [property.image?.path, fallbackImg]);
 
     useEffect(() => {
         const handleSaved = (event: Event) => {
@@ -58,14 +78,13 @@ const PropertyCard = ({
                         <div className="absolute -top-[200%] -left-[200%] w-[200px] h-[400%] bg-gradient-to-r from-white/0 via-white/10 via-white/20 via-white/30 via-white/40 via-white/50 via-white/60 via-white/50 via-white/40 via-white/30 via-white/20 via-white/10 to-white/0 rotate-45 pointer-events-none transition-all ease-in-out group-hover:top-full group-hover:left-full z-50" style={{ transitionDuration: '900ms' }}></div>
 
                         {/* Background Image */}
-                        {property.image?.path && (
-                            <img
-                                src={property.image.path}
-                                loading='lazy'
-                                alt={property.name}
-                                className="absolute inset-0 w-full h-full object-cover group-hover:scale-110 transition-transform duration-700"
-                            />
-                        )}
+                        <img
+                            src={imgSrc}
+                            loading='lazy'
+                            alt={property.name}
+                            onError={() => setImgSrc(fallbackImg)}
+                            className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700"
+                        />
 
                         {/* Gradient Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20"></div>
