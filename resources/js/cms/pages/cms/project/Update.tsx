@@ -133,6 +133,11 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
       : [...data.tags, id]);
   };
 
+    const getXsrfToken = () => {
+        const match = document.cookie.match(/(?:^|; )XSRF-TOKEN=([^;]*)/);
+        return match ? decodeURIComponent(match[1]) : '';
+    };
+
     const deleteExistingImage = async (imageId: number) => {
         if (!confirm('Delete this image? This cannot be undone.')) return;
         setDeletingImageIds((prev) => new Set(prev).add(imageId));
@@ -142,7 +147,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                 credentials: 'same-origin',
                 headers: {
                     'Content-Type': 'application/json',
-                    'X-CSRF-TOKEN': (document.querySelector('meta[name="csrf-token"]') as HTMLMetaElement)?.content ?? '',
+                    'X-XSRF-TOKEN': getXsrfToken(),
                     'X-Requested-With': 'XMLHttpRequest',
                     'Accept': 'application/json',
                 },
