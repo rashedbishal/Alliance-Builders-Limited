@@ -87,7 +87,7 @@ const PropertyCard = ({
                         />
 
                         {/* Gradient Overlay */}
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-black/20"></div>
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-0% via-black/60 via-40% to-transparent to-70%"></div>
 
                         {/* Holographic Shine Effect */}
                         <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-b from-transparent via-transparent to-cyan-400/30 -rotate-45 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-y-full transition-all duration-700 ease-out"></div>
