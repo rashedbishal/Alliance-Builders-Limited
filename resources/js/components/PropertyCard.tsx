@@ -72,7 +72,7 @@ const PropertyCard = ({
                     onMouseLeave={() => setHoveredCard(null)}
                 >
                     {/* Full Background Image Card */}
-                    <div className="relative h-[500px] rounded-2xl overflow-hidden shadow-2xl transition-all duration-500">
+                    <div className="relative aspect-[3/4] rounded-2xl overflow-hidden shadow-2xl transition-all duration-500">
 
                         {/* Glossy Glaze Effect */}
                         <div className="absolute -top-[200%] -left-[200%] w-[200px] h-[400%] bg-gradient-to-r from-white/0 via-white/10 via-white/20 via-white/30 via-white/40 via-white/50 via-white/60 via-white/50 via-white/40 via-white/30 via-white/20 via-white/10 to-white/0 rotate-45 pointer-events-none transition-all ease-in-out group-hover:top-full group-hover:left-full z-50" style={{ transitionDuration: '900ms' }}></div>
