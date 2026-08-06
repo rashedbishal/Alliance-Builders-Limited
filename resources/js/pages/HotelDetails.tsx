@@ -1,5 +1,5 @@
 import { Link, usePage } from '@inertiajs/react';
-import { motion, useScroll, useTransform } from 'framer-motion';
+import { AnimatePresence, motion, useScroll, useTransform } from 'framer-motion';
 import {
     ArrowLeft,
     Bath,
@@ -10,7 +10,7 @@ import {
     Wifi,
     Wind,
 } from 'lucide-react';
-import React, { useRef, useState } from 'react';
+import React, { useEffect, useRef, useState } from 'react';
 
 import FloatingGallery from '@/components/HotelDetails/FloatingGallery';
 import HotelStats from '@/components/HotelDetails/HotelStats';
@@ -179,6 +179,16 @@ const HotelDetails = () => {
     const primaryImage =
         images[activeImage] || projectDetails.project_images?.[0]?.image || '';
 
+    const [signatureIndex, setSignatureIndex] = useState(0);
+    useEffect(() => {
+        if (images.length < 2) return;
+        const interval = setInterval(() => {
+            setSignatureIndex((prev) => (prev + 1) % images.length);
+        }, 4000);
+        return () => clearInterval(interval);
+    }, [images.length]);
+    const signatureImage = images[signatureIndex] || primaryImage;
+
     const heroRef = useRef(null);
     const { scrollYProgress } = useScroll({
         target: heroRef,
@@ -266,18 +276,25 @@ const HotelDetails = () => {
                                     </Card>
                                 </ScrollAnimation>
 
-                                {primaryImage && (
+                                {signatureImage && (
                                     <ScrollAnimation delay={0.15}>
                                         <motion.div
-                                            className="relative overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-lg"
+                                            className="relative h-56 w-full overflow-hidden rounded-3xl border border-white/10 bg-slate-900 shadow-lg"
                                             whileHover={{ scale: 1.02 }}
                                             transition={{ duration: 0.4 }}
                                         >
-                                            <img
-                                                src={primaryImage}
-                                                alt={projectDetails.name}
-                                                className="h-56 w-full object-cover"
-                                            />
+                                            <AnimatePresence mode="sync">
+                                                <motion.img
+                                                    key={signatureIndex}
+                                                    src={signatureImage}
+                                                    alt={projectDetails.name}
+                                                    className="absolute inset-0 h-full w-full object-cover"
+                                                    initial={{ opacity: 0 }}
+                                                    animate={{ opacity: 1 }}
+                                                    exit={{ opacity: 0 }}
+                                                    transition={{ duration: 1.2, ease: 'easeInOut' }}
+                                                />
+                                            </AnimatePresence>
                                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950/70 via-slate-900/10 to-transparent" />
                                             <div className="absolute bottom-4 left-4">
                                                 <p className="text-xs tracking-[0.2em] text-slate-300 uppercase">
@@ -439,41 +456,6 @@ const HotelDetails = () => {
                                 </ScrollAnimation>
                             </div>
                         </div>
-
-                        <div className="mt-12 space-y-10 lg:col-span-2">
-                            <ScrollAnimation delay={0.25}>
-                                <Card className="border-cyan-200/15 bg-slate-950/55 backdrop-blur-xl">
-                                    <CardContent className="p-6 md:p-8">
-                                        <div className="mb-6 flex flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
-                                            <div>
-                                                <h2 className="text-xl font-semibold">
-                                                    Explore on the Map
-                                                </h2>
-                                                <p className="text-xs text-slate-300">
-                                                    Discover nearby attractions
-                                                    and surroundings.
-                                                </p>
-                                            </div>
-                                        </div>
-                                        <div className="group relative">
-                                            <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 via-sky-500/10 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                                            <div className="relative h-[65vh] w-full overflow-hidden rounded-2xl border border-cyan-200/15 bg-slate-950/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30">
-                                                <div className="h-full w-full transition-all duration-1000 ease-in-out group-hover:brightness-110">
-                                                    <MapComponent
-                                                        width="100%"
-                                                        height="100%"
-                                                        src={
-                                                            projectDetails.google_map_url ??
-                                                            ''
-                                                        }
-                                                    />
-                                                </div>
-                                            </div>
-                                        </div>
-                                    </CardContent>
-                                </Card>
-                            </ScrollAnimation>
-                        </div>
                     </section>
 
                     <FloatingGallery images={images} />
@@ -483,6 +465,41 @@ const HotelDetails = () => {
                         floors={projectDetails.floors}
                         size={projectDetails.size}
                     />
+
+                    <section className="container mx-auto px-4 py-12">
+                        <ScrollAnimation delay={0.25}>
+                            <Card className="border-cyan-200/15 bg-slate-950/55 backdrop-blur-xl">
+                                <CardContent className="p-6 md:p-8">
+                                    <div className="mb-6 flex flex-col items-center gap-3 text-center md:flex-row md:justify-between md:text-left">
+                                        <div>
+                                            <h2 className="text-xl font-semibold">
+                                                Explore on the Map
+                                            </h2>
+                                            <p className="text-xs text-slate-300">
+                                                Discover nearby attractions
+                                                and surroundings.
+                                            </p>
+                                        </div>
+                                    </div>
+                                    <div className="group relative">
+                                        <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 via-sky-500/10 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
+                                        <div className="relative h-[65vh] w-full overflow-hidden rounded-2xl border border-cyan-200/15 bg-slate-950/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30">
+                                            <div className="h-full w-full transition-all duration-1000 ease-in-out group-hover:brightness-110">
+                                                <MapComponent
+                                                    width="100%"
+                                                    height="100%"
+                                                    src={
+                                                        projectDetails.google_map_url ??
+                                                        ''
+                                                    }
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        </ScrollAnimation>
+                    </section>
 
                     <SurroundingsSection project={projectDetails} />
                 </div>

@@ -1,6 +1,11 @@
 import { motion } from 'framer-motion';
 
 const SurroundingsSection = ({ project }: any) => {
+    const areaImages: string[] =
+        project.project_images
+            ?.map((img: { image: string }) => `/${img.image}`)
+            .slice(0, 2) || [];
+
     return (
         <section className="relative overflow-hidden py-32">
             <div className="bg-gradient-elegant absolute inset-0 opacity-30" />
@@ -36,11 +41,20 @@ const SurroundingsSection = ({ project }: any) => {
                         whileInView={{ opacity: 1, x: 0 }}
                         transition={{ duration: 0.8 }}
                         viewport={{ once: true }}
+                        className="grid grid-cols-1 gap-4 sm:grid-cols-2"
                     >
-                        <img
-                            src= {`/${project.project_images?.[0]?.image}`}
-                            className="shadow-elegant-xl rounded-3xl"
-                        />
+                        {areaImages.map((src, index) => (
+                            <img
+                                key={index}
+                                src={src}
+                                alt={`${project.location?.name ?? 'Area'} surroundings`}
+                                className={`aspect-video w-full rounded-3xl object-cover shadow-elegant-xl ${
+                                    areaImages.length === 1
+                                        ? 'sm:col-span-2'
+                                        : ''
+                                }`}
+                            />
+                        ))}
                     </motion.div>
                 </div>
             </div>

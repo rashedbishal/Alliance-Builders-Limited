@@ -48,7 +48,7 @@ Organized by domain into subdirectories rather than flat:
 - `Inquiry/` — `Contact` (contact form submissions).
 - `Releases/` — `MediaCoverage`, `Popup`.
 
-Shared relationship/behavior logic is factored into traits under `app/Concerns/` (`HasImage`, `HasImages`, `HasVideo`, `HasVideos`, `HasFacilities`, `HasTags`, `HasDetails`, `HasMetadata`, plus Fortify validation rule traits) and composed into models like `Project` — check there before adding a new polymorphic relation, since a suitable trait likely exists already.
+Shared relationship/behavior logic is factored into traits under `app/Concerns/` (`HasImage`, `HasImages`, `HasVideo`, `HasVideos`, `HasFacilities`, `HasTags`, `HasDetails`, `HasMetadata`, `HasProjects`, plus Fortify validation rule traits) and composed into models like `Project` — check there before adding a new polymorphic relation, since a suitable trait likely exists already.
 
 ### Controllers
 - `PageController` — all public-facing pages (home, about, services, properties, directors, gallery, media, contact, legal pages). Rendered from `resources/js/pages`.
