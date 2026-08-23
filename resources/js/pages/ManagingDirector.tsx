@@ -1,4 +1,4 @@
-import manager from "@/assets/images/people/manager.jpg";
+import manager from "@/assets/images/people/manager.webp";
 import AppLayout from '@/layouts/AppLayout';
 
 export default function ManagingDirector() {
