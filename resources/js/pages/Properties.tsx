@@ -1,6 +1,6 @@
 import { router, usePage } from '@inertiajs/react';
-import { Search } from 'lucide-react';
-import React, { useState, useMemo, useEffect } from 'react';
+import { Search, X, Sparkles, ArrowDown } from 'lucide-react';
+import React, { useState, useMemo, useEffect, useRef } from 'react';
 import golden from "@/assets/images/architecture/golden-building.jpg";
 import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
 import PropertyCard from '@/components/PropertyCard';
@@ -175,12 +175,27 @@ const Properties = () => {
         return filtered;
     }, [nonHotelProjects, activeTab, searchTerm, favorites, locationFilter]);
 
+    const resultsRef = useRef<HTMLDivElement>(null);
+    const isFiltered = Boolean(searchTerm.trim() || (locationFilter && locationFilter !== 'all'));
+
+    const scrollToResults = () => {
+        if (resultsRef.current) {
+            const yOffset = -90;
+            const y = resultsRef.current.getBoundingClientRect().top + window.pageYOffset + yOffset;
+            window.scrollTo({ top: y, behavior: 'smooth' });
+        }
+    };
+
     return (
         <AppLayout>
             <div className="min-h-screen bg-background">
-                {/* Hero Section */}
+                {/* Hero Section - Squeezes dynamically when searching */}
                 <section
-                    className="relative flex h-screen w-full items-center justify-center overflow-hidden pt-4"
+                    className={`relative flex w-full items-center justify-center overflow-hidden transition-all duration-[1500ms] delay-500 ease-in-out ${
+                        isFiltered
+                            ? 'min-h-[42vh] pt-28 pb-10'
+                            : 'min-h-screen pt-16 pb-16'
+                    }`}
                     style={{
                         backgroundImage: `url(${bgBlack})`,
                         backgroundAttachment: 'fixed',
@@ -190,37 +205,90 @@ const Properties = () => {
                     }}
                 >
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
-                    <div className="relative z-10 container mx-auto flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12">
-                        <h1 className="animate-fade-in text-magenta text-white-shadow px-2 text-center text-2xl font-bold sm:px-4 sm:text-3xl md:text-5xl lg:text-7xl">
+                    <div className="relative z-10 container mx-auto flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 transition-all duration-[1500ms] delay-500 ease-in-out">
+                        <h1 className={`animate-fade-in text-magenta text-white-shadow px-2 text-center font-bold transition-all duration-[1500ms] delay-500 ease-in-out ${
+                            isFiltered ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl md:text-5xl lg:text-7xl'
+                        }`}>
                             Find Your Dream Property
                         </h1>
-                        <p
-                            className="animate-fade-in text-blue-shadow mt-4 px-4 text-center text-sm text-white sm:mt-6 sm:px-6 sm:text-base md:px-8 md:text-lg lg:px-12 lg:text-2xl"
-                            style={{ animationDelay: '200ms' }}
+                        
+                        <div
+                            className={`overflow-hidden transition-all duration-[1500ms] delay-500 ease-in-out ${
+                                isFiltered
+                                    ? 'max-h-0 opacity-0 scale-95 mt-0 pointer-events-none'
+                                    : 'max-h-48 opacity-100 scale-100 mt-4 sm:mt-6'
+                            }`}
                         >
-                            <WritingText
-                                spacing={9}
-                                text="Explore the best properties handpicked just for you. Whether you're looking for a luxury villa, a modern apartment, or a cozy house, we have something for everyone."
-                            />
-                        </p>
+                            <p className="animate-fade-in text-blue-shadow px-4 text-center text-sm text-white sm:px-6 sm:text-base md:px-8 md:text-lg lg:px-12 lg:text-2xl">
+                                <WritingText
+                                    spacing={9}
+                                    text="Explore the best properties handpicked just for you. Whether you're looking for a luxury villa, a modern apartment, or a cozy house, we have something for everyone."
+                                />
+                            </p>
+                        </div>
 
-                        {/* Search Filters */}
+                        {/* Search Filters Card */}
                         <Card
-                            className=" shadow-elegant-lg animate-scale-in mx-auto mt-8 h-auto w-full max-w-xs sm:mt-10 sm:max-w-sm md:mt-12 md:max-w-md lg:max-w-lg"
+                            className={`shadow-2xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/80 text-white rounded-2xl animate-scale-in mx-auto h-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl transition-all duration-[1500ms] delay-500 ease-in-out ${
+                                isFiltered ? 'mt-6 sm:mt-6' : 'mt-8 sm:mt-10 md:mt-12'
+                            }`}
                             style={{ animationDelay: '400ms' }}
                         >
-                            <CardContent className="p-1 sm:p-2 md:p-3">
-                                <div className="grid grid-cols-1 gap-3 text-black sm:gap-4">
-                                    <div className="relative">
-                                        <Search className="absolute top-1/2 left-3 h-5 w-5 -translate-y-1/2 text-muted-foreground" />
+                            <CardContent className="p-3.5 sm:p-4">
+                                <div className="grid grid-cols-1 gap-3 text-slate-900">
+                                    <div className="relative flex items-center">
+                                        <Search className="absolute left-3.5 h-5 w-5 text-slate-500 pointer-events-none" />
                                         <Input
                                             placeholder="Search location or property..."
                                             value={searchTerm}
                                             onChange={(e) =>
                                                 setSearchTerm(e.target.value)
                                             }
-                                            className="pl-10 text-sm"
+                                            className="pl-10 pr-10 text-sm h-11 bg-white border-white text-slate-900 placeholder:text-slate-400 focus:bg-white focus:ring-2 focus:ring-amber-500/40 rounded-xl font-medium shadow-inner"
                                         />
+                                        {searchTerm && (
+                                            <button
+                                                onClick={() => setSearchTerm('')}
+                                                className="absolute right-3 p-1 text-slate-500 hover:text-slate-900 rounded-full hover:bg-slate-200 transition-colors"
+                                                title="Clear search"
+                                            >
+                                                <X className="h-4 w-4" />
+                                            </button>
+                                        )}
+                                    </div>
+                                </div>
+
+                                {/* Live Search Results Badge & Quick Actions */}
+                                <div
+                                    className={`overflow-hidden transition-all duration-[1500ms] delay-500 ease-in-out ${
+                                        isFiltered
+                                            ? 'max-h-20 opacity-100 mt-3.5 pt-3 border-t border-slate-700/80 pointer-events-auto'
+                                            : 'max-h-0 opacity-0 mt-0 pt-0 border-t-0 pointer-events-none'
+                                    }`}
+                                >
+                                    <div className="flex items-center justify-between text-xs sm:text-sm text-slate-200">
+                                        <span className="flex items-center gap-1.5 font-semibold text-slate-100">
+                                            <Sparkles className="h-4 w-4 text-amber-400" />
+                                            Found {filteredProperties.length} {filteredProperties.length === 1 ? 'property' : 'properties'}
+                                        </span>
+                                        <div className="flex items-center gap-2">
+                                            <button
+                                                onClick={scrollToResults}
+                                                className="inline-flex items-center gap-1 font-semibold text-blue-400 hover:text-blue-300 transition-colors"
+                                            >
+                                                <span>View Results</span>
+                                                <ArrowDown className="h-3.5 w-3.5 animate-bounce" />
+                                            </button>
+                                            <button
+                                                onClick={() => {
+                                                    setSearchTerm('');
+                                                    setLocationFilter('');
+                                                }}
+                                                className="font-medium text-slate-400 hover:text-red-400 transition-colors pl-2 border-l border-slate-700"
+                                            >
+                                                Reset
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                             </CardContent>
@@ -241,7 +309,8 @@ const Properties = () => {
                     </section>
                 ) : (
                     <section
-                        className="bg-gradient-to-b from-background to-secondary/20 py-20"
+                        ref={resultsRef}
+                        className="bg-gradient-to-b from-background to-secondary/20 py-16 lg:py-20"
                         style={{
                             backgroundImage: `url(${golden})`,
                             backgroundAttachment: 'fixed',
