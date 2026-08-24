@@ -45,7 +45,7 @@ const Footer = () => {
 
   return (
     <footer
-      className="text-primary-foreground relative overflow-hidden bg-cover bg-center bg-no-repeat pb-12"
+      className="text-primary-foreground relative overflow-hidden bg-cover bg-center bg-no-repeat pb-24"
       style={{ backgroundImage: `url(${abstractBg2})`, backgroundAttachment: 'fixed', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat' }}
     >
       <div className="absolute inset-0 bg-black/40" />
@@ -198,7 +198,7 @@ const Footer = () => {
         <Separator className="bg-white/20" />
 
         {/* Bottom Footer */}
-        <div className="py-8">
+        <div className="pt-8 pb-12">
           <div className="flex flex-col lg:flex-row justify-between items-center space-y-6 lg:space-y-0">
             {/* Copyright */}
             <div className="text-center lg:text-left">
