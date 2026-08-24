@@ -137,11 +137,17 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
 
                 {/* Main Button */}
                 <motion.button
+                    layout
                     onClick={handleClick}
                     animate={controls}
                     whileHover={{ scale: 1.05 }}
                     whileTap={{ scale: 0.95 }}
-                    className="relative flex items-center gap-3 rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 p-1 sm:p-1.5 sm:pr-5 shadow-2xl transition-shadow hover:shadow-blue-500/25"
+                    transition={{
+                        layout: { duration: 0.7, ease: [0.16, 1, 0.3, 1] }
+                    }}
+                    className={`relative flex items-center justify-center rounded-full bg-gradient-to-r from-blue-600 via-blue-500 to-purple-600 p-1.5 shadow-2xl transition-shadow duration-700 hover:shadow-blue-500/25 ${
+                        isOpen ? 'sm:p-2' : 'sm:pr-5'
+                    }`}
                 >
                     {/* Avatar Container */}
                     <div className="relative h-8 w-8 sm:h-12 sm:w-12 flex-shrink-0 overflow-hidden rounded-full bg-white">
@@ -149,12 +155,12 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                         <motion.div
                             className="absolute inset-0 bg-gradient-to-br from-blue-400 via-purple-500 to-pink-500"
                             animate={{
-                                rotate: isOpen ? 0 : [0, 180, 360],
+                                rotate: isOpen ? 180 : [0, 180, 360],
                             }}
                             transition={{
-                                duration: isOpen ? 0 : 8,
+                                duration: isOpen ? 0.7 : 8,
                                 repeat: isOpen ? 0 : Infinity,
-                                ease: "linear"
+                                ease: "easeInOut"
                             }}
                             style={{ borderRadius: '50%' }}
                         />
@@ -165,20 +171,20 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                                 {isOpen ? (
                                     <motion.div
                                         key="close"
-                                        initial={{ rotate: -90, opacity: 0 }}
-                                        animate={{ rotate: 0, opacity: 1 }}
-                                        exit={{ rotate: 90, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
+                                        initial={{ rotate: -180, scale: 0.3, opacity: 0 }}
+                                        animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                                        exit={{ rotate: 180, scale: 0.3, opacity: 0 }}
+                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                     >
                                         <X size={22} className="text-white" />
                                     </motion.div>
                                 ) : (
                                     <motion.div
                                         key="open"
-                                        initial={{ scale: 0, opacity: 0 }}
-                                        animate={{ scale: 1, opacity: 1 }}
-                                        exit={{ scale: 0, opacity: 0 }}
-                                        transition={{ duration: 0.2 }}
+                                        initial={{ rotate: 180, scale: 0.3, opacity: 0 }}
+                                        animate={{ rotate: 0, scale: 1, opacity: 1 }}
+                                        exit={{ rotate: -180, scale: 0.3, opacity: 0 }}
+                                        transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
                                         className="relative"
                                     >
                                         <Bot size={24} className="text-blue-400" />
@@ -197,14 +203,15 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                     </div>
 
                     {/* Label */}
-                    <div className='hidden sm:block'>
-                        <AnimatePresence>
+                    <AnimatePresence>
                         {!isOpen && (
                             <motion.div
-                                initial={{ opacity: 0, x: -10 }}
-                                animate={{ opacity: 1, x: 0 }}
-                                exit={{ opacity: 0, x: -10 }}
-                                className="flex items-center gap-2"
+                                key="label"
+                                initial={{ opacity: 0, width: 0, filter: "blur(4px)" }}
+                                animate={{ opacity: 1, width: "auto", filter: "blur(0px)" }}
+                                exit={{ opacity: 0, width: 0, filter: "blur(4px)" }}
+                                transition={{ duration: 0.6, ease: [0.16, 1, 0.3, 1] }}
+                                className="hidden sm:flex items-center gap-2 overflow-hidden whitespace-nowrap pl-2"
                             >
                                 <span className="text-sm font-semibold text-white">
                                     AI Assistant
@@ -216,9 +223,8 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                                     <Zap size={14} className="text-yellow-300" fill="currentColor" />
                                 </motion.div>
                             </motion.div>
-                            )}
-                        </AnimatePresence>
-                    </div>
+                        )}
+                    </AnimatePresence>
 
                     {/* Ripple effect on hover */}
                     {isHovered && !isOpen && (
