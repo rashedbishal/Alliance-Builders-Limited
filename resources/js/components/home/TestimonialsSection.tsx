@@ -1,6 +1,8 @@
 import TestimonialBackground from '@images/home/testimonials-background.jpg';
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState, useEffect } from 'react';
+import { Link } from '@inertiajs/react';
+import { contact } from '@/routes';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ScrollAnimation from '../ScrollAnimation';
@@ -205,8 +207,10 @@ const TestimonialsSection = () => {
         {/* Call to Action */}
         <ScrollAnimation delay={0.5}>
           <div className="text-center mt-16">
-          <Button size="lg" className="bg-accent hover:bg-accent-dark text-accent-foreground shadow-elegant-lg px-4 py-4 text-lg font-semibold">
-            Share Your Experience
+          <Button size="lg" asChild className="bg-accent hover:bg-accent-dark text-accent-foreground shadow-elegant-lg px-6 py-4 text-lg font-semibold transition-all duration-300">
+            <Link href={contact.url()}>
+              Share Your Experience
+            </Link>
           </Button>
         </div>
         </ScrollAnimation>
