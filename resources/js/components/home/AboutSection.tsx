@@ -178,12 +178,12 @@ const AboutSection = () => {
               Join thousands of satisfied clients who have found their perfect properties with EstateElite
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
-              <Button size="lg" className="bg-white/20 backdrop-blur-sm text-white hover:bg-white/30 hover:scale-110 transition duration-500 ease-out shadow-elegant px-8 py-3">
+              <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg px-8 py-3 font-semibold transition-all duration-300">
                 <Link href={properties.url()}>
                     Browse Properties
                 </Link>
               </Button>
-              <Button size="lg" className="bg-accent text-accent-foreground hover:bg-black border shadow-elegant px-8 py-3">
+              <Button size="lg" asChild className="bg-white/10 hover:bg-white/20 border border-white/30 text-white backdrop-blur-sm shadow-md px-8 py-3 font-semibold transition-all duration-300">
                 <Link href={contact.url()}>
                     Schedule Meeting
                 </Link>
