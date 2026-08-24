@@ -64,9 +64,9 @@ const SisterCompanies: React.FC = () => {
     {
       id: 6,
       name: 'Opticore Solutions Ltd.',
-      tag: 'Interior & Space Design',
+      tag: 'IT & Digital Media',
       logo: opticore,
-      description: 'Luxury interior architecture, custom furniture craftsmanship, and high-end commercial design.',
+      description: 'Innovative IT solutions, video editing, graphics designing, 3D production, and digital marketing services.',
       website: 'https://opticoresolutionsltd.com/',
     },
   ];
