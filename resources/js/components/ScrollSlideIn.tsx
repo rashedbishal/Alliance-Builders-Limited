@@ -8,6 +8,7 @@ interface ScrollSlideInProps {
   duration?: number;
   direction?: 'left' | 'right' | 'top' | 'bottom';
   distance?: number;
+  once?: boolean;
 }
 
 const ScrollSlideIn: React.FC<ScrollSlideInProps> = ({ 
@@ -16,7 +17,8 @@ const ScrollSlideIn: React.FC<ScrollSlideInProps> = ({
   delay = 0,
   duration = 0.6,
   direction = 'left',
-  distance = 100
+  distance = 100,
+  once = true
 }) => {
   // Determine initial position based on direction
   const getInitialPosition = () => {
@@ -39,7 +41,7 @@ const ScrollSlideIn: React.FC<ScrollSlideInProps> = ({
       className={className}
       initial={getInitialPosition()}
       whileInView={{ opacity: 1, x: 0, y: 0 }}
-      viewport={{ once: false, amount: 0.2 }}
+      viewport={{ once, amount: 0.2 }}
       transition={{ 
         duration,
         delay,
