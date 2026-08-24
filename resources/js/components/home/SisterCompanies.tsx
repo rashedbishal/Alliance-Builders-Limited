@@ -1,249 +1,177 @@
-import { ArrowUpRight, ExternalLink } from 'lucide-react';
 import React from 'react';
-
-// import logo images
-// import alliance from "@/assets/images/logo/alliance logo.webp"
-import beverage from "@/assets/images/logo/alliance-beverage-agro.svg"
-import brokerage from "@/assets/images/logo/alliance-brokerage.svg"
-import construction from "@/assets/images/logo/alliance-construction.svg"
-import success from "@/assets/images/logo/alliance-success-builders.svg"
-import jana from "@/assets/images/logo/jana.png"
-import opticore from "@/assets/images/logo/opticore-solutions.svg"
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
+import { ArrowUpRight, Globe, Layers, Award, Users } from 'lucide-react';
 import ScrollAnimation from '../ScrollAnimation';
-import { Link } from '@inertiajs/react';
 
-const SisterCompanies = () => {
-  const companies = [
-      {
-          id: 1,
-          name: 'Alliance Brokerage Ltd.',
-          logo: brokerage,
-          description:
-              'Premier construction services specializing in residential and commercial projects with cutting-edge technology.',
-          services: [
-              'Construction Management',
-              'Project Development',
-              'Quality Assurance',
-          ],
-          founded: '2010',
-          projects: '200+',
-          color: 'bg-gradient-to-br from-tertiary-foreground to-tertiary-light',
-          website:
-              'https://www.facebook.com/people/Alliance-Brokerage/100094466712412/#',
-      },
-      {
-          id: 2,
-          name: 'Alliance Beverage Agro',
-          logo: beverage,
-          description:
-              'Innovative landscape architecture and sustainable urban planning solutions for modern developments.',
-          services: [
-              'Landscape Design',
-              'Urban Planning',
-              'Sustainability Consulting',
-          ],
-          founded: '2012',
-          projects: '300+',
-          color: 'bg-gradient-to-br from-success to-success-foreground',
-          website: 'https://www.facebook.com/alliancebeverageandagro/',
-      },
-      {
-          id: 3,
-          name: 'Alliance Construction',
-          logo: construction,
-          description:
-              'Cutting-edge home automation and smart building solutions for residential and commercial properties.',
-          services: [
-              'Home Automation',
-              'Security Systems',
-              'Energy Management',
-          ],
-          founded: '2015',
-          projects: '500+',
-          color: 'bg-gradient-to-br from-neutral to-neutral-light',
-          website: 'https://www.facebook.com/alliancebeverageandagro/',
-      },
-      {
-          id: 4,
-          name: 'Alliance Success Builders',
-          logo: success,
-          description:
-              'Comprehensive security solutions and property management services for residential and commercial clients.',
-          services: [
-              'Property Security',
-              'Facility Management',
-              'Risk Assessment',
-          ],
-          founded: '2008',
-          projects: '400+',
-          color: 'bg--gradient-to-br from-neutral to-neutral-light',
-          website: 'https://alliancesuccessbuilders.com/',
-      },
-      {
-          id: 5,
-          name: 'Hotel Jana',
-          logo: jana,
-          description:
-              'Modern transportation and parking solutions designed for urban developments and commercial complexes.',
-          services: [
-              'Parking Solutions',
-              'Transport Planning',
-              'Mobility Consulting',
-          ],
-          founded: '2018',
-          projects: '150+',
-          color: 'bg-gradient-to-br from-tertiary-foreground to-tertiary-light',
-          website: 'https://invest.alliancebuildersltd.org/',
-      },
-      {
-          id: 6,
-          name: 'Opticore Solutions Ltd.',
-          logo: opticore,
-          description:
-              'Luxury interior design and custom craftsmanship for high-end residential and commercial spaces.',
-          services: ['Interior Design', 'Custom Furniture', 'Luxury Finishes'],
-          founded: '2014',
-          projects: '250+',
-          color: 'bg-gradient-to-br from-tertiary-foreground to-tertiary-light',
-          website: 'https://opticoresolutionsltd.com/',
-      },
+// Import logo images
+import beverage from "@/assets/images/logo/alliance-beverage-agro.svg";
+import brokerage from "@/assets/images/logo/alliance-brokerage.svg";
+import construction from "@/assets/images/logo/alliance-construction.svg";
+import success from "@/assets/images/logo/alliance-success-builders.svg";
+import jana from "@/assets/images/logo/jana.png";
+import opticore from "@/assets/images/logo/opticore-solutions.svg";
+
+interface Company {
+  id: number;
+  name: string;
+  tag: string;
+  logo: string;
+  description: string;
+  website: string;
+}
+
+const SisterCompanies: React.FC = () => {
+  const companies: Company[] = [
+    {
+      id: 1,
+      name: 'Alliance Brokerage Ltd.',
+      tag: 'Real Estate & Investment',
+      logo: brokerage,
+      description: 'Strategic property brokerage, land acquisition, and commercial asset investment management.',
+      website: 'https://www.facebook.com/people/Alliance-Brokerage/100094466712412/#',
+    },
+    {
+      id: 2,
+      name: 'Alliance Beverage Agro',
+      tag: 'Agro & Sustainable Goods',
+      logo: beverage,
+      description: 'Sustainable agricultural processing and beverage manufacturing operating under strict quality standards.',
+      website: 'https://www.facebook.com/alliancebeverageandagro/',
+    },
+    {
+      id: 3,
+      name: 'Alliance Construction',
+      tag: 'Infrastructure & Engineering',
+      logo: construction,
+      description: 'World-class structural development, urban planning, and large-scale architectural engineering.',
+      website: 'https://www.facebook.com/alliancebeverageandagro/',
+    },
+    {
+      id: 4,
+      name: 'Alliance Success Builders',
+      tag: 'Security & Operations',
+      logo: success,
+      description: 'Comprehensive corporate security, residential facility management, and risk assessment services.',
+      website: 'https://alliancesuccessbuilders.com/',
+    },
+    {
+      id: 5,
+      name: 'Hotel Jana',
+      tag: 'Luxury Hospitality',
+      logo: jana,
+      description: 'Premium accommodations, boutique resort experiences, and modern hospitality service excellence.',
+      website: 'https://invest.alliancebuildersltd.org/',
+    },
+    {
+      id: 6,
+      name: 'Opticore Solutions Ltd.',
+      tag: 'Interior & Space Design',
+      logo: opticore,
+      description: 'Luxury interior architecture, custom furniture craftsmanship, and high-end commercial design.',
+      website: 'https://opticoresolutionsltd.com/',
+    },
+  ];
+
+  const stats = [
+    { label: 'Sister Companies', value: '6', icon: Layers },
+    { label: 'Projects Executed', value: '1,800+', icon: Award },
+    { label: 'Cities Served', value: '25+', icon: Globe },
+    { label: 'Dedicated Team', value: '5,000+', icon: Users },
   ];
 
   return (
-      <section className="relative overflow-hidden bg-black py-20">
-          <div className="relative z-10 container mx-auto px-4 lg:px-8">
-              {/* Section Header */}
-              <ScrollAnimation once={true}>
-                  <div className="mb-16 text-center">
-                      <h2 className="mb-6 text-4xl font-bold text-white lg:text-5xl">
-                          Our Corporate Umbrella
-                      </h2>
-                      <p className="mx-auto max-w-3xl text-lg leading-relaxed text-white">
-                          Alliance Builders Ltd. is part of a comprehensive
-                          network of specialized companies, each bringing unique
-                          expertise to deliver complete real estate and
-                          construction solutions under one trusted umbrella.
-                      </p>
-                  </div>
-              </ScrollAnimation>
+    <section className="relative bg-gradient-to-b from-slate-100 via-slate-50 to-white py-24 text-slate-900 overflow-hidden">
+      {/* Subtle Background Accent Orbs */}
+      <div className="absolute top-1/4 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[300px] bg-primary/5 blur-[120px] rounded-full pointer-events-none" />
 
-              {/* Companies Grid */}
-              <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
-                  {companies.map((company, index) => (
-                      <ScrollAnimation key={company.id} delay={0} once={true} yOffset={0}>
-                          <Card className="group hover:shadow-elegant-xl relative cursor-pointer overflow-hidden bg-white transition-transform duration-500 hover:-translate-y-3">
-                              <div
-                                  className={`absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-10 ${company.color}`}
-                              ></div>
-
-                              <CardContent className="relative z-10 p-8">
-                                  {/* Logo and Header */}
-                                  <div className="mb-6 flex items-center justify-between">
-                                      <Link
-                                          href={company.website}
-                                          className={`rounded-2xl p-2 shadow-2xl shadow-black/70 ${company.color} transition-transform duration-300 group-hover:scale-110`}
-                                      >
-                                          <img
-                                              src={company.logo}
-                                              className="h-32 text-white"
-                                          />
-                                      </Link>
-                                      <Button
-                                          size="sm"
-                                          variant="ghost"
-                                          className="opacity-0 transition-opacity duration-300 group-hover:opacity-100 hover:bg-muted"
-                                      >
-                                          <ExternalLink className="h-4 w-4" />
-                                      </Button>
-                                  </div>
-
-                                  {/* Company Info */}
-                                  <div className="mb-6">
-                                      <h3 className="mb-3 text-2xl font-bold text-foreground transition-colors duration-300 group-hover:text-primary">
-                                          {company.name}
-                                      </h3>
-                                      <p className="leading-relaxed text-muted-foreground transition-colors duration-300 group-hover:text-foreground">
-                                          {company.description}
-                                      </p>
-                                  </div>
-                              </CardContent>
-                          </Card>
-                      </ScrollAnimation>
-                  ))}
-              </div>
-
-              {/* Corporate Overview */}
-              <ScrollAnimation delay={0.4} once={true}>
-                  <div className="shadow-elegant-xl rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#020617] p-12">
-                      <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
-                          <div>
-                              <h3 className="mb-6 text-white text-3xl font-bold lg:text-4xl">
-                                  Complete Real Estate Ecosystem
-                              </h3>
-                              <p className="mb-8 text-gray-50 text-xl leading-relaxed opacity-90">
-                                  Our integrated approach brings together
-                                  expertise from construction, design,
-                                  technology, security, and mobility to deliver
-                                  comprehensive solutions that exceed
-                                  expectations at every level.
-                              </p>
-                              <div className="flex flex-col gap-4 sm:flex-row">
-                                  <Button
-                                      size="lg"
-                                      className="shadow-elegant border border-white/30 bg-white/20 text-white backdrop-blur-sm hover:bg-white/30"
-                                  >
-                                      Explore Partnerships
-                                  </Button>
-                                  <Button
-                                      size="lg"
-                                      className="shadow-elegant bg-accent text-accent-foreground hover:bg-accent-dark"
-                                  >
-                                      Download Brochure
-                                  </Button>
-                              </div>
-                          </div>
-
-                          <div className="grid grid-cols-2 gap-6">
-                              <div className="text-center">
-                                  <div className="mb-2 text-4xl font-bold text-accent">
-                                      6
-                                  </div>
-                                  <div className="text-white/80">
-                                      Sister Companies
-                                  </div>
-                              </div>
-                              <div className="text-center">
-                                  <div className="mb-2 text-4xl font-bold text-accent">
-                                      1800+
-                                  </div>
-                                  <div className="text-white/80">
-                                      Total Projects
-                                  </div>
-                              </div>
-                              <div className="text-center">
-                                  <div className="mb-2 text-4xl font-bold text-accent">
-                                      25+
-                                  </div>
-                                  <div className="text-white/80">
-                                      Cities Served
-                                  </div>
-                              </div>
-                              <div className="text-center">
-                                  <div className="mb-2 text-4xl font-bold text-accent">
-                                      5000+
-                                  </div>
-                                  <div className="text-white/80">
-                                      Team Members
-                                  </div>
-                              </div>
-                          </div>
-                      </div>
-                  </div>
-              </ScrollAnimation>
+      <div className="relative z-10 container mx-auto px-4 lg:px-8 max-w-7xl">
+        {/* Section Header */}
+        <ScrollAnimation once={true} yOffset={0}>
+          <div className="mb-16 text-center">
+            <span className="inline-flex items-center gap-1.5 px-4 py-1.5 rounded-full text-xs font-semibold uppercase tracking-wider text-primary border border-primary/20 bg-primary/10 mb-4 shadow-sm">
+              Corporate Network
+            </span>
+            <h2 className="text-4xl lg:text-5xl font-bold tracking-tight text-slate-900 mb-6">
+              Our Corporate Umbrella
+            </h2>
+            <p className="mx-auto max-w-2xl text-base lg:text-lg text-slate-600 leading-relaxed">
+              Alliance Builders Ltd. operates a multi-disciplinary network of specialized enterprises, unifying real estate, hospitality, construction, and technology under one trusted brand.
+            </p>
           </div>
-      </section>
+        </ScrollAnimation>
+
+        {/* Companies Grid */}
+        <div className="mb-20 grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
+          {companies.map((company) => (
+            <ScrollAnimation key={company.id} once={true} yOffset={0}>
+              <div className="group relative flex flex-col justify-between rounded-2xl border border-slate-200/80 bg-white p-6 sm:p-7 shadow-sm transition-all duration-300 hover:border-primary/40 hover:shadow-xl hover:shadow-primary/5 hover:-translate-y-1.5 h-full">
+                <div>
+                  {/* Category Pill Tag */}
+                  <div className="mb-4">
+                    <span className="inline-block text-[11px] font-semibold uppercase tracking-wider px-3 py-1 rounded-md bg-slate-100 border border-slate-200 text-slate-600">
+                      {company.tag}
+                    </span>
+                  </div>
+
+                  {/* 3D Floating Logo */}
+                  <div className="my-6 flex h-28 items-center justify-center py-2">
+                    <img
+                      src={company.logo}
+                      alt={company.name}
+                      className="h-full max-h-24 w-auto object-contain transition-all duration-300 drop-shadow-[0_10px_16px_rgba(13,77,144,0.25)] group-hover:drop-shadow-[0_18px_30px_rgba(13,77,144,0.45)] group-hover:-translate-y-1.5 group-hover:scale-[1.04]"
+                    />
+                  </div>
+
+                  {/* Title & Description */}
+                  <h3 className="mb-2.5 text-xl font-bold text-slate-900 transition-colors duration-300 group-hover:text-primary">
+                    {company.name}
+                  </h3>
+                  <p className="text-sm text-slate-600 leading-relaxed mb-6">
+                    {company.description}
+                  </p>
+                </div>
+
+                {/* Direct External Link Action */}
+                <div className="pt-4 border-t border-slate-100">
+                  <a
+                    href={company.website}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-sm font-semibold text-primary hover:text-primary-dark transition-colors duration-200"
+                  >
+                    <span>Visit Website</span>
+                    <ArrowUpRight className="h-4 w-4 transition-transform duration-300 group-hover:translate-x-0.5 group-hover:-translate-y-0.5" />
+                  </a>
+                </div>
+              </div>
+            </ScrollAnimation>
+          ))}
+        </div>
+
+        {/* Corporate Ecosystem Overview Bar */}
+        <ScrollAnimation once={true} yOffset={0}>
+          <div className="rounded-3xl border border-slate-200/80 bg-white p-8 lg:p-12 shadow-lg">
+            <div className="grid grid-cols-2 gap-8 lg:grid-cols-4 divide-y lg:divide-y-0 lg:divide-x divide-slate-100">
+              {stats.map((stat, idx) => (
+                <div
+                  key={stat.label}
+                  className={`text-center flex flex-col items-center justify-center ${
+                    idx > 0 ? 'pt-6 lg:pt-0' : ''
+                  }`}
+                >
+                  <stat.icon className="h-6 w-6 text-primary mb-3" />
+                  <div className="text-3xl lg:text-4xl font-extrabold text-slate-900 tracking-tight mb-1">
+                    {stat.value}
+                  </div>
+                  <div className="text-xs lg:text-sm font-semibold text-slate-500 uppercase tracking-wider">
+                    {stat.label}
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        </ScrollAnimation>
+      </div>
+    </section>
   );
 };
 
