@@ -82,18 +82,27 @@ const HeroImageCollage = () => {
                       />
 
                       {/* Image */}
-                      <img
+                      <motion.img
                           src={CarouselImageUrl(carousel.image)}
                           alt={carousel.property_name}
-                          className={`h-full w-full object-cover transition-all ${
+                          className="h-full w-full object-cover"
+                          initial={false}
+                          animate={
                               activeIndex === index
-                                  ? 'scale-[1.15] rotate-2 brightness-110 grayscale-0'
-                                  : 'brightness-75 grayscale-[0.3]'
-                          }`}
-                          style={{
-                              transitionTimingFunction:
-                                  'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                              transitionDuration: '1200ms',
+                                  ? {
+                                        scale: 1.15,
+                                        rotate: [0, 2.5, 0],
+                                        filter: 'brightness(1.1) grayscale(0%)',
+                                    }
+                                  : {
+                                        scale: 1,
+                                        rotate: 0,
+                                        filter: 'brightness(0.75) grayscale(0.3)',
+                                    }
+                          }
+                          transition={{
+                              duration: 1.2,
+                              ease: 'easeOut',
                           }}
                       />
 
