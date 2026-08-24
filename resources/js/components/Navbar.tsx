@@ -712,13 +712,13 @@ const Navbar = () => {
                             <div
                                 className={`flex flex-shrink-0 items-center gap-3 pr-2 transition-all duration-700 ${isLoaded ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'}`}
                             >
-                                <Link
-                                    href="tel:+1234567890"
+                                <a
+                                    href="tel:+8801928568853"
                                     className="btn-primary flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-300"
                                 >
                                     <Phone className="h-4 w-4" />
                                     Call Now
-                                </Link>
+                                </a>
                             </div>
                         </div>
 
@@ -738,13 +738,13 @@ const Navbar = () => {
                                 </Link>
                             </div>
                             <div className="flex items-center gap-2 pr-2">
-                                <Link
-                                    href="tel:+1234567890"
+                                <a
+                                    href="tel:+8801928568853"
                                     className="btn-primary flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300"
                                 >
                                     <Phone className="h-4 w-4" />
                                     Call Now
-                                </Link>
+                                </a>
                                 <div className="rounded-full bg-white/90">
                                     <Button
                                         ref={buttonRef}

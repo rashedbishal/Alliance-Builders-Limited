@@ -5,7 +5,7 @@ const FloatingMessageButton = () => {
     const [isOpen, setIsOpen] = useState(false);
     // Update these with your actual contact information:
     // WhatsApp: Include country code (e.g., +234 for Nigeria, +1 for USA)
-    const whatsappNumber = '+8801911533534'; // e.g., '+2347012345678'
+    const whatsappNumber = '+8801928568853'; // e.g., '+2347012345678'
     // Messenger: Your Facebook page ID (find it in your Facebook page settings)
     const messengerPageId = 'https://www.facebook.com/481701615030502/'; // e.g., '1234567890'
     const whatsappMessage = 'Hello! I would like to inquire about your properties.';
