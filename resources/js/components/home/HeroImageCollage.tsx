@@ -47,7 +47,7 @@ const HeroImageCollage = () => {
               {dynamicCarousels.map((carousel, index) => (
                   <div
                       key={index}
-                      className={`relative cursor-pointer overflow-hidden transition-all duration-1200 ease-in-out ${
+                      className={`relative overflow-hidden transition-all duration-1200 ease-in-out ${
                           activeIndex === index
                               ? 'flex-[6]'
                               : activeIndex !== null
