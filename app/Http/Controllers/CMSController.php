@@ -16,6 +16,7 @@ use App\Models\Visual\Gallery;
 use App\Models\Visual\Image;
 use App\Models\Visual\ProjectImage;
 use App\Models\Visual\Video;
+use App\Services\ImageOptimizer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -155,7 +156,7 @@ class CMSController extends Controller
 
                 Storage::disk('public')->delete("home/carousel/{$sanitizedName}"); // safe even aDDing
 
-                $imageFile->storeAs('/home/carousel', $sanitizedName, 'public');
+                ImageOptimizer::optimizeAndStore($imageFile, 'home/carousel', $sanitizedName, 'public', 1920, 80);
 
                 // IMPORTANT: store only filename because model accessor adds the path
                 $carouselData->image = $sanitizedName;
@@ -221,7 +222,7 @@ class CMSController extends Controller
                 if ($request->hasFile('thumbnail')) {
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                    if ($imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public') === false) {
+                    if (!ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
                     }
 
@@ -246,7 +247,7 @@ class CMSController extends Controller
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
-                        if ($imageFile->storeAs($storagePath, $sanitizedName, 'public') === false) {
+                        if (!ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
                             throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
                         }
 
@@ -317,7 +318,7 @@ class CMSController extends Controller
 
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                    if ($imageFile->storeAs('properties/propertyThumbs', $sanitizedName, 'public') === false) {
+                    if (!ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
                     }
 
@@ -342,7 +343,7 @@ class CMSController extends Controller
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
-                        if ($imageFile->storeAs($storagePath, $sanitizedName, 'public') === false) {
+                        if (!ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
                             throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
                         }
 
@@ -441,7 +442,7 @@ class CMSController extends Controller
                 if ($request->hasFile('image')) {
                     $imageFile = $request->file('image');
                     $sanitizedName = Str::slug($media->media_title).'-'.uniqid().'.'.$imageFile->getClientOriginalExtension();
-                    $imageFile->storeAs('media', $sanitizedName, 'public');
+                    ImageOptimizer::optimizeAndStore($imageFile, 'media', $sanitizedName, 'public', 1200, 80);
 
                     $image = new Image;
                     $image->path = $sanitizedName;
@@ -498,7 +499,7 @@ class CMSController extends Controller
                             '4' => 'gallery/event-activity',
                             default => 'properties/projectImages',
                         };
-                        $imageFile->storeAs($storagePath, $sanitizedName, 'public');
+                        ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80);
 
                         $image = new Image;
                         $image->path = $sanitizedName;
@@ -598,7 +599,7 @@ class CMSController extends Controller
                     }
 
                     $sanitizedName = 'popup'.'.'.$imageFile->getClientOriginalExtension();
-                    $imageFile->storeAs('popup', $sanitizedName, 'public');
+                    ImageOptimizer::optimizeAndStore($imageFile, 'popup', $sanitizedName, 'public', 1200, 80);
                     $popup->imagePath = $sanitizedName;
                     $popup->save();
                 }
