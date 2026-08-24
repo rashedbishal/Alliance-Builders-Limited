@@ -32,8 +32,9 @@ export default defineConfig({
         jsx: 'automatic',
     },
     server: {
-        watch: {
-            ignored: ['**/storage/framework/views/**'],
-        },
+        // watch: {
+        //     ignored: ['**/storage/framework/views/**'],
+        // },
+        host: '192.168.0.113',
     },
 });

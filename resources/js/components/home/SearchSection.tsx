@@ -3,7 +3,7 @@ import {Search, MapPin, Home, Calendar} from "lucide-react";
 import React, {useState} from 'react';
 import {Button} from "@/components/ui/button";
 import {Card, CardContent} from "@/components/ui/card";
-import {Select, SelectContent, SelectItem, SelectTrigger, SelectValue} from "@/components/ui/select";
+import CustomSelect from '@/components/ui/CustomSelect';
 import type {Location} from "@/types/Location";
 import type {ProjectTypes} from "@/types/ProjectTypes";
 import type {Tag} from "@/types/Tag";
@@ -17,8 +17,18 @@ const SearchSection = () => {
         // status: ''
     });
 
-    const {locations} = usePage<{locations: Location[]}>().props;
-    const {projectTypes} = usePage<{projectTypes: ProjectTypes[]}>().props;
+    const {locations = []} = usePage<{locations: Location[]}>().props;
+    const {projectTypes = []} = usePage<{projectTypes: ProjectTypes[]}>().props;
+
+    const locationOptions = locations.map((location) => ({
+        value: location.id.toString(),
+        label: location.name,
+    }));
+
+    const propertyTypeOptions = projectTypes.map((type) => ({
+        value: type.id.toString(),
+        label: type.name,
+    }));
 
     const handleSearch = () => {
         console.log('Search filters:', searchFilters);
@@ -61,24 +71,14 @@ const SearchSection = () => {
                                         <MapPin className="h-4 w-4 mr-2 text-white"/>
                                         Location
                                     </label>
-                                    <Select onValueChange={(value) => setSearchFilters(prev => ({
-                                        ...prev,
-                                        location: value
-                                    }))}>
-                                        <SelectTrigger
-                                            className="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300">
-                                            <SelectValue placeholder="Select location"/>
-                                        </SelectTrigger>
-                                        <SelectContent
-                                            className="bg-[rgba(255,255,255,0.5)] backdrop-blur-sm border border-border shadow-elegant">
-                                            {locations.map((location) => (
-                                                <SelectItem key={location.id}
-                                                            value={location.id.toString()}>
-                                                    {location.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <CustomSelect
+                                        value={searchFilters.location}
+                                        onValueChange={(val) => setSearchFilters(prev => ({ ...prev, location: val }))}
+                                        placeholder="Select location"
+                                        options={locationOptions}
+                                        triggerClassName="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300"
+                                        contentClassName="bg-[rgba(30,30,30,0.9)] backdrop-blur-md border border-white/20 shadow-elegant"
+                                    />
                                 </div>
 
                                 <div className="space-y-2">
@@ -86,23 +86,14 @@ const SearchSection = () => {
                                         <Home className="h-4 w-4 mr-2 text-white"/>
                                         Property Type
                                     </label>
-                                    <Select onValueChange={(value) => setSearchFilters(prev => ({
-                                        ...prev,
-                                        propertyType: value
-                                    }))}>
-                                        <SelectTrigger
-                                            className="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300">
-                                            <SelectValue placeholder="Select type"/>
-                                        </SelectTrigger>
-                                        <SelectContent
-                                            className="bg-[rgba(255,255,255,0.5)] backdrop-blur-sm border border-border shadow-elegant ">
-                                            {projectTypes.map((type) => (
-                                                <SelectItem key={type.id} value={type.id.toString()}>
-                                                    {type.name}
-                                                </SelectItem>
-                                            ))}
-                                        </SelectContent>
-                                    </Select>
+                                    <CustomSelect
+                                        value={searchFilters.propertyType}
+                                        onValueChange={(val) => setSearchFilters(prev => ({ ...prev, propertyType: val }))}
+                                        placeholder="Select type"
+                                        options={propertyTypeOptions}
+                                        triggerClassName="bg-[rgba(255,255,255,0.3)] border-border hover:border-accent transition-colors duration-300"
+                                        contentClassName="bg-[rgba(30,30,30,0.9)] backdrop-blur-md border border-white/20 shadow-elegant"
+                                    />
                                 </div>
                             </div>
 
