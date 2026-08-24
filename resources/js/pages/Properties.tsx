@@ -175,8 +175,24 @@ const Properties = () => {
         return filtered;
     }, [nonHotelProjects, activeTab, searchTerm, favorites, locationFilter]);
 
+    const [isScrolled, setIsScrolled] = useState(false);
+
+    useEffect(() => {
+        const handleScroll = () => {
+            setIsScrolled(window.scrollY > 40);
+        };
+
+        window.addEventListener('scroll', handleScroll, { passive: true });
+        handleScroll();
+
+        return () => {
+            window.removeEventListener('scroll', handleScroll);
+        };
+    }, []);
+
     const resultsRef = useRef<HTMLDivElement>(null);
     const isFiltered = Boolean(searchTerm.trim() || (locationFilter && locationFilter !== 'all'));
+    const isSqueezed = isFiltered || isScrolled;
 
     const scrollToResults = () => {
         if (resultsRef.current) {
@@ -189,10 +205,10 @@ const Properties = () => {
     return (
         <AppLayout>
             <div className="min-h-screen bg-background">
-                {/* Hero Section - Squeezes dynamically when searching */}
+                {/* Hero Section - Squeezes dynamically when searching or scrolling down */}
                 <section
-                    className={`relative flex w-full items-center justify-center overflow-hidden transition-all duration-[1500ms] delay-500 ease-in-out ${
-                        isFiltered
+                    className={`relative flex w-full items-center justify-center overflow-hidden transition-all duration-[1200ms] ease-in-out ${
+                        isSqueezed
                             ? 'min-h-[42vh] pt-28 pb-10'
                             : 'min-h-screen pt-16 pb-16'
                     }`}
@@ -205,16 +221,16 @@ const Properties = () => {
                     }}
                 >
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
-                    <div className="relative z-10 container mx-auto flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 transition-all duration-[1500ms] delay-500 ease-in-out">
-                        <h1 className={`animate-fade-in text-magenta text-white-shadow px-2 text-center font-bold transition-all duration-[1500ms] delay-500 ease-in-out ${
-                            isFiltered ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl md:text-5xl lg:text-7xl'
+                    <div className="relative z-10 container mx-auto flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 transition-all duration-[1200ms] ease-in-out">
+                        <h1 className={`animate-fade-in text-magenta text-white-shadow px-2 text-center font-bold transition-all duration-[1200ms] ease-in-out ${
+                            isSqueezed ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl md:text-5xl lg:text-7xl'
                         }`}>
                             Find Your Dream Property
                         </h1>
                         
                         <div
-                            className={`overflow-hidden transition-all duration-[1500ms] delay-500 ease-in-out ${
-                                isFiltered
+                            className={`overflow-hidden transition-all duration-[1200ms] ease-in-out ${
+                                isSqueezed
                                     ? 'max-h-0 opacity-0 scale-95 mt-0 pointer-events-none'
                                     : 'max-h-48 opacity-100 scale-100 mt-4 sm:mt-6'
                             }`}
@@ -229,8 +245,8 @@ const Properties = () => {
 
                         {/* Search Filters Card */}
                         <Card
-                            className={`shadow-2xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/80 text-white rounded-2xl animate-scale-in mx-auto h-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl transition-all duration-[1500ms] delay-500 ease-in-out ${
-                                isFiltered ? 'mt-6 sm:mt-6' : 'mt-8 sm:mt-10 md:mt-12'
+                            className={`shadow-2xl bg-slate-900/85 backdrop-blur-xl border border-slate-700/80 text-white rounded-2xl animate-scale-in mx-auto h-auto w-full max-w-xs sm:max-w-sm md:max-w-md lg:max-w-xl transition-all duration-[1200ms] ease-in-out ${
+                                isSqueezed ? 'mt-6 sm:mt-6' : 'mt-8 sm:mt-10 md:mt-12'
                             }`}
                             style={{ animationDelay: '400ms' }}
                         >
