@@ -7,21 +7,23 @@ interface ScrollAnimationProps {
   delay?: number;
   duration?: number;
   once?: boolean;
+  yOffset?: number;
 }
 
 const ScrollAnimation: React.FC<ScrollAnimationProps> = ({
   children,
   className = "",
   delay = 0,
-  duration = 0.6,
-  once = true
+  duration = 0.4,
+  once = true,
+  yOffset = 0
 }) => {
   return (
     <motion.div
       className={className}
-      initial={{ opacity: 0, y: 50 }}
+      initial={{ opacity: 0, y: yOffset }}
       whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once, amount: 0.2 }}
+      viewport={{ once, amount: 0.05 }}
       transition={{
         duration,
         delay,

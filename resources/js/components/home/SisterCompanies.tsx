@@ -115,7 +115,7 @@ const SisterCompanies = () => {
       <section className="relative overflow-hidden bg-black py-20">
           <div className="relative z-10 container mx-auto px-4 lg:px-8">
               {/* Section Header */}
-              <ScrollAnimation>
+              <ScrollAnimation once={true}>
                   <div className="mb-16 text-center">
                       <h2 className="mb-6 text-4xl font-bold text-white lg:text-5xl">
                           Our Corporate Umbrella
@@ -132,10 +132,10 @@ const SisterCompanies = () => {
               {/* Companies Grid */}
               <div className="mb-16 grid grid-cols-1 gap-8 md:grid-cols-2 xl:grid-cols-3">
                   {companies.map((company, index) => (
-                      <ScrollAnimation key={company.id} delay={index * 0.1}>
-                          <Card className="group hover:shadow-elegant-xl relative cursor-pointer overflow-hidden bg-white transition-all duration-500 hover:-translate-y-3">
+                      <ScrollAnimation key={company.id} delay={0} once={true} yOffset={0}>
+                          <Card className="group hover:shadow-elegant-xl relative cursor-pointer overflow-hidden bg-white transition-transform duration-500 hover:-translate-y-3">
                               <div
-                                  className={`absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-10 ${company.color.replace('bg-gradient-to-br', 'bg-gradient-to-br')}`}
+                                  className={`absolute inset-0 opacity-0 transition-opacity duration-500 group-hover:opacity-10 ${company.color}`}
                               ></div>
 
                               <CardContent className="relative z-10 p-8">
@@ -175,7 +175,7 @@ const SisterCompanies = () => {
               </div>
 
               {/* Corporate Overview */}
-              <ScrollAnimation delay={0.4}>
+              <ScrollAnimation delay={0.4} once={true}>
                   <div className="shadow-elegant-xl rounded-3xl bg-gradient-to-br from-[#0f172a] via-[#111827] to-[#020617] p-12">
                       <div className="grid grid-cols-1 items-center gap-12 lg:grid-cols-2">
                           <div>
