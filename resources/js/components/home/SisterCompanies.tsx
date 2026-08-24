@@ -43,7 +43,7 @@ const SisterCompanies: React.FC = () => {
       tag: 'Infrastructure & Engineering',
       logo: construction,
       description: 'World-class structural development, urban planning, and large-scale architectural engineering.',
-      website: 'https://www.facebook.com/alliancebeverageandagro/',
+      website: 'https://www.facebook.com/p/Alliance-Construction-61550523338981/',
     },
     {
       id: 4,
