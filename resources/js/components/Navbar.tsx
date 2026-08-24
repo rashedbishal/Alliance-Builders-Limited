@@ -35,14 +35,17 @@ const Navbar = () => {
     };
 
     const closeDropdown = () => {
+        if (closeTimer.current) clearTimeout(closeTimer.current);
         closeTimer.current = setTimeout(() => {
             setOpenMenu(null);
         }, 200); // generous delay — covers portal gap + trigger/content travel
     };
 
-    const keepOpen = () => {
-        // Called from DropdownMenuContent onMouseEnter — cancels any pending close
+    const keepOpen = (menuName?: string) => {
         if (closeTimer.current) clearTimeout(closeTimer.current);
+        if (menuName) {
+            setOpenMenu((prev) => (prev === menuName ? prev : menuName));
+        }
     };
 
     // Trigger entrance animations on mount
@@ -315,6 +318,9 @@ const Navbar = () => {
                                                 onMouseEnter={() =>
                                                     openDropdown('projects')
                                                 }
+                                                onMouseMove={() =>
+                                                    keepOpen('projects')
+                                                }
                                                 onMouseLeave={closeDropdown}
                                             >
                                                 <DropdownMenu
@@ -350,7 +356,8 @@ const Navbar = () => {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent
                                                         className="dropdown-content-premium"
-                                                        onMouseEnter={keepOpen}
+                                                        onMouseEnter={() => keepOpen('projects')}
+                                                        onMouseMove={() => keepOpen('projects')}
                                                         onMouseLeave={
                                                             closeDropdown
                                                         }
@@ -420,6 +427,9 @@ const Navbar = () => {
                                                 onMouseEnter={() =>
                                                     openDropdown('mediaGallery')
                                                 }
+                                                onMouseMove={() =>
+                                                    keepOpen('mediaGallery')
+                                                }
                                                 onMouseLeave={closeDropdown}
                                             >
                                                 <DropdownMenu
@@ -467,7 +477,8 @@ const Navbar = () => {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent
                                                         className="dropdown-content-premium"
-                                                        onMouseEnter={keepOpen}
+                                                        onMouseEnter={() => keepOpen('mediaGallery')}
+                                                        onMouseMove={() => keepOpen('mediaGallery')}
                                                         onMouseLeave={
                                                             closeDropdown
                                                         }
@@ -513,6 +524,9 @@ const Navbar = () => {
                                                         'hotelsResorts',
                                                     )
                                                 }
+                                                onMouseMove={() =>
+                                                    keepOpen('hotelsResorts')
+                                                }
                                                 onMouseLeave={closeDropdown}
                                             >
                                                 <DropdownMenu
@@ -555,7 +569,8 @@ const Navbar = () => {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent
                                                         className="dropdown-content-premium"
-                                                        onMouseEnter={keepOpen}
+                                                        onMouseEnter={() => keepOpen('hotelsResorts')}
+                                                        onMouseMove={() => keepOpen('hotelsResorts')}
                                                         onMouseLeave={
                                                             closeDropdown
                                                         }
@@ -600,6 +615,9 @@ const Navbar = () => {
                                                 onMouseEnter={() =>
                                                     openDropdown('contact')
                                                 }
+                                                onMouseMove={() =>
+                                                    keepOpen('contact')
+                                                }
                                                 onMouseLeave={closeDropdown}
                                             >
                                                 <DropdownMenu
@@ -638,7 +656,8 @@ const Navbar = () => {
                                                     </DropdownMenuTrigger>
                                                     <DropdownMenuContent
                                                         className="dropdown-content-premium"
-                                                        onMouseEnter={keepOpen}
+                                                        onMouseEnter={() => keepOpen('contact')}
+                                                        onMouseMove={() => keepOpen('contact')}
                                                         onMouseLeave={
                                                             closeDropdown
                                                         }
