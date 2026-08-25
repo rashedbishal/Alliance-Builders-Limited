@@ -741,53 +741,61 @@ const Navbar = () => {
                             </div>
                         </div>
 
-                        {/* MOBILE NAVBAR - Unchanged */}
-                        <div className="flex items-center justify-between xl:hidden">
-                            <div className="pl-2">
+                        {/* MOBILE & TAB NAVBAR - Single Unified Capsule */}
+                        <div className="flex items-center justify-center w-full mx-auto xl:hidden">
+                            <div className="nav-desktop-container nav-glass-effect flex items-center justify-center gap-2 sm:gap-3 rounded-full px-3 py-1.5 transition-all duration-300">
+                                {/* Logo inside capsule */}
                                 <Link
                                     href={home.url()}
-                                    className="logo-sweep-container relative block overflow-hidden rounded-lg"
+                                    className="logo-sweep-container relative flex items-center justify-center overflow-hidden rounded-lg pr-1"
                                 >
                                     <img
-                                        className="relative z-10 h-14 w-auto object-contain"
+                                        className="relative z-10 h-9 sm:h-11 w-auto object-contain"
                                         src={logo}
                                         alt="Alliance Logo"
                                     />
                                     <div className="logo-sweep"></div>
                                 </Link>
-                            </div>
-                            <div className="flex items-center gap-2 pr-2">
+
+                                {/* Divider */}
+                                <div className="h-5 w-[1px] bg-white/25" />
+
+                                {/* Call Now Button */}
                                 <a
                                     href="tel:+8801928568853"
-                                    className="btn-primary flex items-center gap-2 rounded-lg px-3 py-2 text-sm font-medium transition-all duration-300"
+                                    title="Call Now"
+                                    aria-label="Call Now"
+                                    className="btn-primary flex items-center justify-center gap-2 rounded-full px-2.5 py-2 text-xs font-semibold sm:px-3.5 sm:text-sm transition-all duration-300 hover:scale-105"
                                 >
-                                    <Phone className="h-4 w-4" />
-                                    Call Now
+                                    <Phone className="h-4 w-4 flex-shrink-0" />
+                                    <span className="hidden md:inline">Call Now</span>
                                 </a>
-                                <div className="rounded-full bg-white/90">
-                                    <Button
-                                        ref={buttonRef}
-                                        variant="ghost"
-                                        className="btn-primary-bright rounded-full border-2 p-3"
-                                        onClick={() => {
-                                            if (isMobileMenuOpen) {
-                                                setIsClosing(true);
-                                                setTimeout(() => {
-                                                    setIsMobileMenuOpen(false);
-                                                    setIsClosing(false);
-                                                }, 250);
-                                            } else {
-                                                setIsMobileMenuOpen(true);
-                                            }
-                                        }}
-                                    >
-                                        {isMobileMenuOpen ? (
-                                            <X className="h-6 w-6" />
-                                        ) : (
-                                            <Menu className="h-6 w-8" />
-                                        )}
-                                    </Button>
-                                </div>
+
+                                {/* Hamburger Menu Button */}
+                                <Button
+                                    ref={buttonRef}
+                                    variant="ghost"
+                                    title="Toggle Menu"
+                                    aria-label="Toggle Menu"
+                                    className="btn-primary-bright flex items-center justify-center rounded-full border border-white/30 h-9 w-9 p-0 sm:h-10 sm:w-10 text-white transition-all duration-300 hover:scale-105"
+                                    onClick={() => {
+                                        if (isMobileMenuOpen) {
+                                            setIsClosing(true);
+                                            setTimeout(() => {
+                                                setIsMobileMenuOpen(false);
+                                                setIsClosing(false);
+                                            }, 250);
+                                        } else {
+                                            setIsMobileMenuOpen(true);
+                                        }
+                                    }}
+                                >
+                                    {isMobileMenuOpen ? (
+                                        <X className="h-5 w-5" />
+                                    ) : (
+                                        <Menu className="h-5 w-5" />
+                                    )}
+                                </Button>
                             </div>
                         </div>
                     </div>
