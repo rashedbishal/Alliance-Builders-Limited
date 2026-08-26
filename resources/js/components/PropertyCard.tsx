@@ -65,7 +65,7 @@ const PropertyCard = ({
             <ScrollAnimation delay={index * 0.01}>
             <Link href={`${property.slug}`} className="block">
                 <div
-                    className={`group relative transform transition-all duration-700 hover:scale-105 ${
+                    className={`group relative transition-all duration-700 ${
                         hoveredCard === property.id ? 'z-20' : 'z-10'
                     }`}
                     onMouseEnter={() => setHoveredCard(property.id)}
@@ -83,35 +83,56 @@ const PropertyCard = ({
                             loading='lazy'
                             alt={property.name}
                             onError={() => setImgSrc(fallbackImg)}
-                            className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-700"
+                            className="absolute inset-0 w-full h-full object-cover object-top group-hover:scale-110 transition-transform duration-1000 ease-in-out"
                         />
 
                         {/* Gradient Overlay */}
                         <div className="absolute inset-0 bg-gradient-to-t from-black/95 from-0% via-black/60 via-40% to-transparent to-70%"></div>
 
                         {/* Holographic Shine Effect */}
-                        <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-b from-transparent via-transparent to-cyan-400/30 -rotate-45 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-y-full transition-all duration-700 ease-out"></div>
+                        <div className="absolute -top-1/2 -left-1/2 w-[200%] h-[200%] bg-gradient-to-b from-transparent via-transparent to-cyan-400/30 -rotate-45 pointer-events-none opacity-0 group-hover:opacity-100 group-hover:translate-y-full transition-all duration-1000 ease-in-out"></div>
 
                         {/* Content Overlay */}
                         <div className="relative z-10 h-full flex flex-col justify-between p-6">
-                            {/* Action Buttons */}
-                            <div className="flex justify-end">
+                            {/* Top Bar: Badges (Top-Left) & Fav Button (Top-Right) */}
+                            <div className="flex justify-between items-start w-full">
+                                {/* Badges appearing from Top-Left */}
+                                <div className="opacity-0 group-hover:opacity-100 transform -translate-x-3 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-1000 ease-in-out">
+                                    {property.tags && property.tags.length > 0 && (
+                                        <div className="flex flex-wrap gap-2">
+                                            {property.tags.slice(0, 2).map((tag: any) => (
+                                                <div
+                                                    key={tag.id}
+                                                    className="px-3 py-1 rounded-full bg-black/60 border border-white/30 backdrop-blur-md text-white text-xs font-semibold shadow-lg"
+                                                >
+                                                    {tag.name}
+                                                </div>
+                                            ))}
+                                            {property.tags.length > 2 && (
+                                                <div className="px-3 py-1 rounded-full bg-black/60 border border-white/30 backdrop-blur-md text-white text-xs font-semibold shadow-lg">
+                                                    +{property.tags.length - 2}
+                                                </div>
+                                            )}
+                                        </div>
+                                    )}
+                                </div>
+
+                                {/* Striking Favorite Button (Top-Right) */}
                                 <div onClick={(e) => e.preventDefault()}>
-                                    {/* Floating Action Buttons */}
-                                    <div className="flex space-x-2 opacity-100 transform translate-y-2 group-hover:translate-y-0 transition-all duration-300">
+                                    <div className="opacity-0 group-hover:opacity-100 transform translate-x-3 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-1000 ease-in-out">
                                         <Button
-                                            size="sm"
+                                            size="icon"
                                             onClick={(e) => {
                                                 e.preventDefault();
                                                 e.stopPropagation();
                                                 toggleFavorite();
                                             }}
-                                            className="bg-white/20 border border-white/30 text-white hover:bg-white/30 backdrop-blur-md rounded-full p-2 shadow-lg"
+                                            className="h-10 w-10 bg-black/70 border-2 border-white/50 text-white hover:bg-black/90 hover:border-white/80 backdrop-blur-md rounded-full shadow-[0_4px_20px_rgba(0,0,0,0.5)] transition-all duration-300 hover:scale-110 active:scale-95 group/fav"
                                         >
                                             <Heart
-                                                className={`h-4 w-4 transition ${
+                                                className={`h-5 w-5 transition-all duration-300 ${
                                                     isFavorite
-                                                        ? "fill-red-500 text-red-500 scale-110"
+                                                        ? "fill-red-500 text-red-500 drop-shadow-[0_0_8px_rgba(239,68,68,0.9)] scale-110"
                                                         : "text-white"
                                                 }`}
                                             />
@@ -121,60 +142,44 @@ const PropertyCard = ({
                             </div>
 
                             {/* Bottom Content */}
-                            <div className="space-y-4">
+                            <div>
                                 <div>
-                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-300">
+                                    <h3 className="text-xl font-bold text-white mb-2 group-hover:text-blue-200 transition-colors duration-700 ease-in-out">
                                         {property.name}
                                     </h3>
-                                    <div className="flex items-center text-white/70 mb-3">
+                                    <div className="flex items-center text-white/70">
                                         <MapPin className="h-4 w-4 mr-2 text-blue-400" />
                                         <span className="text-sm">{property.location.name}</span>
                                     </div>
                                 </div>
 
-                                {/* Stats Grid */}
-                                <div className="grid grid-cols-4 gap-2">
-                                    <div className="text-center p-2 bg-white/10 border border-white/20 rounded-lg backdrop-blur-md">
-                                        <Bed className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                        <div className="text-sm font-semibold text-white">{property.details.bedroom}</div>
-                                        <div className="text-xs text-white/60">Beds</div>
-                                    </div>
-                                    <div className="text-center p-2 bg-white/10 border border-white/20 rounded-lg backdrop-blur-md">
-                                        <Bath className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                        <div className="text-sm font-semibold text-white">{property.details.bathroom}</div>
-                                        <div className="text-xs text-white/60">Baths</div>
-                                    </div>
-                                    <div className="text-center p-2 bg-white/10 border border-white/20 rounded-lg backdrop-blur-md">
-                                        <Square className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                        <div className="text-sm font-semibold text-white">{property.details.apartment_size}</div>
-                                        <div className="text-xs text-white/60">Sq Ft</div>
-                                    </div>
-                                    <div className="text-center p-2 bg-white/10 border border-white/20 rounded-lg backdrop-blur-md">
-                                        <Compass className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                        <div className="text-sm font-semibold text-white">{property.details.apartment_direction}</div>
-                                        <div className="text-xs text-white/60">Facing</div>
-                                    </div>
-                                </div>
-
-                                {/* Features Tags */}
-                                <div className="flex justify-between items-start">
-                                    {property.tags && property.tags.length > 0 && (
-                                        <div className='flex space-x-2'>
-                                            {property.tags.slice(0, 2).map((tag: any) => (
-                                                <div
-                                                    key={tag.id}
-                                                    className="px-3 py-1 rounded-full bg-white/20 border border-white/30 backdrop-blur-md text-white text-xs font-semibold shadow-lg"
-                                                >
-                                                    {tag.name}
-                                                </div>
-                                            ))}
-                                            {property.tags.length > 2 && (
-                                                <div className="px-3 py-1 rounded-full bg-white/20 border border-white/30 backdrop-blur-md text-white text-xs font-semibold shadow-lg">
-                                                    +{property.tags.length - 2}
-                                                </div>
-                                            )}
+                                {/* Expandable Stats Container */}
+                                <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] opacity-0 group-hover:opacity-100 transition-all duration-1000 ease-in-out">
+                                    <div className="overflow-hidden space-y-4 pt-3">
+                                        {/* Stats Grid - bright semi-transparent glass */}
+                                        <div className="grid grid-cols-4 gap-2">
+                                            <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
+                                                <Bed className="h-4 w-4 mx-auto mb-1 text-blue-400" />
+                                                <div className="text-sm font-semibold text-white">{property.details.bedroom}</div>
+                                                <div className="text-xs text-white/60">Beds</div>
+                                            </div>
+                                            <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
+                                                <Bath className="h-4 w-4 mx-auto mb-1 text-blue-400" />
+                                                <div className="text-sm font-semibold text-white">{property.details.bathroom}</div>
+                                                <div className="text-xs text-white/60">Baths</div>
+                                            </div>
+                                            <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
+                                                <Square className="h-4 w-4 mx-auto mb-1 text-blue-400" />
+                                                <div className="text-sm font-semibold text-white">{property.details.apartment_size}</div>
+                                                <div className="text-xs text-white/60">Sq Ft</div>
+                                            </div>
+                                            <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
+                                                <Compass className="h-4 w-4 mx-auto mb-1 text-blue-400" />
+                                                <div className="text-sm font-semibold text-white">{property.details.apartment_direction}</div>
+                                                <div className="text-xs text-white/60">Facing</div>
+                                            </div>
                                         </div>
-                                    )}
+                                    </div>
                                 </div>
                             </div>
                         </div>
