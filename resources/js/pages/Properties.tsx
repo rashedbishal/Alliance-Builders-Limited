@@ -1,5 +1,5 @@
 import { router, usePage } from '@inertiajs/react';
-import { Search, X, Sparkles, ArrowDown } from 'lucide-react';
+import { Search, X, Sparkles, ArrowDown, SearchX, Building2, RotateCcw } from 'lucide-react';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import golden from "@/assets/images/architecture/golden-building.jpg";
 import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
@@ -14,6 +14,41 @@ import { useFavorites } from '@/hooks/useFavorites';
 import AppLayout from '@/layouts/AppLayout';
 import type { ProjectThumb } from '@/types/ProjectThumb';
 import type { ProjectTypes } from '@/types/ProjectTypes';
+
+const EmptyState = ({
+    title = "No Properties Found",
+    message,
+    showReset = false,
+    onReset,
+}: {
+    title?: string;
+    message: string;
+    showReset?: boolean;
+    onReset?: () => void;
+}) => (
+    <div className="py-12 flex justify-center">
+        <div className="w-full max-w-md p-8 sm:p-10 rounded-2xl bg-slate-900/90 border border-slate-700/90 backdrop-blur-xl shadow-2xl text-center transition-all duration-500">
+            <div className="w-16 h-16 mx-auto mb-4 rounded-full bg-slate-800/80 border border-slate-700 flex items-center justify-center text-amber-400 shadow-inner">
+                <SearchX className="h-8 w-8" />
+            </div>
+            <h3 className="text-xl font-bold text-white mb-2 tracking-wide">
+                {title}
+            </h3>
+            <p className="text-sm text-slate-300 leading-relaxed max-w-sm mx-auto">
+                {message}
+            </p>
+            {showReset && onReset && (
+                <button
+                    onClick={onReset}
+                    className="mt-6 inline-flex items-center gap-2 px-5 py-2.5 bg-gradient-to-r from-amber-500 to-amber-600 hover:from-amber-600 hover:to-amber-700 text-slate-950 font-bold text-xs rounded-xl shadow-lg hover:shadow-amber-500/20 transition-all transform hover:scale-105 active:scale-95"
+                >
+                    <RotateCcw className="h-3.5 w-3.5" />
+                    Reset Search & Filters
+                </button>
+            )}
+        </div>
+    </div>
+);
 
 const Properties = () => {
     const { projects } = usePage<{ projects: ProjectThumb[] }>().props;
@@ -202,6 +237,11 @@ const Properties = () => {
         }
     };
 
+    const handleResetFilters = () => {
+        setSearchTerm('');
+        setLocationFilter('');
+    };
+
     return (
         <AppLayout>
             <div className="min-h-screen bg-background">
@@ -296,10 +336,7 @@ const Properties = () => {
                                                 <ArrowDown className="h-3.5 w-3.5 animate-bounce" />
                                             </button>
                                             <button
-                                                onClick={() => {
-                                                    setSearchTerm('');
-                                                    setLocationFilter('');
-                                                }}
+                                                onClick={handleResetFilters}
                                                 className="font-medium text-slate-400 hover:text-red-400 transition-colors pl-2 border-l border-slate-700"
                                             >
                                                 Reset
@@ -316,10 +353,11 @@ const Properties = () => {
                 {projectList.length === 0 ? (
                     <section className="bg-gradient-to-b from-background to-secondary/20 py-20">
                         <div className="container mx-auto px-4">
-                            <div className="py-16 text-center">
-                                <p className="text-lg text-white/70">
-                                    Loading properties...
-                                </p>
+                            <div className="py-12 flex justify-center">
+                                <div className="w-full max-w-sm p-8 rounded-2xl bg-slate-900/90 border border-slate-700/90 backdrop-blur-xl shadow-2xl text-center">
+                                    <Building2 className="h-10 w-10 text-amber-400 mx-auto mb-3 animate-pulse" />
+                                    <p className="text-base font-semibold text-white">Loading properties...</p>
+                                </div>
                             </div>
                         </div>
                     </section>
@@ -407,12 +445,12 @@ const Properties = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="py-16 text-center">
-                                            <p className="text-2xl text-primary/70">
-                                                No properties found matching
-                                                your filters.
-                                            </p>
-                                        </div>
+                                        <EmptyState
+                                            title="No Properties Found"
+                                            message="We couldn't find any properties matching your current search or filter criteria."
+                                            showReset={isFiltered}
+                                            onReset={handleResetFilters}
+                                        />
                                     )}
                                 </TabsContent>
 
@@ -447,12 +485,12 @@ const Properties = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="py-16 text-center">
-                                            <p className="text-lg text-white/70">
-                                                No upcoming properties at the
-                                                moment.
-                                            </p>
-                                        </div>
+                                        <EmptyState
+                                            title="No Upcoming Projects"
+                                            message="There are currently no upcoming projects matching your criteria."
+                                            showReset={isFiltered}
+                                            onReset={handleResetFilters}
+                                        />
                                     )}
                                 </TabsContent>
 
@@ -487,12 +525,12 @@ const Properties = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="py-16 text-center">
-                                            <p className="text-lg text-white/70">
-                                                No ongoing projects currently
-                                                available.
-                                            </p>
-                                        </div>
+                                        <EmptyState
+                                            title="No Ongoing Projects"
+                                            message="There are currently no ongoing projects matching your criteria."
+                                            showReset={isFiltered}
+                                            onReset={handleResetFilters}
+                                        />
                                     )}
                                 </TabsContent>
 
@@ -527,12 +565,12 @@ const Properties = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="py-16 text-center">
-                                            <p className="text-lg text-white/70">
-                                                No properties ready for
-                                                handover.
-                                            </p>
-                                        </div>
+                                        <EmptyState
+                                            title="No Handover Projects"
+                                            message="There are currently no handover projects matching your criteria."
+                                            showReset={isFiltered}
+                                            onReset={handleResetFilters}
+                                        />
                                     )}
                                 </TabsContent>
 
@@ -567,13 +605,16 @@ const Properties = () => {
                                             )}
                                         </div>
                                     ) : (
-                                        <div className="py-16 text-center">
-                                            <p className="text-lg text-white/70">
-                                                {favorites.length === 0
-                                                    ? 'No favorite properties yet. Add one by clicking the heart icon!'
-                                                    : 'No results found in your favorites matching the search.'}
-                                            </p>
-                                        </div>
+                                        <EmptyState
+                                            title={favorites.length === 0 ? "No Saved Favorites" : "No Favorites Found"}
+                                            message={
+                                                favorites.length === 0
+                                                    ? "You haven't saved any favorite properties yet. Click the heart icon on any property card to save it here!"
+                                                    : "No properties in your saved favorites match the current search."
+                                            }
+                                            showReset={isFiltered && favorites.length > 0}
+                                            onReset={handleResetFilters}
+                                        />
                                     )}
                                 </TabsContent>
                             </Tabs>
