@@ -634,7 +634,7 @@ export default function ProjectAdd({
                                         pointerEvents: 'none',
                                     }}
                                 >
-                                    WEBP only · Max 300KB (Target < 150KB)
+                                    WEBP only · Max 300KB (Target under 150KB)
                                 </p>
                             </div>
                             {errors.thumbnail && (

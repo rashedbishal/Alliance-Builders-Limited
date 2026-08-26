@@ -733,7 +733,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                           pointerEvents: 'none',
                                       }}
                                   >
-                                      WEBP only · Max 300KB (Target < 150KB)
+                                      WEBP only · Max 300KB (Target under 150KB)
                                   </p>
                               </div>
                               {errors.thumbnail && (
