@@ -53,7 +53,7 @@ Shared relationship/behavior logic is factored into traits under `app/Concerns/`
 ### Controllers
 - `PageController` — all public-facing pages (home, about, services, properties, directors, gallery, media, contact, legal pages). Rendered from `resources/js/pages`.
 - `CMSController` — all admin CRUD for carousels, projects, media, galleries, popups, and config entities (facilities, tags). Rendered from `resources/js/cms/pages`. Also handles feedback export to XLSX via PhpSpreadsheet.
-- `ChatbotController` — `/chatbot` POST endpoint.
+- `ChatbotController` — `/chatbot` POST endpoint; proxies to Groq's OpenAI-compatible chat completions API (`llama-3.3-70b-versatile`), keyed via `GROQ_API_KEY` (`config('services.groq.key')`).
 - `Settings/*Controller` — profile, password, two-factor auth (Fortify-backed).
 
 ### Frontend conventions

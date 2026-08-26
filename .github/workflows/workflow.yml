@@ -42,6 +42,8 @@ jobs:
             --exclude='node_modules' \
             --exclude='.github' \
             --exclude='deployment' \
+            --exclude='storage/app/public' \
+            --exclude='storage/app/private' \
             ./ deployment/
 
       - name: Setup SSH
@@ -56,8 +58,12 @@ jobs:
             -e "ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new" \
             --exclude='.env' \
             --exclude='.htaccess' \
+            --exclude='storage/app/public' \
+            --exclude='storage/app/private' \
             --filter='P .env' \
             --filter='P .htaccess' \
+            --filter='P storage/app/public' \
+            --filter='P storage/app/private' \
             deployment/ \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }}:${{ secrets.HOSTINGER_PATH }}/
 
