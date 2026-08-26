@@ -262,7 +262,7 @@ const Navbar = () => {
                             >
                                 <Link
                                     href={home.url()}
-                                    className="logo-sweep-container relative block overflow-hidden rounded-lg"
+                                    className="logo-sweep-container relative overflow-hidden"
                                 >
                                     <img
                                         className="relative z-10 h-16 w-auto object-contain transition duration-500 hover:scale-105 lg:h-18"
@@ -749,7 +749,7 @@ const Navbar = () => {
                                 {/* Logo inside capsule */}
                                 <Link
                                     href={home.url()}
-                                    className="logo-sweep-container relative flex items-center justify-center overflow-hidden rounded-lg pr-1"
+                                    className="logo-sweep-container relative overflow-hidden px-2 py-1"
                                 >
                                     <img
                                         className="relative z-10 h-9 sm:h-11 w-auto object-contain"
@@ -1359,10 +1359,37 @@ const Navbar = () => {
     transform: translateY(0) scale(0.97);
 }
 
-        /* Logo sweep animation */
+        /* Logo sweep animation & container enhancement */
         .logo-sweep-container {
             position: relative;
-            display: inline-block;
+            display: inline-flex;
+            align-items: center;
+            justify-content: center;
+            padding: 6px 18px;
+            background: linear-gradient(135deg, rgba(15, 23, 42, 0.5) 0%, rgba(30, 58, 138, 0.4) 100%);
+            backdrop-filter: blur(12px) saturate(180%);
+            -webkit-backdrop-filter: blur(12px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.25);
+            border-radius: 999px;
+            box-shadow:
+                0 4px 20px rgba(0, 0, 0, 0.35),
+                0 0 15px rgba(59, 130, 246, 0.25),
+                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+            transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
+        }
+
+        .logo-sweep-container:hover {
+            border-color: rgba(147, 197, 253, 0.6);
+            box-shadow:
+                0 8px 28px rgba(0, 0, 0, 0.45),
+                0 0 25px rgba(59, 130, 246, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+            transform: translateY(-2px);
+        }
+
+        .logo-sweep-container img {
+            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
+            transition: transform 0.4s ease, filter 0.4s ease;
         }
 
         .logo-sweep {
