@@ -367,13 +367,13 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 2. AT A GLANCE */}
-                <section className="border-b border-white/5 py-24">
-                    <div className="container mx-auto grid grid-cols-1 gap-16 px-4 lg:grid-cols-12">
+                <section className="border-b border-white/5 py-16 sm:py-20 lg:py-24">
+                    <div className="container mx-auto grid grid-cols-1 gap-10 lg:gap-16 px-4 lg:grid-cols-12">
                         <div className="lg:col-span-5">
                             <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
                                 Project Overview
                             </span>
-                            <h2 className="mt-6 mb-8 text-4xl leading-tight font-light">
+                            <h2 className="mt-4 mb-6 text-2xl sm:text-3xl lg:text-4xl leading-tight font-light">
                                 {projectDetails.description}
                             </h2>
                             <div className="flex items-center gap-3 text-sm text-white/60">
@@ -381,7 +381,7 @@ const PropertyDetail = () => {
                                 <span>Project ID: {projectDetails.project_id}</span>
                             </div>
                         </div>
-                        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3 lg:col-span-7">
+                        <div className="grid grid-cols-2 gap-px overflow-hidden rounded-2xl sm:rounded-3xl border border-white/10 bg-white/10 md:grid-cols-3 lg:col-span-7">
                             {[
                                 {
                                     label: 'Apartment Size',
@@ -420,13 +420,13 @@ const PropertyDetail = () => {
                             ].map((stat, i) => (
                                 <div
                                     key={i}
-                                    className="group relative bg-[#0a0a0a] p-8"
+                                    className="group relative bg-[#0a0a0a] p-5 sm:p-6 lg:p-8"
                                 >
-                                    <stat.icon className="mb-4 h-5 w-5 text-white/40 transition-all duration-300 group-hover:text-primary" />
-                                    <div className="mb-1 text-xs tracking-widest text-white/40 uppercase">
+                                    <stat.icon className="mb-3 sm:mb-4 h-4 sm:h-5 w-4 sm:w-5 text-white/40 transition-all duration-300 group-hover:text-primary" />
+                                    <div className="mb-1 text-[10px] sm:text-xs tracking-widest text-white/40 uppercase">
                                         {stat.label}
                                     </div>
-                                    <div className="text-xl font-medium">
+                                    <div className="text-lg sm:text-xl font-medium truncate">
                                         {stat.value || '—'}
                                     </div>
                                     <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
@@ -437,36 +437,35 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 3. AMENITIES: Interactive Grid with Spinning Icons */}
-                <section className="py-24 bg-sidebar">
+                <section className="py-16 sm:py-20 lg:py-24 bg-sidebar">
                     <div className="container mx-auto px-4">
-                        <div className="mb-16 text-center">
+                        <div className="mb-10 sm:mb-16 text-center">
                             <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
                                 Features
                             </span>
-                            <h2 className="mt-4 font-serif text-5xl font-light text-white">
+                            <h2 className="mt-3 font-serif text-3xl sm:text-4xl lg:text-5xl font-light text-white">
                                 Amenities & Facilities
                             </h2>
-                            <p className="mx-auto mt-4 max-w-2xl text-white/50">
+                            <p className="mx-auto mt-3 max-w-2xl text-sm sm:text-base text-white/50">
                                 Thoughtfully designed features to enhance your living experience
                             </p>
                         </div>
 
-                        <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-6">
+                        <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-4 sm:gap-6">
                             {projectDetails.facilities?.map((f) => {
                                 const Icon = getFacilityIcon(f.name);
                                 return (
-                                    <ScrollAnimation>
+                                    <ScrollAnimation key={f.id}>
                                         <motion.div
-                                            key={f.id}
                                             whileHover={{ y: -5 }}
-                                            className="group relative flex min-w-[220px] flex-col items-center justify-center overflow-hidden rounded-[2rem] border border-white/10 bg-white/[0.03] p-8 transition-all duration-500 hover:border-primary/30"
+                                            className="group relative flex min-w-[140px] sm:min-w-[200px] flex-1 max-w-[280px] flex-col items-center justify-center overflow-hidden rounded-2xl sm:rounded-[2rem] border border-white/10 bg-white/[0.03] p-5 sm:p-8 transition-all duration-500 hover:border-primary/30"
                                         >
                                             {/* The Spinning Icon Container */}
-                                            <div className="relative z-10 mb-6 flex h-16 w-16 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary">
-                                                <Icon className="h-8 w-8 text-primary-foreground transition-colors duration-500 group-hover:text-black" />
+                                            <div className="relative z-10 mb-4 sm:mb-6 flex h-12 w-12 sm:h-16 sm:w-16 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary">
+                                                <Icon className="h-6 w-6 sm:h-8 sm:w-8 text-primary-foreground transition-colors duration-500 group-hover:text-black" />
                                             </div>
 
-                                            <span className="relative z-10 text-lg font-medium text-white/70 transition-colors group-hover:text-white">
+                                            <span className="relative z-10 text-sm sm:text-lg font-medium text-white/70 transition-colors group-hover:text-white text-center">
                                                 {f.name}
                                             </span>
 
@@ -481,19 +480,19 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 4. INTERNAL SPECIFICATIONS (50/50 SPLIT) */}
-                <section className="overflow-hidden border-t border-white/5 bg-black py-24">
-                    <div className="container mx-auto px-4">
-                        <div className="grid grid-cols-1 items-start gap-24 lg:grid-cols-2">
-                            <div className="h-fit pb-40 lg:sticky lg:top-24">
-                                <div className="relative flex flex-col gap-6">
+                <section className="overflow-hidden border-t border-white/5 bg-black py-16 sm:py-20 lg:py-24">
+                    <div className="container mx-auto px-4 sm:px-6">
+                        <div className="grid grid-cols-1 items-start gap-16 sm:gap-20 lg:grid-cols-2 lg:gap-24">
+                            <div className="h-fit pb-24 sm:pb-32 lg:sticky lg:top-24 lg:pb-40">
+                                <div className="relative flex flex-col gap-6 pr-4 sm:pr-8 lg:pr-12">
                                     <motion.div
                                         initial={{ x: -50, opacity: 0 }}
                                         whileInView={{ x: 0, opacity: 1 }}
                                         transition={{ duration: 1 }}
-                                        className="relative z-10 aspect-4/5 overflow-hidden rounded-4xl border border-white/10"
+                                        className="relative z-10 aspect-4/5 overflow-hidden rounded-2xl sm:rounded-3xl lg:rounded-4xl border border-white/10"
                                     >
                                         <img
-                                            src={`/${projectDetails.project_images[0]?.image}`}
+                                            src={images[0] || primaryImage}
                                             className="h-full w-full object-cover"
                                             alt="Main"
                                         />
@@ -502,11 +501,11 @@ const PropertyDetail = () => {
                                         initial={{ x: 50, opacity: 0 }}
                                         whileInView={{ x: 0, opacity: 1 }}
                                         transition={{ duration: 1 }}
-                                        className="absolute -right-12 -bottom-40 z-20 aspect-3/4 w-[70%] rounded-4xl border-2 border-black shadow-2xl"
+                                        className="absolute right-0 -bottom-20 sm:-right-4 sm:-bottom-28 lg:-right-12 lg:-bottom-40 z-20 aspect-3/4 w-[65%] sm:w-[70%] rounded-2xl sm:rounded-3xl lg:rounded-4xl border-2 border-black shadow-2xl"
                                     >
-                                        <div className="h-full w-full overflow-hidden rounded-[calc(var(--radius-4xl)-2px)]">
+                                        <div className="h-full w-full overflow-hidden rounded-[calc(var(--radius-2xl)-2px)] sm:rounded-[calc(var(--radius-3xl)-2px)] lg:rounded-[calc(var(--radius-4xl)-2px)]">
                                             <img
-                                                src={`/${projectDetails.project_images[1]?.image || projectDetails.project_images[0]?.image}`}
+                                                src={images[1] || images[0] || primaryImage}
                                                 className="h-full w-full object-cover"
                                                 alt="Detail"
                                             />
@@ -516,7 +515,7 @@ const PropertyDetail = () => {
                             </div>
 
                             <div>
-                                <h2 className="mb-16 font-serif text-6xl leading-tight font-light tracking-tight">
+                                <h2 className="mb-8 sm:mb-12 lg:mb-16 font-serif text-3xl sm:text-5xl lg:text-6xl leading-tight font-light tracking-tight">
                                     Unit <br />
                                     <span className="text-primary italic">
                                         Specifications
@@ -524,25 +523,24 @@ const PropertyDetail = () => {
                                 </h2>
                                 <div className="divide-y divide-white/10">
                                     {unitSpecs.map((spec, i) => (
-                                        <ScrollAnimation>
+                                        <ScrollAnimation key={i}>
                                             <div
-                                                key={i}
-                                                className="group relative flex items-center justify-between py-5"
+                                                className="group relative flex items-center justify-between py-4 sm:py-5"
                                             >
-                                                <div className="flex items-center gap-8">
-                                                    <div className="flex flex-col items-start gap-1">
+                                                <div className="flex items-center gap-3 sm:gap-6 lg:gap-8 min-w-0">
+                                                    <div className="flex flex-col items-start gap-1 flex-shrink-0">
                                                         <span className="font-mono text-[10px] text-primary/60">
                                                             0{i + 1}
                                                         </span>
-                                                        <div className="flex h-10 w-10 items-center justify-center rounded-xl border border-white/5 bg-white/[0.03] group-hover:bg-primary/10">
-                                                            <spec.icon className="h-5 w-5 text-white/20 transition-all duration-500 group-hover:text-primary" />
+                                                        <div className="flex h-9 w-9 sm:h-10 sm:w-10 items-center justify-center rounded-xl border border-white/5 bg-white/[0.03] group-hover:bg-primary/10">
+                                                            <spec.icon className="h-4 w-4 sm:h-5 sm:w-5 text-white/20 transition-all duration-500 group-hover:text-primary" />
                                                         </div>
                                                     </div>
-                                                    <h3 className="text-xl font-light text-white/40 transition-colors group-hover:text-white">
+                                                    <h3 className="text-base sm:text-lg lg:text-xl font-light text-white/40 transition-colors group-hover:text-white truncate">
                                                         {spec.label}
                                                     </h3>
                                                 </div>
-                                                <span className="text-3xl font-light tracking-tighter transition-colors group-hover:text-primary">
+                                                <span className="text-xl sm:text-2xl lg:text-3xl font-light tracking-tighter transition-colors group-hover:text-primary flex-shrink-0 ml-2">
                                                     {spec.value}
                                                 </span>
                                             </div>
@@ -560,7 +558,7 @@ const PropertyDetail = () => {
                         <span className="text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
                             Visual Portfolio
                         </span>
-                        <h2 className="mt-2 font-serif text-4xl font-light text-white italic">
+                        <h2 className="mt-2 font-serif text-3xl sm:text-4xl font-light text-white italic">
                             Gallery
                         </h2>
                     </div>
@@ -654,16 +652,16 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 6. MEDIA: Contained Cinematic Tour */}
-                <section className="border-t border-white/5 bg-black py-24">
+                <section className="border-t border-white/5 bg-black py-16 sm:py-20 lg:py-24">
                     <div className="container mx-auto px-4">
                         {/* Section Title - Above the Video */}
-                        <div className="mb-12">
-                            <span className="mb-4 block text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
+                        <div className="mb-8 sm:mb-12">
+                            <span className="mb-3 block text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
                                 Cinematic Experience
                             </span>
-                            <h2 className="font-serif text-5xl font-light tracking-tighter text-white italic md:text-6xl">
+                            <h2 className="font-serif text-3xl sm:text-5xl md:text-6xl font-light tracking-tighter text-white italic">
                                 Virtual{' '}
-                                <span className="ml-2 font-sans text-4xl font-bold tracking-widest text-primary/80 uppercase not-italic md:text-5xl">
+                                <span className="inline-block sm:ml-2 font-sans text-2xl sm:text-4xl md:text-5xl font-bold tracking-widest text-primary/80 uppercase not-italic">
                                     Walkthrough
                                 </span>
                             </h2>
@@ -671,17 +669,17 @@ const PropertyDetail = () => {
 
                         {/* Contained Video Wrapper */}
                         <div className="relative mx-auto max-w-6xl">
-                            <div className="relative  overflow-hidden rounded-[2rem] border border-white/10 bg-white/5 shadow-2xl md:rounded-[3rem]">
+                            <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl sm:rounded-[2rem] md:rounded-[3rem]">
                                 {projectDetails.details?.youtube_video_id ? (
                                     <iframe
-                                        className="h-[80dvh] w-full"
+                                        className="aspect-video h-auto min-h-[220px] sm:min-h-[360px] lg:h-[75dvh] w-full"
                                         src={`https://www.youtube.com/embed/${projectDetails.details.youtube_video_id}?rel=0&modestbranding=1`}
                                         title="Property Video Tour"
                                         allowFullScreen
                                     />
                                 ) : (
-                                    <div className="flex h-full w-full flex-col items-center justify-center">
-                                        <Video className="mb-4 h-12 w-12 text-white/10" />
+                                    <div className="flex h-56 sm:h-80 lg:h-96 w-full flex-col items-center justify-center">
+                                        <Video className="mb-4 h-10 sm:h-12 w-10 sm:w-12 text-white/10" />
                                         <span className="text-[10px] tracking-[0.4em] text-white/20 uppercase">
                                             Visuals in Production
                                         </span>
@@ -696,14 +694,14 @@ const PropertyDetail = () => {
                 </section>
 
                 {/* 7. LOCATION: Accessible Neighborhood Map */}
-                <section className="bg-[#0a0a0a] py-24">
-                    <div className="container mx-auto mb-12 px-4">
-                        <div className="flex flex-col justify-between gap-6 border-l-2 border-primary pl-8 md:flex-row md:items-end">
+                <section className="bg-[#0a0a0a] py-16 sm:py-20 lg:py-24">
+                    <div className="container mx-auto mb-8 sm:mb-12 px-4">
+                        <div className="flex flex-col justify-between gap-4 border-l-2 border-primary pl-4 sm:pl-8 md:flex-row md:items-end">
                             <div>
-                                <span className="text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
+                                <span className="text-[10px] font-bold tracking-[0.3em] sm:tracking-[0.5em] text-primary uppercase">
                                     Strategic Context
                                 </span>
-                                <h2 className="mt-2 font-serif text-5xl font-light tracking-tight text-white">
+                                <h2 className="mt-2 font-serif text-3xl sm:text-4xl lg:text-5xl font-light tracking-tight text-white">
                                     The{' '}
                                     <span className="text-primary italic">
                                         Neighborhood
@@ -711,8 +709,8 @@ const PropertyDetail = () => {
                                 </h2>
                             </div>
                             <div className="flex items-center gap-3 pb-1 font-mono text-[10px] tracking-[0.3em] text-white/40 uppercase">
-                                <MapPin className="h-4 w-4 text-primary/60" />
-                                {projectDetails.address}
+                                <MapPin className="h-4 w-4 text-primary/60 flex-shrink-0" />
+                                <span className="truncate">{projectDetails.address}</span>
                             </div>
                         </div>
                     </div>
@@ -721,7 +719,7 @@ const PropertyDetail = () => {
                     <div className="container mx-auto px-4">
                         <div className="group relative">
                             <div className="absolute -inset-1 bg-gradient-to-r from-cyan-500/20 via-sky-500/10 to-cyan-500/20 rounded-2xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-                            <div className="relative h-[65vh] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30">
+                            <div className="relative h-[45vh] sm:h-[55vh] lg:h-[65vh] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30">
                                 <div className="h-full w-full contrast-[1.1] grayscale invert-[0.05] transition-all duration-1000 ease-in-out group-hover:grayscale-0 group-hover:invert-[0.02]">
                                     <MapComponent width="100%" height="100%" src={projectDetails.google_map_url} />
                                 </div>
