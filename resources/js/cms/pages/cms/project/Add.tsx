@@ -88,6 +88,13 @@ export default function ProjectAdd({
             return;
         }
 
+        if (file.size > 300 * 1024) {
+            const fileSizeKb = Math.round(file.size / 1024);
+            setError('thumbnail', `File size is ${fileSizeKb}KB. Maximum allowed thumbnail size is 300KB (aim for < 150KB).`);
+            e.target.value = '';
+            return;
+        }
+
         clearErrors('thumbnail');
         setData('thumbnail', file);
         setThumbPreview(URL.createObjectURL(file));
@@ -99,6 +106,13 @@ export default function ProjectAdd({
 
         if (rejected) {
             setError('project_images', 'Only WEBP images are allowed.');
+            e.target.value = '';
+            return;
+        }
+
+        const overSized = files.find((f) => f.size > 300 * 1024);
+        if (overSized) {
+            setError('project_images', 'One or more images exceed the 300KB limit. Please compress project gallery WEBP images.');
             e.target.value = '';
             return;
         }
@@ -620,7 +634,7 @@ export default function ProjectAdd({
                                         pointerEvents: 'none',
                                     }}
                                 >
-                                    WEBP only · Max 10MB
+                                    WEBP only · Max 300KB (Target < 150KB)
                                 </p>
                             </div>
                             {errors.thumbnail && (

@@ -8,6 +8,8 @@ const isWebp = (file: File) =>
     file.type === 'image/webp' ||
     file.name.toLowerCase().endsWith('.webp');
 
+const MAX_IMAGE_SIZE_BYTES = 300 * 1024; // 300 KB limit for images
+
 interface Props {
   types: GalleryType[];
 }
@@ -22,7 +24,8 @@ export default function GalleryAdd({ types }: Props) {
   });
 
   const [preview, setPreview] = useState<{ url: string; type: 'image' | 'video' } | null>(null);
-  const [fileTypeText, setFileTypeText] = useState('WEBP only · Max 10MB');
+  const [objectFit, setObjectFit] = useState<'contain' | 'cover'>('contain');
+  const [fileTypeText, setFileTypeText] = useState('WEBP only · Max 300KB');
   const [uploadLabel, setUploadLabel] = useState('Upload Image');
   const fileRef = useRef<HTMLInputElement>(null);
 
@@ -33,7 +36,7 @@ export default function GalleryAdd({ types }: Props) {
     if (fileRef.current) fileRef.current.value = '';
     if (val === '1') {
       setUploadLabel('Upload Image');
-      setFileTypeText('WEBP only · Max 10MB');
+      setFileTypeText('WEBP only · Max 300KB');
       fileRef.current?.setAttribute('accept', 'image/webp');
     } else if (val === '2') {
       setUploadLabel('Upload Video');
@@ -52,6 +55,13 @@ export default function GalleryAdd({ types }: Props) {
         return;
     }
 
+    if (data.media_type === '1' && file.size > MAX_IMAGE_SIZE_BYTES) {
+        const fileSizeKb = Math.round(file.size / 1024);
+        setError('gallery_content', `File size is ${fileSizeKb}KB. Maximum allowed image size is 300KB (aim for < 150KB for fast web load times).`);
+        e.target.value = '';
+        return;
+    }
+
     clearErrors('gallery_content');
     setData('gallery_content', file);
     const url = URL.createObjectURL(file);
@@ -66,7 +76,7 @@ export default function GalleryAdd({ types }: Props) {
 
         reset();
         setPreview(null);
-        setFileTypeText('WEBP only · Max 10MB');
+        setFileTypeText('WEBP only · Max 300KB');
         setUploadLabel('Upload Image');
 
         if (fileRef.current) {
@@ -92,7 +102,7 @@ export default function GalleryAdd({ types }: Props) {
     <CMSLayout title="Add Gallery Image" breadcrumb="Gallery Image Management / Add Image">
       <div className="page-header">
         <h2>Add Gallery Image</h2>
-        <p>Upload a new image to the gallery</p>
+        <p>Upload a new image or video entry to the gallery</p>
         <div className="gold-line" />
       </div>
 
@@ -177,17 +187,107 @@ export default function GalleryAdd({ types }: Props) {
                   {fileTypeText}
                 </p>
               </div>
+              <div
+                  style={{
+                      marginTop: 8,
+                      padding: '8px 12px',
+                      borderRadius: 6,
+                      background: 'rgba(201,168,76,0.06)',
+                      border: '1px solid rgba(201,168,76,0.15)',
+                      fontSize: '0.75rem',
+                      color: 'var(--gold-light)',
+                  }}
+              >
+                  💡 <strong>Recommended:</strong> 1920 × 1080px (Landscape) or 1080 × 1350px (Portrait) · <strong>Strict Max 300KB</strong> (Target &lt; 150KB) · WEBP format
+              </div>
               {errors.gallery_content && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.gallery_content}</p>}
             </div>
 
             <div className="form-group">
-              <label>Preview</label>
-              <div className="preview-box" style={{ height: 185 }}>
+              <div
+                  style={{
+                      display: 'flex',
+                      alignItems: 'center',
+                      justifyContent: 'space-between',
+                      marginBottom: 6,
+                  }}
+              >
+                  <label style={{ margin: 0 }}>Preview</label>
+                  {preview?.type === 'image' && (
+                      <div style={{ display: 'flex', gap: 6 }}>
+                          <button
+                              type="button"
+                              onClick={() => setObjectFit('contain')}
+                              style={{
+                                  padding: '2px 8px',
+                                  fontSize: '0.7rem',
+                                  borderRadius: 4,
+                                  border: '1px solid var(--border)',
+                                  background:
+                                      objectFit === 'contain'
+                                          ? 'var(--gold)'
+                                          : 'transparent',
+                                  color:
+                                      objectFit === 'contain'
+                                          ? '#000'
+                                          : 'var(--text)',
+                                  cursor: 'pointer',
+                                  fontWeight: 600,
+                              }}
+                          >
+                              Fit Uncropped
+                          </button>
+                          <button
+                              type="button"
+                              onClick={() => setObjectFit('cover')}
+                              style={{
+                                  padding: '2px 8px',
+                                  fontSize: '0.7rem',
+                                  borderRadius: 4,
+                                  border: '1px solid var(--border)',
+                                  background:
+                                      objectFit === 'cover'
+                                          ? 'var(--gold)'
+                                          : 'transparent',
+                                  color:
+                                      objectFit === 'cover'
+                                          ? '#000'
+                                          : 'var(--text)',
+                                  cursor: 'pointer',
+                                  fontWeight: 600,
+                              }}
+                          >
+                              Fill Frame
+                          </button>
+                      </div>
+                  )}
+              </div>
+              <div
+                  className="preview-box"
+                  style={{
+                      minHeight: 220,
+                      maxHeight: 280,
+                      width: '100%',
+                      aspectRatio: '16/9',
+                      background: '#0a0b0e',
+                      borderRadius: 10,
+                      overflow: 'hidden',
+                      border: '1px solid var(--border)',
+                  }}
+              >
                 {preview?.type === 'image' && (
-                  <img src={preview.url} style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }} alt="preview" />
+                  <img
+                    src={preview.url}
+                    style={{
+                      width: '100%',
+                      height: '100%',
+                      objectFit: objectFit,
+                    }}
+                    alt="preview"
+                  />
                 )}
                 {preview?.type === 'video' && (
-                  <video controls style={{ width: '100%', height: '100%', objectFit: 'cover', borderRadius: 8 }}>
+                  <video controls style={{ width: '100%', height: '100%', objectFit: 'contain' }}>
                     <source src={preview.url} />
                     Your browser does not support video.
                   </video>

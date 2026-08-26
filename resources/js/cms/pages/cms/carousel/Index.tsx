@@ -8,6 +8,8 @@ const isWebp = (file: File) =>
     file.type === 'image/webp' ||
     file.name.toLowerCase().endsWith('.webp');
 
+const MAX_SIZE_BYTES = 300 * 1024; // 300 KB limit
+
 interface Props {
   carousels: Carousel[];
 }
@@ -23,6 +25,7 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
   const [preview, setPreview] = useState<string | null>(
     carousel.image ? `${carousel.image}` : null
   );
+  const [objectFit, setObjectFit] = useState<'contain' | 'cover'>('contain');
   const fileRef = useRef<HTMLInputElement>(null);
 
   const handleFile = (e: React.ChangeEvent<HTMLInputElement>) => {
@@ -31,6 +34,13 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
 
     if (!isWebp(file)) {
         setError('image', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    if (file.size > MAX_SIZE_BYTES) {
+        const fileSizeKb = Math.round(file.size / 1024);
+        setError('image', `File size is ${fileSizeKb}KB. Maximum allowed file size is 300KB (aim for < 150KB for fast web load times).`);
         e.target.value = '';
         return;
     }
@@ -119,25 +129,107 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
                                   pointerEvents: 'none',
                               }}
                           >
-                              WEBP only · Leave empty to keep current
+                              WEBP format · Max 300KB · Leave empty to keep current
                           </p>
                       </div>
+                      <div
+                          style={{
+                              marginTop: 8,
+                              padding: '8px 12px',
+                              borderRadius: 6,
+                              background: 'rgba(201,168,76,0.06)',
+                              border: '1px solid rgba(201,168,76,0.15)',
+                              fontSize: '0.75rem',
+                              color: 'var(--gold-light)',
+                          }}
+                      >
+                          💡 <strong>Recommended:</strong> 1920 × 1080px (16:9) or 2560 × 1080px (21:9) · <strong>Strict Max 300KB</strong> (Target &lt; 150KB for fast loads) · WEBP format
+                      </div>
                       {errors.image && (
-                          <span className="text-sm text-red-500">
+                          <span className="text-sm text-red-500" style={{ marginTop: 6, display: 'block', color: '#FF8080', fontSize: '0.78rem' }}>
                               {errors.image}
                           </span>
                       )}
                   </div>
                   <div className="form-group">
-                      <label>Preview</label>
-                      <div className="preview-box" style={{ height: 140 }}>
+                      <div
+                          style={{
+                              display: 'flex',
+                              alignItems: 'center',
+                              justifyContent: 'space-between',
+                              marginBottom: 6,
+                          }}
+                      >
+                          <label style={{ margin: 0 }}>Preview</label>
+                          {preview && (
+                              <div style={{ display: 'flex', gap: 6 }}>
+                                  <button
+                                      type="button"
+                                      onClick={() => setObjectFit('contain')}
+                                      style={{
+                                          padding: '2px 8px',
+                                          fontSize: '0.7rem',
+                                          borderRadius: 4,
+                                          border: '1px solid var(--border)',
+                                          background:
+                                              objectFit === 'contain'
+                                                  ? 'var(--gold)'
+                                                  : 'transparent',
+                                          color:
+                                              objectFit === 'contain'
+                                                  ? '#000'
+                                                  : 'var(--text)',
+                                          cursor: 'pointer',
+                                          fontWeight: 600,
+                                      }}
+                                  >
+                                      Fit Uncropped
+                                  </button>
+                                  <button
+                                      type="button"
+                                      onClick={() => setObjectFit('cover')}
+                                      style={{
+                                          padding: '2px 8px',
+                                          fontSize: '0.7rem',
+                                          borderRadius: 4,
+                                          border: '1px solid var(--border)',
+                                          background:
+                                              objectFit === 'cover'
+                                                  ? 'var(--gold)'
+                                                  : 'transparent',
+                                          color:
+                                              objectFit === 'cover'
+                                                  ? '#000'
+                                                  : 'var(--text)',
+                                          cursor: 'pointer',
+                                          fontWeight: 600,
+                                      }}
+                                  >
+                                      Fill Frame
+                                  </button>
+                              </div>
+                          )}
+                      </div>
+                      <div
+                          className="preview-box"
+                          style={{
+                              minHeight: 220,
+                              maxHeight: 280,
+                              width: '100%',
+                              aspectRatio: '16/9',
+                              background: '#0a0b0e',
+                              borderRadius: 10,
+                              overflow: 'hidden',
+                              border: '1px solid var(--border)',
+                          }}
+                      >
                           {preview ? (
                               <img
                                   src={preview}
                                   style={{
                                       width: '100%',
                                       height: '100%',
-                                      objectFit: 'cover',
+                                      objectFit: objectFit,
                                   }}
                                   alt="preview"
                               />

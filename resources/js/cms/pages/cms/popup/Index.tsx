@@ -8,6 +8,8 @@ const isWebp = (file: File) =>
     file.type === 'image/webp' ||
     file.name.toLowerCase().endsWith('.webp');
 
+const MAX_SIZE_BYTES = 300 * 1024; // 300 KB limit
+
 interface Props {
   popup: Popup;
 }
@@ -32,6 +34,13 @@ export default function PopupIndex({ popup }: Props) {
 
     if (!isWebp(file)) {
         setError('image', 'Only WEBP images are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    if (file.size > MAX_SIZE_BYTES) {
+        const fileSizeKb = Math.round(file.size / 1024);
+        setError('image', `File size is ${fileSizeKb}KB. Maximum allowed file size is 300KB (aim for < 150KB for fast loads).`);
         e.target.value = '';
         return;
     }
@@ -103,17 +112,30 @@ export default function PopupIndex({ popup }: Props) {
                   Drag & drop or <span style={{ color: 'var(--gold)' }}>browse</span>
                 </p>
                 <p style={{ marginTop: 4, fontSize: '0.72rem', color: 'var(--muted)', pointerEvents: 'none' }}>
-                  WEBP only · Leave empty to keep current
+                  WEBP format · Max 300KB · Leave empty to keep current
                 </p>
+              </div>
+              <div
+                  style={{
+                      marginTop: 8,
+                      padding: '8px 12px',
+                      borderRadius: 6,
+                      background: 'rgba(201,168,76,0.06)',
+                      border: '1px solid rgba(201,168,76,0.15)',
+                      fontSize: '0.75rem',
+                      color: 'var(--gold-light)',
+                  }}
+              >
+                  💡 <strong>Recommended:</strong> 800 × 800px or 600 × 800px · <strong>Strict Max 300KB</strong> (Target &lt; 150KB) · WEBP format
               </div>
               {errors.image && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.image}</p>}
             </div>
 
             <div className="form-group">
               <label>Preview</label>
-              <div className="preview-box" style={{ height: 158 }}>
+              <div className="preview-box" style={{ minHeight: 200, maxHeight: 280, width: '100%', aspectRatio: '1/1', background: '#0a0b0e' }}>
                 {preview
-                  ? <img src={preview} style={{ width: '100%', height: '100%', objectFit: 'cover', display: 'block' }} alt="popup preview" />
+                  ? <img src={preview} style={{ width: '100%', height: '100%', objectFit: 'contain', display: 'block' }} alt="popup preview" />
                   : <div style={{ color: 'var(--muted)', fontSize: '0.78rem', textAlign: 'center', padding: 20 }}>📷<br/>No image selected</div>
                 }
               </div>
