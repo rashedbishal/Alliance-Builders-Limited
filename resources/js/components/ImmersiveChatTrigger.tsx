@@ -249,14 +249,14 @@ export default function ImmersiveChatTrigger({ onClick, isOpen }: ImmersiveChatT
                 )}
             </div>
 
-            {/* Bottom label */}
+            {/* Hover label - absolutely positioned to avoid layout shift */}
             <AnimatePresence>
                 {isHovered && !isOpen && (
                     <motion.div
-                        initial={{ opacity: 0, y: -5 }}
+                        initial={{ opacity: 0, y: 4 }}
                         animate={{ opacity: 1, y: 0 }}
-                        exit={{ opacity: 0, y: -5 }}
-                        className="hidden sm:block mt-2 text-[10px] font-medium tracking-wide text-white/40"
+                        exit={{ opacity: 0, y: 4 }}
+                        className="absolute -top-7 right-2 hidden sm:block text-[10px] font-medium tracking-wide text-white/60 pointer-events-none whitespace-nowrap bg-black/60 px-2 py-0.5 rounded-full border border-white/10 backdrop-blur-md shadow-lg"
                     >
                         Click to chat
                     </motion.div>
