@@ -5,6 +5,8 @@ use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
 
+use Inertia\Inertia;
+
 Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group(function () {
 
     Route::get('dashboard', 'carousel')->name('dashboard');
@@ -88,3 +90,16 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
 });
 
 Route::post('/chatbot', [ChatbotController::class, 'chat'])->middleware('web');
+
+Route::get('/error-preview/{status}', function ($status) {
+    $code = (int) $status;
+    return Inertia::render('Error', ['status' => $code])
+        ->toResponse(request())
+        ->setStatusCode($code >= 400 && $code < 600 ? $code : 200);
+});
+
+Route::fallback(function () {
+    return Inertia::render('Error', ['status' => 404])
+        ->toResponse(request())
+        ->setStatusCode(404);
+});
