@@ -31,9 +31,10 @@ class CMSController extends Controller
     public function carousel()
     {
         //        return view('carousel.index');
-        $carousels = Carousel::select('id', 'property_name', 'description', 'image')->get();
+        $carousels = Carousel::with('project:id,name,slug')->select('id', 'property_name', 'description', 'image', 'project_id')->get();
+        $projects = Project::select('id', 'name', 'slug')->orderBy('name')->get();
 
-        return Inertia::render('cms/carousel/Index', ['carousels' => $carousels]);
+        return Inertia::render('cms/carousel/Index', ['carousels' => $carousels, 'projects' => $projects]);
     }
 
     public function projectAdd()
@@ -145,6 +146,7 @@ class CMSController extends Controller
 
         $carouselData->property_name = $request->input('property_name') ?? ' ';
         $carouselData->description = $request->input('description') ?? ' ';
+        $carouselData->project_id = $request->input('project_id') ? (int) $request->input('project_id') : null;
         $carouselData->save();
 
         try {

@@ -19,7 +19,7 @@ class PageController extends Controller
 {
     public function home()
     {
-        $carousels = Carousel::select('id', 'property_name', 'description', 'image')->get();
+        $carousels = Carousel::with('project:id,name,slug')->select('id', 'property_name', 'description', 'image', 'project_id')->get();
         $locations = Location::select('id', 'name')->get();
         $projectTypes = ProjectType::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();

@@ -10,15 +10,23 @@ const isWebp = (file: File) =>
 
 const MAX_SIZE_BYTES = 300 * 1024; // 300 KB limit
 
-interface Props {
-  carousels: Carousel[];
+interface ProjectOption {
+  id: number;
+  name: string;
+  slug: string;
 }
 
-function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }) {
+interface Props {
+  carousels: Carousel[];
+  projects?: ProjectOption[];
+}
+
+function CarouselCard({ carousel, index, projects = [] }: { carousel: Carousel; index: number; projects?: ProjectOption[] }) {
     const { data, setData, post, processing, errors, setError, clearErrors } = useForm({
         position: String(index + 1),
         property_name: carousel.property_name ?? '',
         description: carousel.description ?? '',
+        project_id: carousel.project_id ? String(carousel.project_id) : '',
         image: null as File | null,
     });
 
@@ -64,7 +72,7 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
           <form onSubmit={handleSubmit}>
               <input type="hidden" name="position" value={data.position} />
 
-              <div className="form-row cols-2" style={{ marginTop: 12 }}>
+              <div className="form-row cols-3" style={{ marginTop: 12, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
                   <div className="form-group">
                       <label>Property Name</label>
                       <input
@@ -75,6 +83,37 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
                           }
                           placeholder="Enter property name..."
                       />
+                  </div>
+                  <div className="form-group">
+                      <label>Link to Project (Optional)</label>
+                      <select
+                          value={data.project_id}
+                          onChange={(e) => {
+                              const selectedId = e.target.value;
+                              setData('project_id', selectedId);
+                              // Auto-fill property name if name is empty or default
+                              const proj = projects.find(p => String(p.id) === selectedId);
+                              if (proj && (!data.property_name || data.property_name.trim() === '')) {
+                                  setData('property_name', proj.name);
+                              }
+                          }}
+                          style={{
+                              width: '100%',
+                              padding: '10px 12px',
+                              borderRadius: 8,
+                              background: 'var(--bg-input, #0f172a)',
+                              color: '#fff',
+                              border: '1px solid var(--border, #334155)',
+                              fontSize: '0.88rem',
+                          }}
+                      >
+                          <option value="">-- No Project Linked --</option>
+                          {projects.map((proj) => (
+                              <option key={proj.id} value={proj.id}>
+                                  {proj.name}
+                              </option>
+                          ))}
+                      </select>
                   </div>
                   <div className="form-group">
                       <label>Description</label>
@@ -263,12 +302,12 @@ function CarouselCard({ carousel, index }: { carousel: Carousel; index: number }
   );
 }
 
-export default function CarouselIndex({ carousels }: Props) {
+export default function CarouselIndex({ carousels, projects = [] }: Props) {
   return (
     <CMSLayout title="Carousel Banner" breadcrumb="Carousel Banner">
       <div className="page-header">
         <h2>Carousel Banner</h2>
-        <p>Manage the homepage carousel banners</p>
+        <p>Manage the homepage carousel banners and project links</p>
         <div className="gold-line" />
       </div>
 
@@ -282,7 +321,7 @@ export default function CarouselIndex({ carousels }: Props) {
         </div>
 
         {carousels.map((carousel, i) => (
-          <CarouselCard key={carousel.id} carousel={carousel} index={i} />
+          <CarouselCard key={carousel.id} carousel={carousel} index={i} projects={projects} />
         ))}
       </div>
     </CMSLayout>

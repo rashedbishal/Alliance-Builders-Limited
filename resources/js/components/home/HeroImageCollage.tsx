@@ -1,14 +1,21 @@
-import {usePage} from "@inertiajs/react";
+import { Link, usePage } from "@inertiajs/react";
 import { motion } from 'framer-motion';
+import { ArrowUpRight, ArrowRight } from 'lucide-react';
 import React, { useEffect, useState } from 'react';
 import BlurText from '@/components/ui/shadcn-io/blur-text/index';
 import type {Carousel} from "@/types/Carousel";
 import {CarouselImageUrl} from "@/utils/carousel/carouselImageUrl";
 
+interface ProjectItem {
+    id: number;
+    name: string;
+    slug: string;
+}
+
 const HeroImageCollage = () => {
     const [activeIndex, setActiveIndex] = useState<number | null>(null);
     const [isHovered, setIsHovered] = useState(false);
-    const { carousels = [] } = usePage<{ carousels?: Carousel[] }>().props;
+    const { carousels = [], projects = [] } = usePage<{ carousels?: Carousel[]; projects?: ProjectItem[] }>().props;
 
     const [isMobile, setIsMobile] = useState(window.innerWidth < 768);
 
@@ -44,7 +51,10 @@ const HeroImageCollage = () => {
               </motion.div>
           )}
           <div className="relative flex h-full w-full flex-row gap-0">
-              {dynamicCarousels.map((carousel, index) => (
+              {dynamicCarousels.map((carousel, index) => {
+                  const targetSlug = carousel.project?.slug || projects.find(p => p.name.toLowerCase().trim() === carousel.property_name?.toLowerCase().trim())?.slug;
+
+                  return (
                   <div
                       key={index}
                       className={`relative overflow-hidden transition-all duration-1200 ease-in-out ${
@@ -108,7 +118,7 @@ const HeroImageCollage = () => {
 
                       {/* Text Overlay */}
                       <div
-                          className={`absolute right-0 bottom-0 left-0 z-30 bg-gradient-to-t from-black/80 to-transparent px-10 py-20 sm:py-10 transition-transform duration-[1200ms] ${
+                          className={`absolute right-0 bottom-0 left-0 z-30 bg-gradient-to-t from-black/95 via-black/60 to-transparent px-8 sm:px-12 py-16 sm:py-10 transition-transform duration-[1200ms] ${
                               activeIndex === index
                                   ? 'translate-y-0'
                                   : 'translate-y-full'
@@ -119,21 +129,44 @@ const HeroImageCollage = () => {
                               transitionDuration: '1200ms',
                           }}
                       >
-                          <h2
-                              className={`mb-2 text-5xl font-bold text-white transition-all duration-[1200ms] ${
-                                  activeIndex === index
-                                      ? 'translate-y-0 scale-100 opacity-100'
-                                      : 'translate-y-8 scale-75 opacity-0'
-                              }`}
-                              style={{
-                                  transitionTimingFunction:
-                                      'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
-                              }}
-                          >
-                              {carousel.property_name}
-                          </h2>
+                          {targetSlug ? (
+                              <Link
+                                  href={`/${targetSlug}`}
+                                  className="group/title block max-w-fit"
+                              >
+                                  <div className="flex items-center gap-3 mb-2">
+                                      <h2
+                                          className={`text-3xl sm:text-4xl md:text-5xl font-bold text-white group-hover/title:text-amber-400 transition-all duration-500 ${
+                                              activeIndex === index
+                                                  ? 'translate-y-0 scale-100 opacity-100'
+                                                  : 'translate-y-8 scale-75 opacity-0'
+                                          }`}
+                                          style={{
+                                              transitionTimingFunction:
+                                                  'cubic-bezier(0.68, -0.55, 0.265, 1.55)',
+                                          }}
+                                      >
+                                          {carousel.property_name}
+                                      </h2>
+                                      <div className="flex items-center justify-center w-10 h-10 rounded-full bg-white/10 group-hover/title:bg-amber-400 group-hover/title:text-slate-950 border border-white/20 group-hover/title:border-amber-400 text-white backdrop-blur-md transition-all duration-500 shadow-lg group-hover/title:scale-110 shrink-0">
+                                          <ArrowUpRight className="w-5 h-5 group-hover/title:translate-x-0.5 group-hover/title:-translate-y-0.5 transition-transform" />
+                                      </div>
+                                  </div>
+                              </Link>
+                          ) : (
+                              <h2
+                                  className={`mb-2 text-3xl sm:text-4xl md:text-5xl font-bold text-white transition-all duration-[1200ms] ${
+                                      activeIndex === index
+                                          ? 'translate-y-0 scale-100 opacity-100'
+                                          : 'translate-y-8 scale-75 opacity-0'
+                                  }`}
+                              >
+                                  {carousel.property_name}
+                              </h2>
+                          )}
+                          
                           <p
-                              className={`text-xl text-white/95 transition-all duration-[1200ms] ${
+                              className={`text-base sm:text-lg text-white/90 max-w-2xl transition-all duration-[1200ms] ${
                                   activeIndex === index
                                       ? 'translate-x-0 opacity-100'
                                       : '-translate-x-8 opacity-0'
@@ -147,7 +180,8 @@ const HeroImageCollage = () => {
                           </p>
                       </div>
                   </div>
-              ))}
+              );
+              })}
           </div>
       </section>
   );
