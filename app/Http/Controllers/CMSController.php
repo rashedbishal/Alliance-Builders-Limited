@@ -121,9 +121,12 @@ class CMSController extends Controller
 
     public function updateCarousel(Request $request)
     {
-        $carouselData = $request->validate(
-            ['image' => 'nullable|file|mimes:webp']
-        );
+        $request->validate([
+            'image' => 'nullable|file|mimes:webp',
+            'project_id' => 'nullable|exists:projects,id',
+            'property_name' => 'required|string|max:100',
+            'description' => 'required|string|max:150',
+        ]);
         switch ($request->input('position')) {
             case '1':
                 $carouselData = Carousel::findOrFail(1);
@@ -144,8 +147,8 @@ class CMSController extends Controller
                 abort(500);
         }
 
-        $carouselData->property_name = $request->input('property_name') ?? ' ';
-        $carouselData->description = $request->input('description') ?? ' ';
+        $carouselData->property_name = trim($request->input('property_name'));
+        $carouselData->description = trim($request->input('description'));
         $carouselData->project_id = $request->input('project_id') ? (int) $request->input('project_id') : null;
         $carouselData->save();
 

@@ -60,6 +60,24 @@ function CarouselCard({ carousel, index, projects = [] }: { carousel: Carousel; 
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+        
+        if (!data.property_name || !data.property_name.trim()) {
+            setError('property_name', 'Property name is required.');
+            return;
+        }
+
+        if (!data.description || !data.description.trim()) {
+            setError('description', 'Description is required.');
+            return;
+        }
+
+        if (data.description.length > 150) {
+            setError('description', 'Description must not exceed 150 characters.');
+            return;
+        }
+
+        clearErrors('property_name', 'description');
+
         post(route('update-carousel'), {
             forceFormData: true,
             preserveScroll: true,
@@ -74,15 +92,24 @@ function CarouselCard({ carousel, index, projects = [] }: { carousel: Carousel; 
 
               <div className="form-row cols-3" style={{ marginTop: 12, display: 'grid', gridTemplateColumns: '1fr 1fr 1fr', gap: '16px' }}>
                   <div className="form-group">
-                      <label>Property Name</label>
+                      <label>
+                          Property Name <span style={{ color: '#FF8080' }}>*</span>
+                      </label>
                       <input
                           type="text"
+                          required
                           value={data.property_name}
-                          onChange={(e) =>
-                              setData('property_name', e.target.value)
-                          }
+                          onChange={(e) => {
+                              clearErrors('property_name');
+                              setData('property_name', e.target.value);
+                          }}
                           placeholder="Enter property name..."
                       />
+                      {errors.property_name && (
+                          <span style={{ marginTop: 4, display: 'block', color: '#FF8080', fontSize: '0.78rem' }}>
+                              {errors.property_name}
+                          </span>
+                      )}
                   </div>
                   <div className="form-group">
                       <label>Link to Project (Optional)</label>
@@ -116,15 +143,30 @@ function CarouselCard({ carousel, index, projects = [] }: { carousel: Carousel; 
                       </select>
                   </div>
                   <div className="form-group">
-                      <label>Description</label>
+                      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', marginBottom: 6 }}>
+                          <label style={{ margin: 0 }}>
+                              Description <span style={{ color: '#FF8080' }}>*</span>
+                          </label>
+                          <span style={{ fontSize: '0.72rem', color: data.description.length >= 140 ? '#FF8080' : 'var(--muted, #94a3b8)' }}>
+                              {data.description.length}/150
+                          </span>
+                      </div>
                       <input
                           type="text"
+                          required
+                          maxLength={150}
                           value={data.description}
-                          onChange={(e) =>
-                              setData('description', e.target.value)
-                          }
-                          placeholder="Enter description..."
+                          onChange={(e) => {
+                              clearErrors('description');
+                              setData('description', e.target.value);
+                          }}
+                          placeholder="Enter concise carousel description (max 150 chars)..."
                       />
+                      {errors.description && (
+                          <span style={{ marginTop: 4, display: 'block', color: '#FF8080', fontSize: '0.78rem' }}>
+                              {errors.description}
+                          </span>
+                      )}
                   </div>
               </div>
 
