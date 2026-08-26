@@ -1366,29 +1366,30 @@ const Navbar = () => {
             align-items: center;
             justify-content: center;
             padding: 6px 18px;
-            background: linear-gradient(135deg, rgba(15, 23, 42, 0.5) 0%, rgba(30, 58, 138, 0.4) 100%);
-            backdrop-filter: blur(12px) saturate(180%);
-            -webkit-backdrop-filter: blur(12px) saturate(180%);
-            border: 1px solid rgba(255, 255, 255, 0.25);
+            background: linear-gradient(135deg, rgba(224, 242, 254, 0.65) 0%, rgba(147, 197, 253, 0.45) 50%, rgba(30, 58, 138, 0.45) 100%);
+            backdrop-filter: blur(14px) saturate(180%);
+            -webkit-backdrop-filter: blur(14px) saturate(180%);
+            border: 1px solid rgba(255, 255, 255, 0.45);
             border-radius: 999px;
             box-shadow:
-                0 4px 20px rgba(0, 0, 0, 0.35),
-                0 0 15px rgba(59, 130, 246, 0.25),
-                inset 0 1px 0 rgba(255, 255, 255, 0.25);
+                0 4px 20px rgba(0, 0, 0, 0.25),
+                0 0 16px rgba(59, 130, 246, 0.3),
+                inset 0 1px 0 rgba(255, 255, 255, 0.5);
             transition: all 0.4s cubic-bezier(0.34, 1.56, 0.64, 1);
         }
 
         .logo-sweep-container:hover {
-            border-color: rgba(147, 197, 253, 0.6);
+            border-color: rgba(255, 255, 255, 0.75);
+            background: linear-gradient(135deg, rgba(224, 242, 254, 0.75) 0%, rgba(147, 197, 253, 0.55) 50%, rgba(30, 58, 138, 0.55) 100%);
             box-shadow:
-                0 8px 28px rgba(0, 0, 0, 0.45),
-                0 0 25px rgba(59, 130, 246, 0.45),
-                inset 0 1px 0 rgba(255, 255, 255, 0.4);
+                0 6px 26px rgba(0, 0, 0, 0.3),
+                0 0 22px rgba(59, 130, 246, 0.45),
+                inset 0 1px 0 rgba(255, 255, 255, 0.7);
             transform: translateY(-2px);
         }
 
         .logo-sweep-container img {
-            filter: drop-shadow(0 2px 6px rgba(0, 0, 0, 0.5)) drop-shadow(0 0 12px rgba(255, 255, 255, 0.25));
+            filter: drop-shadow(0 2px 4px rgba(15, 23, 42, 0.3)) drop-shadow(0 0 10px rgba(255, 255, 255, 0.35));
             transition: transform 0.4s ease, filter 0.4s ease;
         }
 
