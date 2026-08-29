@@ -93,7 +93,7 @@ const PropertyDetail = () => {
         { label: 'Living & Dining', value: projectDetails.details?.living_dining, icon: CheckCircle2 },
         { label: 'Parking Slots', value: projectDetails.details?.parking, icon: Car },
         { label: 'Garage No.', value: projectDetails.details?.garage_no, icon: Car },
-        { label: 'Garage Size', value: projectDetails.details?.garage_size, icon: Ruler },
+        { label: 'Garage Size', value: projectDetails.details?.garage_size ? `${projectDetails.details.garage_size} sq ft` : projectDetails.details?.garage_size, icon: Ruler },
     ].filter(spec => spec.value && spec.value !== "0");
 
     const totalImages = images.length;

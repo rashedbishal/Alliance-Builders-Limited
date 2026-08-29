@@ -36,8 +36,11 @@ class CMSController extends Controller
     private function projectDetailValidationRules(): array
     {
         return [
+            'price' => 'nullable|integer|min:0',
+            'floors' => 'nullable|regex:/^[A-Za-z0-9+]+$/',
             'size' => 'nullable|integer|min:100|max:50000',
             'apartment_size' => 'nullable|integer|min:100|max:50000',
+            'garage_size' => 'nullable|integer|min:100|max:50000',
             'bedroom' => 'nullable|integer|min:0|max:10',
             'bathroom' => 'nullable|integer|min:1|max:10',
             'apartment_direction' => 'nullable|in:North,North-East,East,South-East,South,South-West,West,North-West',

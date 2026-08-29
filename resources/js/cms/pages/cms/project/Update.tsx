@@ -459,11 +459,15 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               <label>Price (BDT)</label>
                               <input
                                   type="number"
+                                  min="0"
+                                  step="1"
+                                  inputMode="numeric"
                                   value={data.price}
                                   onChange={(e) =>
                                       setData('price', e.target.value)
                                   }
                               />
+                              <FieldError message={errors.price} />
                           </div>
                           <div className="form-group">
                               <label>Size</label>
@@ -505,7 +509,10 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                   onChange={(e) =>
                                       setData('floors', e.target.value)
                                   }
+                                  pattern="[A-Za-z0-9+]+"
+                                  title="Letters, numbers and + only (e.g. 12 or G+12) — no negative values"
                               />
+                              <FieldError message={errors.floors} />
                           </div>
                           <div className="form-group">
                               <label>Featured</label>
@@ -697,7 +704,6 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                           {[
                               { key: 'parking', label: 'Parking' },
                               { key: 'garage_no', label: 'Garage No.' },
-                              { key: 'garage_size', label: 'Garage Size' },
                           ].map(({ key, label }) => (
                               <div className="form-group" key={key}>
                                   <label>{label}</label>
@@ -710,6 +716,38 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                   />
                               </div>
                           ))}
+                          <div className="form-group">
+                              <label>Garage Size</label>
+                              <div style={{ position: 'relative' }}>
+                                  <input
+                                      type="number"
+                                      min={SQFT_MIN}
+                                      max={SQFT_MAX}
+                                      step="1"
+                                      inputMode="numeric"
+                                      value={data.garage_size}
+                                      onChange={(e) =>
+                                          setData('garage_size', e.target.value)
+                                      }
+                                      placeholder="e.g. 150"
+                                      style={{ paddingRight: 56 }}
+                                  />
+                                  <span
+                                      style={{
+                                          position: 'absolute',
+                                          top: '50%',
+                                          right: 14,
+                                          transform: 'translateY(-50%)',
+                                          color: 'var(--muted)',
+                                          fontSize: '0.78rem',
+                                          pointerEvents: 'none',
+                                      }}
+                                  >
+                                      sq ft
+                                  </span>
+                              </div>
+                              <FieldError message={errors.garage_size} />
+                          </div>
                           <div className="form-group">
                               <label>Apt Direction</label>
                               <select
