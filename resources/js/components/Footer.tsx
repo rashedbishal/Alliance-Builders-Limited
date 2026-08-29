@@ -16,8 +16,6 @@ import { Link } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import abstractBg2 from "@/assets/images/backgrounds/city-7.webp";
 import logo from "@/assets/images/logo/alliance logo.webp";
-import { Button } from "@/components/ui/button";
-import { Card, CardContent } from "@/components/ui/card";
 import { Separator } from "@/components/ui/separator";
 
 const Footer = () => {
@@ -145,54 +143,8 @@ const Footer = () => {
                   </li>
                 ))}
               </ul>
-
-              {/* Newsletter */}
-              <Card className="bg-white/10 border-white/20 backdrop-blur-sm hidden md:hidden lg:block h-fit">
-                <CardContent className="p-6">
-                  <h4 className="font-semibold text-white mb-3 flex items-center">
-                    <Mail className="h-4 w-4 mr-2 text-accent" />
-                    Newsletter
-                  </h4>
-                  <p className="text-sm text-white/80 mb-4 drop-shadow-sm">
-                    Get the latest property updates and market insights delivered to your inbox.
-                  </p>
-                  <div className="space-y-3">
-                    <input
-                      type="email"
-                      placeholder="Enter your email"
-                      className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-accent"
-                    />
-                    <Button className="w-full bg-accent hover:bg-accent-dark text-accent-foreground">
-                      Subscribe
-                    </Button>
-                  </div>
-                </CardContent>
-              </Card>
-
             </div>
           </div>
-
-          <Card className="mt-8 bg-white/10 border-white/20 backdrop-blur-sm lg:hidden">
-            <CardContent className="p-6">
-              <h4 className="font-semibold text-white mb-3 flex items-center">
-                <Mail className="h-4 w-4 mr-2 text-accent" />
-                Newsletter
-              </h4>
-              <p className="text-sm text-white/80 mb-4 drop-shadow-sm">
-                Get the latest property updates and market insights delivered to your inbox.
-              </p>
-              <div className="space-y-3">
-                <input
-                  type="email"
-                  placeholder="Enter your email"
-                  className="w-full px-3 py-2 bg-white/10 border border-white/20 rounded-lg text-white placeholder-gray-400 focus:outline-none focus:border-accent"
-                />
-                <Button className="w-full bg-accent hover:bg-accent-dark text-accent-foreground">
-                  Subscribe
-                </Button>
-              </div>
-            </CardContent>
-          </Card>
         </div>
 
         <Separator className="bg-white/20" />
