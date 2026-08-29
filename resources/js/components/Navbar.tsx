@@ -252,10 +252,10 @@ const Navbar = () => {
                 }}
             >
                 {/* Add top padding wrapper */}
-                <div className="pt-3 pb-4 xl:pt-0 xl:pb-0">
+                <div className="pt-3 pb-4 min-[1380px]:pt-0 min-[1380px]:pb-0">
                     {/* DESKTOP NAVBAR - Redesigned */}
                     <div className="relative mx-auto max-w-[1600px]">
-                        <div className="hidden xl:flex xl:items-center xl:justify-between xl:gap-4">
+                        <div className="hidden min-[1380px]:flex min-[1380px]:items-center min-[1380px]:justify-between min-[1380px]:gap-4">
                             {/* LEFT: Logo - Stays outside navbar */}
                             <div
                                 className={`flex-shrink-0 pl-2 transition-all duration-700 ${isLoaded ? 'translate-x-0 opacity-100' : '-translate-x-8 opacity-0'}`}
@@ -744,7 +744,7 @@ const Navbar = () => {
                         </div>
 
                         {/* MOBILE & TAB NAVBAR - Single Unified Capsule */}
-                        <div className="flex items-center justify-center w-full mx-auto xl:hidden">
+                        <div className="flex items-center justify-center w-full mx-auto min-[1380px]:hidden">
                             <div className="nav-desktop-container nav-glass-effect flex items-center justify-center gap-2 sm:gap-3 rounded-full px-3 py-1.5 transition-all duration-300">
                                 {/* Logo inside capsule */}
                                 <Link
@@ -808,7 +808,7 @@ const Navbar = () => {
                             <div
                                 ref={mobileMenuRef}
                                 onClick={(e) => e.stopPropagation()}
-                                className={`bg-navbar-gradient shadow-navbar mt-0 inline-block max-h-[calc(100vh-100px)] w-auto min-w-60 overflow-y-auto rounded-2xl border-2 border-blue-300/60 backdrop-blur-xl sm:w-sm md:w-md xl:hidden ${isClosing ? 'animate-fade-out' : 'animate-fade-in'}`}
+                                className={`bg-navbar-gradient shadow-navbar mt-0 inline-block max-h-[calc(100vh-100px)] w-auto min-w-60 overflow-y-auto rounded-2xl border-2 border-blue-300/60 backdrop-blur-xl sm:w-sm md:w-md min-[1380px]:hidden ${isClosing ? 'animate-fade-out' : 'animate-fade-in'}`}
                             >
                                 <div className="space-y-1.5 py-2">
                                     <div className="mx-2 rounded-md border border-sky-400/40 border-l-4 border-l-sky-500/80 bg-gradient-to-r from-blue-400/35 via-sky-300/30 to-blue-300/35 shadow-sm transition-all duration-300 hover:border-sky-400/70">
