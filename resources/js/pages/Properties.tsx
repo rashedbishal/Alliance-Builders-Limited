@@ -1,8 +1,8 @@
 import { router, usePage } from '@inertiajs/react';
 import { Search, X, Sparkles, ArrowDown, SearchX, Building2, RotateCcw } from 'lucide-react';
 import React, { useState, useMemo, useEffect, useRef } from 'react';
-import golden from "@/assets/images/architecture/golden-building.jpg";
-import bgBlack from "@/assets/images/backgrounds/bg-black.jpg";
+import golden from "@/assets/images/architecture/golden-building.webp";
+import bgBlack from "@/assets/images/backgrounds/bg-black.webp";
 import PropertyCard from '@/components/PropertyCard';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";

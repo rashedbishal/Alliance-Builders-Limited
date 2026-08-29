@@ -1,4 +1,4 @@
-import AboutBackground from '@images/home/about-section.jpg';
+import AboutBackground from '@images/home/about-section.webp';
 import {Link} from "@inertiajs/react";
 import {
   Building2,

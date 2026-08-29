@@ -1,4 +1,4 @@
-import TestimonialBackground from '@images/home/testimonials-background.jpg';
+import TestimonialBackground from '@images/home/testimonials-background.webp';
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState, useEffect } from 'react';
 import { Link } from '@inertiajs/react';

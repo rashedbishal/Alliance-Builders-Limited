@@ -7,7 +7,7 @@ import beverage from "@/assets/images/logo/alliance-beverage-agro.svg";
 import brokerage from "@/assets/images/logo/alliance-brokerage.svg";
 import construction from "@/assets/images/logo/alliance-construction.svg";
 import success from "@/assets/images/logo/alliance-success-builders.svg";
-import jana from "@/assets/images/logo/jana.png";
+import jana from "@/assets/images/logo/jana.webp";
 import opticore from "@/assets/images/logo/opticore-solutions.svg";
 
 interface Company {

@@ -1,7 +1,7 @@
 import { Award, Users, Building, TrendingUp, Target, Eye, Heart } from 'lucide-react';
-import bg3 from "@/assets/images/backgrounds/bg3.png";
-import collage6 from "@/assets/images/collage/collage-6.jpg";
-import property3 from "@/assets/images/properties/property-3.jpg";
+import bg3 from "@/assets/images/backgrounds/bg3.webp";
+import collage6 from "@/assets/images/collage/collage-6.webp";
+import property3 from "@/assets/images/properties/property-3.webp";
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
