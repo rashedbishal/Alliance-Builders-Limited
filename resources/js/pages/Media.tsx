@@ -1,7 +1,7 @@
 import { usePage } from "@inertiajs/react";
 import type { Image } from "@types/Image";
 import { motion, useScroll, useTransform, useSpring, useMotionValue, useMotionTemplate } from 'framer-motion';
-import { Calendar, Newspaper, ArrowRight, ExternalLink, Sparkles, Play, Quote } from 'lucide-react';
+import { Calendar, Newspaper, ArrowRight, ArrowUpRight, ExternalLink, Sparkles, Play, Quote } from 'lucide-react';
 import { useRef, useState, useEffect } from 'react';
 
 // Import media assets
@@ -852,10 +852,12 @@ const Media = () => {
                                     <MagneticButton className="rounded-full bg-white font-semibold text-slate-950 transition-colors hover:bg-white/90">
                                         <a
                                             href="https://jananews24.com/"
+                                            target="_blank"
+                                            rel="noopener noreferrer"
                                             className="gap-2 inline-flex items-center justify-center rounded-full px-8 py-4"
                                         >
                                             <span className="text-sm sm:text-md">View Our News Site</span>
-                                            <ArrowRight className="h-4 w-4" />
+                                            <ArrowUpRight className="h-4 w-4" />
                                         </a>
                                     </MagneticButton>
                                 </div>
