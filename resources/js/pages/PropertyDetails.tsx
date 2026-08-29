@@ -41,6 +41,8 @@ const PropertyDetail = () => {
     // const [scrollLeft, setScrollLeft] = useState(0);
     const isDragging = useRef(false);  // useRef instead of useState to avoid re-renders
     const startX = useRef(0);
+    const startY = useRef(0);
+    const swipeDirection = useRef<'x' | 'y' | null>(null);
     const scrollLeftRef = useRef(0);
     const velX = useRef(0);
     const lastX = useRef(0);
@@ -208,6 +210,8 @@ const PropertyDetail = () => {
         isDragging.current = true;
         setIsAutoPlaying(false);
         startX.current = e.touches[0].clientX;
+        startY.current = e.touches[0].clientY;
+        swipeDirection.current = null;
         scrollLeftRef.current = scrollRef.current.scrollLeft;
         lastX.current = e.touches[0].clientX;
         velX.current = 0;
@@ -218,6 +222,27 @@ const PropertyDetail = () => {
     const handleTouchMove = (e: React.TouchEvent) => {
         if (!isDragging.current || !scrollRef.current) return;
         const x = e.touches[0].clientX;
+        const y = e.touches[0].clientY;
+
+        // Figure out whether this is a horizontal swipe or a vertical scroll
+        // before committing to either — a diagonal-ish finger flick should
+        // never fight the page's vertical scroll.
+        if (swipeDirection.current === null) {
+            const dx = x - startX.current;
+            const dy = y - startY.current;
+            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
+
+            if (Math.abs(dy) > Math.abs(dx)) {
+                // Vertical intent — bail out and let the page scroll normally.
+                swipeDirection.current = 'y';
+                isDragging.current = false;
+                return;
+            }
+            swipeDirection.current = 'x';
+        }
+
+        if (swipeDirection.current !== 'x') return;
+
         velX.current = x - lastX.current;
         lastX.current = x;
         const walk = x - startX.current;
@@ -226,22 +251,28 @@ const PropertyDetail = () => {
 
     const handleTouchEnd = () => {
         if (!scrollRef.current) return;
+        const wasVerticalSwipe = swipeDirection.current === 'y';
         isDragging.current = false;
+        swipeDirection.current = null;
         scrollRef.current.style.scrollBehavior = 'smooth';
 
-        // Snap to nearest slide with considered velocity
+        if (wasVerticalSwipe) {
+            setIsAutoPlaying(true);
+            return;
+        }
+
+        // Snap to the nearest slide based on how far the finger actually
+        // dragged, but never advance more than one slide per swipe —
+        // a hard/fast flick should still only move the gallery by one image.
         const slideWidth = scrollRef.current.offsetWidth * 0.85;
         const gap = 16;
         const totalWidth = slideWidth + gap;
         const currentScroll = scrollRef.current.scrollLeft;
-        
-        // Consider velocity for flick gestures
+
         let targetIndex = Math.round(currentScroll / totalWidth);
-        if (Math.abs(velX.current) > 1) {
-            targetIndex += velX.current > 0 ? -1 : 1;
-        }
-        
+        targetIndex = Math.max(currentIndex - 1, Math.min(currentIndex + 1, targetIndex));
         targetIndex = Math.max(0, Math.min(targetIndex, images.length - 1));
+
         const targetScroll = targetIndex * totalWidth;
         const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
 
@@ -597,7 +628,7 @@ const PropertyDetail = () => {
                                     setCurrentIndex(index);
                                 }
                             }}
-                            className="no-scrollbar flex max-h-screen cursor-grab touch-pan-x snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 select-none sm:gap-6"
+                            className="no-scrollbar flex max-h-screen cursor-grab touch-pan-y snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 select-none sm:gap-6"
                             style={{
                                 scrollbarWidth: 'none',
                                 msOverflowStyle: 'none',
