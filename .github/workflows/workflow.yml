@@ -74,5 +74,6 @@ jobs:
               cd ${{ secrets.HOSTINGER_PATH }}
               chmod -R 775 storage bootstrap/cache
               php artisan optimize:clear
+              php artisan migrate --force
               ln -s ../storage/app/public public/storage
           EOF
