@@ -2,7 +2,14 @@ import { router } from '@inertiajs/react';
 import { useState } from 'react';
 import { route } from 'ziggy-js';
 import CMSLayout from '@/cms/layouts/CMSLayout';
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import type { GalleryType } from '@/cms/types/cms';
+
+const cmsSelectTriggerClass =
+  'h-10 w-auto min-w-[190px] rounded-lg border border-[rgba(201,168,76,0.2)] bg-[var(--darker)] px-3.5 text-[0.83rem] text-[var(--text)] focus:border-[var(--gold)] focus:ring-0 focus:shadow-[0_0_0_3px_rgba(201,168,76,0.1)]';
+const cmsSelectContentClass = 'min-w-[190px] border border-[var(--border)] bg-[var(--surface)] text-[var(--text)]';
+const cmsSelectItemClass =
+  'text-[var(--text)] hover:bg-[rgba(201,168,76,0.1)] focus:border-[rgba(201,168,76,0.3)] focus:bg-[rgba(201,168,76,0.15)] focus:text-[var(--gold-light)]';
 
 interface Props {
   types: GalleryType[];
@@ -57,28 +64,36 @@ export default function GalleryRemove({ types }: Props) {
         </div>
 
         <div style={{ display: 'flex', gap: 12, marginBottom: 20, flexWrap: 'wrap' }}>
-          <select
-            value={galleryTypeFilter}
-            onChange={e => setGalleryTypeFilter(e.target.value)}
-            className="h-10"
-            style={{ width: 'auto', minWidth: 180 }}
+          <Select
+            value={galleryTypeFilter || 'all'}
+            onValueChange={v => setGalleryTypeFilter(v === 'all' ? '' : v)}
           >
-            <option value="">All Gallery Types</option>
-            {types.map(t => (
-              <option key={t.id} value={t.type.toLowerCase()}>{t.type.charAt(0).toUpperCase() + t.type.slice(1)}</option>
-            ))}
-          </select>
+            <SelectTrigger className={cmsSelectTriggerClass}>
+              <SelectValue placeholder="All Gallery Types" />
+            </SelectTrigger>
+            <SelectContent className={cmsSelectContentClass}>
+              <SelectItem value="all" className={cmsSelectItemClass}>All Gallery Types</SelectItem>
+              {types.map(t => (
+                <SelectItem key={t.id} value={t.type.toLowerCase()} className={cmsSelectItemClass}>
+                  {t.type.charAt(0).toUpperCase() + t.type.slice(1)}
+                </SelectItem>
+              ))}
+            </SelectContent>
+          </Select>
 
-          <select
-            value={mediaTypeFilter}
-            onChange={e => setMediaTypeFilter(e.target.value)}
-            className="h-10"
-            style={{ width: 'auto', minWidth: 160 }}
+          <Select
+            value={mediaTypeFilter || 'all'}
+            onValueChange={v => setMediaTypeFilter(v === 'all' ? '' : v)}
           >
-            <option value="">All Media Types</option>
-            <option value="image">Image</option>
-            <option value="video">Video</option>
-          </select>
+            <SelectTrigger className={cmsSelectTriggerClass}>
+              <SelectValue placeholder="All Media Types" />
+            </SelectTrigger>
+            <SelectContent className={cmsSelectContentClass}>
+              <SelectItem value="all" className={cmsSelectItemClass}>All Media Types</SelectItem>
+              <SelectItem value="image" className={cmsSelectItemClass}>Image</SelectItem>
+              <SelectItem value="video" className={cmsSelectItemClass}>Video</SelectItem>
+            </SelectContent>
+          </Select>
         </div>
 
         {types.every(t => !t.images?.length && !t.videos?.length) ? (
