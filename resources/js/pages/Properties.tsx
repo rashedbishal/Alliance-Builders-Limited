@@ -242,6 +242,15 @@ const Properties = () => {
         setLocationFilter('');
     };
 
+    // Below md, tabs wrap onto multiple lines — give each its own border/card so
+    // they read as distinct chips instead of floating text. At md+ they collapse
+    // back into the seamless single-row pill look.
+    const tabTriggerClass =
+        'rounded-xl border border-border/60 bg-white/60 py-2.5 shadow-sm transition-all ' +
+        'data-[state=active]:border-primary data-[state=active]:bg-primary/5 data-[state=active]:text-primary data-[state=active]:shadow-md ' +
+        'md:rounded-sm md:border-0 md:bg-transparent md:py-1.5 md:shadow-none ' +
+        'md:data-[state=active]:bg-background md:data-[state=active]:text-foreground md:data-[state=active]:shadow-sm';
+
     return (
         <AppLayout>
             <div className="min-h-screen bg-background">
@@ -380,11 +389,11 @@ const Properties = () => {
                                 className="w-full"
                             >
                                 <div className="mb-12 flex justify-center">
-                                    <TabsList className="grid h-auto w-full max-w-4xl grid-cols-2 sm:grid-cols-3 md:grid-cols-5">
-                                        <TabsTrigger value="all">
+                                    <TabsList className="grid h-auto w-full max-w-4xl grid-cols-2 gap-2 rounded-2xl border border-border/70 bg-white/80 p-2 shadow-lg backdrop-blur-md sm:grid-cols-3 sm:gap-2.5 sm:p-2.5 md:grid-cols-5 md:gap-0 md:rounded-md md:border-0 md:bg-muted md:p-1 md:shadow-none">
+                                        <TabsTrigger value="all" className={tabTriggerClass}>
                                             All ({nonHotelProjects.length})
                                         </TabsTrigger>
-                                        <TabsTrigger value="upcoming">
+                                        <TabsTrigger value="upcoming" className={tabTriggerClass}>
                                             Upcoming (
                                             {nonHotelProjects.filter(
                                                 (p) =>
@@ -393,7 +402,7 @@ const Properties = () => {
                                             ).length}
                                             )
                                         </TabsTrigger>
-                                        <TabsTrigger value="ongoing">
+                                        <TabsTrigger value="ongoing" className={tabTriggerClass}>
                                             Ongoing (
                                             {nonHotelProjects.filter(
                                                 (p) =>
@@ -402,7 +411,7 @@ const Properties = () => {
                                             ).length}
                                             )
                                         </TabsTrigger>
-                                        <TabsTrigger value="handover">
+                                        <TabsTrigger value="handover" className={tabTriggerClass}>
                                             Handover (
                                             {nonHotelProjects.filter(
                                                 (p) =>
@@ -411,7 +420,7 @@ const Properties = () => {
                                             ).length}
                                             )
                                         </TabsTrigger>
-                                        <TabsTrigger value="favorites">
+                                        <TabsTrigger value="favorites" className={tabTriggerClass}>
                                             Favorites ({favorites.length})
                                         </TabsTrigger>
                                     </TabsList>
