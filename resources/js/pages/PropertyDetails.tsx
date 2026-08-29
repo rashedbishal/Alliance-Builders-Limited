@@ -234,7 +234,7 @@ const PropertyDetail = () => {
                             {[
                                 {
                                     label: 'Apartment Size',
-                                    value: projectDetails.size,
+                                    value: projectDetails.size ? `${projectDetails.size} sq ft` : projectDetails.size,
                                     icon: Square,
                                 },
                                 {

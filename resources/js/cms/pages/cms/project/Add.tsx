@@ -328,14 +328,33 @@ export default function ProjectAdd({
                         </div>
                         <div className="form-group">
                             <label>Size</label>
-                            <input
-                                type="text"
-                                value={data.size}
-                                onChange={(e) =>
-                                    setData('size', e.target.value)
-                                }
-                                placeholder="e.g. 1200 sqft"
-                            />
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    inputMode="numeric"
+                                    value={data.size}
+                                    onChange={(e) =>
+                                        setData('size', e.target.value)
+                                    }
+                                    placeholder="e.g. 1200"
+                                    style={{ paddingRight: 56 }}
+                                />
+                                <span
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        right: 14,
+                                        transform: 'translateY(-50%)',
+                                        color: 'var(--muted)',
+                                        fontSize: '0.78rem',
+                                        pointerEvents: 'none',
+                                    }}
+                                >
+                                    sq ft
+                                </span>
+                            </div>
                         </div>
                         <div className="form-group">
                             <label>Floors</label>
@@ -443,8 +462,37 @@ export default function ProjectAdd({
                     </div>
 
                     <div className="form-row cols-3">
+                        <div className="form-group">
+                            <label>Apartment Size</label>
+                            <div style={{ position: 'relative' }}>
+                                <input
+                                    type="number"
+                                    min="0"
+                                    step="1"
+                                    inputMode="numeric"
+                                    value={data.apartment_size}
+                                    onChange={(e) =>
+                                        setData('apartment_size', e.target.value)
+                                    }
+                                    placeholder="e.g. 1200"
+                                    style={{ paddingRight: 56 }}
+                                />
+                                <span
+                                    style={{
+                                        position: 'absolute',
+                                        top: '50%',
+                                        right: 14,
+                                        transform: 'translateY(-50%)',
+                                        color: 'var(--muted)',
+                                        fontSize: '0.78rem',
+                                        pointerEvents: 'none',
+                                    }}
+                                >
+                                    sq ft
+                                </span>
+                            </div>
+                        </div>
                         {[
-                            { key: 'apartment_size', label: 'Apartment Size' },
                             { key: 'bedroom', label: 'Bedroom' },
                             { key: 'bathroom', label: 'Bathroom' },
                             { key: 'balcony', label: 'Balcony' },

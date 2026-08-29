@@ -160,22 +160,22 @@ const PropertyCard = ({
                                         <div className="grid grid-cols-4 gap-2">
                                             <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
                                                 <Bed className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                                <div className="text-sm font-semibold text-white">{property.details.bedroom}</div>
+                                                <div className="truncate text-sm font-semibold text-white">{property.details.bedroom}</div>
                                                 <div className="text-xs text-white/60">Beds</div>
                                             </div>
                                             <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
                                                 <Bath className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                                <div className="text-sm font-semibold text-white">{property.details.bathroom}</div>
+                                                <div className="truncate text-sm font-semibold text-white">{property.details.bathroom}</div>
                                                 <div className="text-xs text-white/60">Baths</div>
                                             </div>
                                             <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
                                                 <Square className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                                <div className="text-sm font-semibold text-white">{property.details.apartment_size}</div>
+                                                <div className="truncate text-sm font-semibold text-white">{property.details.apartment_size}</div>
                                                 <div className="text-xs text-white/60">Sq Ft</div>
                                             </div>
                                             <div className="text-center p-2 bg-white/20 border border-white/30 rounded-lg backdrop-blur-md shadow-lg [transform:translateZ(0)]">
                                                 <Compass className="h-4 w-4 mx-auto mb-1 text-blue-400" />
-                                                <div className="text-sm font-semibold text-white">{property.details.apartment_direction}</div>
+                                                <div className="truncate text-sm font-semibold text-white">{property.details.apartment_direction}</div>
                                                 <div className="text-xs text-white/60">Facing</div>
                                             </div>
                                         </div>
