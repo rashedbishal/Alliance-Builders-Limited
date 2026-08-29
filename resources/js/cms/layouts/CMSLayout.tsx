@@ -402,8 +402,8 @@ export default function CMSLayout({
                                 Add Image
                             </Link>
                             <Link
-                                href={route('gallery-erase')}
-                                className={`submenu-link ${currentRoute('gallery-erase') ? 'submenu-link-active' : ''}`}
+                                href={route('gallery-remove')}
+                                className={`submenu-link ${currentRoute('gallery-remove') ? 'submenu-link-active' : ''}`}
                             >
                                 Remove Image
                             </Link>
@@ -450,8 +450,8 @@ export default function CMSLayout({
                                 Add Image
                             </Link>
                             <Link
-                                href={route('media-erase')}
-                                className={`submenu-link ${currentRoute('media-erase') ? 'submenu-link-active' : ''}`}
+                                href={route('media-remove')}
+                                className={`submenu-link ${currentRoute('media-remove') ? 'submenu-link-active' : ''}`}
                             >
                                 Remove Image
                             </Link>
@@ -503,8 +503,8 @@ export default function CMSLayout({
                                 Update Project
                             </Link>
                             <Link
-                                href={route('project-erase')}
-                                className={`submenu-link ${currentRoute('project-erase') ? 'submenu-link-active' : ''}`}
+                                href={route('project-remove')}
+                                className={`submenu-link ${currentRoute('project-remove') ? 'submenu-link-active' : ''}`}
                             >
                                 Remove Project
                             </Link>

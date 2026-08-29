@@ -21,19 +21,19 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::post('project/image/destroy', 'destroyProjectImage')->name('destroy-project-image');
     Route::post('update/project', 'updateProject')->name('update-project');
 
-    Route::get('project/erase', 'projectErase')->name('project-erase');
+    Route::get('project/remove', 'projectRemove')->name('project-remove');
     Route::post('destroy/project', 'destroyProject')->name('destroy-project');
 
     Route::get('media/add', 'mediaAdd')->name('media-add');
     Route::post('save/media', 'saveMedia')->name('save-media');
 
-    Route::get('media/erase', 'mediaErase')->name('media-erase');
+    Route::get('media/remove', 'mediaRemove')->name('media-remove');
     Route::post('destroy/media', 'destroyMedia')->name('destroy-media');
 
     Route::get('gallery/add', 'galleryAdd')->name('gallery-add');
     Route::post('save/gallery', 'saveGallery')->name('save-gallery');
 
-    Route::get('gallery/erase', 'galleryErase')->name('gallery-erase');
+    Route::get('gallery/remove', 'galleryRemove')->name('gallery-remove');
     Route::post('destroy/gallery', 'destroyGallery')->name('destroy-gallery');
 
     Route::get('popup/add', 'popupAdd')->name('popup-add');

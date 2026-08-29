@@ -38,8 +38,8 @@
                 class="submenu-link {{ Request::routeIs('gallery-add') ? 'active' : '' }}">
                     Add Image
                 </a>
-                <a href="{{route('gallery-erase')}}" {{-- replace # with route('gallery.remove') --}}
-                class="submenu-link {{ Request::routeIs('gallery-erase') ? 'active' : '' }}">
+                <a href="{{route('gallery-remove')}}" {{-- replace # with route('gallery.remove') --}}
+                class="submenu-link {{ Request::routeIs('gallery-remove') ? 'active' : '' }}">
                     Remove Image
                 </a>
             </div>
@@ -64,8 +64,8 @@
                 class="submenu-link {{ Request::routeIs('media-add') ? 'active' : '' }}">
                     Add Image
                 </a>
-                <a href="{{route('media-erase')}}" {{-- replace # with route('media.remove') --}}
-                class="submenu-link {{ Request::routeIs('media-erase') ? 'active' : '' }}">
+                <a href="{{route('media-remove')}}" {{-- replace # with route('media.remove') --}}
+                class="submenu-link {{ Request::routeIs('media-remove') ? 'active' : '' }}">
                     Remove Image
                 </a>
             </div>
@@ -93,8 +93,8 @@
                 class="submenu-link {{ Request::routeIs('project-update') ? 'active' : '' }}">
                     Update Project
                 </a>
-                <a href="{{route('project-erase')}}" {{-- replace # with route('project.remove') --}}
-                class="submenu-link {{ Request::routeIs('project-erase') ? 'active' : '' }}">
+                <a href="{{route('project-remove')}}" {{-- replace # with route('project.remove') --}}
+                class="submenu-link {{ Request::routeIs('project-remove') ? 'active' : '' }}">
                     Remove Project
                 </a>
             </div>

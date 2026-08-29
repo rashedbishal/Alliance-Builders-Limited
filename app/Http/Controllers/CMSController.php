@@ -95,7 +95,7 @@ class CMSController extends Controller
         return Project::with('tags', 'details', 'projectImages', 'facilities', 'location', 'image')->where('id', $id)->first();
     }
 
-    public function projectErase()
+    public function projectRemove()
     {
         $types = ProjectType::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
@@ -110,7 +110,7 @@ class CMSController extends Controller
         return Inertia::render('cms/media/Add');
     }
 
-    public function mediaErase()
+    public function mediaRemove()
     {
         $mediaItems = MediaCoverage::with('image')->paginate(7);
 
@@ -126,7 +126,7 @@ class CMSController extends Controller
         return Inertia::render('cms/gallery/Add', compact('types'));
     }
 
-    public function galleryErase()
+    public function galleryRemove()
     {
         $types = Gallery::with('images', 'videos')->select('id', 'type')->get();
 
