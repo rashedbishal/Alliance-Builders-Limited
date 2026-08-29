@@ -105,7 +105,7 @@ const Footer = () => {
                   <li key={link.label}>
                     <Link
                       href={link.href}
-                      className="text-white/80 hover:text-accent transition-colors duration-300 flex items-center group drop-shadow-sm"
+                      className="text-white/80 hover:text-accent transition-colors duration-300 inline-flex items-center group drop-shadow-sm"
                     >
                       <ArrowUpRight className="h-4 w-4 mr-2 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
                       {link.label}
@@ -135,7 +135,7 @@ const Footer = () => {
                   <li key={project.label}>
                     <Link
                       href={project.href}
-                      className="text-white/80 hover:text-accent transition-colors duration-300 flex items-center group drop-shadow-sm"
+                      className="text-white/80 hover:text-accent transition-colors duration-300 inline-flex items-center group drop-shadow-sm"
                     >
                       <Building2 className="h-4 w-4 mr-2 opacity-50 group-hover:opacity-100 transition-opacity duration-300" />
                       {project.label}
