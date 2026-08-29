@@ -12,6 +12,7 @@ import {
     Square,
     ChevronLeft,
     ChevronRight,
+    Expand,
     Waves,
     ShieldCheck,
     FlameKindling,
@@ -21,32 +22,40 @@ import {
     Home,
 } from 'lucide-react';
 import React, { useState, useRef, useEffect } from 'react';
+import { Autoplay, Keyboard, A11y } from 'swiper/modules';
+import { Swiper, SwiperSlide } from 'swiper/react';
+import type { Swiper as SwiperClass } from 'swiper/types';
+import Lightbox from 'yet-another-react-lightbox';
+import Counter from 'yet-another-react-lightbox/plugins/counter';
+import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
+import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
+import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import MapComponent from '@/components/MapComponent';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
 import AppLayout from "@/layouts/AppLayout";
 import type { Project } from '@/types/Project';
 
+import 'swiper/css';
+import 'swiper/css/a11y';
+import 'yet-another-react-lightbox/styles.css';
+import 'yet-another-react-lightbox/plugins/counter.css';
+import 'yet-another-react-lightbox/plugins/thumbnails.css';
+
 const PropertyDetail = () => {
     const { projectDetails } = usePage<{ projectDetails: Project }>().props;
     const heroRef = useRef(null);
     const [activeImage, setActiveImage] = useState(0);
 
-    // Gallery State & Refs
-    const scrollRef = useRef<HTMLDivElement>(null);
+    // Gallery State
+    const gallerySwiperRef = useRef<SwiperClass | null>(null);
     const [currentIndex, setCurrentIndex] = useState(0);
-    const [isAutoPlaying, setIsAutoPlaying] = useState(true);
-    // const [isDragging, setIsDragging] = useState(false);
-    // const [startX, setStartX] = useState(0);
-    // const [scrollLeft, setScrollLeft] = useState(0);
-    const isDragging = useRef(false);  // useRef instead of useState to avoid re-renders
-    const startX = useRef(0);
-    const startY = useRef(0);
-    const swipeDirection = useRef<'x' | 'y' | null>(null);
-    const scrollLeftRef = useRef(0);
-    const velX = useRef(0);
-    const lastX = useRef(0);
-    const animFrame = useRef<number>(0);
+    const [lightboxOpen, setLightboxOpen] = useState(false);
+    const [lightboxIndex, setLightboxIndex] = useState(0);
+    // True while the browser's native fullscreen mode is active — the thumbnail
+    // strip is dropped in that state so the image itself can claim the full
+    // width/height of the screen, matching how a native media viewer behaves.
+    const [isImmersiveFullscreen, setIsImmersiveFullscreen] = useState(false);
     // --- DATA HELPERS ---
     const images = projectDetails?.project_images?.map((img) => `/${img.image}`) ?? [];
     const primaryImage = images[0] ?? '/placeholder-property.jpg';
@@ -87,203 +96,12 @@ const PropertyDetail = () => {
         { label: 'Garage Size', value: projectDetails.details?.garage_size, icon: Ruler },
     ].filter(spec => spec.value && spec.value !== "0");
 
-    const handleMouseDown = (e: React.MouseEvent) => {
-        if (!scrollRef.current) return;
-        isDragging.current = true;
-        setIsAutoPlaying(false);
-        startX.current = e.pageX;
-        scrollLeftRef.current = scrollRef.current.scrollLeft;
-        velX.current = 0;
-        lastX.current = e.pageX;
-        scrollRef.current.style.cursor = 'grabbing';
-        scrollRef.current.style.scrollBehavior = 'auto';
-        if (animFrame.current) cancelAnimationFrame(animFrame.current);
-    };
-
-    const handleMouseMove = (e: React.MouseEvent) => {
-        if (!isDragging.current || !scrollRef.current) return;
-        e.preventDefault();
-        const now = Date.now();
-        const deltaTime = now - (lastX.current as any);
-        velX.current = (e.pageX - lastX.current) / Math.max(deltaTime, 16);
-        lastX.current = e.pageX;
-        const walk = e.pageX - startX.current;
-        scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
-    };
-
-    const handleMouseUp = () => {
-        if (!scrollRef.current) return;
-        isDragging.current = false;
-        scrollRef.current.style.cursor = 'grab';
-        scrollRef.current.style.scrollBehavior = 'smooth';
-
-        // Snap to nearest slide
-        const slideWidth = scrollRef.current.offsetWidth * 0.85;
-        const gap = 16;
-        const totalWidth = slideWidth + gap;
-        const targetIndex = Math.round(scrollRef.current.scrollLeft / totalWidth);
-        const targetScroll = targetIndex * totalWidth;
-        const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
-
-        setCurrentIndex(Math.max(0, Math.min(targetIndex, images.length - 1)));
-        scrollRef.current.scrollTo({
-            left: Math.max(0, Math.min(targetScroll, maxScroll)),
-            behavior: 'smooth'
-        });
-
-        // Resume autoplay after a delay
-        setTimeout(() => setIsAutoPlaying(true), 3000);
-    };
-
-    // Keyboard navigation
-    useEffect(() => {
-        const handleKeyDown = (e: KeyboardEvent) => {
-            if (e.key === 'ArrowLeft') scrollToIndex('prev');
-            if (e.key === 'ArrowRight') scrollToIndex('next');
-        };
-        window.addEventListener('keydown', handleKeyDown);
-        return () => window.removeEventListener('keydown', handleKeyDown);
-    }, [images.length]);
-
-    // Auto-slideshow
-    useEffect(() => {
-        if (!isAutoPlaying) return;
-        
-        const interval = setInterval(() => {
-            setCurrentIndex(prev => {
-                if (!scrollRef.current) return prev;
-                const slideWidth = scrollRef.current.offsetWidth * 0.85;
-                const gap = 16;
-                const totalWidth = slideWidth + gap;
-                const newIndex = (prev + 1) % images.length;
-                
-                scrollRef.current.scrollTo({
-                    left: newIndex * totalWidth,
-                    behavior: 'smooth'
-                });
-                return newIndex;
-            });
-        }, 5000); // Change slide every 5 seconds
-
-        return () => clearInterval(interval);
-    }, [isAutoPlaying, images.length]);
-
-    const scrollToIndex = (direction: 'next' | 'prev') => {
-        if (!scrollRef.current) return;
-        const container = scrollRef.current;
-        const slideWidth = container.offsetWidth * 0.85;
-        const gap = 16;
-        const totalWidth = slideWidth + gap;
-        const newIndex = direction === 'next' 
-            ? Math.min(currentIndex + 1, images.length - 1)
-            : Math.max(currentIndex - 1, 0);
-        
-        const newScroll = newIndex * totalWidth;
-        
-        container.scrollTo({
-            left: newScroll,
-            behavior: 'smooth'
-        });
-        setCurrentIndex(newIndex);
-    };
-
-    const getSlideWidth = () => {
-        if (!scrollRef.current) return 0;
-        return scrollRef.current.offsetWidth * 0.85;
-    };
-
-    const calculateCurrentIndex = (scrollLeft: number) => {
-        if (!scrollRef.current) return 0;
-        const slideWidth = scrollRef.current.offsetWidth * 0.85;
-        const gap = 16;
-        const totalWidth = slideWidth + gap;
-        const index = Math.round(scrollLeft / totalWidth);
-        return Math.max(0, Math.min(index, images.length - 1));
-    };
-
     const totalImages = images.length;
     const progress = totalImages > 0 ? Math.min(((currentIndex + 1) / totalImages) * 100, 100) : 0;
 
-    // Touch/swipe handling for gallery
-    const handleTouchStart = (e: React.TouchEvent) => {
-        if (!scrollRef.current) return;
-        isDragging.current = true;
-        setIsAutoPlaying(false);
-        startX.current = e.touches[0].clientX;
-        startY.current = e.touches[0].clientY;
-        swipeDirection.current = null;
-        scrollLeftRef.current = scrollRef.current.scrollLeft;
-        lastX.current = e.touches[0].clientX;
-        velX.current = 0;
-        scrollRef.current.style.scrollBehavior = 'auto';
-        if (animFrame.current) cancelAnimationFrame(animFrame.current);
-    };
-
-    const handleTouchMove = (e: React.TouchEvent) => {
-        if (!isDragging.current || !scrollRef.current) return;
-        const x = e.touches[0].clientX;
-        const y = e.touches[0].clientY;
-
-        // Figure out whether this is a horizontal swipe or a vertical scroll
-        // before committing to either — a diagonal-ish finger flick should
-        // never fight the page's vertical scroll.
-        if (swipeDirection.current === null) {
-            const dx = x - startX.current;
-            const dy = y - startY.current;
-            if (Math.abs(dx) < 8 && Math.abs(dy) < 8) return;
-
-            if (Math.abs(dy) > Math.abs(dx)) {
-                // Vertical intent — bail out and let the page scroll normally.
-                swipeDirection.current = 'y';
-                isDragging.current = false;
-                return;
-            }
-            swipeDirection.current = 'x';
-        }
-
-        if (swipeDirection.current !== 'x') return;
-
-        velX.current = x - lastX.current;
-        lastX.current = x;
-        const walk = x - startX.current;
-        scrollRef.current.scrollLeft = scrollLeftRef.current - walk;
-    };
-
-    const handleTouchEnd = () => {
-        if (!scrollRef.current) return;
-        const wasVerticalSwipe = swipeDirection.current === 'y';
-        isDragging.current = false;
-        swipeDirection.current = null;
-        scrollRef.current.style.scrollBehavior = 'smooth';
-
-        if (wasVerticalSwipe) {
-            setIsAutoPlaying(true);
-            return;
-        }
-
-        // Snap to the nearest slide based on how far the finger actually
-        // dragged, but never advance more than one slide per swipe —
-        // a hard/fast flick should still only move the gallery by one image.
-        const slideWidth = scrollRef.current.offsetWidth * 0.85;
-        const gap = 16;
-        const totalWidth = slideWidth + gap;
-        const currentScroll = scrollRef.current.scrollLeft;
-
-        let targetIndex = Math.round(currentScroll / totalWidth);
-        targetIndex = Math.max(currentIndex - 1, Math.min(currentIndex + 1, targetIndex));
-        targetIndex = Math.max(0, Math.min(targetIndex, images.length - 1));
-
-        const targetScroll = targetIndex * totalWidth;
-        const maxScroll = scrollRef.current.scrollWidth - scrollRef.current.offsetWidth;
-
-        setCurrentIndex(targetIndex);
-        scrollRef.current.scrollTo({
-            left: Math.max(0, Math.min(targetScroll, maxScroll)),
-            behavior: 'smooth'
-        });
-
-        // Resume autoplay after a delay
-        setTimeout(() => setIsAutoPlaying(true), 3000);
+    const openLightboxAt = (index: number) => {
+        setLightboxIndex(index);
+        setLightboxOpen(true);
     };
 
     return (
@@ -598,77 +416,108 @@ const PropertyDetail = () => {
                         <div className="group relative">
                         {/* FLOATING ARROWS */}
                         <button
-                            onClick={() => scrollToIndex('prev')}
+                            onClick={() => gallerySwiperRef.current?.slidePrev()}
                             className="group/btn absolute top-1/2 left-4 z-40 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 hover:border-primary/50 hover:bg-primary hover:text-black"
                             aria-label="Previous slide"
                         >
                             <ChevronLeft className="h-6 w-6 transition-transform duration-300 group-hover/btn:scale-110" />
                         </button>
                         <button
-                            onClick={() => scrollToIndex('next')}
+                            onClick={() => gallerySwiperRef.current?.slideNext()}
                             className="group/btn absolute top-1/2 right-4 z-40 flex h-14 w-14 -translate-y-1/2 items-center justify-center rounded-full border border-white/10 bg-black/50 text-white opacity-0 backdrop-blur-md transition-all duration-300 group-hover:opacity-100 hover:border-primary/50 hover:bg-primary hover:text-black"
                             aria-label="Next slide"
                         >
                             <ChevronRight className="h-6 w-6 transition-transform duration-300 group-hover/btn:scale-110" />
                         </button>
 
-                        <div
-                            ref={scrollRef}
-                            onMouseDown={handleMouseDown}
-                            onMouseMove={handleMouseMove}
-                            onMouseUp={handleMouseUp}
-                            onMouseLeave={handleMouseUp}
-                            onTouchStart={handleTouchStart}
-                            onTouchMove={handleTouchMove}
-                            onTouchEnd={handleTouchEnd}
-                            onScroll={(e) => {
-                                if (isDragging.current) return; // Don't update index while dragging
-                                const index = calculateCurrentIndex(e.currentTarget.scrollLeft);
-                                if (index !== currentIndex) {
-                                    setCurrentIndex(index);
-                                }
+                        <Swiper
+                            modules={[Autoplay, Keyboard, A11y]}
+                            onSwiper={(swiper) => { gallerySwiperRef.current = swiper; }}
+                            onSlideChange={(swiper) => setCurrentIndex(swiper.realIndex)}
+                            slidesPerView={1.15}
+                            spaceBetween={16}
+                            centeredSlides={false}
+                            grabCursor
+                            loop={images.length > 1}
+                            keyboard={{ enabled: true, onlyInViewport: true }}
+                            autoplay={images.length > 1 ? { delay: 5000, disableOnInteraction: false, pauseOnMouseEnter: true } : false}
+                            breakpoints={{
+                                640: { slidesPerView: 1.6, spaceBetween: 24 },
+                                1024: { slidesPerView: 2.2, spaceBetween: 24 },
                             }}
-                            className="no-scrollbar flex max-h-screen cursor-grab touch-pan-y snap-x snap-mandatory gap-4 overflow-x-auto px-4 pb-6 select-none sm:gap-6"
-                            style={{
-                                scrollbarWidth: 'none',
-                                msOverflowStyle: 'none',
-                                WebkitOverflowScrolling: 'touch',
-                            }}
+                            className="max-h-screen px-4 pb-6"
                         >
-                            <style>{`
-                                .no-scrollbar::-webkit-scrollbar { display: none; }
-                                .gallery-slide {
-                                    scroll-snap-align: center;
-                                    scroll-snap-stop: always;
-                                }
-                            `}</style>
                             {images.map((img, i) => (
-                                <motion.div
-                                    key={i}
-                                    initial={{ opacity: 0, scale: 0.95 }}
-                                    whileInView={{ opacity: 1, scale: 1 }}
-                                    viewport={{ once: true, margin: "-100px" }}
-                                    transition={{ duration: 0.5, delay: i * 0.05 }}
-                                    className="gallery-slide group relative h-full max-h-screen w-[85%] flex-shrink-0 overflow-hidden rounded-2xl border border-white/10 bg-white/5 transition-all duration-300 hover:border-primary/30"
-                                >
-                                    <img
-                                        src={img}
-                                        className="h-full w-full object-cover"
-                                        alt={`Gallery ${i + 1}`}
-                                        draggable={false}
-                                    />
-                                    {/* Subtle gradient overlay */}
-                                    <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover:from-black/30" />
-                                    <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-md transition-all duration-300 sm:bottom-6 sm:left-6 group-hover:border-primary/30 group-hover:bg-black/50">
-                                        <span className="text-[10px] font-medium tracking-wider text-white/70 uppercase transition-colors duration-300 group-hover:text-primary/80">
-                                            {String(i + 1).padStart(2, '0')} / {String(totalImages).padStart(2, '0')}
-                                        </span>
-                                    </div>
-                                </motion.div>
+                                <SwiperSlide key={i} className="h-auto">
+                                    <motion.button
+                                        type="button"
+                                        onClick={() => openLightboxAt(i)}
+                                        initial={{ opacity: 0, scale: 0.95 }}
+                                        whileInView={{ opacity: 1, scale: 1 }}
+                                        viewport={{ once: true, margin: "-100px" }}
+                                        transition={{ duration: 0.5, delay: i * 0.05 }}
+                                        className="group/slide relative block h-full w-full cursor-zoom-in overflow-hidden rounded-2xl border border-white/10 bg-white/5 text-left transition-all duration-300 hover:border-primary/30"
+                                    >
+                                        <img
+                                            src={img}
+                                            className="aspect-4/3 h-full w-full object-cover"
+                                            alt={`Gallery ${i + 1}`}
+                                            draggable={false}
+                                        />
+                                        {/* Subtle gradient overlay */}
+                                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent transition-opacity duration-300 group-hover/slide:from-black/30" />
+                                        <div className="absolute inset-0 flex items-center justify-center opacity-0 transition-opacity duration-300 group-hover/slide:opacity-100">
+                                            <span className="flex h-12 w-12 items-center justify-center rounded-full border border-white/20 bg-black/50 backdrop-blur-md">
+                                                <Expand className="h-5 w-5 text-white" />
+                                            </span>
+                                        </div>
+                                        <div className="absolute bottom-4 left-4 flex items-center gap-2 rounded-full border border-white/10 bg-black/30 px-3 py-1.5 backdrop-blur-md transition-all duration-300 sm:bottom-6 sm:left-6 group-hover/slide:border-primary/30 group-hover/slide:bg-black/50">
+                                            <span className="text-[10px] font-medium tracking-wider text-white/70 uppercase transition-colors duration-300 group-hover/slide:text-primary/80">
+                                                {String(i + 1).padStart(2, '0')} / {String(totalImages).padStart(2, '0')}
+                                            </span>
+                                        </div>
+                                    </motion.button>
+                                </SwiperSlide>
                             ))}
-                        </div>
+                        </Swiper>
                     </div>
                     </div>
+
+                    <Lightbox
+                        open={lightboxOpen}
+                        close={() => setLightboxOpen(false)}
+                        index={lightboxIndex}
+                        slides={images.map((img) => ({ src: img, alt: projectDetails.name }))}
+                        plugins={isImmersiveFullscreen ? [Zoom, Fullscreen, Counter] : [Zoom, Fullscreen, Counter, Thumbnails]}
+                        animation={{ swipe: 250 }}
+                        controller={{ closeOnPullDown: true, closeOnBackdropClick: true }}
+                        carousel={{
+                            finite: images.length <= 1,
+                            padding: 0,
+                            imageFit: 'contain',
+                            // YARL caps an image's rendered size to its native pixel
+                            // resolution by default (anti-upscale guard) — that leaves
+                            // large empty bars around any image smaller than the
+                            // screen. Force it to always fill the slide box on at
+                            // least one axis, upscaling if needed, like a native
+                            // media viewer.
+                            imageProps: {
+                                style: {
+                                    width: '100%',
+                                    height: '100%',
+                                    maxWidth: '100%',
+                                    maxHeight: '100%',
+                                    objectFit: 'contain',
+                                },
+                            },
+                        }}
+                        zoom={{ maxZoomPixelRatio: 3, scrollToZoom: true }}
+                        on={{
+                            enterFullscreen: () => setIsImmersiveFullscreen(true),
+                            exitFullscreen: () => setIsImmersiveFullscreen(false),
+                        }}
+                        styles={{ container: { backgroundColor: 'rgba(0, 0, 0, 0.95)' } }}
+                    />
 
                     <div className="container mx-auto max-w-6xl px-4 mt-6">
                         <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/5">
