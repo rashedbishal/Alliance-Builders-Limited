@@ -8,6 +8,36 @@ const isWebp = (file: File) =>
     file.type === 'image/webp' ||
     file.name.toLowerCase().endsWith('.webp');
 
+const APARTMENT_DIRECTIONS = [
+  'North', 'North-East', 'East', 'South-East',
+  'South', 'South-West', 'West', 'North-West',
+];
+const BEDROOM_MIN = 0;
+const BEDROOM_MAX = 10;
+const BATHROOM_MIN = 1;
+const BATHROOM_MAX = 10;
+const SQFT_MIN = 100;
+const SQFT_MAX = 50000;
+const DESCRIPTION_MAX = 300;
+const SURROUNDINGS_MAX = 500;
+
+const nextDay = (dateStr: string) => {
+  if (!dateStr) return undefined;
+  const d = new Date(dateStr);
+  if (Number.isNaN(d.getTime())) return undefined;
+  d.setDate(d.getDate() + 1);
+  return d.toISOString().slice(0, 10);
+};
+
+const FieldError = ({ message }: { message?: string }) => {
+  if (!message) return null;
+  return (
+    <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>
+      {message}
+    </p>
+  );
+};
+
 interface Props {
   types: ProjectType[];
   locations: Location[];
@@ -440,7 +470,8 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               <div style={{ position: 'relative' }}>
                                   <input
                                       type="number"
-                                      min="0"
+                                      min={SQFT_MIN}
+                                      max={SQFT_MAX}
                                       step="1"
                                       inputMode="numeric"
                                       value={data.size}
@@ -464,6 +495,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                       sq ft
                                   </span>
                               </div>
+                              <FieldError message={errors.size} />
                           </div>
                           <div className="form-group">
                               <label>Floors</label>
@@ -509,16 +541,19 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                       )
                                   }
                               />
+                              <FieldError message={errors.construction_start_date} />
                           </div>
                           <div className="form-group">
                               <label>Handover Date</label>
                               <input
                                   type="date"
                                   value={data.handover_date}
+                                  min={nextDay(data.construction_start_date)}
                                   onChange={(e) =>
                                       setData('handover_date', e.target.value)
                                   }
                               />
+                              <FieldError message={errors.handover_date} />
                           </div>
                       </div>
 
@@ -536,19 +571,29 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                           <label>Description</label>
                           <textarea
                               value={data.description}
+                              maxLength={DESCRIPTION_MAX}
                               onChange={(e) =>
                                   setData('description', e.target.value)
                               }
                           />
+                          <p style={{ color: 'var(--muted)', fontSize: '0.72rem', marginTop: 5, textAlign: 'right' }}>
+                              {data.description.length}/{DESCRIPTION_MAX}
+                          </p>
+                          <FieldError message={errors.description} />
                       </div>
                       <div className="form-group">
                           <label>Surroundings</label>
                           <textarea
                               value={data.surroundings}
+                              maxLength={SURROUNDINGS_MAX}
                               onChange={(e) =>
                                   setData('surroundings', e.target.value)
                               }
                           />
+                          <p style={{ color: 'var(--muted)', fontSize: '0.72rem', marginTop: 5, textAlign: 'right' }}>
+                              {data.surroundings.length}/{SURROUNDINGS_MAX}
+                          </p>
+                          <FieldError message={errors.surroundings} />
                       </div>
                   </div>
 
@@ -572,7 +617,8 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               <div style={{ position: 'relative' }}>
                                   <input
                                       type="number"
-                                      min="0"
+                                      min={SQFT_MIN}
+                                      max={SQFT_MAX}
                                       step="1"
                                       inputMode="numeric"
                                       value={(data as any).apartment_size}
@@ -596,10 +642,41 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                       sq ft
                                   </span>
                               </div>
+                              <FieldError message={errors.apartment_size} />
+                          </div>
+                          <div className="form-group">
+                              <label>Bedroom</label>
+                              <input
+                                  type="number"
+                                  min={BEDROOM_MIN}
+                                  max={BEDROOM_MAX}
+                                  step="1"
+                                  inputMode="numeric"
+                                  value={data.bedroom}
+                                  onChange={(e) =>
+                                      setData('bedroom', e.target.value)
+                                  }
+                                  placeholder="0-10"
+                              />
+                              <FieldError message={errors.bedroom} />
+                          </div>
+                          <div className="form-group">
+                              <label>Bathroom</label>
+                              <input
+                                  type="number"
+                                  min={BATHROOM_MIN}
+                                  max={BATHROOM_MAX}
+                                  step="1"
+                                  inputMode="numeric"
+                                  value={data.bathroom}
+                                  onChange={(e) =>
+                                      setData('bathroom', e.target.value)
+                                  }
+                                  placeholder="1-10"
+                              />
+                              <FieldError message={errors.bathroom} />
                           </div>
                           {[
-                              { key: 'bedroom', label: 'Bedroom' },
-                              { key: 'bathroom', label: 'Bathroom' },
                               { key: 'balcony', label: 'Balcony' },
                               { key: 'kitchen', label: 'Kitchen' },
                               { key: 'living_dining', label: 'Living/Dining' },
@@ -621,10 +698,6 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               { key: 'parking', label: 'Parking' },
                               { key: 'garage_no', label: 'Garage No.' },
                               { key: 'garage_size', label: 'Garage Size' },
-                              {
-                                  key: 'apartment_direction',
-                                  label: 'Apt Direction',
-                              },
                           ].map(({ key, label }) => (
                               <div className="form-group" key={key}>
                                   <label>{label}</label>
@@ -637,6 +710,24 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                   />
                               </div>
                           ))}
+                          <div className="form-group">
+                              <label>Apt Direction</label>
+                              <select
+                                  value={data.apartment_direction}
+                                  onChange={(e) =>
+                                      setData('apartment_direction', e.target.value)
+                                  }
+                                  className="h-10"
+                              >
+                                  <option value="">Select direction</option>
+                                  {APARTMENT_DIRECTIONS.map((dir) => (
+                                      <option key={dir} value={dir}>
+                                          {dir}
+                                      </option>
+                                  ))}
+                              </select>
+                              <FieldError message={errors.apartment_direction} />
+                          </div>
                       </div>
                       <div className="form-group">
                           <label>YouTube Video ID</label>

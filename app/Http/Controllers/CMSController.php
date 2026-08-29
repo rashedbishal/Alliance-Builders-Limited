@@ -28,6 +28,26 @@ use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
 
 class CMSController extends Controller
 {
+    /**
+     * Shared validation rules for project/unit-detail fields, enforced
+     * server-side since the CMS form's own constraints (number ranges,
+     * fixed direction dropdown, date ordering) can be bypassed client-side.
+     */
+    private function projectDetailValidationRules(): array
+    {
+        return [
+            'size' => 'nullable|integer|min:100|max:50000',
+            'apartment_size' => 'nullable|integer|min:100|max:50000',
+            'bedroom' => 'nullable|integer|min:0|max:10',
+            'bathroom' => 'nullable|integer|min:1|max:10',
+            'apartment_direction' => 'nullable|in:North,North-East,East,South-East,South,South-West,West,North-West',
+            'construction_start_date' => 'nullable|date',
+            'handover_date' => 'nullable|date|after:construction_start_date',
+            'description' => 'nullable|string|max:300',
+            'surroundings' => 'nullable|string|max:500',
+        ];
+    }
+
     public function carousel()
     {
         //        return view('carousel.index');
@@ -177,10 +197,10 @@ class CMSController extends Controller
 
     public function saveProject(Request $request)
     {
-        $request->validate([
+        $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
             'project_images.*' => 'nullable|file|mimes:webp',
-        ]);
+        ], $this->projectDetailValidationRules()));
 
         try {
             DB::transaction(function () use ($request) {
@@ -273,10 +293,10 @@ class CMSController extends Controller
 
     public function updateProject(Request $request)
     {
-        $request->validate([
+        $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
             'project_images.*' => 'nullable|file|mimes:webp',
-        ]);
+        ], $this->projectDetailValidationRules()));
 
         try {
             DB::transaction(function () use ($request) {
