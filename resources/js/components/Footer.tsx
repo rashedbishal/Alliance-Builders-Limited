@@ -129,9 +129,9 @@ const Footer = () => {
               </div>
             </div>
 
-            {/* Projects */}
+            {/* Properties */}
             <div className="space-y-6 lg:col-span-1">
-              <h3 className="text-xl font-bold text-white">Our Projects</h3>
+              <h3 className="text-xl font-bold text-white">Our Properties</h3>
               <ul className="space-y-3">
                 {projectStatus.map((project) => (
                   <li key={project.label}>
