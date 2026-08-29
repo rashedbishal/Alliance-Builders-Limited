@@ -398,27 +398,28 @@ const Media = () => {
                                 achievements
                             </motion.p>
 
-                            {/* Animated scroll indicator */}
+                        </motion.div>
+
+                        {/* Animated scroll indicator — sits below the subtitle in normal flow */}
+                        <motion.div
+                            className="mt-16 flex justify-center"
+                            initial={{ opacity: 0 }}
+                            animate={{ opacity: 1 }}
+                            transition={{ delay: 1, duration: 0.5 }}
+                        >
                             <motion.div
-                                className="absolute bottom-12 left-1/2 -translate-x-1/2"
-                                initial={{ opacity: 0 }}
-                                animate={{ opacity: 1 }}
-                                transition={{ delay: 1, duration: 0.5 }}
+                                className="flex flex-col items-center gap-2"
+                                animate={{ y: [0, 10, 0] }}
+                                transition={{
+                                    duration: 2,
+                                    repeat: Infinity,
+                                    ease: 'easeInOut',
+                                }}
                             >
-                                <motion.div
-                                    className="flex flex-col items-center gap-2"
-                                    animate={{ y: [0, 10, 0] }}
-                                    transition={{
-                                        duration: 2,
-                                        repeat: Infinity,
-                                        ease: 'easeInOut',
-                                    }}
-                                >
-                                    <span className="text-xs tracking-widest text-white/40 uppercase">
-                                        Scroll
-                                    </span>
-                                    <div className="h-12 w-px bg-gradient-to-b from-white/40 to-transparent" />
-                                </motion.div>
+                                <span className="text-xs tracking-widest text-white/40 uppercase">
+                                    Scroll
+                                </span>
+                                <div className="h-12 w-px bg-gradient-to-b from-white/40 to-transparent" />
                             </motion.div>
                         </motion.div>
                     </div>
