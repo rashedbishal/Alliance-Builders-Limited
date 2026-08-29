@@ -117,9 +117,15 @@ const PropertyCard = ({
                                     )}
                                 </div>
 
-                                {/* Striking Favorite Button (Top-Right) */}
+                                {/* Striking Favorite Button (Top-Right) — stays visible once favorited */}
                                 <div onClick={(e) => e.preventDefault()}>
-                                    <div className="opacity-0 group-hover:opacity-100 transform translate-x-3 -translate-y-2 group-hover:translate-x-0 group-hover:translate-y-0 transition-all duration-1000 ease-in-out">
+                                    <div
+                                        className={`transform transition-all duration-1000 ease-in-out ${
+                                            isFavorite
+                                                ? 'opacity-100 translate-x-0 translate-y-0'
+                                                : 'opacity-0 translate-x-3 -translate-y-2 group-hover:opacity-100 group-hover:translate-x-0 group-hover:translate-y-0'
+                                        }`}
+                                    >
                                         <Button
                                             size="icon"
                                             onClick={(e) => {
