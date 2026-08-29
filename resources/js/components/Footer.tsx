@@ -65,35 +65,46 @@ const Footer = () => {
 
               {/* Contact Info */}
               <div className="space-y-4">
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-accent/20 rounded-lg">
+                <a
+                  href="tel:+8801928568853"
+                  className="flex items-center space-x-3 group w-fit"
+                >
+                  <div className="p-2 bg-accent/20 rounded-lg group-hover:bg-accent/30 transition-colors duration-300">
                     <Phone className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <div className="font-semibold text-white">24/7 Hotline</div>
-                    <div className="text-white/80 drop-shadow-sm">+88-01928568853</div>
+                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">+88-01928568853</div>
                   </div>
-                </div>
+                </a>
 
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-accent/20 rounded-lg">
+                <a
+                  href="mailto:asad@alliancebuildersltd.org"
+                  className="flex items-center space-x-3 group w-fit"
+                >
+                  <div className="p-2 bg-accent/20 rounded-lg group-hover:bg-accent/30 transition-colors duration-300">
                     <Mail className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <div className="font-semibold text-white">Email Us</div>
-                    <div className="text-white/80 drop-shadow-sm">asad@alliancebuildersltd.org</div>
+                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">asad@alliancebuildersltd.org</div>
                   </div>
-                </div>
+                </a>
 
-                <div className="flex items-center space-x-3">
-                  <div className="p-2 bg-accent/20 rounded-lg">
+                <a
+                  href="https://www.google.com/maps/search/?api=1&query=House%23+640+(1st+Floor)+West+Kazipara+Mirpur+Dhaka+1216"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="flex items-center space-x-3 group w-fit"
+                >
+                  <div className="p-2 bg-accent/20 rounded-lg group-hover:bg-accent/30 transition-colors duration-300">
                     <MapPin className="h-5 w-5 text-white" />
                   </div>
                   <div>
                     <div className="font-semibold text-white">Visit Our Office</div>
-                    <div className="text-white/80 drop-shadow-sm">House# 640 (1st Floor)<br />West Kazipara Mirpur, Dhaka-1216</div>
+                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">House# 640 (1st Floor)<br />West Kazipara Mirpur, Dhaka-1216</div>
                   </div>
-                </div>
+                </a>
               </div>
             </div>
 
