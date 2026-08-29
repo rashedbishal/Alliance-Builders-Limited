@@ -159,8 +159,8 @@ const PropertyCard = ({
                                     </div>
                                 </div>
 
-                                {/* Expandable Stats Container */}
-                                <div className="grid grid-rows-[0fr] group-hover:grid-rows-[1fr] opacity-0 group-hover:opacity-100 transition-all duration-1000 ease-in-out">
+                                {/* Stats: always shown on mobile/tablet (no hover there); expand-on-hover on desktop */}
+                                <div className="grid grid-rows-[1fr] opacity-100 transition-all duration-1000 ease-in-out lg:grid-rows-[0fr] lg:opacity-0 lg:group-hover:grid-rows-[1fr] lg:group-hover:opacity-100">
                                     <div className="overflow-hidden space-y-4 pt-3">
                                         {/* Stats Grid - bright semi-transparent glass */}
                                         <div className="grid grid-cols-4 gap-2">
