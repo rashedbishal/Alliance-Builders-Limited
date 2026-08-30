@@ -447,13 +447,19 @@ export default function CMSLayout({
                                 href={route('media-add')}
                                 className={`submenu-link ${currentRoute('media-add') ? 'submenu-link-active' : ''}`}
                             >
-                                Add Image
+                                Add Media
+                            </Link>
+                            <Link
+                                href={route('media-edit')}
+                                className={`submenu-link ${currentRoute('media-edit') ? 'submenu-link-active' : ''}`}
+                            >
+                                Edit Media
                             </Link>
                             <Link
                                 href={route('media-remove')}
                                 className={`submenu-link ${currentRoute('media-remove') ? 'submenu-link-active' : ''}`}
                             >
-                                Remove Image
+                                Remove Media
                             </Link>
                         </div>
                     </div>

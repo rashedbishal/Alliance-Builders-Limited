@@ -118,6 +118,13 @@ class CMSController extends Controller
         return Inertia::render('cms/media/Remove', compact('mediaItems'));
     }
 
+    public function mediaEdit()
+    {
+        $mediaItems = MediaCoverage::with('image')->select('id', 'media_title', 'media_type', 'news_hyperlink', 'isFeatured')->get();
+
+        return Inertia::render('cms/media/Edit', compact('mediaItems'));
+    }
+
     public function galleryAdd()
     {
         $types = Gallery::select('id', 'type')->get();
@@ -492,6 +499,66 @@ class CMSController extends Controller
                     $image->path = $sanitizedName;
                     $image->project()->associate($media);
                     $image->save();
+                }
+            });
+
+            return redirect()->back()->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function updateMedia(Request $request)
+    {
+        $request->validate([
+            'media_id' => 'required|exists:media_coverages,id',
+            'media_title' => 'required|string|max:255',
+            'media_type' => 'required|string|max:255',
+            'news_hyperlink' => 'required|string|max:1048|url',
+            'image' => 'nullable|file|mimes:webp',
+        ], [
+            'media_id.required' => 'Please select a media entry to edit.',
+            'media_id.exists' => 'The selected media entry no longer exists.',
+            'media_title.required' => 'Please enter a media title.',
+            'media_type.required' => 'Please enter a media type.',
+            'news_hyperlink.required' => 'Please enter a news hyperlink.',
+            'news_hyperlink.url' => 'Please enter a valid URL (e.g. https://example.com/article).',
+            'image.mimes' => 'Only WEBP images are allowed.',
+        ]);
+
+        try {
+            DB::transaction(function () use ($request) {
+                $media = MediaCoverage::with('image')->findOrFail($request->input('media_id'));
+                $isFeatured = (bool) $request->input('isFeatured');
+
+                if ($isFeatured) {
+                    MediaCoverage::where('isFeatured', true)->where('id', '!=', $media->id)->update(['isFeatured' => false]);
+                }
+
+                $media->media_title = $request->input('media_title');
+                $media->media_type = $request->input('media_type');
+                $media->news_hyperlink = $request->input('news_hyperlink');
+                $media->isFeatured = $isFeatured;
+                $media->save();
+
+                if ($request->hasFile('image')) {
+                    if ($media->image && Storage::disk('public')->exists('media/'.$media->image->getRawOriginal('path'))) {
+                        Storage::disk('public')->delete('media/'.$media->image->getRawOriginal('path'));
+                    }
+
+                    $imageFile = $request->file('image');
+                    $sanitizedName = Str::slug($media->media_title).'-'.uniqid().'.'.$imageFile->getClientOriginalExtension();
+                    ImageOptimizer::optimizeAndStore($imageFile, 'media', $sanitizedName, 'public', 1200, 80);
+
+                    if ($media->image) {
+                        $media->image->path = $sanitizedName;
+                        $media->image->save();
+                    } else {
+                        $image = new Image;
+                        $image->path = $sanitizedName;
+                        $image->project()->associate($media);
+                        $image->save();
+                    }
                 }
             });
 

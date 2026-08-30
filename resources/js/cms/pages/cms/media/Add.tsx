@@ -72,7 +72,7 @@ export default function MediaAdd() {
     };
 
   return (
-    <CMSLayout title="Add Media Coverage" breadcrumb="Media Coverage Management / Add Image">
+    <CMSLayout title="Add Media Coverage" breadcrumb="Media Coverage Management / Add Media">
       <div className="page-header">
         <h2>Add Media Coverage</h2>
         <p>Upload a new media coverage entry</p>

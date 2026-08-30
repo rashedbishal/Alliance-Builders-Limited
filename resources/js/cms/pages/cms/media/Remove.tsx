@@ -36,7 +36,7 @@ export default function MediaRemove({ mediaItems }: Props) {
   const formatType = (t: string) => t.replace(/_/g, ' ').replace(/\b\w/g, c => c.toUpperCase());
 
   return (
-    <CMSLayout title="Remove Media Coverage" breadcrumb="Media Coverage Management / Remove Image">
+    <CMSLayout title="Remove Media Coverage" breadcrumb="Media Coverage Management / Remove Media">
       <div className="page-header">
         <h2>Remove Media Coverage</h2>
         <p>Delete existing media coverage entries</p>

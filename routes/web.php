@@ -4,7 +4,6 @@ use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
 use Illuminate\Support\Facades\Route;
-
 use Inertia\Inertia;
 
 Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group(function () {
@@ -26,6 +25,9 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
 
     Route::get('media/add', 'mediaAdd')->name('media-add');
     Route::post('save/media', 'saveMedia')->name('save-media');
+
+    Route::get('media/edit', 'mediaEdit')->name('media-edit');
+    Route::post('update/media', 'updateMedia')->name('update-media');
 
     Route::get('media/remove', 'mediaRemove')->name('media-remove');
     Route::post('destroy/media', 'destroyMedia')->name('destroy-media');
@@ -93,6 +95,7 @@ Route::post('/chatbot', [ChatbotController::class, 'chat'])->middleware('web');
 
 Route::get('/error-preview/{status}', function ($status) {
     $code = (int) $status;
+
     return Inertia::render('Error', ['status' => $code])
         ->toResponse(request())
         ->setStatusCode($code >= 400 && $code < 600 ? $code : 200);
