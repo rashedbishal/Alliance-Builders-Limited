@@ -269,6 +269,12 @@ export default function PropertyUpdate({ types, locations, facilities, tags }: P
     setProjectImagePreviews(files.map(f => URL.createObjectURL(f)));
   };
 
+  const removeProjectImage = (index: number) => {
+    URL.revokeObjectURL(projectImagePreviews[index]);
+    setData('project_images', data.project_images.filter((_, i) => i !== index));
+    setProjectImagePreviews(prev => prev.filter((_, i) => i !== index));
+  };
+
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
 
@@ -1150,6 +1156,7 @@ export default function PropertyUpdate({ types, locations, facilities, tags }: P
                                       <div
                                           key={i}
                                           style={{
+                                              position: 'relative',
                                               width: 90,
                                               height: 70,
                                               borderRadius: 8,
@@ -1166,6 +1173,30 @@ export default function PropertyUpdate({ types, locations, facilities, tags }: P
                                               }}
                                               alt={`img-${i}`}
                                           />
+                                          <button
+                                              type="button"
+                                              onClick={() => removeProjectImage(i)}
+                                              title="Remove image"
+                                              style={{
+                                                  position: 'absolute',
+                                                  top: 4,
+                                                  right: 4,
+                                                  width: 20,
+                                                  height: 20,
+                                                  borderRadius: '50%',
+                                                  border: 'none',
+                                                  background: 'rgba(0,0,0,0.65)',
+                                                  color: '#fff',
+                                                  fontSize: '0.7rem',
+                                                  lineHeight: 1,
+                                                  cursor: 'pointer',
+                                                  display: 'flex',
+                                                  alignItems: 'center',
+                                                  justifyContent: 'center',
+                                              }}
+                                          >
+                                              ✕
+                                          </button>
                                       </div>
                                   ))}
                               </div>

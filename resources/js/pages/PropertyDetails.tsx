@@ -151,6 +151,24 @@ const PropertyDetail = () => {
         },
     ].filter((spec) => spec.value && spec.value !== '0');
 
+    // Flex-wrap fills each row greedily, so an odd total leaves a sparse
+    // last row (e.g. 5 + 1). Instead, split into as few rows as fit within
+    // MAX_PER_ROW, then spread the cards evenly across those rows (e.g. 6
+    // cards become 3 + 3, not 5 + 1) and render each row as its own
+    // centered flex container.
+    const facilities = projectDetails.facilities ?? [];
+    const MAX_PER_ROW = 5;
+    const facilityRowCount = Math.max(
+        1,
+        Math.ceil(facilities.length / MAX_PER_ROW),
+    );
+    const facilitiesPerRow = Math.ceil(
+        facilities.length / facilityRowCount,
+    );
+    const facilityRows = Array.from({ length: facilityRowCount }, (_, i) =>
+        facilities.slice(i * facilitiesPerRow, (i + 1) * facilitiesPerRow),
+    );
+
     const totalImages = images.length;
     const progress =
         totalImages > 0
@@ -409,30 +427,39 @@ const PropertyDetail = () => {
                                 </p>
                             </div>
 
-                            <div className="mx-auto flex max-w-6xl flex-wrap justify-center gap-4 sm:gap-6">
-                                {projectDetails.facilities?.map((f) => {
-                                    const Icon = getFacilityIcon(f.name);
-                                    return (
-                                        <ScrollAnimation key={f.id}>
-                                            <motion.div
-                                                whileHover={{ y: -5 }}
-                                                className="group relative flex max-w-[280px] min-w-[140px] flex-1 flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-500 hover:border-primary/30 sm:min-w-[200px] sm:rounded-[2rem] sm:p-8"
-                                            >
-                                                {/* The Spinning Icon Container */}
-                                                <div className="relative z-10 mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary sm:mb-6 sm:h-16 sm:w-16">
-                                                    <Icon className="h-6 w-6 text-primary-foreground transition-colors duration-500 group-hover:text-black sm:h-8 sm:w-8" />
-                                                </div>
+                            <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:gap-6">
+                                {facilityRows.map((row, rowIndex) => (
+                                    <div
+                                        key={rowIndex}
+                                        className="flex w-full flex-wrap justify-center gap-4 sm:gap-6"
+                                    >
+                                        {row.map((f) => {
+                                            const Icon = getFacilityIcon(
+                                                f.name,
+                                            );
+                                            return (
+                                                <ScrollAnimation key={f.id}>
+                                                    <motion.div
+                                                        whileHover={{ y: -5 }}
+                                                        className="group relative flex max-w-[280px] min-w-[140px] flex-1 flex-col items-center justify-center overflow-hidden rounded-2xl border border-white/10 bg-white/[0.03] p-5 transition-all duration-500 hover:border-primary/30 sm:min-w-[200px] sm:rounded-[2rem] sm:p-8"
+                                                    >
+                                                        {/* The Spinning Icon Container */}
+                                                        <div className="relative z-10 mb-4 flex h-12 w-12 items-center justify-center rounded-2xl bg-white/5 transition-all duration-700 ease-in-out group-hover:rotate-[360deg] group-hover:bg-primary sm:mb-6 sm:h-16 sm:w-16">
+                                                            <Icon className="h-6 w-6 text-primary-foreground transition-colors duration-500 group-hover:text-black sm:h-8 sm:w-8" />
+                                                        </div>
 
-                                                <span className="relative z-10 text-center text-sm font-medium text-white/70 transition-colors group-hover:text-white sm:text-lg">
-                                                    {f.name}
-                                                </span>
+                                                        <span className="relative z-10 text-center text-sm font-medium text-white/70 transition-colors group-hover:text-white sm:text-lg">
+                                                            {f.name}
+                                                        </span>
 
-                                                {/* Subtle background glow on hover */}
-                                                <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
-                                            </motion.div>
-                                        </ScrollAnimation>
-                                    );
-                                })}
+                                                        {/* Subtle background glow on hover */}
+                                                        <div className="absolute inset-0 bg-primary/5 opacity-0 transition-opacity duration-500 group-hover:opacity-100" />
+                                                    </motion.div>
+                                                </ScrollAnimation>
+                                            );
+                                        })}
+                                    </div>
+                                ))}
                             </div>
                         </div>
                     </section>
