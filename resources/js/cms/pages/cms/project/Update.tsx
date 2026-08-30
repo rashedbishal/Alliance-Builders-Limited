@@ -8,6 +8,26 @@ const isWebp = (file: File) =>
     file.type === 'image/webp' ||
     file.name.toLowerCase().endsWith('.webp');
 
+const MAX_FLOORS = 99;
+
+// Clamps to [0, MAX_FLOORS] while allowing the field to be cleared.
+const clampFloors = (value: string) => {
+    if (value === '') return value;
+    const n = Number(value);
+    if (Number.isNaN(n)) return value;
+    return String(Math.min(Math.max(n, 0), MAX_FLOORS));
+};
+
+// Accepts a raw 11-char video ID as-is, or extracts it if a full YouTube
+// URL (watch/embed/youtu.be) is pasted instead.
+const extractYoutubeId = (value: string) => {
+    const trimmed = value.trim();
+    const match = trimmed.match(
+        /(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/,
+    );
+    return match ? match[1] : trimmed;
+};
+
 const APARTMENT_DIRECTIONS = [
   'North', 'North-East', 'East', 'South-East',
   'South', 'South-West', 'West', 'North-West',
@@ -53,7 +73,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
   const [loadingData, setLoadingData] = useState(false);
   const [loaded, setLoaded] = useState(false);
 
-  const { data, setData, post, processing, errors, reset, setError, clearErrors } = useForm({
+  const { data, setData, post, transform, processing, errors, reset, setError, clearErrors } = useForm({
     project_id_db: '',
     name: '', address: '', google_map_url: '', price: '',
     size: '', floors: '', construction_start_date: '', handover_date: '',
@@ -108,7 +128,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
         google_map_url: project.google_map_url ?? '',
         price: String(project.price ?? ''),
         size: project.size ?? '',
-        floors: project.floors ?? '',
+        floors: clampFloors((project.floors ?? '').replace(/^G\+/i, '')),
         construction_start_date: project.construction_start_date ?? '',
         handover_date: project.handover_date ?? '',
         isFeatured: !!project.isFeatured,
@@ -251,6 +271,11 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
 
     const handleSubmit = (e: React.FormEvent) => {
         e.preventDefault();
+
+        transform((data) => ({
+            ...data,
+            floors: data.floors ? `G+${data.floors}` : '',
+        }));
 
         post(route('update-project'), {
             forceFormData: true,
@@ -503,15 +528,37 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                           </div>
                           <div className="form-group">
                               <label>Floors</label>
-                              <input
-                                  type="text"
-                                  value={data.floors}
-                                  onChange={(e) =>
-                                      setData('floors', e.target.value)
-                                  }
-                                  pattern="[A-Za-z0-9+]+"
-                                  title="Letters, numbers and + only (e.g. 12 or G+12) — no negative values"
-                              />
+                              <div style={{ position: 'relative' }}>
+                                  <span
+                                      style={{
+                                          position: 'absolute',
+                                          top: '50%',
+                                          left: 14,
+                                          transform: 'translateY(-50%)',
+                                          color: 'var(--muted)',
+                                          fontSize: '0.85rem',
+                                          pointerEvents: 'none',
+                                      }}
+                                  >
+                                      G+
+                                  </span>
+                                  <input
+                                      type="number"
+                                      min={0}
+                                      max={99}
+                                      step={1}
+                                      inputMode="numeric"
+                                      value={data.floors}
+                                      onChange={(e) =>
+                                          setData(
+                                              'floors',
+                                              clampFloors(e.target.value),
+                                          )
+                                      }
+                                      placeholder="12"
+                                      style={{ paddingLeft: 40 }}
+                                  />
+                              </div>
                               <FieldError message={errors.floors} />
                           </div>
                           <div className="form-group">
@@ -573,6 +620,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                                   setData('google_map_url', e.target.value)
                               }
                           />
+                          <FieldError message={errors.google_map_url} />
                       </div>
                       <div className="form-group">
                           <label>Description</label>
@@ -773,9 +821,16 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               type="text"
                               value={data.youtube_video_id}
                               onChange={(e) =>
-                                  setData('youtube_video_id', e.target.value)
+                                  setData(
+                                      'youtube_video_id',
+                                      extractYoutubeId(e.target.value),
+                                  )
                               }
+                              placeholder="e.g. dQw4w9WgXcQ"
+                              pattern="[A-Za-z0-9_-]{11}"
+                              title="Paste the 11-character YouTube video ID, or a full YouTube URL (the ID will be extracted automatically)"
                           />
+                          <FieldError message={errors.youtube_video_id} />
                       </div>
                   </div>
 
@@ -927,7 +982,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                               <label>Thumbnail Preview</label>
                               <div
                                   className="preview-box"
-                                  style={{ height: 185 }}
+                                  style={{ maxWidth: 210, maxHeight: 280, aspectRatio: '3/4', margin: '0 auto' }}
                               >
                                   {thumbPreview || existingThumb ? (
                                       <img

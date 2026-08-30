@@ -37,7 +37,7 @@ class CMSController extends Controller
     {
         return [
             'price' => 'nullable|integer|min:0',
-            'floors' => 'nullable|regex:/^[A-Za-z0-9+]+$/',
+            'floors' => ['nullable', 'regex:/^G\+[0-9]{1,2}$/'],
             'size' => 'nullable|integer|min:100|max:50000',
             'apartment_size' => 'nullable|integer|min:100|max:50000',
             'garage_size' => 'nullable|integer|min:100|max:50000',
@@ -48,6 +48,17 @@ class CMSController extends Controller
             'handover_date' => 'nullable|date|after:construction_start_date',
             'description' => 'nullable|string|max:300',
             'surroundings' => 'nullable|string|max:500',
+            'google_map_url' => 'nullable|url|max:2048',
+            'youtube_video_id' => ['nullable', 'regex:/^[A-Za-z0-9_-]{11}$/'],
+        ];
+    }
+
+    private function projectDetailValidationMessages(): array
+    {
+        return [
+            'floors.regex' => 'Please enter a valid number of floors (0-99).',
+            'google_map_url.url' => 'Please enter a valid URL (e.g. https://maps.google.com/...).',
+            'youtube_video_id.regex' => 'Please enter a valid YouTube video ID (11 characters, e.g. dQw4w9WgXcQ) — not a full URL.',
         ];
     }
 
@@ -210,7 +221,7 @@ class CMSController extends Controller
         $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
             'project_images.*' => 'nullable|file|mimes:webp',
-        ], $this->projectDetailValidationRules()));
+        ], $this->projectDetailValidationRules()), $this->projectDetailValidationMessages());
 
         try {
             DB::transaction(function () use ($request) {
@@ -306,7 +317,7 @@ class CMSController extends Controller
         $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
             'project_images.*' => 'nullable|file|mimes:webp',
-        ], $this->projectDetailValidationRules()));
+        ], $this->projectDetailValidationRules()), $this->projectDetailValidationMessages());
 
         try {
             DB::transaction(function () use ($request) {

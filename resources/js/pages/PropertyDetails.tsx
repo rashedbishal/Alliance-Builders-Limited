@@ -31,6 +31,7 @@ import Counter from 'yet-another-react-lightbox/plugins/counter';
 import Fullscreen from 'yet-another-react-lightbox/plugins/fullscreen';
 import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
+import SurroundingsSection from '@/components/HotelDetails/SurroundingsSection';
 import MapComponent from '@/components/MapComponent';
 import SavedAnimation from '@/components/SavedAnimation';
 import ScrollAnimation from '@/components/ScrollAnimation';
@@ -796,6 +797,8 @@ const PropertyDetail = () => {
                             </div>
                         </div>
                     </section>
+
+                    <SurroundingsSection project={projectDetails} />
                 </div>
             </AppLayout>
         </>
