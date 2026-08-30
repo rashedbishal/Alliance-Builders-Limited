@@ -107,6 +107,14 @@ const HotelDetails = () => {
         );
     }
 
+    const formatDate = (dateString: string | null) => {
+        if (!dateString) return 'TBA';
+        return new Date(dateString).toLocaleDateString('en-GB', {
+            month: 'short',
+            year: 'numeric',
+        });
+    };
+
     const images =
         projectDetails.project_images?.map((img) => `/${img.image}`) || [];
 
@@ -358,8 +366,9 @@ const HotelDetails = () => {
                                                         Handover
                                                     </p>
                                                     <p>
-                                                        {projectDetails.handover_date ??
-                                                            'TBA'}
+                                                        {formatDate(
+                                                            projectDetails.handover_date,
+                                                        )}
                                                     </p>
                                                 </div>
                                             </div>

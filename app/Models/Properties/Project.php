@@ -46,8 +46,8 @@ class Project extends Model
     ];
 
     protected $casts = [
-        'construction_start_date' => 'date',
-        'handover_date' => 'date',
+        'construction_start_date' => 'date:Y-m-d',
+        'handover_date' => 'date:Y-m-d',
     ];
 
     public function getRouteKeyName()
