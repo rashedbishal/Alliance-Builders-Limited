@@ -470,11 +470,17 @@ class CMSController extends Controller
 
         try {
             DB::transaction(function () use ($request) {
+                $isFeatured = (bool) $request->input('isFeatured');
+
+                if ($isFeatured) {
+                    MediaCoverage::where('isFeatured', true)->update(['isFeatured' => false]);
+                }
+
                 $media = new MediaCoverage;
                 $media->media_title = $request->input('media_title');
                 $media->media_type = $request->input('media_type');
                 $media->news_hyperlink = $request->input('news_hyperlink');
-                $media->isFeatured = $request->input('isFeatured') ?? false;
+                $media->isFeatured = $isFeatured;
                 $media->save();
 
                 if ($request->hasFile('image')) {
