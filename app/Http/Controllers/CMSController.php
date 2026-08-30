@@ -104,15 +104,51 @@ class CMSController extends Controller
             return $value;
         }
 
+        $resolved = $this->resolveShortenedMapUrl($value);
+
         if (
-            preg_match('/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/', $value, $matches)
-            || preg_match('/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/', $value, $matches)
-            || preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $value, $matches)
+            preg_match('/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/', $resolved, $matches)
+            || preg_match('/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/', $resolved, $matches)
+            || preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $resolved, $matches)
         ) {
             return "https://www.google.com/maps?q={$matches[1]},{$matches[2]}&output=embed";
         }
 
         return $value;
+    }
+
+    /**
+     * A pasted maps.app.goo.gl / goo.gl short link carries no coordinates
+     * in the URL itself - they only appear after following the redirect.
+     * Resolve it server-side (restricted to Google's own short-link hosts)
+     * so the coordinate extraction above has something to match against.
+     */
+    private function resolveShortenedMapUrl(string $url): string
+    {
+        $host = parse_url($url, PHP_URL_HOST) ?? '';
+
+        if (! str_ends_with($host, 'goo.gl')) {
+            return $url;
+        }
+
+        try {
+            $ch = curl_init($url);
+            curl_setopt_array($ch, [
+                CURLOPT_NOBODY => true,
+                CURLOPT_FOLLOWLOCATION => true,
+                CURLOPT_MAXREDIRS => 5,
+                CURLOPT_TIMEOUT => 5,
+                CURLOPT_RETURNTRANSFER => true,
+                CURLOPT_USERAGENT => 'Mozilla/5.0',
+            ]);
+            curl_exec($ch);
+            $effectiveUrl = curl_getinfo($ch, CURLINFO_EFFECTIVE_URL);
+            curl_close($ch);
+
+            return $effectiveUrl ?: $url;
+        } catch (\Throwable) {
+            return $url;
+        }
     }
 
     public function carousel()
