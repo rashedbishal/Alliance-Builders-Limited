@@ -455,7 +455,17 @@ class CMSController extends Controller
     public function saveMedia(Request $request)
     {
         $request->validate([
-            'image' => 'nullable|file|mimes:webp',
+            'media_title' => 'required|string|max:255',
+            'media_type' => 'required|string|max:255',
+            'news_hyperlink' => 'required|string|max:1048|url',
+            'image' => 'required|file|mimes:webp',
+        ], [
+            'media_title.required' => 'Please enter a media title.',
+            'media_type.required' => 'Please enter a media type.',
+            'news_hyperlink.required' => 'Please enter a news hyperlink.',
+            'news_hyperlink.url' => 'Please enter a valid URL (e.g. https://example.com/article).',
+            'image.required' => 'Please upload an image.',
+            'image.mimes' => 'Only WEBP images are allowed.',
         ]);
 
         try {

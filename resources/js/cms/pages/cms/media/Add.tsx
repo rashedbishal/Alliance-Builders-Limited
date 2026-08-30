@@ -98,6 +98,7 @@ export default function MediaAdd() {
                 value={data.media_title}
                 onChange={e => setData('media_title', e.target.value)}
                 placeholder="Enter media title..."
+                required
               />
               {errors.media_title && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.media_title}</p>}
             </div>
@@ -109,18 +110,20 @@ export default function MediaAdd() {
                 value={data.media_type}
                 onChange={e => setData('media_type', e.target.value)}
                 placeholder="Enter media type..."
+                required
               />
               {errors.media_type && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.media_type}</p>}
             </div>
           </div>
 
           <div className="form-group">
-            <label>Hyperlink</label>
+            <label>Hyperlink <span style={{ color: '#FF8080' }}>*</span></label>
             <input
               type="url"
               value={data.news_hyperlink}
               onChange={e => setData('news_hyperlink', e.target.value)}
               placeholder="https://example.com/article..."
+              required
             />
             {errors.news_hyperlink && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.news_hyperlink}</p>}
           </div>
@@ -147,6 +150,7 @@ export default function MediaAdd() {
                   accept="image/webp"
                   className="uploader-input"
                   onChange={handleFile}
+                  required
                 />
                 <div style={{ fontSize: '2rem', marginBottom: 8, pointerEvents: 'none' }}>📰</div>
                 <p style={{ fontSize: '0.8rem', color: 'var(--muted)', pointerEvents: 'none' }}>

@@ -18,7 +18,7 @@ interface Media {
     news_hyperlink: string;
     isFeatured: boolean;
     created_date: string;
-    image: Image;
+    image: Image | null;
 }
 
 // Animated floating particles component
@@ -481,23 +481,30 @@ const Media = () => {
 
                                                 {/* Image container */}
                                                 <div className="relative h-[600px] overflow-hidden">
-                                                    <motion.img
-                                                        src={
-                                                            featuredContent
-                                                                .image.path
-                                                        }
-                                                        alt={
-                                                            featuredContent
-                                                                .image.title
-                                                        }
-                                                        className="h-full w-full object-cover"
-                                                        whileHover={{
-                                                            scale: 1.05,
-                                                        }}
-                                                        transition={{
-                                                            duration: 0.6,
-                                                        }}
-                                                    />
+                                                    {featuredContent.image ? (
+                                                        <motion.img
+                                                            src={
+                                                                featuredContent
+                                                                    .image.path
+                                                            }
+                                                            alt={
+                                                                featuredContent
+                                                                    .image
+                                                                    .title
+                                                            }
+                                                            className="h-full w-full object-cover"
+                                                            whileHover={{
+                                                                scale: 1.05,
+                                                            }}
+                                                            transition={{
+                                                                duration: 0.6,
+                                                            }}
+                                                        />
+                                                    ) : (
+                                                        <div className="flex h-full w-full items-center justify-center bg-slate-900">
+                                                            <Newspaper className="h-16 w-16 text-slate-700" />
+                                                        </div>
+                                                    )}
 
                                                     {/* Animated gradient overlay */}
                                                     <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-slate-950/60 to-transparent" />
@@ -691,23 +698,29 @@ const Media = () => {
                                                     <Card className="relative h-full overflow-hidden rounded-2xl border border-white/10 bg-slate-900/40 backdrop-blur-sm transition-colors duration-300 hover:border-white/20">
                                                         {/* Image */}
                                                         <div className="relative h-52 overflow-hidden">
-                                                            <motion.img
-                                                                src={
-                                                                    article
-                                                                        .image
-                                                                        .path
-                                                                }
-                                                                alt={
-                                                                    article.media_title
-                                                                }
-                                                                className="h-full w-full object-cover"
-                                                                whileHover={{
-                                                                    scale: 1.1,
-                                                                }}
-                                                                transition={{
-                                                                    duration: 0.6,
-                                                                }}
-                                                            />
+                                                            {article.image ? (
+                                                                <motion.img
+                                                                    src={
+                                                                        article
+                                                                            .image
+                                                                            .path
+                                                                    }
+                                                                    alt={
+                                                                        article.media_title
+                                                                    }
+                                                                    className="h-full w-full object-cover"
+                                                                    whileHover={{
+                                                                        scale: 1.1,
+                                                                    }}
+                                                                    transition={{
+                                                                        duration: 0.6,
+                                                                    }}
+                                                                />
+                                                            ) : (
+                                                                <div className="flex h-full w-full items-center justify-center bg-slate-900">
+                                                                    <Newspaper className="h-10 w-10 text-slate-700" />
+                                                                </div>
+                                                            )}
                                                             <div className="absolute inset-0 bg-gradient-to-t from-slate-950 via-transparent to-transparent" />
 
                                                             {/* Hover overlay */}
