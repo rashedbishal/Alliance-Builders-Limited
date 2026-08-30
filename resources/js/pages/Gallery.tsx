@@ -389,6 +389,19 @@ const ImageCard = ({
                             {item.date}
                         </motion.p>
                     )}
+                    {item.description && (
+                        <motion.p
+                            className="mt-1 line-clamp-2 text-xs leading-relaxed text-white/50"
+                            initial={{ y: 10, opacity: 0 }}
+                            animate={{
+                                y: isHovered ? 0 : 10,
+                                opacity: isHovered ? 1 : 0,
+                            }}
+                            transition={{ duration: 0.3, delay: 0.15 }}
+                        >
+                            {item.description}
+                        </motion.p>
+                    )}
                 </div>
             </motion.div>
 

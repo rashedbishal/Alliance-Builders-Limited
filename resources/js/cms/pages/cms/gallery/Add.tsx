@@ -16,6 +16,8 @@ const isAllowedVideo = (file: File) =>
 
 const MAX_IMAGE_SIZE_BYTES = 300 * 1024; // 300 KB limit for images
 const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB limit for videos
+const MAX_TITLE_LENGTH = 64; // half of images/videos.title column limit (255)
+const MAX_DESCRIPTION_LENGTH = 512; // matches images/videos.description column
 
 interface Props {
   types: GalleryType[];
@@ -173,10 +175,21 @@ export default function GalleryAdd({ types }: Props) {
             <input
               type="text"
               value={data.title}
-              onChange={e => setData('title', e.target.value)}
+              onChange={e => setData('title', e.target.value.slice(0, MAX_TITLE_LENGTH))}
               placeholder="Enter image title..."
+              maxLength={MAX_TITLE_LENGTH}
               required
             />
+            <p
+              style={{
+                fontSize: '0.72rem',
+                color: data.title.length >= MAX_TITLE_LENGTH ? '#FF8080' : 'var(--muted)',
+                marginTop: 4,
+                textAlign: 'right',
+              }}
+            >
+              {data.title.length} / {MAX_TITLE_LENGTH}
+            </p>
             {errors.title && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.title}</p>}
           </div>
 
@@ -184,9 +197,21 @@ export default function GalleryAdd({ types }: Props) {
             <label>Description</label>
             <textarea
               value={data.description}
-              onChange={e => setData('description', e.target.value)}
+              onChange={e => setData('description', e.target.value.slice(0, MAX_DESCRIPTION_LENGTH))}
               placeholder="Enter image description..."
+              maxLength={MAX_DESCRIPTION_LENGTH}
             />
+            <p
+              style={{
+                fontSize: '0.72rem',
+                color: data.description.length >= MAX_DESCRIPTION_LENGTH ? '#FF8080' : 'var(--muted)',
+                marginTop: 4,
+                textAlign: 'right',
+              }}
+            >
+              {data.description.length} / {MAX_DESCRIPTION_LENGTH}
+            </p>
+            {errors.description && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.description}</p>}
           </div>
 
           <div className="form-row cols-2" style={{ alignItems: 'start' }}>

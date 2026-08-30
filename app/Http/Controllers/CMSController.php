@@ -510,7 +510,8 @@ class CMSController extends Controller
         $request->validate([
             'gallery_type' => 'required|exists:galleries,id',
             'media_type' => 'required|in:1,2',
-            'title' => 'required|string',
+            'title' => 'required|string|max:64',
+            'description' => 'nullable|string|max:512',
             'gallery_content' => $request->input('media_type') == '1'
                 ? 'required|file|mimes:webp|max:300'
                 : 'required|file|mimes:mp4,mov,avi|max:51200',
@@ -520,6 +521,8 @@ class CMSController extends Controller
             'media_type.required' => 'Please select a media type.',
             'media_type.in' => 'The selected media type is invalid.',
             'title.required' => 'Please enter a title.',
+            'title.max' => 'Title must not exceed 64 characters.',
+            'description.max' => 'Description must not exceed 512 characters.',
             'gallery_content.mimes' => $request->input('media_type') == '1'
                 ? 'Only WEBP images are allowed.'
                 : 'Only MP4, MOV, or AVI video files are allowed.',
