@@ -664,13 +664,6 @@ const Media = () => {
                         {contents.length > 0 ? (
                             <div className="grid grid-cols-1 gap-6 md:grid-cols-2 lg:grid-cols-3">
                                 {contents
-                                    .filter(
-                                        (_, index) =>
-                                            index !==
-                                                contents.findIndex(
-                                                    (c) => c.isFeatured,
-                                                ) || !featuredContent,
-                                    )
                                     .map((article, index) => (
                                         <motion.div
                                             key={index}
