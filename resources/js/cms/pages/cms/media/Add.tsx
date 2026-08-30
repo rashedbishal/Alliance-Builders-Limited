@@ -129,7 +129,7 @@ export default function MediaAdd() {
           </div>
 
           <div className="form-group">
-            <label className="featured-check" style={{ display: 'flex', alignItems: 'center', gap: 10, cursor: 'pointer' }}>
+            <label className="featured-check">
               <input
                 type="checkbox"
                 checked={data.isFeatured}

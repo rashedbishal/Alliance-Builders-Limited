@@ -227,7 +227,7 @@ export default function CMSLayout({
         .checkbox-item.checked { border-color: var(--gold); background: rgba(201,168,76,0.08); color: var(--gold-light); }
         .checkbox-item input { accent-color: var(--gold); width: 14px; height: 14px; }
 
-        .featured-check { display: flex; align-items: center; gap: 10px; cursor: pointer; }
+        .featured-check { display: inline-flex; align-items: center; gap: 10px; cursor: pointer; }
         .featured-check input { accent-color: var(--gold); width: 16px; height: 16px; }
         .featured-check span { font-size: 0.83rem; color: var(--text); }
 
