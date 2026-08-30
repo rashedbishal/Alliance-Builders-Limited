@@ -59,7 +59,7 @@ export default function CMSLayout({
         const menus: Record<string, boolean> = {};
         if (currentRoute('gallery-*')) menus['gallery'] = true;
         if (currentRoute('media-*')) menus['media'] = true;
-        if (currentRoute('project-*')) menus['project'] = true;
+        if (currentRoute('property-*')) menus['property'] = true;
         if (currentRoute('facility-*') || currentRoute('tag-*')) menus['config'] = true;
         setOpenMenus(menus);
     }, []);
@@ -464,24 +464,24 @@ export default function CMSLayout({
                         </div>
                     </div>
 
-                    {/* Project Info */}
+                    {/* Properties */}
                     <div>
                         <button
-                            className={`nav-link-base ${currentRoute('project-*') ? 'nav-link-active' : ''}`}
-                            onClick={() => toggleMenu('project')}
+                            className={`nav-link-base ${currentRoute('property-*') ? 'nav-link-active' : ''}`}
+                            onClick={() => toggleMenu('property')}
                         >
                             <NavIcon>
                                 <path d="M3 21h18M9 21V9l3-6 3 6v12M5 21V12l-2-2M19 21V12l2-2" />
                                 <path d="M9 12h6" />
                             </NavIcon>
-                            Project Info
+                            Properties
                             <svg
                                 style={{
                                     marginLeft: 'auto',
                                     width: 14,
                                     height: 14,
                                     transition: 'transform 0.25s',
-                                    transform: openMenus['project']
+                                    transform: openMenus['property']
                                         ? 'rotate(90deg)'
                                         : 'none',
                                 }}
@@ -494,25 +494,25 @@ export default function CMSLayout({
                             </svg>
                         </button>
                         <div
-                            className={`submenu ${openMenus['project'] ? 'open' : ''}`}
+                            className={`submenu ${openMenus['property'] ? 'open' : ''}`}
                         >
                             <Link
-                                href={route('project-add')}
-                                className={`submenu-link ${currentRoute('project-add') ? 'submenu-link-active' : ''}`}
+                                href={route('property-add')}
+                                className={`submenu-link ${currentRoute('property-add') ? 'submenu-link-active' : ''}`}
                             >
-                                Add Project
+                                Add Property
                             </Link>
                             <Link
-                                href={route('project-update')}
-                                className={`submenu-link ${currentRoute('project-update') ? 'submenu-link-active' : ''}`}
+                                href={route('property-update')}
+                                className={`submenu-link ${currentRoute('property-update') ? 'submenu-link-active' : ''}`}
                             >
-                                Update Project
+                                Update Property
                             </Link>
                             <Link
-                                href={route('project-remove')}
-                                className={`submenu-link ${currentRoute('project-remove') ? 'submenu-link-active' : ''}`}
+                                href={route('property-remove')}
+                                className={`submenu-link ${currentRoute('property-remove') ? 'submenu-link-active' : ''}`}
                             >
-                                Remove Project
+                                Remove Property
                             </Link>
                         </div>
                     </div>

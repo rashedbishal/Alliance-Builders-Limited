@@ -67,7 +67,7 @@ interface Props {
     tags: Tag[];
 }
 
-export default function ProjectAdd({
+export default function PropertyAdd({
     types,
     locations,
     facilities,
@@ -202,7 +202,7 @@ export default function ProjectAdd({
             floors: data.floors ? `G+${data.floors}` : '',
         }));
 
-        post(route('save-project'), {
+        post(route('save-property'), {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: (page) => {
@@ -215,11 +215,11 @@ export default function ProjectAdd({
 
     return (
         <CMSLayout
-            title="Add Project"
-            breadcrumb="Project Info Management / Add Project"
+            title="Add Property"
+            breadcrumb="Property Management / Add Property"
         >
             <div className="page-header">
-                <h2>Add Project</h2>
+                <h2>Add Property</h2>
                 <p>Add a new property to the portfolio</p>
                 <div className="gold-line" />
             </div>
@@ -1000,7 +1000,7 @@ export default function ProjectAdd({
                         className="btn-primary"
                         disabled={processing}
                     >
-                        {processing ? 'Saving...' : 'Add Project'}
+                        {processing ? 'Saving...' : 'Add Property'}
                     </button>
                     <button
                         type="button"

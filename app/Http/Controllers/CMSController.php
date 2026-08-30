@@ -71,18 +71,18 @@ class CMSController extends Controller
         return Inertia::render('cms/carousel/Index', ['carousels' => $carousels, 'projects' => $projects]);
     }
 
-    public function projectAdd()
+    public function propertyAdd()
     {
         $types = ProjectType::select('id', 'name')->get();
         $locations = Location::select('id', 'name')->get();
         $facilities = Facility::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
 
-        //        return view('project.add', compact('types', 'locations', 'facilities', 'tags'));
-        return Inertia::render('cms/project/Add', compact('types', 'locations', 'facilities', 'tags'));
+        //        return view('property.add', compact('types', 'locations', 'facilities', 'tags'));
+        return Inertia::render('cms/property/Add', compact('types', 'locations', 'facilities', 'tags'));
     }
 
-    public function projectUpdate()
+    public function propertyUpdate()
     {
         $types = ProjectType::select('id', 'name')->get();
         $locations = Location::select('id', 'name')->get();
@@ -90,29 +90,29 @@ class CMSController extends Controller
         $tags = Tag::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
 
-        //        return view('project.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
-        return Inertia::render('cms/project/Update', compact('types', 'locations', 'facilities', 'tags'));
+        //        return view('property.update', compact('types', 'locations', 'facilities', 'tags', 'projects'));
+        return Inertia::render('cms/property/Update', compact('types', 'locations', 'facilities', 'tags'));
     }
 
-    public function projectByType(Request $request)
+    public function propertyByType(Request $request)
     {
         return Project::where('project_type_id', $request->type)
             ->select('id', 'name')
             ->get();
     }
 
-    public function projectData($id)
+    public function propertyData($id)
     {
         return Project::with('tags', 'details', 'projectImages', 'facilities', 'location', 'image')->where('id', $id)->first();
     }
 
-    public function projectRemove()
+    public function propertyRemove()
     {
         $types = ProjectType::select('id', 'name')->get();
         $projects = Project::with('tags', 'details', 'projectImages', 'facilities', 'location')->get();
 
-        //        return view('project.remove', compact('types', 'projects'));
-        return Inertia::render('cms/project/Remove', compact('types'));
+        //        return view('property.remove', compact('types', 'projects'));
+        return Inertia::render('cms/property/Remove', compact('types'));
     }
 
     public function mediaAdd()
@@ -216,7 +216,7 @@ class CMSController extends Controller
         }
     }
 
-    public function saveProject(Request $request)
+    public function saveProperty(Request $request)
     {
         $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
@@ -312,7 +312,7 @@ class CMSController extends Controller
         }
     }
 
-    public function updateProject(Request $request)
+    public function updateProperty(Request $request)
     {
         $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
@@ -409,7 +409,7 @@ class CMSController extends Controller
 
     }
 
-    public function destroyProjectImage(Request $request)
+    public function destroyPropertyImage(Request $request)
     {
         try {
             DB::transaction(function () use ($request) {
@@ -438,7 +438,7 @@ class CMSController extends Controller
         }
     }
 
-    public function destroyProject(Request $request)
+    public function destroyProperty(Request $request)
     {
         try {
             DB::transaction(function () use ($request) {

@@ -65,7 +65,7 @@ interface Props {
   tags: Tag[];
 }
 
-export default function ProjectUpdate({ types, locations, facilities, tags }: Props) {
+export default function PropertyUpdate({ types, locations, facilities, tags }: Props) {
   const [selectedType, setSelectedType] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [projectOptions, setProjectOptions] = useState<{ id: number; name: string }[]>([]);
@@ -105,7 +105,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
     if (!typeId) return;
     setLoadingProjects(true);
     try {
-      const res = await fetch(`/cms/projects/by-type?type=${typeId}`);
+      const res = await fetch(`/cms/properties/by-type?type=${typeId}`);
       const data = await res.json();
       setProjectOptions(data);
     } finally {
@@ -119,7 +119,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
     if (!id) return;
     setLoadingData(true);
     try {
-      const res = await fetch(`/cms/projects/${id}/data`);
+      const res = await fetch(`/cms/properties/${id}/data`);
       const project: Project = await res.json();
       setData({
         project_id_db: String(project.id),
@@ -192,7 +192,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
         if (!confirm('Delete this image? This cannot be undone.')) return;
         setDeletingImageIds((prev) => new Set(prev).add(imageId));
         try {
-            const res = await fetch(route('destroy-project-image'), {
+            const res = await fetch(route('destroy-property-image'), {
                 method: 'POST',
                 credentials: 'same-origin',
                 headers: {
@@ -277,7 +277,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
             floors: data.floors ? `G+${data.floors}` : '',
         }));
 
-        post(route('update-project'), {
+        post(route('update-property'), {
             forceFormData: true,
             preserveScroll: true,
             onSuccess: (page) => {
@@ -293,11 +293,11 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
 
   return (
       <CMSLayout
-          title="Update Project"
-          breadcrumb="Project Info Management / Update Project"
+          title="Update Property"
+          breadcrumb="Property Management / Update Property"
       >
           <div className="page-header">
-              <h2>Update Project</h2>
+              <h2>Update Property</h2>
               <p>Select and update an existing project</p>
               <div className="gold-line" />
           </div>
@@ -1179,7 +1179,7 @@ export default function ProjectUpdate({ types, locations, facilities, tags }: Pr
                           className="btn-primary"
                           disabled={processing}
                       >
-                          {processing ? 'Updating...' : 'Update Project'}
+                          {processing ? 'Updating...' : 'Update Property'}
                       </button>
                   </div>
               </form>

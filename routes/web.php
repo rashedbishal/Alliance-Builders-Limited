@@ -11,17 +11,17 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('dashboard', 'carousel')->name('dashboard');
     Route::post('update/carousel', 'updateCarousel')->name('update-carousel');
 
-    Route::get('project/add', 'projectAdd')->name('project-add');
-    Route::post('save/project', 'saveProject')->name('save-project');
+    Route::get('property/add', 'propertyAdd')->name('property-add');
+    Route::post('save/property', 'saveProperty')->name('save-property');
 
-    Route::get('project/update', 'projectUpdate')->name('project-update');
-    Route::get('cms/projects/by-type', 'projectByType')->name('project-by-type');
-    Route::get('cms/projects/{id}/data', 'projectData')->name('project-data');
-    Route::post('project/image/destroy', 'destroyProjectImage')->name('destroy-project-image');
-    Route::post('update/project', 'updateProject')->name('update-project');
+    Route::get('property/update', 'propertyUpdate')->name('property-update');
+    Route::get('cms/properties/by-type', 'propertyByType')->name('property-by-type');
+    Route::get('cms/properties/{id}/data', 'propertyData')->name('property-data');
+    Route::post('property/image/destroy', 'destroyPropertyImage')->name('destroy-property-image');
+    Route::post('update/property', 'updateProperty')->name('update-property');
 
-    Route::get('project/remove', 'projectRemove')->name('project-remove');
-    Route::post('destroy/project', 'destroyProject')->name('destroy-project');
+    Route::get('property/remove', 'propertyRemove')->name('property-remove');
+    Route::post('destroy/property', 'destroyProperty')->name('destroy-property');
 
     Route::get('media/add', 'mediaAdd')->name('media-add');
     Route::post('save/media', 'saveMedia')->name('save-media');

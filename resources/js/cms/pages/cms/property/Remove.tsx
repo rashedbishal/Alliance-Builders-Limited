@@ -13,7 +13,7 @@ interface ProjectOption {
   name: string;
 }
 
-export default function ProjectRemove({ types }: Props) {
+export default function PropertyRemove({ types }: Props) {
   const [selectedType, setSelectedType] = useState('');
   const [selectedProjectId, setSelectedProjectId] = useState('');
   const [selectedProjectName, setSelectedProjectName] = useState('');
@@ -30,7 +30,7 @@ export default function ProjectRemove({ types }: Props) {
     if (!typeId) return;
     setLoading(true);
     try {
-      const res = await fetch(`/cms/projects/by-type?type=${typeId}`);
+      const res = await fetch(`/cms/properties/by-type?type=${typeId}`);
       const data: ProjectOption[] = await res.json();
       setProjects(data);
     } finally {
@@ -50,7 +50,7 @@ export default function ProjectRemove({ types }: Props) {
     e.preventDefault();
     if (!selectedProjectId || !selectedProjectName) return;
     if (!confirm(`Are you sure you want to permanently delete "${selectedProjectName}"?\n\nThis action cannot be undone.`)) return;
-    router.post(route('destroy-project'), { project_db_id: selectedProjectId }, {
+    router.post(route('destroy-property'), { project_db_id: selectedProjectId }, {
       onSuccess: () => {
         setSelectedProjectId('');
         setSelectedProjectName('');
@@ -62,10 +62,10 @@ export default function ProjectRemove({ types }: Props) {
   };
 
   return (
-    <CMSLayout title="Remove Project" breadcrumb="Project Info Management / Remove Project">
+    <CMSLayout title="Remove Property" breadcrumb="Property Management / Remove Property">
       <div className="page-header">
-        <h2>Remove Project</h2>
-        <p>Select a project to permanently delete it</p>
+        <h2>Remove Property</h2>
+        <p>Select a property to permanently delete it</p>
         <div className="gold-line" />
       </div>
 
@@ -77,7 +77,7 @@ export default function ProjectRemove({ types }: Props) {
             <path d="M10 11v6M14 11v6"/>
             <path d="M9 6V4h6v2"/>
           </svg>
-          Select Project to Delete
+          Select Property to Delete
         </div>
 
         <div className="form-row cols-2" style={{ marginBottom: 24 }}>
@@ -96,14 +96,14 @@ export default function ProjectRemove({ types }: Props) {
           </div>
 
           <div className="form-group">
-            <label>Project Name <span style={{ color: '#FF8080' }}>*</span></label>
+            <label>Property Name <span style={{ color: '#FF8080' }}>*</span></label>
             <select
               value={selectedProjectId}
               onChange={handleProjectSelect}
               disabled={!selectedType || loading || projects.length === 0}
               className="h-10"
             >
-              <option value="">Select Project Name</option>
+              <option value="">Select Property Name</option>
               {projects.map(p => (
                 <option key={p.id} value={p.id}>{p.name}</option>
               ))}
@@ -113,7 +113,7 @@ export default function ProjectRemove({ types }: Props) {
 
         {loading && (
           <div style={{ fontSize: '0.8rem', color: 'var(--muted)', marginTop: -14, marginBottom: 16 }}>
-            ⏳ Loading projects...
+            ⏳ Loading properties...
           </div>
         )}
 
@@ -127,7 +127,7 @@ export default function ProjectRemove({ types }: Props) {
             </p>
             <p style={{ fontSize: '0.8rem', color: 'var(--muted)' }}>
               All data associated with <strong style={{ color: '#FF8080' }}>{selectedProjectName}</strong>
-              {' '}— including images, project details — will be permanently deleted.
+              {' '}— including images, property details — will be permanently deleted.
             </p>
           </div>
         )}
@@ -144,7 +144,7 @@ export default function ProjectRemove({ types }: Props) {
               transition: 'all 0.2s',
             }}
           >
-            🗑️ &nbsp;Delete Project
+            🗑️ &nbsp;Delete Property
           </button>
         </form>
       </div>
