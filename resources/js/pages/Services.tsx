@@ -1,5 +1,6 @@
 import { Home, Building2, TrendingUp, FileText, Search, DollarSign, Users, Shield, ClipboardCheck, Sparkles } from 'lucide-react';
 import React from 'react';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
@@ -94,6 +95,11 @@ const Services = () => {
                 <section className="relative overflow-hidden pt-32 pb-20">
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
                     <div className="relative z-10 container mx-auto px-4">
+                        <PageBreadcrumb
+                            items={[{ label: 'Services' }]}
+                            variant="light"
+                            className="mb-6"
+                        />
                         <ScrollAnimation>
                             <Badge className="bg-gradient-accent mb-6 text-accent-foreground">Our Services</Badge>
                         </ScrollAnimation>

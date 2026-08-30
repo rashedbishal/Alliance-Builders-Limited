@@ -3,6 +3,7 @@ import { Search, X, Sparkles, ArrowDown, SearchX, Building2, RotateCcw } from 'l
 import React, { useState, useMemo, useEffect, useRef } from 'react';
 import golden from "@/assets/images/architecture/golden-building.webp";
 import bgBlack from "@/assets/images/backgrounds/bg-black.webp";
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import PropertyCard from '@/components/PropertyCard';
 import { Card, CardContent } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
@@ -271,6 +272,10 @@ const Properties = () => {
                 >
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
                     <div className="relative z-10 container mx-auto flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 transition-all duration-[1200ms] ease-in-out">
+                        <PageBreadcrumb
+                            items={[{ label: 'Properties' }]}
+                            className="mb-4 justify-center"
+                        />
                         <h1 className={`animate-fade-in text-magenta text-white-shadow px-2 text-center font-bold transition-all duration-[1200ms] ease-in-out ${
                             isSqueezed ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl md:text-5xl lg:text-7xl'
                         }`}>

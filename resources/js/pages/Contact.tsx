@@ -11,12 +11,13 @@ import {
 } from 'lucide-react';
 import React, { useState } from 'react';
 import { route } from 'ziggy-js';
+import MapComponent from '@/components/MapComponent';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
 import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
-import MapComponent from '@/components/MapComponent';
 
 const Contact = () => {
     const [showSuccess, setShowSuccess] = useState(false);
@@ -176,6 +177,10 @@ const Contact = () => {
                     <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-secondary/10 blur-[100px]" />
 
                     <div className="relative z-10 container mx-auto px-4">
+                        <PageBreadcrumb
+                            items={[{ label: 'Contact' }]}
+                            className="mb-6"
+                        />
                         <ScrollAnimation delay={0.1}>
                             <h1 className="mb-6 text-5xl leading-tight font-bold text-white md:text-7xl">
                                 Let's Start a<br />

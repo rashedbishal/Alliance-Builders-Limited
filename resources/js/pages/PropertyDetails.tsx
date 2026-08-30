@@ -33,6 +33,7 @@ import Thumbnails from 'yet-another-react-lightbox/plugins/thumbnails';
 import Zoom from 'yet-another-react-lightbox/plugins/zoom';
 import SurroundingsSection from '@/components/HotelDetails/SurroundingsSection';
 import MapComponent from '@/components/MapComponent';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import SavedAnimation from '@/components/SavedAnimation';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
@@ -185,8 +186,17 @@ const PropertyDetail = () => {
             <SavedAnimation show={showSaved} />
             <AppLayout>
                 <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
+                    <div className="container mx-auto max-w-[1280px] px-4 pt-24 sm:px-6 lg:px-8 lg:pt-28">
+                        <PageBreadcrumb
+                            items={[
+                                { label: 'Properties', href: '/properties' },
+                                { label: projectDetails.name },
+                            ]}
+                        />
+                    </div>
+
                     {/* Hero + Gallery */}
-                    <section className="container mx-auto mb-6 max-w-[1280px] px-4 pt-24 pb-4 sm:px-6 lg:mb-8 lg:px-8 lg:pt-28 lg:pb-6">
+                    <section className="container mx-auto mb-6 max-w-[1280px] px-4 pt-4 pb-4 sm:px-6 lg:mb-8 lg:px-8 lg:pt-6 lg:pb-6">
                         <ScrollAnimation>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-stretch">
                                 <div className="hidden lg:grid lg:h-[min(calc(100dvh-9.5rem),540px)] lg:grid-rows-3 lg:gap-3 lg:overflow-hidden">

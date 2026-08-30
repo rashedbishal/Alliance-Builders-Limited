@@ -16,6 +16,7 @@ import FloatingGallery from '@/components/HotelDetails/FloatingGallery';
 import HotelStats from '@/components/HotelDetails/HotelStats';
 import SurroundingsSection from '@/components/HotelDetails/SurroundingsSection';
 import MapComponent from '@/components/MapComponent';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Badge } from '@/components/ui/badge';
 import { Button } from '@/components/ui/button';
@@ -223,6 +224,17 @@ const HotelDetails = () => {
                             />
                             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-[#0a0a0a]" />
                         </motion.div>
+                        <div className="absolute top-24 right-0 left-0 z-10 container mx-auto px-4 lg:top-28">
+                            <PageBreadcrumb
+                                items={[
+                                    {
+                                        label: 'Properties',
+                                        href: '/properties',
+                                    },
+                                    { label: projectDetails.name },
+                                ]}
+                            />
+                        </div>
                         <div className="relative z-10 container mx-auto flex h-full flex-col justify-end px-4 pb-20">
                             <div className="mb-4 flex flex-wrap gap-2">
                                 <Badge className="bg-primary text-white">

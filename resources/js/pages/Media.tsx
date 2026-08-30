@@ -8,6 +8,7 @@ import { useRef, useState, useEffect } from 'react';
 import heroVideo from '@/assets/videos/PixVerse_V5_Image_Text_360P_Hero_section_video.mp4';
 
 // Import UI
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from '@/components/ui/badge';
 import { Card } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
@@ -325,6 +326,10 @@ const Media = () => {
                             backgroundSize: '100px 100px',
                         }}
                     />
+
+                    <div className="absolute top-24 right-0 left-0 z-10 container mx-auto px-4 lg:top-28">
+                        <PageBreadcrumb items={[{ label: 'Media' }]} />
+                    </div>
 
                     {/* Hero Content */}
                     <div className="relative z-10 mx-auto max-w-5xl px-4 text-center">

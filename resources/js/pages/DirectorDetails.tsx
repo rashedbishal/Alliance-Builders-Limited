@@ -1,6 +1,7 @@
 import { usePage, Link } from '@inertiajs/react';
 import { Mail, Phone, Linkedin, ArrowLeft, Award, Briefcase, GraduationCap } from 'lucide-react';
 import React from 'react';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -108,6 +109,14 @@ const DirectorDetail = () => {
                 {/* Back Button */}
                 <section className="px-4 pt-32">
                     <div className="container mx-auto max-w-7xl">
+                        <PageBreadcrumb
+                            items={[
+                                { label: 'Directors', href: '/directors' },
+                                { label: director.name },
+                            ]}
+                            variant="light"
+                            className="mb-4"
+                        />
                         <ScrollAnimation>
                             <Link href="/directors">
                                 <Button variant="ghost" className="mb-8 hover:bg-primary/10">

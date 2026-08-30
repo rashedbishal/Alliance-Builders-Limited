@@ -2,6 +2,7 @@ import { Award, Users, Building, TrendingUp, Target, Eye, Heart } from 'lucide-r
 import bg3 from "@/assets/images/backgrounds/bg3.webp";
 import collage6 from "@/assets/images/collage/collage-6.webp";
 import property3 from "@/assets/images/properties/property-3.webp";
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
@@ -53,6 +54,10 @@ const About = () => {
                 >
                     <div className="bg-black absolute inset-0 opacity-80"></div>
                     <div className="relative z-10 container mx-auto px-4">
+                        <PageBreadcrumb
+                            items={[{ label: 'About Us' }]}
+                            className="mb-6"
+                        />
                         <ScrollAnimation delay={0.1} className="md:w-[80%] lg:w-[75%]">
                             <SplittingText
                                 className="lg:9xl mb-6 text-3xl sm:text-5xl font-semibold text-white text-blue-shadow md:text-7xl"

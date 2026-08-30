@@ -1,4 +1,5 @@
 import React from 'react';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import AppLayout from '@/layouts/AppLayout';
 
 const TermsOfService = () => {
@@ -7,6 +8,10 @@ const TermsOfService = () => {
             <div className="min-h-screen bg-black py-20">
                 <div className="container mx-auto px-4 lg:px-8">
                     <div className="max-w-4xl mx-auto">
+                        <PageBreadcrumb
+                            items={[{ label: 'Terms of Service' }]}
+                            className="mb-6"
+                        />
                         <h1 className="text-4xl font-bold text-white mb-8">Terms of Service</h1>
                         
                         <div className="prose prose-invert max-w-none">

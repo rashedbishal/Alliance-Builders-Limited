@@ -1,6 +1,7 @@
 import { Link } from '@inertiajs/react';
 import { Mail, Phone, Linkedin } from 'lucide-react';
 import React from 'react';
+import PageBreadcrumb from '@/components/PageBreadcrumb';
 import ScrollAnimation from '@/components/ScrollAnimation';
 import { Button } from '@/components/ui/button';
 import { Card } from '@/components/ui/card';
@@ -77,6 +78,10 @@ const Directors = () => {
                 {/* Hero Section */}
                 <section className="relative px-4 pt-32 pb-20">
                     <div className="container mx-auto max-w-7xl">
+                        <PageBreadcrumb
+                            items={[{ label: 'Directors' }]}
+                            className="mb-6 justify-center"
+                        />
                         <ScrollAnimation>
                             <h1 className="mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-center text-5xl font-bold text-white md:text-6xl lg:text-7xl">
                                 Our Directors Team
