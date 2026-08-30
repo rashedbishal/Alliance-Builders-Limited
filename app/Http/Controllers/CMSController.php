@@ -508,9 +508,24 @@ class CMSController extends Controller
     public function saveGallery(Request $request)
     {
         $request->validate([
+            'gallery_type' => 'required|exists:galleries,id',
+            'media_type' => 'required|in:1,2',
+            'title' => 'required|string',
             'gallery_content' => $request->input('media_type') == '1'
-                ? 'required|file|mimes:webp'
-                : 'required|file',
+                ? 'required|file|mimes:webp|max:300'
+                : 'required|file|mimes:mp4,mov,avi|max:51200',
+        ], [
+            'gallery_type.required' => 'Please select a gallery type.',
+            'gallery_type.exists' => 'The selected gallery type is invalid.',
+            'media_type.required' => 'Please select a media type.',
+            'media_type.in' => 'The selected media type is invalid.',
+            'title.required' => 'Please enter a title.',
+            'gallery_content.mimes' => $request->input('media_type') == '1'
+                ? 'Only WEBP images are allowed.'
+                : 'Only MP4, MOV, or AVI video files are allowed.',
+            'gallery_content.max' => $request->input('media_type') == '1'
+                ? 'Maximum allowed image size is 300KB.'
+                : 'Maximum allowed video size is 50MB.',
         ]);
 
         try {

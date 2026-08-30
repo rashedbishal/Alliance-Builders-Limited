@@ -8,7 +8,14 @@ const isWebp = (file: File) =>
     file.type === 'image/webp' ||
     file.name.toLowerCase().endsWith('.webp');
 
+const VIDEO_EXTENSIONS = ['mp4', 'mov', 'avi'];
+
+const isAllowedVideo = (file: File) =>
+    file.type.startsWith('video/') ||
+    VIDEO_EXTENSIONS.some(ext => file.name.toLowerCase().endsWith(`.${ext}`));
+
 const MAX_IMAGE_SIZE_BYTES = 300 * 1024; // 300 KB limit for images
+const MAX_VIDEO_SIZE_BYTES = 50 * 1024 * 1024; // 50 MB limit for videos
 
 interface Props {
   types: GalleryType[];
@@ -58,6 +65,19 @@ export default function GalleryAdd({ types }: Props) {
     if (data.media_type === '1' && file.size > MAX_IMAGE_SIZE_BYTES) {
         const fileSizeKb = Math.round(file.size / 1024);
         setError('gallery_content', `File size is ${fileSizeKb}KB. Maximum allowed image size is 300KB (aim for < 150KB for fast web load times).`);
+        e.target.value = '';
+        return;
+    }
+
+    if (data.media_type === '2' && !isAllowedVideo(file)) {
+        setError('gallery_content', 'Only MP4, MOV, or AVI video files are allowed.');
+        e.target.value = '';
+        return;
+    }
+
+    if (data.media_type === '2' && file.size > MAX_VIDEO_SIZE_BYTES) {
+        const fileSizeMb = (file.size / (1024 * 1024)).toFixed(1);
+        setError('gallery_content', `File size is ${fileSizeMb}MB. Maximum allowed video size is 50MB.`);
         e.target.value = '';
         return;
     }
@@ -122,6 +142,7 @@ export default function GalleryAdd({ types }: Props) {
                 value={data.gallery_type}
                 onChange={e => setData('gallery_type', e.target.value)}
                 className="h-10"
+                required
               >
                 <option value="" disabled>Select Gallery Type</option>
                 {types.map(t => (
@@ -137,6 +158,7 @@ export default function GalleryAdd({ types }: Props) {
                 value={data.media_type}
                 onChange={e => handleMediaTypeChange(e.target.value)}
                 className="h-10"
+                required
               >
                 <option value="" disabled>Select Media Type</option>
                 <option value="1">Image</option>
@@ -153,6 +175,7 @@ export default function GalleryAdd({ types }: Props) {
               value={data.title}
               onChange={e => setData('title', e.target.value)}
               placeholder="Enter image title..."
+              required
             />
             {errors.title && <p style={{ color: '#FF8080', fontSize: '0.75rem', marginTop: 5 }}>{errors.title}</p>}
           </div>
