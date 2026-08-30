@@ -62,6 +62,59 @@ class CMSController extends Controller
         ];
     }
 
+    /**
+     * The map/video fields are rendered directly into an <iframe> src on the
+     * frontend, which only works with an embed-shaped URL: a normal
+     * Google Maps share/place link (or a full YouTube watch/share URL, if
+     * pasted instead of the bare video ID) silently fails to embed. Rewrite
+     * both into the shape the frontend actually needs before validating.
+     */
+    private function normalizeMediaLinks(Request $request): void
+    {
+        $request->merge([
+            'google_map_url' => $this->normalizeGoogleMapUrl($request->input('google_map_url')),
+            'youtube_video_id' => $this->extractYoutubeId($request->input('youtube_video_id')),
+        ]);
+    }
+
+    private function extractYoutubeId(?string $value): ?string
+    {
+        if (! $value) {
+            return $value;
+        }
+
+        $value = trim($value);
+
+        if (preg_match('/(?:youtube\.com\/(?:watch\?v=|embed\/)|youtu\.be\/)([A-Za-z0-9_-]{11})/', $value, $matches)) {
+            return $matches[1];
+        }
+
+        return $value;
+    }
+
+    private function normalizeGoogleMapUrl(?string $value): ?string
+    {
+        if (! $value) {
+            return $value;
+        }
+
+        $value = trim($value);
+
+        if (str_contains($value, 'output=embed') || str_contains($value, '/maps/embed')) {
+            return $value;
+        }
+
+        if (
+            preg_match('/!3d(-?\d+\.\d+)!4d(-?\d+\.\d+)/', $value, $matches)
+            || preg_match('/[?&]q=(-?\d+\.\d+),(-?\d+\.\d+)/', $value, $matches)
+            || preg_match('/@(-?\d+\.\d+),(-?\d+\.\d+)/', $value, $matches)
+        ) {
+            return "https://www.google.com/maps?q={$matches[1]},{$matches[2]}&output=embed";
+        }
+
+        return $value;
+    }
+
     public function carousel()
     {
         //        return view('carousel.index');
@@ -218,6 +271,8 @@ class CMSController extends Controller
 
     public function saveProperty(Request $request)
     {
+        $this->normalizeMediaLinks($request);
+
         $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
             'project_images.*' => 'nullable|file|mimes:webp',
@@ -268,7 +323,7 @@ class CMSController extends Controller
                 if ($request->hasFile('thumbnail')) {
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                    if (!ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
+                    if (! ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
                     }
 
@@ -293,7 +348,7 @@ class CMSController extends Controller
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
-                        if (!ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
+                        if (! ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
                             throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
                         }
 
@@ -314,6 +369,8 @@ class CMSController extends Controller
 
     public function updateProperty(Request $request)
     {
+        $this->normalizeMediaLinks($request);
+
         $request->validate(array_merge([
             'thumbnail' => 'nullable|file|mimes:webp',
             'project_images.*' => 'nullable|file|mimes:webp',
@@ -364,7 +421,7 @@ class CMSController extends Controller
 
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
-                    if (!ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
+                    if (! ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
                     }
 
@@ -389,7 +446,7 @@ class CMSController extends Controller
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
-                        if (!ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
+                        if (! ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
                             throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
                         }
 
