@@ -513,21 +513,30 @@ const PropertyDetail = () => {
                                     <div className="divide-y divide-white/10">
                                         {unitSpecs.map((spec, i) => (
                                             <ScrollAnimation key={i}>
-                                                <div className="group relative flex items-center justify-between py-4 sm:py-5">
+                                                <div className="group relative flex flex-wrap items-center justify-between gap-x-2 gap-y-1 py-4 sm:flex-nowrap sm:py-5">
                                                     <div className="flex min-w-0 items-center gap-3 sm:gap-6 lg:gap-8">
                                                         <div className="flex flex-shrink-0 flex-col items-start gap-1">
                                                             <span className="font-mono text-[10px] text-primary/60">
                                                                 0{i + 1}
                                                             </span>
-                                                            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/5 bg-white/[0.03] group-hover:bg-primary/10 sm:h-10 sm:w-10">
-                                                                <spec.icon className="h-4 w-4 text-white/20 transition-all duration-500 group-hover:text-primary sm:h-5 sm:w-5" />
+                                                            <div className="flex h-9 w-9 items-center justify-center rounded-xl border border-white/5 bg-primary/10 transition-colors duration-500 group-hover:bg-primary/10 sm:h-10 sm:w-10 sm:bg-white/[0.03]">
+                                                                <spec.icon className="h-4 w-4 text-primary transition-all duration-500 group-hover:text-primary sm:h-5 sm:w-5 sm:text-white/20" />
                                                             </div>
                                                         </div>
-                                                        <h3 className="truncate text-base font-light text-white/40 transition-colors group-hover:text-white sm:text-lg lg:text-xl">
+                                                        <h3 className="min-w-0 text-base leading-snug font-light text-white transition-colors group-hover:text-white sm:text-lg sm:text-white/40 lg:text-xl">
                                                             {spec.label}
                                                         </h3>
                                                     </div>
-                                                    <span className="ml-2 flex-shrink-0 text-xl font-light tracking-tighter transition-colors group-hover:text-primary sm:text-2xl lg:text-3xl">
+                                                    <span
+                                                        className="min-w-0 flex-1 basis-full text-right text-base leading-snug font-light tracking-tight transition-colors group-hover:text-primary sm:basis-auto sm:text-lg lg:text-xl"
+                                                        style={{
+                                                            display: '-webkit-box',
+                                                            WebkitLineClamp: 2,
+                                                            WebkitBoxOrient: 'vertical',
+                                                            overflow: 'hidden',
+                                                        }}
+                                                        title={String(spec.value)}
+                                                    >
                                                         {spec.value}
                                                     </span>
                                                 </div>
