@@ -186,7 +186,7 @@ const PropertyDetail = () => {
             <SavedAnimation show={showSaved} />
             <AppLayout>
                 <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
-                    <div className="container mx-auto max-w-[1280px] px-4 pt-24 sm:px-6 lg:px-8 lg:pt-28">
+                    <div className="container mx-auto max-w-7xl px-4 pt-24 sm:px-6 lg:px-8 lg:pt-28">
                         <PageBreadcrumb
                             items={[
                                 { label: 'Properties', href: '/properties' },
@@ -196,7 +196,7 @@ const PropertyDetail = () => {
                     </div>
 
                     {/* Hero + Gallery */}
-                    <section className="container mx-auto mb-6 max-w-[1280px] px-4 pt-4 pb-4 sm:px-6 lg:mb-8 lg:px-8 lg:pt-6 lg:pb-6">
+                    <section className="container mx-auto mb-6 max-w-7xl px-4 pt-4 pb-4 sm:px-6 lg:mb-8 lg:px-8 lg:pt-6 lg:pb-6">
                         <ScrollAnimation>
                             <div className="grid grid-cols-1 gap-4 lg:grid-cols-[220px_minmax(0,1fr)] lg:items-stretch">
                                 <div className="hidden lg:grid lg:h-[min(calc(100dvh-9.5rem),540px)] lg:grid-rows-3 lg:gap-3 lg:overflow-hidden">
@@ -349,7 +349,7 @@ const PropertyDetail = () => {
 
                     {/* 2. AT A GLANCE */}
                     <section className="border-b border-white/5 py-16 sm:py-20 lg:py-24">
-                        <div className="container mx-auto grid grid-cols-1 gap-10 px-4 lg:grid-cols-12 lg:gap-16">
+                        <div className="container mx-auto grid max-w-7xl grid-cols-1 gap-10 px-4 sm:px-6 lg:grid-cols-12 lg:items-start lg:gap-16 lg:px-8">
                             <div className="lg:col-span-5">
                                 <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
                                     Project Overview
@@ -411,7 +411,7 @@ const PropertyDetail = () => {
                                         <div className="mb-1 text-[10px] tracking-widest text-white/40 uppercase sm:text-xs">
                                             {stat.label}
                                         </div>
-                                        <div className="truncate text-lg font-medium sm:text-xl">
+                                        <div className="text-lg font-medium break-words sm:text-xl">
                                             {stat.value || '—'}
                                         </div>
                                         <div className="absolute bottom-0 left-0 h-[2px] w-0 bg-primary transition-all duration-500 group-hover:w-full" />
@@ -423,7 +423,7 @@ const PropertyDetail = () => {
 
                     {/* 3. AMENITIES: Interactive Grid with Spinning Icons */}
                     <section className="bg-sidebar py-16 sm:py-20 lg:py-24">
-                        <div className="container mx-auto px-4">
+                        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="mb-10 text-center sm:mb-16">
                                 <span className="text-xs font-bold tracking-[0.3em] text-primary uppercase">
                                     Features
@@ -437,7 +437,7 @@ const PropertyDetail = () => {
                                 </p>
                             </div>
 
-                            <div className="mx-auto flex max-w-6xl flex-col items-center gap-4 sm:gap-6">
+                            <div className="mx-auto flex flex-col items-center gap-4 sm:gap-6">
                                 {facilityRows.map((row, rowIndex) => (
                                     <div
                                         key={rowIndex}
@@ -476,7 +476,7 @@ const PropertyDetail = () => {
 
                     {/* 4. INTERNAL SPECIFICATIONS (50/50 SPLIT) */}
                     <section className="overflow-hidden border-t border-white/5 bg-black py-16 sm:py-20 lg:py-24">
-                        <div className="container mx-auto px-4 sm:px-6">
+                        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="grid grid-cols-1 items-start gap-16 sm:gap-20 lg:grid-cols-2 lg:gap-24">
                                 <div className="h-fit pb-24 sm:pb-32 lg:sticky lg:top-24 lg:pb-40">
                                     <div className="relative flex flex-col gap-6 pr-4 sm:pr-8 lg:pr-12">
@@ -560,7 +560,7 @@ const PropertyDetail = () => {
 
                     {/* 5. THE DRASTIC GALLERY (REDUCED HEIGHT & FLOATING ARROWS) */}
                     <section className="overflow-hidden bg-[#050505] py-20">
-                        <div className="container mx-auto mb-10 px-4">
+                        <div className="container mx-auto mb-10 max-w-7xl px-4 sm:px-6 lg:px-8">
                             <span className="text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
                                 Visual Portfolio
                             </span>
@@ -569,7 +569,7 @@ const PropertyDetail = () => {
                             </h2>
                         </div>
 
-                        <div className="container mx-auto max-w-6xl px-4">
+                        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="group relative">
                                 {/* FLOATING ARROWS */}
                                 <button
@@ -738,7 +738,7 @@ const PropertyDetail = () => {
                             }}
                         />
 
-                        <div className="container mx-auto mt-6 max-w-6xl px-4">
+                        <div className="container mx-auto mt-6 max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="relative h-1 w-full overflow-hidden rounded-full bg-white/5">
                                 <motion.div
                                     className="absolute top-0 left-0 h-full bg-gradient-to-r from-primary via-primary to-sky-400"
@@ -759,7 +759,7 @@ const PropertyDetail = () => {
 
                     {/* 6. MEDIA: Contained Cinematic Tour */}
                     <section className="border-t border-white/5 bg-black py-16 sm:py-20 lg:py-24">
-                        <div className="container mx-auto px-4">
+                        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             {/* Section Title - Above the Video */}
                             <div className="mb-8 sm:mb-12">
                                 <span className="mb-3 block text-[10px] font-bold tracking-[0.5em] text-primary uppercase">
@@ -774,7 +774,7 @@ const PropertyDetail = () => {
                             </div>
 
                             {/* Contained Video Wrapper */}
-                            <div className="relative mx-auto max-w-6xl">
+                            <div className="relative mx-auto">
                                 <div className="relative overflow-hidden rounded-2xl border border-white/10 bg-white/5 shadow-2xl sm:rounded-[2rem] md:rounded-[3rem]">
                                     {projectDetails.details
                                         ?.youtube_video_id ? (
@@ -802,7 +802,7 @@ const PropertyDetail = () => {
 
                     {/* 7. LOCATION: Accessible Neighborhood Map */}
                     <section className="bg-[#0a0a0a] py-16 sm:py-20 lg:py-24">
-                        <div className="container mx-auto mb-8 px-4 sm:mb-12">
+                        <div className="container mx-auto mb-8 max-w-7xl px-4 sm:mb-12 sm:px-6 lg:px-8">
                             <div className="flex flex-col justify-between gap-4 border-l-2 border-primary pl-4 sm:pl-8 md:flex-row md:items-end">
                                 <div>
                                     <span className="text-[10px] font-bold tracking-[0.3em] text-primary uppercase sm:tracking-[0.5em]">
@@ -825,7 +825,7 @@ const PropertyDetail = () => {
                         </div>
 
                         {/* Map Container - Enhanced Visual Design */}
-                        <div className="container mx-auto px-4">
+                        <div className="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
                             <div className="group relative">
                                 <div className="absolute -inset-1 rounded-2xl bg-gradient-to-r from-cyan-500/20 via-sky-500/10 to-cyan-500/20 opacity-0 blur-xl transition-opacity duration-500 group-hover:opacity-100" />
                                 <div className="relative h-[45vh] w-full overflow-hidden rounded-2xl border border-white/10 bg-black/40 shadow-2xl transition-all duration-500 group-hover:border-primary/30 sm:h-[55vh] lg:h-[65vh]">
@@ -844,7 +844,10 @@ const PropertyDetail = () => {
                         </div>
                     </section>
 
-                    <SurroundingsSection project={projectDetails} />
+                    <SurroundingsSection
+                        project={projectDetails}
+                        containerClassName="container mx-auto max-w-7xl px-4 sm:px-6 lg:px-8"
+                    />
                 </div>
             </AppLayout>
         </>

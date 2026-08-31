@@ -1,7 +1,13 @@
 import { motion } from 'framer-motion';
 import { MapPin } from 'lucide-react';
 
-const SurroundingsSection = ({ project }: any) => {
+const SurroundingsSection = ({
+    project,
+    containerClassName = 'container mx-auto px-4',
+}: {
+    project: any;
+    containerClassName?: string;
+}) => {
     const areaImages: string[] =
         project.project_images
             ?.map((img: { image: string }) => `/${img.image}`)
@@ -11,7 +17,7 @@ const SurroundingsSection = ({ project }: any) => {
         <section className="relative overflow-hidden py-32">
             <div className="bg-gradient-elegant absolute inset-0 opacity-30" />
 
-            <div className="relative z-10 container mx-auto px-4">
+            <div className={`relative z-10 ${containerClassName}`}>
                 <div className="grid items-center gap-16 md:grid-cols-2">
                     <motion.div
                         initial={{ opacity: 0, x: -60 }}
