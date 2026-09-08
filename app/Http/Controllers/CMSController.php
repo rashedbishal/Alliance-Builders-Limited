@@ -377,10 +377,10 @@ class CMSController extends Controller
                             $imageFile->getClientOriginalExtension();
 
                         $storagePath = match ($project->project_type_id) {
-                            '1' => 'properties/handoverProject',
-                            '2' => 'properties/ongoingProject',
-                            '3' => 'properties/upcomingProject',
-                            '4' => 'properties/hotelsResorts',
+                            1 => 'properties/handoverProject',
+                            2 => 'properties/ongoingProject',
+                            3 => 'properties/upcomingProject',
+                            4 => 'properties/hotelsResorts',
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
@@ -477,10 +477,10 @@ class CMSController extends Controller
                             $imageFile->getClientOriginalExtension();
 
                         $storagePath = match ($project->project_type_id) {
-                            '1' => 'properties/handoverProject',
-                            '2' => 'properties/ongoingProject',
-                            '3' => 'properties/upcomingProject',
-                            '4' => 'properties/hotelsResorts',
+                            1 => 'properties/handoverProject',
+                            2 => 'properties/ongoingProject',
+                            3 => 'properties/upcomingProject',
+                            4 => 'properties/hotelsResorts',
                             default => 'properties/projectImages',
                         };
                         // Store in a separate folder (recommended)
