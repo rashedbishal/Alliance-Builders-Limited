@@ -376,13 +376,7 @@ class CMSController extends Controller
                         $sanitizedName = $project->slug.'-'.time().'-'.uniqid().'.'.
                             $imageFile->getClientOriginalExtension();
 
-                        $storagePath = match ($project->project_type_id) {
-                            1 => 'properties/handoverProject',
-                            2 => 'properties/ongoingProject',
-                            3 => 'properties/upcomingProject',
-                            4 => 'properties/hotelsResorts',
-                            default => 'properties/projectImages',
-                        };
+                        $storagePath = $project->projectType->storageFolder();
                         // Store in a separate folder (recommended)
                         if (! ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
                             throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
@@ -476,13 +470,7 @@ class CMSController extends Controller
                         $sanitizedName = $project->slug.'-'.time().'-'.uniqid().'.'.
                             $imageFile->getClientOriginalExtension();
 
-                        $storagePath = match ($project->project_type_id) {
-                            1 => 'properties/handoverProject',
-                            2 => 'properties/ongoingProject',
-                            3 => 'properties/upcomingProject',
-                            4 => 'properties/hotelsResorts',
-                            default => 'properties/projectImages',
-                        };
+                        $storagePath = $project->projectType->storageFolder();
                         // Store in a separate folder (recommended)
                         if (! ImageOptimizer::optimizeAndStore($imageFile, $storagePath, $sanitizedName, 'public', 1920, 80)) {
                             throw new \RuntimeException("Failed to store project image: {$sanitizedName}");
@@ -508,15 +496,9 @@ class CMSController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                $image = ProjectImage::with('project')->findOrFail($request->input('image_id'));
+                $image = ProjectImage::with('project.projectType')->findOrFail($request->input('image_id'));
 
-                $storagePath = match ($image->project?->project_type_id) {
-                    1 => 'properties/handoverProject',
-                    2 => 'properties/ongoingProject',
-                    3 => 'properties/upcomingProject',
-                    4 => 'properties/hotelsResorts',
-                    default => 'properties/projectImages',
-                };
+                $storagePath = $image->project?->projectType?->storageFolder() ?? 'properties/projectImages';
 
                 $filename = $image->getRawOriginal('image');
 
@@ -537,18 +519,12 @@ class CMSController extends Controller
     {
         try {
             DB::transaction(function () use ($request) {
-                $project = Project::findOrFail($request->input('project_db_id'));
+                $project = Project::with('projectType')->findOrFail($request->input('project_db_id'));
                 if ($project->image && Storage::disk('public')->exists(path: 'properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'))) {
                     Storage::disk('public')->delete('properties/propertyThumbs'.'/'.$project->image->getRawOriginal('path'));
                 }
 
-                $storagePath = match ($project->project_type_id) {
-                    1 => 'properties/handoverProject',
-                    2 => 'properties/ongoingProject',
-                    3 => 'properties/upcomingProject',
-                    4 => 'properties/hotelsResorts',
-                    default => 'properties/projectImages',
-                };
+                $storagePath = $project->projectType->storageFolder();
 
                 foreach ($project->projectImages as $projectImage) {
                     if (Storage::disk('public')->exists(path: $storagePath.'/'.$projectImage->getRawOriginal('image'))) {
