@@ -453,7 +453,9 @@ class CMSController extends Controller
 
                 if ($request->hasFile('thumbnail')) {
 
-                    Storage::disk('public')->delete("properties/propertyThumbs/{$project->image->getRawOriginal('path')}");
+                    if ($project->image) {
+                        Storage::disk('public')->delete("properties/propertyThumbs/{$project->image->getRawOriginal('path')}");
+                    }
 
                     $imageFile = $request->file('thumbnail');
                     $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
@@ -461,7 +463,7 @@ class CMSController extends Controller
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
                     }
 
-                    $image = new Image;
+                    $image = $project->image ?: new Image;
                     $image->path = $sanitizedName;
                     $image->project()->associate($project);
                     $image->save();
