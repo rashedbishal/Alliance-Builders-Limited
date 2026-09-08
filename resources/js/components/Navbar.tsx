@@ -85,11 +85,23 @@ const Navbar = () => {
         };
     }, []);
 
-    // Close mobile menu when clicking outside
+    // Close mobile menu when it loses focus: a tap/click outside it, or the
+    // browser tab/window itself losing focus.
     useEffect(() => {
-        const handleClickOutside = (e: MouseEvent) => {
-            if (!isMobileMenuOpen) return;
+        if (!isMobileMenuOpen) return;
 
+        const closeMenu = () => {
+            setIsClosing(true);
+            setTimeout(() => {
+                setIsMobileMenuOpen(false);
+                setIsClosing(false);
+            }, 250);
+        };
+
+        // pointerdown (not click) — iOS Safari doesn't reliably synthesize a
+        // `click` on the first tap of a non-interactive element, so relying
+        // on `click` here left the menu stuck open on real touch devices.
+        const handlePointerOutside = (e: PointerEvent) => {
             const mobileMenu = mobileMenuRef.current;
             const navContainer = navRef.current;
             const buttonElement = buttonRef.current;
@@ -102,20 +114,16 @@ const Navbar = () => {
                 !navContainer.contains(target) &&
                 buttonElement && !buttonElement.contains(target)
             ) {
-                setIsClosing(true);
-                setTimeout(() => {
-                    setIsMobileMenuOpen(false);
-                    setIsClosing(false);
-                }, 250);
+                closeMenu();
             }
         };
 
-        if (isMobileMenuOpen) {
-            document.addEventListener('click', handleClickOutside);
-        }
+        document.addEventListener('pointerdown', handlePointerOutside);
+        window.addEventListener('blur', closeMenu);
 
         return () => {
-            document.removeEventListener('click', handleClickOutside);
+            document.removeEventListener('pointerdown', handlePointerOutside);
+            window.removeEventListener('blur', closeMenu);
         };
     }, [isMobileMenuOpen]);
 
