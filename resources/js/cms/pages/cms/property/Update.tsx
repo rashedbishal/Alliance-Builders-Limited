@@ -257,9 +257,9 @@ export default function PropertyUpdate({ types, locations, facilities, tags }: P
         return;
     }
 
-    const overSized = files.find(f => f.size > 300 * 1024);
+    const overSized = files.find(f => f.size > 2048 * 1024);
     if (overSized) {
-        setError('project_images', 'One or more images exceed the 300KB limit. Please compress project gallery WEBP images.');
+        setError('project_images', 'One or more images exceed the 2048KB limit. Please compress project gallery WEBP images.');
         e.target.value = '';
         return;
     }
