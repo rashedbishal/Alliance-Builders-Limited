@@ -28,6 +28,18 @@ const Navbar = () => {
 
     const buttonRef = useRef<HTMLButtonElement>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
+    const mobileMenuClosing = useRef(false);
+
+    const closeMobileMenu = () => {
+        if (mobileMenuClosing.current) return;
+        mobileMenuClosing.current = true;
+        setIsClosing(true);
+        setTimeout(() => {
+            setIsMobileMenuOpen(false);
+            setIsClosing(false);
+            mobileMenuClosing.current = false;
+        }, 250);
+    };
 
     const openDropdown = (menuName: string) => {
         if (closeTimer.current) clearTimeout(closeTimer.current);
@@ -90,14 +102,6 @@ const Navbar = () => {
     useEffect(() => {
         if (!isMobileMenuOpen) return;
 
-        const closeMenu = () => {
-            setIsClosing(true);
-            setTimeout(() => {
-                setIsMobileMenuOpen(false);
-                setIsClosing(false);
-            }, 250);
-        };
-
         // pointerdown (not click) — iOS Safari doesn't reliably synthesize a
         // `click` on the first tap of a non-interactive element, so relying
         // on `click` here left the menu stuck open on real touch devices.
@@ -114,16 +118,16 @@ const Navbar = () => {
                 !navContainer.contains(target) &&
                 buttonElement && !buttonElement.contains(target)
             ) {
-                closeMenu();
+                closeMobileMenu();
             }
         };
 
         document.addEventListener('pointerdown', handlePointerOutside);
-        window.addEventListener('blur', closeMenu);
+        window.addEventListener('blur', closeMobileMenu);
 
         return () => {
             document.removeEventListener('pointerdown', handlePointerOutside);
-            window.removeEventListener('blur', closeMenu);
+            window.removeEventListener('blur', closeMobileMenu);
         };
     }, [isMobileMenuOpen]);
 
@@ -134,6 +138,12 @@ const Navbar = () => {
     useEffect(() => {
         const handleScroll = () => {
             const currentScrollY = window.scrollY;
+
+            // Don't let the mobile menu ride along with the navbar as it
+            // hides/shows on scroll — close it instead.
+            if (isMobileMenuOpen) {
+                closeMobileMenu();
+            }
 
             if (currentScrollY < 10) {
                 setIsVisible(true);
@@ -148,7 +158,7 @@ const Navbar = () => {
 
         window.addEventListener('scroll', handleScroll, { passive: true });
         return () => window.removeEventListener('scroll', handleScroll);
-    }, [lastScrollY]);
+    }, [lastScrollY, isMobileMenuOpen]);
 
     const projectItems = [
         { label: 'All Properties', href: '/properties', icon: <svg className="h-full w-full" id="Layer_1" enable-background="new 0 0 4000 4000" viewBox="0 0 4000 4000" xmlns="http://www.w3.org/2000/svg"><g><g><g><path d="m1888 2448v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g><g><path d="m1888 1216v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g></g><g><g><path d="m3120 2448v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g><g><path d="m3120 1216v336c0 184.789-151.211 336-336 336h-336c-184.789 0-336-151.211-336-336v-336c0-184.789 151.211-336 336-336h336c184.789 0 336 151.211 336 336z" fill="currentColor" opacity="0.9" stroke="currentColor" strokeWidth="60" /></g></g></g></svg> },
