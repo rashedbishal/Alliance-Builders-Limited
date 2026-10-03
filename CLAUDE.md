@@ -65,4 +65,4 @@ Shared relationship/behavior logic is factored into traits under `app/Concerns/`
 - React Compiler (`babel-plugin-react-compiler`) is enabled in the Vite/Babel config.
 
 ### Deployment
-`.github/workflows/*.yml` deploys `main` to Hostinger via SSH/rsync on push: composer install (no-dev), `npm run build`, rsync to remote, then `php artisan optimize:clear` and re-linking `public/storage`. There is no CI test/lint gate before deploy — run `composer test`, `npm run lint`, and `npm run types` locally before pushing to `main`.
+`.github/workflows/workflow.yml` deploys `main` to Hostinger via SSH/rsync on push: composer install (no-dev), `npm run build`, rsync to remote, then `php artisan optimize:clear`, `php artisan migrate --force`, and re-linking `public/storage`. Migrations run automatically against production on every push to `main`. There is no CI test/lint gate before deploy — run `composer test`, `npm run lint`, and `npm run types` locally before pushing to `main`.
