@@ -186,15 +186,15 @@ const TestimonialsSection = () => {
         <ScrollAnimation delay={0.4}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
           <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">98%</div>
+            <div className="text-4xl font-bold text-accent mb-2">99%</div>
             <div className="text-black/80">Client Satisfaction</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">1000+</div>
+            <div className="text-4xl font-bold text-accent mb-2">3500+</div>
             <div className="text-black/80">Happy Clients</div>
           </div>
           <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">15+</div>
+            <div className="text-4xl font-bold text-accent mb-2">17+</div>
             <div className="text-black/80">Years Experience</div>
           </div>
           <div className="text-center">

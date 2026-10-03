@@ -14,10 +14,10 @@ import ScrollAnimation from '../components/ScrollAnimation';
 
 const About = () => {
     const stats = [
-        { icon: Building, value: "500+", label: "Properties Sold" },
-        { icon: Users, value: "10,000+", label: "Happy Clients" },
+        { icon: Building, value: "120+", label: "Properties Sold" },
+        { icon: Users, value: "3,500+", label: "Happy Clients" },
         { icon: Award, value: "50+", label: "Awards Won" },
-        { icon: TrendingUp, value: "98%", label: "Client Satisfaction" }
+        { icon: TrendingUp, value: "99%", label: "Client Satisfaction" }
     ];
 
     const values = [

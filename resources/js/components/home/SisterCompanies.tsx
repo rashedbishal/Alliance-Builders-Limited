@@ -73,9 +73,9 @@ const SisterCompanies: React.FC = () => {
 
   const stats = [
     { label: 'Sister Companies', value: '6', icon: Layers },
-    { label: 'Projects Executed', value: '1,800+', icon: Award },
-    { label: 'Cities Served', value: '25+', icon: Globe },
-    { label: 'Dedicated Team', value: '5,000+', icon: Users },
+    { label: 'Projects Executed', value: '124+', icon: Award },
+    { label: 'Cities Served', value: '3+', icon: Globe },
+    { label: 'Dedicated Team', value: '300+', icon: Users },
   ];
 
   return (

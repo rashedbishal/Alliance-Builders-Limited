@@ -115,7 +115,7 @@ const SearchSection = () => {
                 <ScrollAnimation delay={0.4}>
                     <div className="grid grid-cols-2 md:grid-cols-4 gap-6 mt-12 max-w-4xl mx-auto">
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-white mb-2">500+</div>
+                            <div className="text-3xl font-bold text-white mb-2">124+</div>
                             <div className="text-sm text-white">Properties Listed</div>
                         </div>
                         <div className="text-center">
@@ -123,11 +123,11 @@ const SearchSection = () => {
                             <div className="text-sm text-white">Prime Locations</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-white mb-2">1000+</div>
+                            <div className="text-3xl font-bold text-white mb-2">3500+</div>
                             <div className="text-sm text-white">Happy Clients</div>
                         </div>
                         <div className="text-center">
-                            <div className="text-3xl font-bold text-white mb-2">15+</div>
+                            <div className="text-3xl font-bold text-white mb-2">17+</div>
                             <div className="text-sm text-white">Years Experience</div>
                         </div>
                     </div>
