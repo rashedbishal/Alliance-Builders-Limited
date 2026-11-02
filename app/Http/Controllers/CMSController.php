@@ -6,6 +6,7 @@ use App\Models\Config\Details;
 use App\Models\Config\Facility;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
+use App\Models\Config\SiteSetting;
 use App\Models\Config\Tag;
 use App\Models\Inquiry\Contact;
 use App\Models\Properties\Project;
@@ -15,6 +16,7 @@ use App\Models\Visual\Carousel;
 use App\Models\Visual\Gallery;
 use App\Models\Visual\Image;
 use App\Models\Visual\ProjectImage;
+use App\Models\Visual\Testimonial;
 use App\Models\Visual\Video;
 use App\Services\ImageOptimizer;
 use Carbon\Carbon;
@@ -833,6 +835,149 @@ class CMSController extends Controller
             return redirect()->back()->with('success', 'Operation Successful');
         } catch (\Exception $e) {
             return redirect()->back()->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function settingsIndex()
+    {
+        return Inertia::render('cms/settings/Index', [
+            'settings' => SiteSetting::firstOrCreate(['id' => 1]),
+        ]);
+    }
+
+    public function updateSettings(Request $request)
+    {
+        $request->validate([
+            'header_phone' => 'nullable|string|max:30',
+            'footer_phone' => 'nullable|string|max:30',
+            'footer_email' => 'nullable|email|max:255',
+            'whatsapp_number' => 'nullable|string|max:30',
+            'messenger_link' => 'nullable|string|max:255',
+        ]);
+
+        $settings = SiteSetting::firstOrCreate(['id' => 1]);
+        $settings->update($request->only([
+            'header_phone',
+            'footer_phone',
+            'footer_email',
+            'whatsapp_number',
+            'messenger_link',
+        ]));
+
+        return redirect()->route('settings-index')->with('success', 'Operation Successful');
+    }
+
+    public function testimonialIndex()
+    {
+        return Inertia::render('cms/testimonial/Index', [
+            'testimonials' => Testimonial::orderBy('id')->get(),
+        ]);
+    }
+
+    public function storeTestimonial(Request $request)
+    {
+        $request->validate([
+            'name' => 'required|string|max:100',
+            'role' => 'nullable|string|max:100',
+            'company' => 'nullable|string|max:100',
+            'rating' => 'required|integer|min:1|max:5',
+            'quote' => 'required|string|max:1000',
+            'property_type' => 'nullable|string|max:100',
+            'image' => 'nullable|file|mimes:webp',
+        ]);
+
+        try {
+            DB::transaction(function () use ($request) {
+                $testimonial = new Testimonial($request->only([
+                    'name', 'role', 'company', 'rating', 'quote', 'property_type',
+                ]));
+                $testimonial->save();
+
+                if ($request->hasFile('image')) {
+                    $imageFile = $request->file('image');
+                    $sanitizedName = 'testimonial-'.$testimonial->id.'-'.time().'-'.Str::random(8).'.'.$imageFile->getClientOriginalExtension();
+
+                    if (! ImageOptimizer::optimizeAndStore($imageFile, 'testimonials', $sanitizedName, 'public', 600, 80)) {
+                        throw new \RuntimeException("Failed to store testimonial image: {$sanitizedName}");
+                    }
+
+                    $testimonial->image = $sanitizedName;
+                    $testimonial->save();
+                }
+            });
+
+            return redirect()->route('testimonial-index')->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->route('testimonial-index')->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function updateTestimonial(Request $request)
+    {
+        $request->validate([
+            'testimonial_id' => 'required|exists:testimonials,id',
+            'name' => 'required|string|max:100',
+            'role' => 'nullable|string|max:100',
+            'company' => 'nullable|string|max:100',
+            'rating' => 'required|integer|min:1|max:5',
+            'quote' => 'required|string|max:1000',
+            'property_type' => 'nullable|string|max:100',
+            'image' => 'nullable|file|mimes:webp',
+        ]);
+
+        try {
+            DB::transaction(function () use ($request) {
+                $testimonial = Testimonial::findOrFail($request->input('testimonial_id'));
+                $testimonial->fill($request->only([
+                    'name', 'role', 'company', 'rating', 'quote', 'property_type',
+                ]));
+                $testimonial->save();
+
+                if ($request->hasFile('image')) {
+                    $imageFile = $request->file('image');
+                    $previousImage = $testimonial->getRawOriginal('image');
+
+                    $sanitizedName = 'testimonial-'.$testimonial->id.'-'.time().'-'.Str::random(8).'.'.$imageFile->getClientOriginalExtension();
+                    if (! ImageOptimizer::optimizeAndStore($imageFile, 'testimonials', $sanitizedName, 'public', 600, 80)) {
+                        throw new \RuntimeException("Failed to store testimonial image: {$sanitizedName}");
+                    }
+
+                    if ($previousImage && ! str_starts_with($previousImage, 'http')) {
+                        Storage::disk('public')->delete('testimonials/'.$previousImage);
+                    }
+
+                    $testimonial->image = $sanitizedName;
+                    $testimonial->save();
+                }
+            });
+
+            return redirect()->route('testimonial-index')->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->route('testimonial-index')->with('error', 'Operation Failed: '.$e->getMessage());
+        }
+    }
+
+    public function destroyTestimonial(Request $request)
+    {
+        $request->validate([
+            'testimonial_id' => 'required|exists:testimonials,id',
+        ]);
+
+        try {
+            DB::transaction(function () use ($request) {
+                $testimonial = Testimonial::findOrFail($request->input('testimonial_id'));
+                $previousImage = $testimonial->getRawOriginal('image');
+
+                if ($previousImage && ! str_starts_with($previousImage, 'http')) {
+                    Storage::disk('public')->delete('testimonials/'.$previousImage);
+                }
+
+                $testimonial->delete();
+            });
+
+            return redirect()->route('testimonial-index')->with('success', 'Operation Successful');
+        } catch (\Exception $e) {
+            return redirect()->route('testimonial-index')->with('error', 'Operation Failed: '.$e->getMessage());
         }
     }
 

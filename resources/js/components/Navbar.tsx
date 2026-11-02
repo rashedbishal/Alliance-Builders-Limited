@@ -11,6 +11,9 @@ import {
 } from '@/components/ui/dropdown-menu';
 import { useFavorites } from '@/hooks/useFavorites';
 import { about, directors, home, services, managingDirector, contact, media, gallery, properties } from "@/routes";
+import type { SiteSetting } from '@/types/SiteSetting';
+
+const DEFAULT_HEADER_PHONE = '+8801928568853';
 
 const Navbar = () => {
     const [openMenu, setOpenMenu] = useState<string | null>(null);
@@ -22,9 +25,11 @@ const Navbar = () => {
     const navRef = useRef<HTMLDivElement>(null);
     const mobileMenuRef = useRef<HTMLDivElement>(null);
     const { favorites } = useFavorites();
-    const { navHotels } = usePage<{
+    const { navHotels, siteSettings } = usePage<{
         navHotels?: { id: number; name: string; slug: string }[];
+        siteSettings?: SiteSetting;
     }>().props;
+    const headerPhone = siteSettings?.header_phone || DEFAULT_HEADER_PHONE;
 
     const buttonRef = useRef<HTMLButtonElement>(null);
     const closeTimer = useRef<ReturnType<typeof setTimeout> | null>(null);
@@ -752,7 +757,7 @@ const Navbar = () => {
                                 className={`flex flex-shrink-0 items-center gap-3 pr-2 transition-all duration-700 ${isLoaded ? 'translate-x-0 opacity-100' : 'translate-x-8 opacity-0'}`}
                             >
                                 <a
-                                    href="tel:+8801928568853"
+                                    href={`tel:${headerPhone}`}
                                     className="btn-primary flex items-center gap-2 rounded-xl px-4 py-2.5 text-sm font-medium transition-all duration-300"
                                 >
                                     <Phone className="h-4 w-4" />
@@ -782,7 +787,7 @@ const Navbar = () => {
 
                                 {/* Call Now Button */}
                                 <a
-                                    href="tel:+8801928568853"
+                                    href={`tel:${headerPhone}`}
                                     title="Call Now"
                                     aria-label="Call Now"
                                     className="btn-primary flex items-center justify-center gap-2 rounded-full px-2.5 py-2 text-xs font-semibold sm:px-3.5 sm:text-sm transition-all duration-300 hover:scale-105"

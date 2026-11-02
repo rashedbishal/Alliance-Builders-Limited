@@ -2,15 +2,16 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Config\Facility;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
-use App\Models\Config\Facility;
 use App\Models\Inquiry\Contact;
 use App\Models\Properties\Project;
 use App\Models\Releases\MediaCoverage;
 use App\Models\Visual\Carousel;
 use App\Models\Visual\Gallery;
+use App\Models\Visual\Testimonial;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Inertia\Inertia;
@@ -24,8 +25,9 @@ class PageController extends Controller
         $projectTypes = ProjectType::select('id', 'name')->get();
         $tags = Tag::select('id', 'name')->get();
         $projects = Project::with('projectType', 'tags', 'details', 'image', 'location')->where('isFeatured', true)->where('project_type_id', '!=', 4)->select('id', 'name', 'address', 'floors', 'size', 'project_id', 'project_type_id', 'location_id', 'slug')->get();
+        $testimonials = Testimonial::orderBy('id')->get();
 
-        return Inertia::render('Home', ['carousels' => $carousels, 'locations' => $locations, 'projectTypes' => $projectTypes, 'tags' => $tags, 'projects' => $projects]);
+        return Inertia::render('Home', ['carousels' => $carousels, 'locations' => $locations, 'projectTypes' => $projectTypes, 'tags' => $tags, 'projects' => $projects, 'testimonials' => $testimonials]);
     }
 
     public function about()

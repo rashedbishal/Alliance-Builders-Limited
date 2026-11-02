@@ -60,7 +60,8 @@ export default function CMSLayout({
         if (currentRoute('gallery-*')) menus['gallery'] = true;
         if (currentRoute('media-*')) menus['media'] = true;
         if (currentRoute('property-*')) menus['property'] = true;
-        if (currentRoute('facility-*') || currentRoute('tag-*')) menus['config'] = true;
+        if (currentRoute('facility-*') || currentRoute('tag-*'))
+            menus['config'] = true;
         setOpenMenus(menus);
     }, []);
 
@@ -534,6 +535,33 @@ export default function CMSLayout({
                                 <path d="M17 12H7M12 7l5 5-5 5" />
                             </NavIcon>
                             Pop-up Settings
+                        </Link>
+                    </div>
+
+                    {/* Site Settings */}
+                    <div>
+                        <Link
+                            href={route('settings-index')}
+                            className={`nav-link-base ${currentRoute('settings-index') ? 'nav-link-active' : ''}`}
+                        >
+                            <NavIcon>
+                                <path d="M12 2a10 10 0 1 0 0 20A10 10 0 0 0 12 2z" />
+                                <path d="M12 8v4l3 3" />
+                            </NavIcon>
+                            Settings
+                        </Link>
+                    </div>
+
+                    {/* Testimonial Settings */}
+                    <div>
+                        <Link
+                            href={route('testimonial-index')}
+                            className={`nav-link-base ${currentRoute('testimonial-index') ? 'nav-link-active' : ''}`}
+                        >
+                            <NavIcon>
+                                <path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z" />
+                            </NavIcon>
+                            Testimonial Settings
                         </Link>
                     </div>
                     <div>

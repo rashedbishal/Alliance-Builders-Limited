@@ -2,7 +2,9 @@
 
 namespace App\Http\Middleware;
 
+use App\Models\Config\SiteSetting;
 use App\Models\Properties\Project;
+use App\Models\Releases\Popup;
 use Illuminate\Http\Request;
 use Inertia\Middleware;
 
@@ -44,10 +46,10 @@ class HandleInertiaRequests extends Middleware
             ],
             'sidebarOpen' => ! $request->hasCookie('sidebar_state') || $request->cookie('sidebar_state') === 'true',
             'isPopupEnabled' => function () {
-                return \App\Models\Releases\Popup::value('isEnabled') ?? false;
+                return Popup::value('isEnabled') ?? false;
             },
             'popupImgUrl' => function () {
-                return \App\Models\Releases\Popup::value('imagePath') ?? false;
+                return Popup::value('imagePath') ?? false;
             },
             'navHotels' => function () {
                 return Project::where('project_type_id', 4)
@@ -55,9 +57,12 @@ class HandleInertiaRequests extends Middleware
                     ->orderBy('name')
                     ->get();
             },
+            'siteSettings' => function () {
+                return SiteSetting::find(1);
+            },
             'flash' => [
                 'success' => fn () => $request->session()->get('success'),
-                'error'   => fn () => $request->session()->get('error'),
+                'error' => fn () => $request->session()->get('error'),
             ],
         ];
     }

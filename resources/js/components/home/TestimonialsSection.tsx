@@ -1,8 +1,9 @@
 import TestimonialBackground from '@images/home/testimonials-background.webp';
 import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState, useEffect } from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { contact } from '@/routes';
+import type { Testimonial } from '@/types/Testimonial';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
 import ScrollAnimation from '../ScrollAnimation';
@@ -10,59 +11,18 @@ import ScrollAnimation from '../ScrollAnimation';
 const TestimonialsSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
+  const { testimonials: cmsTestimonials } = usePage<{ testimonials?: Testimonial[] }>().props;
 
-  const testimonials = [
-    {
-      id: 1,
-      name: "Sarah Johnson",
-      role: "Property Investor",
-      company: "Johnson Holdings",
-      image: "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "EstateElite transformed our investment portfolio completely. Their market insights and professional approach helped us identify premium properties that have appreciated significantly. The team's dedication to excellence is unmatched in the industry.",
-      propertyType: "Commercial Investment"
-    },
-    {
-      id: 2,
-      name: "Michael Chen",
-      role: "Landowner",
-      company: "Chen Development Group",
-      image: "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "Working with EstateElite on our land development project was exceptional. They understood our vision and delivered beyond expectations. The entire process was transparent, professional, and resulted in a remarkable development that exceeded our ROI projections.",
-      propertyType: "Land Development"
-    },
-    {
-      id: 3,
-      name: "Emily Rodriguez",
-      role: "Home Buyer",
-      company: "Marketing Executive",
-      image: "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "Finding our dream home seemed impossible until we met EstateElite. They listened to our needs, understood our budget, and presented options that perfectly matched our requirements. The buying process was smooth and stress-free.",
-      propertyType: "Luxury Residence"
-    },
-    {
-      id: 4,
-      name: "David Thompson",
-      role: "Business Owner",
-      company: "Thompson Enterprises",
-      image: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "EstateElite helped us secure the perfect commercial space for our expanding business. Their understanding of commercial real estate and negotiation skills saved us both time and money. Highly recommended for any business property needs.",
-      propertyType: "Commercial Space"
-    },
-    {
-      id: 5,
-      name: "Lisa Wang",
-      role: "Real Estate Developer",
-      company: "Wang Properties",
-      image: "https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&h=150&fit=crop&crop=face",
-      rating: 5,
-      text: "As a fellow developer, I can appreciate quality work when I see it. EstateElite's attention to detail, innovative designs, and commitment to sustainability sets them apart. They've become our preferred partner for joint ventures.",
-      propertyType: "Development Partnership"
-    }
-  ];
+  const testimonials = (cmsTestimonials ?? []).map((t) => ({
+    id: t.id,
+    name: t.name,
+    role: t.role ?? '',
+    company: t.company ?? '',
+    image: t.image ?? '',
+    rating: t.rating,
+    text: t.quote,
+    propertyType: t.property_type ?? '',
+  }));
 
   useEffect(() => {
     if (isAutoPlay) {
@@ -84,6 +44,10 @@ const TestimonialsSection = () => {
   const goToTestimonial = (index: number) => {
     setCurrentTestimonial(index);
   };
+
+  if (testimonials.length === 0) {
+    return null;
+  }
 
   return (
     <section className="py-20 px-4 relative" style={{backgroundImage: `url(${TestimonialBackground})`, backgroundAttachment: 'fixed', backgroundSize: 'cover', backgroundPosition: 'center', backgroundRepeat: 'no-repeat'}}>
@@ -118,11 +82,17 @@ const TestimonialsSection = () => {
               </div>
 
               <div className="flex flex-col sm:flex-row items-center justify-center space-y-4 sm:space-y-0 sm:space-x-6">
-                <img
-                  src={testimonials[currentTestimonial].image}
-                  alt={testimonials[currentTestimonial].name}
-                  className="w-20 h-20 rounded-full border-4 border-accent shadow-elegant"
-                />
+                {testimonials[currentTestimonial].image ? (
+                  <img
+                    src={testimonials[currentTestimonial].image}
+                    alt={testimonials[currentTestimonial].name}
+                    className="w-20 h-20 rounded-full border-4 border-accent shadow-elegant object-cover"
+                  />
+                ) : (
+                  <div className="w-20 h-20 rounded-full border-4 border-accent shadow-elegant bg-accent/20 flex items-center justify-center text-2xl font-bold text-accent">
+                    {testimonials[currentTestimonial].name.charAt(0)}
+                  </div>
+                )}
                 <div className="text-center sm:text-left">
                   <div className="text-2xl font-bold text-black">
                     {testimonials[currentTestimonial].name}

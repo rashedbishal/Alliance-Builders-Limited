@@ -41,6 +41,16 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('popup/add', 'popupAdd')->name('popup-add');
     Route::post('save/popup', 'savePopup')->name('save-popup');
 
+    // ── Site Settings ────────────────────────────────────────────
+    Route::get('cms/settings', 'settingsIndex')->name('settings-index');
+    Route::post('cms/settings', 'updateSettings')->name('update-settings');
+
+    // ── Testimonial Settings ─────────────────────────────────────
+    Route::get('cms/testimonials', 'testimonialIndex')->name('testimonial-index');
+    Route::post('testimonial/store', 'storeTestimonial')->name('testimonial-store');
+    Route::post('testimonial/update', 'updateTestimonial')->name('testimonial-update');
+    Route::post('testimonial/destroy', 'destroyTestimonial')->name('testimonial-destroy');
+
     // ── Facility Config ──────────────────────────────────────────
     Route::get('facility/add', 'facilityAdd')->name('facility-add');
     Route::post('facility/store', 'facilityStore')->name('facility-store');

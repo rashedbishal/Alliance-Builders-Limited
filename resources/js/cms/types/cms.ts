@@ -55,6 +55,26 @@ export interface Popup {
   imagePath?: string;
 }
 
+export interface SiteSetting {
+  id: number;
+  header_phone?: string | null;
+  footer_phone?: string | null;
+  footer_email?: string | null;
+  whatsapp_number?: string | null;
+  messenger_link?: string | null;
+}
+
+export interface Testimonial {
+  id: number;
+  name: string;
+  role?: string | null;
+  company?: string | null;
+  rating: number;
+  quote: string;
+  property_type?: string | null;
+  image?: string | null;
+}
+
 export interface ProjectType {
   id: number;
   name: string;

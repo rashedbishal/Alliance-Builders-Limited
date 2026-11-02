@@ -12,13 +12,21 @@ import {
   Clock
 } from "lucide-react";
 import React from 'react';
-import { Link } from '@inertiajs/react';
+import { Link, usePage } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import abstractBg2 from "@/assets/images/backgrounds/city-7.webp";
 import logo from "@/assets/images/logo/alliance logo.webp";
 import { Separator } from "@/components/ui/separator";
+import type { SiteSetting } from '@/types/SiteSetting';
+
+const DEFAULT_FOOTER_PHONE = '+8801928568853';
+const DEFAULT_FOOTER_EMAIL = 'asad@alliancebuildersltd.org';
 
 const Footer = () => {
+  const { siteSettings } = usePage<{ siteSettings?: SiteSetting }>().props;
+  const footerPhone = siteSettings?.footer_phone || DEFAULT_FOOTER_PHONE;
+  const footerEmail = siteSettings?.footer_email || DEFAULT_FOOTER_EMAIL;
+
   const quickLinks = [
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
@@ -66,7 +74,7 @@ const Footer = () => {
               {/* Contact Info */}
               <div className="space-y-4">
                 <a
-                  href="tel:+8801928568853"
+                  href={`tel:${footerPhone}`}
                   className="flex items-center space-x-3 group w-fit"
                 >
                   <div className="p-2 bg-accent/20 rounded-lg group-hover:bg-accent/30 transition-colors duration-300">
@@ -74,12 +82,12 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">24/7 Hotline</div>
-                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">+88-01928568853</div>
+                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">{footerPhone}</div>
                   </div>
                 </a>
 
                 <a
-                  href="mailto:asad@alliancebuildersltd.org"
+                  href={`mailto:${footerEmail}`}
                   className="flex items-center space-x-3 group w-fit"
                 >
                   <div className="p-2 bg-accent/20 rounded-lg group-hover:bg-accent/30 transition-colors duration-300">
@@ -87,7 +95,7 @@ const Footer = () => {
                   </div>
                   <div>
                     <div className="font-semibold text-white">Email Us</div>
-                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">asad@alliancebuildersltd.org</div>
+                    <div className="text-white/80 group-hover:text-accent transition-colors duration-300 drop-shadow-sm">{footerEmail}</div>
                   </div>
                 </a>
 

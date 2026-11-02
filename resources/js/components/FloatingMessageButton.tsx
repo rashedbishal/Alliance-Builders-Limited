@@ -1,13 +1,19 @@
+import { usePage } from '@inertiajs/react';
 import React, { useState } from 'react';
 import { MessageCircle, X } from 'lucide-react';
+import type { SiteSetting } from '@/types/SiteSetting';
+
+const DEFAULT_WHATSAPP_NUMBER = '+8801928568853';
+const DEFAULT_MESSENGER_LINK = 'alliancebuilderslimited';
 
 const FloatingMessageButton = () => {
     const [isOpen, setIsOpen] = useState(false);
-    // Update these with your actual contact information:
-    // WhatsApp: Include country code (e.g., +234 for Nigeria, +1 for USA)
-    const whatsappNumber = '+8801928568853'; // e.g., '+2347012345678'
-    // Messenger: Facebook page username or ID
-    const messengerPageId = 'alliancebuilderslimited';
+    const { siteSettings } = usePage<{ siteSettings?: SiteSetting }>().props;
+    // WhatsApp: include country code (e.g., +234 for Nigeria, +1 for USA).
+    // Messenger: Facebook page username/ID, or a full link. Both are
+    // controlled from CMS → Settings; these are just the fallback values.
+    const whatsappNumber = siteSettings?.whatsapp_number || DEFAULT_WHATSAPP_NUMBER;
+    const messengerPageId = siteSettings?.messenger_link || DEFAULT_MESSENGER_LINK;
     const whatsappMessage = 'Hello! I would like to inquire about your properties.';
 
     const whatsappLink = whatsappNumber ? `https://wa.me/${whatsappNumber.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMessage)}` : '#';
