@@ -16,15 +16,6 @@ type Props = {
     canRegister: boolean;
 };
 
-const panelVariants: Variants = {
-    hidden: { opacity: 0, x: -24 },
-    show: {
-        opacity: 1,
-        x: 0,
-        transition: { duration: 0.7, ease: [0.16, 1, 0.3, 1] },
-    },
-};
-
 const cardVariants: Variants = {
     hidden: { opacity: 0, y: 24 },
     show: {
@@ -34,9 +25,60 @@ const cardVariants: Variants = {
     },
 };
 
+// Left-to-right wipe reveal for the brand wordmark.
+const brandNameVariants: Variants = {
+    hidden: { clipPath: 'inset(0 100% 0 0)', opacity: 0 },
+    show: {
+        clipPath: 'inset(0 0% 0 0)',
+        opacity: 1,
+        transition: { duration: 0.9, ease: [0.76, 0, 0.24, 1] },
+    },
+};
+
+// Word-by-word cascade for the headline.
+const headlineContainer: Variants = {
+    hidden: {},
+    show: { transition: { staggerChildren: 0.08, delayChildren: 0.35 } },
+};
+const headlineWord: Variants = {
+    hidden: { opacity: 0, y: 24, rotateX: -60 },
+    show: {
+        opacity: 1,
+        y: 0,
+        rotateX: 0,
+        transition: { duration: 0.5, ease: [0.16, 1, 0.3, 1] },
+    },
+};
+
+// Pop-in for the logo mark above "Welcome back".
+const logoVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.6, rotate: -8 },
+    show: {
+        opacity: 1,
+        scale: 1,
+        rotate: 0,
+        transition: { duration: 0.7, delay: 0.1, ease: [0.34, 1.56, 0.64, 1] },
+    },
+};
+
+// Slide-in-from-right for form fields, staggered via the `custom` delay.
 const fieldVariants: Variants = {
-    hidden: { opacity: 0, y: 10 },
-    show: { opacity: 1, y: 0, transition: { duration: 0.4, ease: 'easeOut' } },
+    hidden: { opacity: 0, x: 24 },
+    show: (delay: number) => ({
+        opacity: 1,
+        x: 0,
+        transition: { duration: 0.45, delay, ease: [0.16, 1, 0.3, 1] },
+    }),
+};
+
+// Springy scale pop for the submit button.
+const buttonVariants: Variants = {
+    hidden: { opacity: 0, scale: 0.85 },
+    show: (delay: number) => ({
+        opacity: 1,
+        scale: 1,
+        transition: { type: 'spring', stiffness: 260, damping: 18, delay },
+    }),
 };
 
 /**
@@ -246,22 +288,16 @@ export default function Login({ status }: Props) {
                 />
 
                 <motion.div
-                    variants={panelVariants}
+                    variants={brandNameVariants}
                     initial="hidden"
                     animate="show"
-                    className="relative z-10 flex items-center gap-3"
+                    className="relative z-10"
                 >
-                    <Link href={home()} className="flex items-center gap-3">
-                        <div className="flex h-11 w-11 items-center justify-center rounded-xl bg-white/10 ring-1 ring-white/15">
-                            <img
-                                src={logo}
-                                alt=""
-                                className="h-7 w-auto object-contain"
-                            />
-                        </div>
-                        <span className="text-lg font-semibold tracking-tight">
-                            Alliance Builders Limited
-                        </span>
+                    <Link
+                        href={home()}
+                        className="text-2xl font-bold tracking-tight lg:text-3xl"
+                    >
+                        Alliance Builders Limited
                     </Link>
                 </motion.div>
 
@@ -278,20 +314,39 @@ export default function Login({ status }: Props) {
                     <BuildingLineArt />
                 </motion.div>
 
-                <motion.div
-                    initial={{ opacity: 0, y: 14 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    transition={{ duration: 0.6, delay: 0.3 }}
-                    className="relative z-10"
-                >
-                    <h2 className="text-xl font-semibold tracking-tight whitespace-nowrap lg:text-2xl xl:text-3xl">
-                        Affordable Apartments for All
-                    </h2>
-                    <p className="mt-3 max-w-sm text-sm text-white/55">
+                <div className="relative z-10">
+                    <motion.h2
+                        variants={headlineContainer}
+                        initial="hidden"
+                        animate="show"
+                        className="flex flex-nowrap gap-x-2 text-xl font-semibold tracking-tight whitespace-nowrap [perspective:800px] lg:text-2xl xl:text-3xl"
+                    >
+                        {['Affordable', 'Apartments', 'for', 'All'].map(
+                            (word) => (
+                                <motion.span
+                                    key={word}
+                                    variants={headlineWord}
+                                    className="inline-block"
+                                >
+                                    {word}
+                                </motion.span>
+                            ),
+                        )}
+                    </motion.h2>
+                    <motion.p
+                        initial={{ opacity: 0, x: -24 }}
+                        animate={{ opacity: 1, x: 0 }}
+                        transition={{
+                            duration: 0.6,
+                            delay: 0.75,
+                            ease: 'easeOut',
+                        }}
+                        className="mt-3 max-w-sm text-sm text-white/55"
+                    >
                         Sign in to manage listings, media, and content for
                         Alliance Builders Limited.
-                    </p>
-                </motion.div>
+                    </motion.p>
+                </div>
             </div>
 
             {/* Form panel */}
@@ -302,19 +357,31 @@ export default function Login({ status }: Props) {
                     animate="show"
                     className="w-full max-w-sm"
                 >
-                    {/* Logo shown only when the brand panel is hidden (mobile) */}
-                    <div className="mb-8 flex flex-col items-center gap-2 text-center lg:hidden">
+                    {/* Logo above the heading on every breakpoint */}
+                    <motion.div
+                        variants={logoVariants}
+                        initial="hidden"
+                        animate="show"
+                        className="mb-6 flex justify-center"
+                    >
                         <Link href={home()}>
                             <img
                                 src={logo}
                                 alt="Alliance Builders Limited"
-                                className="h-28 w-auto object-contain"
+                                className="h-20 w-auto object-contain lg:h-24"
                             />
                         </Link>
-                        <p className="text-sm font-medium whitespace-nowrap text-muted-foreground">
-                            Affordable Apartments for All
-                        </p>
-                    </div>
+                    </motion.div>
+
+                    {/* Slogan shown only when the brand panel is hidden (mobile) */}
+                    <motion.p
+                        initial={{ opacity: 0 }}
+                        animate={{ opacity: 1 }}
+                        transition={{ duration: 0.5, delay: 0.3 }}
+                        className="mb-8 text-center text-sm font-medium whitespace-nowrap text-muted-foreground lg:hidden"
+                    >
+                        Affordable Apartments for All
+                    </motion.p>
 
                     <div className="mb-8">
                         <h1 className="text-2xl font-semibold text-foreground">
@@ -336,9 +403,9 @@ export default function Login({ status }: Props) {
                                 <div className="grid gap-5">
                                     <motion.div
                                         variants={fieldVariants}
+                                        custom={0.15}
                                         initial="hidden"
                                         animate="show"
-                                        transition={{ delay: 0.15 }}
                                         className="grid gap-2"
                                     >
                                         <Label htmlFor="email">
@@ -362,9 +429,9 @@ export default function Login({ status }: Props) {
 
                                     <motion.div
                                         variants={fieldVariants}
+                                        custom={0.25}
                                         initial="hidden"
                                         animate="show"
-                                        transition={{ delay: 0.22 }}
                                         className="grid gap-2"
                                     >
                                         <Label htmlFor="password">
@@ -386,10 +453,10 @@ export default function Login({ status }: Props) {
                                     </motion.div>
 
                                     <motion.div
-                                        variants={fieldVariants}
+                                        variants={buttonVariants}
+                                        custom={0.4}
                                         initial="hidden"
                                         animate="show"
-                                        transition={{ delay: 0.3 }}
                                     >
                                         <Button
                                             type="submit"
