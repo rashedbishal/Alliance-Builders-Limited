@@ -366,7 +366,7 @@ class CMSController extends Controller
 
                 if ($request->hasFile('thumbnail')) {
                     $imageFile = $request->file('thumbnail');
-                    $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
+                    $sanitizedName = $project->slug.'-thumbnail-'.time().'-'.Str::random(8).'.'.$imageFile->getClientOriginalExtension();
                     if (! ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
                     }
@@ -455,14 +455,16 @@ class CMSController extends Controller
 
                 if ($request->hasFile('thumbnail')) {
 
-                    if ($project->image) {
-                        Storage::disk('public')->delete("properties/propertyThumbs/{$project->image->getRawOriginal('path')}");
-                    }
+                    $previousThumbnail = $project->image?->getRawOriginal('path');
 
                     $imageFile = $request->file('thumbnail');
-                    $sanitizedName = $project->slug.'-thumbnail.'.$imageFile->getClientOriginalExtension();
+                    $sanitizedName = $project->slug.'-thumbnail-'.time().'-'.Str::random(8).'.'.$imageFile->getClientOriginalExtension();
                     if (! ImageOptimizer::optimizeAndStore($imageFile, 'properties/propertyThumbs', $sanitizedName, 'public', 1000, 80)) {
                         throw new \RuntimeException("Failed to store thumbnail image: {$sanitizedName}");
+                    }
+
+                    if ($previousThumbnail) {
+                        Storage::disk('public')->delete("properties/propertyThumbs/{$previousThumbnail}");
                     }
 
                     $image = $project->image ?: new Image;
@@ -812,13 +814,17 @@ class CMSController extends Controller
 
                 if ($request->hasFile('image')) {
                     $imageFile = $request->file('image');
+                    $previousImage = $popup->getRawOriginal('imagePath');
 
-                    if (Storage::disk('public')->exists(path: 'popup/'.$popup->getRawOriginal('imagePath'))) {
-                        Storage::disk('public')->delete('popup/'.$popup->getRawOriginal('imagePath'));
+                    $sanitizedName = 'popup-'.time().'-'.Str::random(8).'.'.$imageFile->getClientOriginalExtension();
+                    if (! ImageOptimizer::optimizeAndStore($imageFile, 'popup', $sanitizedName, 'public', 1200, 80)) {
+                        throw new \RuntimeException("Failed to store popup image: {$sanitizedName}");
                     }
 
-                    $sanitizedName = 'popup'.'.'.$imageFile->getClientOriginalExtension();
-                    ImageOptimizer::optimizeAndStore($imageFile, 'popup', $sanitizedName, 'public', 1200, 80);
+                    if ($previousImage && Storage::disk('public')->exists('popup/'.$previousImage)) {
+                        Storage::disk('public')->delete('popup/'.$previousImage);
+                    }
+
                     $popup->imagePath = $sanitizedName;
                     $popup->save();
                 }
