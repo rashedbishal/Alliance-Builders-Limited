@@ -287,11 +287,19 @@ class CMSController extends Controller
             if ($request->hasFile('image')) {
                 $imageFile = $request->file('image');
 
-                $sanitizedName = "carousel-image-{$request->input('position')}.".$imageFile->getClientOriginalExtension();
+                // Unique filename per upload so the CDN/browser cache can't keep
+                // serving a previous image under the same URL.
+                $sanitizedName = "carousel-image-{$request->input('position')}-".now()->timestamp.'-'.Str::random(8).'.'.$imageFile->getClientOriginalExtension();
 
-                Storage::disk('public')->delete("home/carousel/{$sanitizedName}"); // safe even aDDing
+                $previousImage = $carouselData->getRawOriginal('image');
 
-                ImageOptimizer::optimizeAndStore($imageFile, 'home/carousel', $sanitizedName, 'public', 1920, 80);
+                if (! ImageOptimizer::optimizeAndStore($imageFile, 'home/carousel', $sanitizedName, 'public', 1920, 80)) {
+                    throw new \RuntimeException('Failed to store the uploaded image.');
+                }
+
+                if ($previousImage) {
+                    Storage::disk('public')->delete("home/carousel/{$previousImage}");
+                }
 
                 // IMPORTANT: store only filename because model accessor adds the path
                 $carouselData->image = $sanitizedName;
