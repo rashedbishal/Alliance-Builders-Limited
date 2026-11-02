@@ -282,12 +282,12 @@ export default function Login({ status }: Props) {
                     initial={{ opacity: 0, y: 14 }}
                     animate={{ opacity: 1, y: 0 }}
                     transition={{ duration: 0.6, delay: 0.3 }}
-                    className="relative z-10 max-w-sm"
+                    className="relative z-10"
                 >
-                    <h2 className="text-3xl leading-tight font-semibold tracking-tight xl:text-4xl">
+                    <h2 className="text-xl font-semibold tracking-tight whitespace-nowrap lg:text-2xl xl:text-3xl">
                         Affordable Apartments for All
                     </h2>
-                    <p className="mt-3 text-sm text-white/55">
+                    <p className="mt-3 max-w-sm text-sm text-white/55">
                         Sign in to manage listings, media, and content for
                         Alliance Builders Limited.
                     </p>
@@ -303,25 +303,17 @@ export default function Login({ status }: Props) {
                     className="w-full max-w-sm"
                 >
                     {/* Logo shown only when the brand panel is hidden (mobile) */}
-                    <div className="mb-8 flex flex-col items-center gap-3 text-center lg:hidden">
-                        <Link
-                            href={home()}
-                            className="flex h-16 w-16 items-center justify-center rounded-2xl bg-secondary shadow-lg shadow-secondary/20"
-                        >
+                    <div className="mb-8 flex flex-col items-center gap-2 text-center lg:hidden">
+                        <Link href={home()}>
                             <img
                                 src={logo}
                                 alt="Alliance Builders Limited"
-                                className="h-9 w-auto object-contain"
+                                className="h-28 w-auto object-contain"
                             />
                         </Link>
-                        <div>
-                            <p className="font-semibold text-foreground">
-                                Alliance Builders Limited
-                            </p>
-                            <p className="text-xs text-muted-foreground">
-                                Affordable Apartments for All
-                            </p>
-                        </div>
+                        <p className="text-sm font-medium whitespace-nowrap text-muted-foreground">
+                            Affordable Apartments for All
+                        </p>
                     </div>
 
                     <div className="mb-8">
@@ -362,7 +354,6 @@ export default function Login({ status }: Props) {
                                                 autoFocus
                                                 tabIndex={1}
                                                 autoComplete="email"
-                                                placeholder="you@example.com"
                                                 className="h-11 pl-10 focus-visible:border-secondary focus-visible:ring-secondary/25"
                                             />
                                         </div>
@@ -388,7 +379,6 @@ export default function Login({ status }: Props) {
                                                 required
                                                 tabIndex={2}
                                                 autoComplete="current-password"
-                                                placeholder="Password"
                                                 className="h-11 pl-10 focus-visible:border-secondary focus-visible:ring-secondary/25"
                                             />
                                         </div>
