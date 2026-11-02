@@ -1,4 +1,5 @@
 import { Form, Head } from '@inertiajs/react';
+import { Lock, Mail } from 'lucide-react';
 import {route} from "ziggy-js";
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -32,19 +33,23 @@ export default function Login({
             >
                 {({ processing, errors }) => (
                     <>
-                        <div className="grid gap-6">
+                        <div className="grid gap-5">
                             <div className="grid gap-2">
                                 <Label htmlFor="email">Email address</Label>
-                                <Input
-                                    id="email"
-                                    type="email"
-                                    name="email"
-                                    required
-                                    autoFocus
-                                    tabIndex={1}
-                                    autoComplete="email"
-                                    placeholder="Email Address"
-                                />
+                                <div className="relative">
+                                    <Mail className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                    <Input
+                                        id="email"
+                                        type="email"
+                                        name="email"
+                                        required
+                                        autoFocus
+                                        tabIndex={1}
+                                        autoComplete="email"
+                                        placeholder="Email Address"
+                                        className="h-11 pl-10"
+                                    />
+                                </div>
                                 <InputError message={errors.email} />
                             </div>
 
@@ -52,21 +57,26 @@ export default function Login({
                                 <div className="flex items-center">
                                     <Label htmlFor="password">Password</Label>
                                 </div>
-                                <Input
-                                    id="password"
-                                    type="password"
-                                    name="password"
-                                    required
-                                    tabIndex={2}
-                                    autoComplete="current-password"
-                                    placeholder="Password"
-                                />
+                                <div className="relative">
+                                    <Lock className="pointer-events-none absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
+                                    <Input
+                                        id="password"
+                                        type="password"
+                                        name="password"
+                                        required
+                                        tabIndex={2}
+                                        autoComplete="current-password"
+                                        placeholder="Password"
+                                        className="h-11 pl-10"
+                                    />
+                                </div>
                                 <InputError message={errors.password} />
                             </div>
 
                             <Button
                                 type="submit"
-                                className="mt-4 w-full"
+                                size="lg"
+                                className="mt-2 w-full shadow-md shadow-primary/20"
                                 tabIndex={4}
                                 disabled={processing}
                                 data-test="login-button"
