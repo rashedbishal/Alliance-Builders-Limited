@@ -44,6 +44,7 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     // ── Site Settings ────────────────────────────────────────────
     Route::get('cms/settings', 'settingsIndex')->name('settings-index');
     Route::post('cms/settings', 'updateSettings')->name('update-settings');
+    Route::post('cms/settings/credentials', 'updateAdminCredentials')->name('update-admin-credentials');
 
     // ── Testimonial Settings ─────────────────────────────────────
     Route::get('cms/testimonials', 'testimonialIndex')->name('testimonial-index');

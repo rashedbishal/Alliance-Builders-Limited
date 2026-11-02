@@ -5,9 +5,12 @@ import type { SiteSetting } from '@/cms/types/cms';
 
 interface Props {
     settings: SiteSetting;
+    admin: {
+        email: string;
+    };
 }
 
-export default function SettingsIndex({ settings }: Props) {
+export default function SettingsIndex({ settings, admin }: Props) {
     const { data, setData, post, processing, errors, clearErrors } = useForm({
         header_phone: settings.header_phone ?? '',
         footer_phone: settings.footer_phone ?? '',
@@ -20,6 +23,31 @@ export default function SettingsIndex({ settings }: Props) {
         e.preventDefault();
         post(route('update-settings'), {
             preserveScroll: true,
+        });
+    };
+
+    const {
+        data: credentialsData,
+        setData: setCredentialsData,
+        post: postCredentials,
+        processing: credentialsProcessing,
+        errors: credentialsErrors,
+        clearErrors: clearCredentialsErrors,
+        reset: resetCredentials,
+    } = useForm({
+        current_password: '',
+        email: admin.email,
+        password: '',
+        password_confirmation: '',
+    });
+
+    const handleCredentialsSubmit = (e: React.FormEvent) => {
+        e.preventDefault();
+        postCredentials(route('update-admin-credentials'), {
+            preserveScroll: true,
+            onSuccess: () => {
+                resetCredentials('current_password', 'password', 'password_confirmation');
+            },
         });
     };
 
@@ -220,6 +248,180 @@ export default function SettingsIndex({ settings }: Props) {
                 >
                     {processing ? 'Saving...' : 'Save Settings'}
                 </button>
+            </form>
+
+            <form onSubmit={handleCredentialsSubmit}>
+                <div className="section-card">
+                    <div className="section-title">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                        >
+                            <rect x="3" y="11" width="18" height="11" rx="2" />
+                            <path d="M7 11V7a5 5 0 0 1 10 0v4" />
+                        </svg>
+                        Login Email &amp; Password
+                    </div>
+
+                    <p
+                        style={{
+                            marginTop: -8,
+                            marginBottom: 18,
+                            fontSize: '0.78rem',
+                            color: 'var(--muted)',
+                        }}
+                    >
+                        Change the email and password used to log into this
+                        dashboard. Your current password is required to
+                        confirm any change.
+                    </p>
+
+                    <div className="form-group">
+                        <label>
+                            Current Password{' '}
+                            <span style={{ color: '#FF8080' }}>*</span>
+                        </label>
+                        <input
+                            type="password"
+                            required
+                            autoComplete="current-password"
+                            value={credentialsData.current_password}
+                            onChange={(e) => {
+                                clearCredentialsErrors('current_password');
+                                setCredentialsData(
+                                    'current_password',
+                                    e.target.value,
+                                );
+                            }}
+                            placeholder="Enter your current password"
+                        />
+                        {credentialsErrors.current_password && (
+                            <span
+                                style={{
+                                    marginTop: 4,
+                                    display: 'block',
+                                    color: '#FF8080',
+                                    fontSize: '0.78rem',
+                                }}
+                            >
+                                {credentialsErrors.current_password}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="form-group">
+                        <label>
+                            Login Email{' '}
+                            <span style={{ color: '#FF8080' }}>*</span>
+                        </label>
+                        <input
+                            type="text"
+                            required
+                            autoComplete="email"
+                            value={credentialsData.email}
+                            onChange={(e) => {
+                                clearCredentialsErrors('email');
+                                setCredentialsData('email', e.target.value);
+                            }}
+                            placeholder="admin@example.com"
+                        />
+                        {credentialsErrors.email && (
+                            <span
+                                style={{
+                                    marginTop: 4,
+                                    display: 'block',
+                                    color: '#FF8080',
+                                    fontSize: '0.78rem',
+                                }}
+                            >
+                                {credentialsErrors.email}
+                            </span>
+                        )}
+                    </div>
+
+                    <div className="form-row cols-2">
+                        <div className="form-group">
+                            <label>New Password</label>
+                            <input
+                                type="password"
+                                autoComplete="new-password"
+                                value={credentialsData.password}
+                                onChange={(e) => {
+                                    clearCredentialsErrors('password');
+                                    setCredentialsData(
+                                        'password',
+                                        e.target.value,
+                                    );
+                                }}
+                                placeholder="Leave blank to keep current password"
+                            />
+                            {credentialsErrors.password && (
+                                <span
+                                    style={{
+                                        marginTop: 4,
+                                        display: 'block',
+                                        color: '#FF8080',
+                                        fontSize: '0.78rem',
+                                    }}
+                                >
+                                    {credentialsErrors.password}
+                                </span>
+                            )}
+                            <p
+                                style={{
+                                    marginTop: 6,
+                                    fontSize: '0.72rem',
+                                    color: 'var(--muted)',
+                                }}
+                            >
+                                Minimum 8 characters, must include both
+                                letters and numbers.
+                            </p>
+                        </div>
+                        <div className="form-group">
+                            <label>Confirm New Password</label>
+                            <input
+                                type="password"
+                                autoComplete="new-password"
+                                value={credentialsData.password_confirmation}
+                                onChange={(e) => {
+                                    clearCredentialsErrors(
+                                        'password_confirmation',
+                                    );
+                                    setCredentialsData(
+                                        'password_confirmation',
+                                        e.target.value,
+                                    );
+                                }}
+                                placeholder="Repeat the new password"
+                            />
+                            {credentialsErrors.password_confirmation && (
+                                <span
+                                    style={{
+                                        marginTop: 4,
+                                        display: 'block',
+                                        color: '#FF8080',
+                                        fontSize: '0.78rem',
+                                    }}
+                                >
+                                    {credentialsErrors.password_confirmation}
+                                </span>
+                            )}
+                        </div>
+                    </div>
+
+                    <button
+                        type="submit"
+                        className="btn-primary"
+                        disabled={credentialsProcessing}
+                    >
+                        {credentialsProcessing
+                            ? 'Saving...'
+                            : 'Update Login Credentials'}
+                    </button>
+                </div>
             </form>
         </CMSLayout>
     );

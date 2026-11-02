@@ -24,6 +24,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Validation\Rule;
+use Illuminate\Validation\Rules\Password;
 use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -842,6 +844,9 @@ class CMSController extends Controller
     {
         return Inertia::render('cms/settings/Index', [
             'settings' => SiteSetting::firstOrCreate(['id' => 1]),
+            'admin' => [
+                'email' => auth()->user()->email,
+            ],
         ]);
     }
 
@@ -865,6 +870,27 @@ class CMSController extends Controller
         ]));
 
         return redirect()->route('settings-index')->with('success', 'Operation Successful');
+    }
+
+    public function updateAdminCredentials(Request $request)
+    {
+        $user = $request->user();
+
+        $request->validate([
+            'current_password' => ['required', 'string', 'current_password'],
+            'email' => ['required', 'string', 'email', 'max:255', Rule::unique('users', 'email')->ignore($user->id)],
+            'password' => ['nullable', 'string', 'confirmed', Password::min(8)->letters()->numbers()],
+        ]);
+
+        $user->email = $request->input('email');
+
+        if ($request->filled('password')) {
+            $user->password = $request->input('password');
+        }
+
+        $user->save();
+
+        return redirect()->route('settings-index')->with('success', 'Login credentials updated successfully.');
     }
 
     public function testimonialIndex()
