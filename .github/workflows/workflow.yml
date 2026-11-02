@@ -72,9 +72,10 @@ jobs:
         run: |
           ssh -p ${{ secrets.HOSTINGER_PORT }} -i ~/.ssh/id_ed25519 -o StrictHostKeyChecking=accept-new \
             ${{ secrets.HOSTINGER_USER }}@${{ secrets.HOSTINGER_HOST }} << 'EOF'
+              set -e
               cd ${{ secrets.HOSTINGER_PATH }}
               chmod -R 775 storage bootstrap/cache
               php artisan optimize:clear
               php artisan migrate --force
-              ln -s ../storage/app/public public/storage
+              ln -sfn ../storage/app/public public/storage
           EOF
