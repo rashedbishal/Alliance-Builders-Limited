@@ -31,10 +31,10 @@ export default defineConfig({
     esbuild: {
         jsx: 'automatic',
     },
-    // server: {
-    //     // watch: {
-    //     //     ignored: ['**/storage/framework/views/**'],
-    //     // },
-    //     host: '192.168.0.113',
-    // },
+    server: {
+        // watch: {
+        //     ignored: ['**/storage/framework/views/**'],
+        // },
+        host: '192.168.0.113',
+    },
 });
