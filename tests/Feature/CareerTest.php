@@ -375,6 +375,27 @@ class CareerTest extends TestCase
         Storage::disk('public')->assertMissing('career/'.$stored);
     }
 
+    public function test_sanitizer_keeps_only_safe_color_and_font_size_styles(): void
+    {
+        $html = RichTextSanitizer::clean(
+            '<h2><span style="color: #EF4444; font-size: 24px">Red</span></h2>'
+            .'<p><span style="color: rgb(51, 95, 230)">Blue</span>'
+            .'<span style="background:url(x); color: expression(alert(1)); font-size: 999px">bad</span>'
+            .'<span style="position:fixed;top:0">fixed</span>'
+            .'<p style="color: red">para</p>'
+            .'<span onclick="a()" style="font-size: 14px">ok</span></p>'
+        );
+
+        $this->assertStringContainsString('<span style="color: #ef4444; font-size: 24px">Red</span>', $html);
+        $this->assertStringContainsString('<span style="color: rgb(51, 95, 230)">Blue</span>', $html);
+        $this->assertStringContainsString('<span>bad</span>', $html);
+        $this->assertStringContainsString('<span>fixed</span>', $html);
+        $this->assertStringContainsString('<span style="font-size: 14px">ok</span>', $html);
+        foreach (['url(', 'expression', '999px', 'position', 'onclick', '<p style'] as $bad) {
+            $this->assertStringNotContainsString($bad, $html);
+        }
+    }
+
     public function test_sanitizer_blank_detection(): void
     {
         $this->assertTrue(RichTextSanitizer::isBlank('<p></p>'));

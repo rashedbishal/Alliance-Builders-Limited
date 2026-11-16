@@ -18,6 +18,8 @@ class RichTextSanitizer
         'ul' => [], 'ol' => [], 'li' => [],
         'blockquote' => [],
         'a' => ['href'],
+        // Only color / font-size survive, see RichTextStyleSanitizer.
+        'span' => ['style'],
     ];
 
     public static function clean(?string $html): string
@@ -30,6 +32,7 @@ class RichTextSanitizer
             ->allowLinkSchemes(['https', 'http', 'mailto'])
             ->forceAttribute('a', 'rel', 'noopener noreferrer nofollow')
             ->forceAttribute('a', 'target', '_blank')
+            ->withAttributeSanitizer(new RichTextStyleSanitizer)
             ->withMaxInputLength(100_000);
 
         foreach (self::ALLOWED_ELEMENTS as $element => $attributes) {
