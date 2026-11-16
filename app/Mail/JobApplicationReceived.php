@@ -19,8 +19,11 @@ class JobApplicationReceived extends Mailable
 
     public function envelope(): Envelope
     {
+        // Email is optional for candidates; only set Reply-To when given.
         return new Envelope(
-            replyTo: [new Address($this->application->email, $this->application->name)],
+            replyTo: $this->application->email
+                ? [new Address($this->application->email, $this->application->name)]
+                : [],
             subject: 'New Job Application: '.$this->application->job_title.' — '.$this->application->name,
         );
     }

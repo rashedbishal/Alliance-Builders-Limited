@@ -7,7 +7,9 @@
       "Bash(npx --no-install playwright --version)",
       "Read(//home/saadman/.npm/_npx/**)",
       "Bash(timeout 120 node shoot.cjs)",
-      "Bash(grep -n '\\\\${inputClass}' resources/js/pages/Career.tsx)"
+      "Bash(grep -n '\\\\${inputClass}' resources/js/pages/Career.tsx)",
+      "Bash(python3 -)",
+      "Bash(vendor/bin/pint --test app/Http/Controllers/CareerController.php app/Mail database/migrations/2026_11_16_120000_make_job_applications_email_nullable.php tests/Feature/CareerTest.php)"
     ]
   }
 }

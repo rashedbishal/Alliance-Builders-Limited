@@ -53,6 +53,24 @@ class CareerTest extends TestCase
         ], $overrides);
     }
 
+    /** A complete, valid CMS job post form submission. */
+    private function jobForm(array $overrides = []): array
+    {
+        return array_merge([
+            'title' => 'Accountant',
+            'department' => 'Finance',
+            'location' => 'Dhaka Head Office',
+            'job_type' => 'Full-time',
+            'vacancies' => 2,
+            'experience' => '3-5 years',
+            'salary' => 'Negotiable',
+            'deadline' => today()->addWeek()->toDateString(),
+            'description' => '<p>Keep the books.</p>',
+            'notification_email' => 'hr@example.com',
+            'is_active' => true,
+        ], $overrides);
+    }
+
     // ── Public page ────────────────────────────────────────────
 
     public function test_career_page_renders_and_is_not_swallowed_by_property_catch_all(): void
@@ -97,6 +115,23 @@ class CareerTest extends TestCase
 
         Mail::assertSent(JobApplicationReceived::class, fn ($mail) => $mail->hasTo('hr@example.com')
             && $mail->application->is($application));
+    }
+
+    public function test_applicant_email_is_optional(): void
+    {
+        $job = $this->job(['notification_email' => 'hr@example.com']);
+
+        $this->post('/career', $this->payload(['job_post_id' => $job->id, 'email' => '']))
+            ->assertSessionHasNoErrors();
+
+        $application = JobApplication::sole();
+        $this->assertNull($application->email);
+        Mail::assertSent(JobApplicationReceived::class, fn ($mail) => $mail->hasTo('hr@example.com')
+            && $mail->replyTo === []);
+
+        RateLimiter::clear('career-apply:127.0.0.1');
+        $this->post('/career', $this->payload(['job_post_id' => $job->id, 'email' => 'not-an-email']))
+            ->assertSessionHasErrors('email');
     }
 
     public function test_no_email_is_sent_when_job_has_no_notification_email(): void
@@ -265,15 +300,9 @@ class CareerTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        $this->post(route('career-job-store'), [
-            'title' => 'Accountant',
-            'job_type' => 'Full-time',
-            'vacancies' => 2,
-            'deadline' => today()->addWeek()->toDateString(),
+        $this->post(route('career-job-store'), $this->jobForm([
             'description' => '<h2>About</h2><p onclick="x()">Hi <strong>there</strong></p><script>alert(1)</script><a href="javascript:alert(1)">bad</a><a href="https://example.com">good</a>',
-            'notification_email' => 'hr@example.com',
-            'is_active' => true,
-        ])->assertSessionHasNoErrors()->assertRedirect(route('career-jobs'));
+        ]))->assertSessionHasNoErrors()->assertRedirect(route('career-jobs'));
 
         $job = JobPost::sole();
         $this->assertStringNotContainsString('<script', $job->description);
@@ -288,11 +317,21 @@ class CareerTest extends TestCase
     {
         $this->actingAs(User::factory()->create());
 
-        $this->post(route('career-job-store'), [
-            'title' => 'Accountant',
+        $this->post(route('career-job-store'), $this->jobForm([
             'description' => '<p></p><script>x</script>',
-            'is_active' => true,
-        ])->assertSessionHasErrors('description');
+        ]))->assertSessionHasErrors('description');
+
+        $this->assertSame(0, JobPost::count());
+    }
+
+    public function test_all_job_post_fields_are_required(): void
+    {
+        $this->actingAs(User::factory()->create());
+
+        $fields = ['title', 'department', 'location', 'job_type', 'vacancies', 'experience', 'salary', 'deadline', 'description', 'notification_email'];
+
+        $this->post(route('career-job-store'), array_fill_keys($fields, '') + ['is_active' => true])
+            ->assertSessionHasErrors($fields);
 
         $this->assertSame(0, JobPost::count());
     }
@@ -302,12 +341,11 @@ class CareerTest extends TestCase
         $this->actingAs(User::factory()->create());
         $job = $this->job();
 
-        $this->post(route('career-job-update'), [
+        $this->post(route('career-job-update'), $this->jobForm([
             'job_post_id' => $job->id,
             'title' => 'Senior Site Engineer',
             'description' => '<p>Updated</p>',
-            'is_active' => true,
-        ])->assertSessionHasNoErrors();
+        ]))->assertSessionHasNoErrors();
         $this->assertSame('Senior Site Engineer', $job->fresh()->title);
 
         $this->post(route('career-job-toggle'), ['job_post_id' => $job->id]);

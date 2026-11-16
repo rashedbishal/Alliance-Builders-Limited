@@ -119,9 +119,12 @@ function JobForm({
                     <FieldError message={errors.title} />
                 </div>
                 <div className="form-group">
-                    <label>Department</label>
+                    <label>
+                        Department <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
                         type="text"
+                        required
                         maxLength={255}
                         value={data.department}
                         onChange={(e) => set('department', e.target.value)}
@@ -130,9 +133,12 @@ function JobForm({
                     <FieldError message={errors.department} />
                 </div>
                 <div className="form-group">
-                    <label>Location</label>
+                    <label>
+                        Location <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
                         type="text"
+                        required
                         maxLength={255}
                         value={data.location}
                         onChange={(e) => set('location', e.target.value)}
@@ -144,12 +150,17 @@ function JobForm({
 
             <div className="form-row cols-4">
                 <div className="form-group">
-                    <label>Job Type</label>
+                    <label>
+                        Job Type <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <select
+                        required
                         value={data.job_type}
                         onChange={(e) => set('job_type', e.target.value)}
                     >
-                        <option value="">— Not specified —</option>
+                        <option value="" disabled>
+                            — Select job type —
+                        </option>
                         {jobTypes.map((t) => (
                             <option key={t} value={t}>
                                 {t}
@@ -159,9 +170,12 @@ function JobForm({
                     <FieldError message={errors.job_type} />
                 </div>
                 <div className="form-group">
-                    <label>Vacancies</label>
+                    <label>
+                        Vacancies <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
                         type="number"
+                        required
                         min={1}
                         max={9999}
                         value={data.vacancies}
@@ -171,9 +185,12 @@ function JobForm({
                     <FieldError message={errors.vacancies} />
                 </div>
                 <div className="form-group">
-                    <label>Experience</label>
+                    <label>
+                        Experience <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
                         type="text"
+                        required
                         maxLength={255}
                         value={data.experience}
                         onChange={(e) => set('experience', e.target.value)}
@@ -182,9 +199,12 @@ function JobForm({
                     <FieldError message={errors.experience} />
                 </div>
                 <div className="form-group">
-                    <label>Salary</label>
+                    <label>
+                        Salary <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
                         type="text"
+                        required
                         maxLength={255}
                         value={data.salary}
                         onChange={(e) => set('salary', e.target.value)}
@@ -196,22 +216,30 @@ function JobForm({
 
             <div className="form-row cols-2">
                 <div className="form-group">
-                    <label>Application Deadline</label>
+                    <label>
+                        Application Deadline{' '}
+                        <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
                         type="date"
+                        required
                         value={data.deadline}
                         onChange={(e) => set('deadline', e.target.value)}
                     />
                     <span style={hintStyle}>
-                        Optional. The post is hidden from the Career page
-                        automatically after this date.
+                        The post is hidden from the Career page automatically
+                        after this date.
                     </span>
                     <FieldError message={errors.deadline} />
                 </div>
                 <div className="form-group">
-                    <label>Notification Email</label>
+                    <label>
+                        Notification Email{' '}
+                        <span style={{ color: '#FF8080' }}>*</span>
+                    </label>
                     <input
-                        type="text"
+                        type="email"
+                        required
                         inputMode="email"
                         maxLength={255}
                         value={data.notification_email}
@@ -221,8 +249,8 @@ function JobForm({
                         placeholder="e.g. hr@alliancebuildersltd.org"
                     />
                     <span style={hintStyle}>
-                        Optional. Every application for this job is emailed here
-                        with the CV attached. Leave empty to send no email.
+                        Every application for this job is emailed here with the
+                        CV attached.
                     </span>
                     <FieldError message={errors.notification_email} />
                 </div>

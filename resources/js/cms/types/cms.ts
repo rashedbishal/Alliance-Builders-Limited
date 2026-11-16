@@ -173,7 +173,7 @@ export interface JobApplication {
   job_title: string;
   name: string;
   phone: string;
-  email: string;
+  email: string | null;
   message: string;
   cv_original_name: string;
   created_at: string;

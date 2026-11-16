@@ -68,7 +68,7 @@ class CareerController extends Controller
             'custom_position' => ['required_without:job_post_id', 'nullable', 'string', 'max:255'],
             'name' => ['required', 'string', 'max:255'],
             'phone' => ['required', 'string', 'regex:/^01[3-9][0-9]{8}$/'],
-            'email' => ['required', 'email', 'max:255'],
+            'email' => ['nullable', 'email', 'max:255'],
             'message' => ['required', 'string', 'max:5000'],
             'cv' => ['required', 'file', 'extensions:pdf,docx', 'mimes:pdf,docx', 'max:'.self::CV_MAX_KB],
         ], [
@@ -98,7 +98,7 @@ class CareerController extends Controller
                 'job_title' => $jobPost?->title ?? trim($validated['custom_position']),
                 'name' => $validated['name'],
                 'phone' => $validated['phone'],
-                'email' => $validated['email'],
+                'email' => $validated['email'] ?? null,
                 'message' => $validated['message'],
                 'cv_path' => $storedName,
                 'cv_original_name' => Str::limit($cvFile->getClientOriginalName(), 250, ''),
@@ -210,15 +210,15 @@ class CareerController extends Controller
     {
         return [
             'title' => ['required', 'string', 'max:255'],
-            'department' => ['nullable', 'string', 'max:255'],
-            'location' => ['nullable', 'string', 'max:255'],
-            'job_type' => ['nullable', 'string', Rule::in(JobPost::JOB_TYPES)],
-            'vacancies' => ['nullable', 'integer', 'min:1', 'max:9999'],
-            'experience' => ['nullable', 'string', 'max:255'],
-            'salary' => ['nullable', 'string', 'max:255'],
-            'deadline' => ['nullable', 'date'],
+            'department' => ['required', 'string', 'max:255'],
+            'location' => ['required', 'string', 'max:255'],
+            'job_type' => ['required', 'string', Rule::in(JobPost::JOB_TYPES)],
+            'vacancies' => ['required', 'integer', 'min:1', 'max:9999'],
+            'experience' => ['required', 'string', 'max:255'],
+            'salary' => ['required', 'string', 'max:255'],
+            'deadline' => ['required', 'date'],
             'description' => ['required', 'string', 'max:100000'],
-            'notification_email' => ['nullable', 'email', 'max:255'],
+            'notification_email' => ['required', 'email', 'max:255'],
             'is_active' => ['required', 'boolean'],
         ];
     }

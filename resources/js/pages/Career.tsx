@@ -358,9 +358,7 @@ const Career = ({ settings, jobs }: Props) => {
         if (!data.name.trim()) {
             errs.name = 'Please enter your full name.';
         }
-        if (!data.email.trim()) {
-            errs.email = 'Please enter your email address.';
-        } else if (!EMAIL_REGEX.test(data.email.trim())) {
+        if (data.email.trim() && !EMAIL_REGEX.test(data.email.trim())) {
             errs.email = 'Please enter a valid email address.';
         }
         if (!PHONE_REGEX.test(data.phone)) {
@@ -972,7 +970,10 @@ const Career = ({ settings, jobs }: Props) => {
                                                     htmlFor="email"
                                                     className={labelClass}
                                                 >
-                                                    Email Address
+                                                    Email Address{' '}
+                                                    <span className="tracking-normal text-white/30 normal-case">
+                                                        (optional)
+                                                    </span>
                                                 </label>
                                                 <input
                                                     id="email"
@@ -989,7 +990,6 @@ const Career = ({ settings, jobs }: Props) => {
                                                     }}
                                                     className={inputClass}
                                                     placeholder="you@example.com"
-                                                    required
                                                     {...fieldA11y('email')}
                                                 />
                                                 <FieldError

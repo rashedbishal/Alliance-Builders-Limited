@@ -472,14 +472,27 @@ export default function CareerApplications({ applications }: Props) {
                                                                 </a>
                                                             </DetailRow>
                                                             <DetailRow label="Email">
-                                                                <a
-                                                                    href={`mailto:${app.email}`}
-                                                                    style={{
-                                                                        color: 'var(--gold)',
-                                                                    }}
-                                                                >
-                                                                    {app.email}
-                                                                </a>
+                                                                {app.email ? (
+                                                                    <a
+                                                                        href={`mailto:${app.email}`}
+                                                                        style={{
+                                                                            color: 'var(--gold)',
+                                                                        }}
+                                                                    >
+                                                                        {
+                                                                            app.email
+                                                                        }
+                                                                    </a>
+                                                                ) : (
+                                                                    <span
+                                                                        style={{
+                                                                            color: 'var(--muted)',
+                                                                        }}
+                                                                    >
+                                                                        Not
+                                                                        provided
+                                                                    </span>
+                                                                )}
                                                             </DetailRow>
                                                             <DetailRow label="Submitted">
                                                                 {formatDateTime(

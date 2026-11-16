@@ -30,7 +30,7 @@
                     </tr>
                     <tr style="border-bottom:1px solid #e5e7eb;">
                         <td style="color:#6b7280;">Email</td>
-                        <td>{{ $application->email }}</td>
+                        <td>{{ $application->email ?: 'Not provided' }}</td>
                     </tr>
                     <tr style="border-bottom:1px solid #e5e7eb;">
                         <td style="color:#6b7280;">Submitted</td>
@@ -39,7 +39,7 @@
                 </table>
                 <p style="margin:20px 0 6px;color:#6b7280;font-size:14px;">Cover Letter</p>
                 <div style="white-space:pre-line;font-size:14px;line-height:1.6;background:#f9fafb;border:1px solid #e5e7eb;border-radius:6px;padding:14px;">{{ $application->message }}</div>
-                <p style="margin:20px 0 0;font-size:13px;color:#6b7280;">The candidate's CV is attached ({{ $application->cv_original_name }}). You can reply directly to this email to contact the candidate.</p>
+                <p style="margin:20px 0 0;font-size:13px;color:#6b7280;">The candidate's CV is attached ({{ $application->cv_original_name }}).@if ($application->email) You can reply directly to this email to contact the candidate.@endif</p>
             </td>
         </tr>
     </table>
