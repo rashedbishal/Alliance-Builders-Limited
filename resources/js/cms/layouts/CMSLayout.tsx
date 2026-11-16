@@ -62,6 +62,7 @@ export default function CMSLayout({
         if (currentRoute('property-*')) menus['property'] = true;
         if (currentRoute('facility-*') || currentRoute('tag-*'))
             menus['config'] = true;
+        if (currentRoute('career-*')) menus['career'] = true;
         setOpenMenus(menus);
     }, []);
 
@@ -658,6 +659,59 @@ export default function CMSLayout({
                                 className={`submenu-link ${currentRoute('tag-delete') ? 'submenu-link-active' : ''}`}
                             >
                                 Delete Tag
+                            </Link>
+                        </div>
+                    </div>
+                    {/* Career */}
+                    <div>
+                        <button
+                            className={`nav-link-base ${currentRoute('career-*') ? 'nav-link-active' : ''}`}
+                            onClick={() => toggleMenu('career')}
+                        >
+                            <NavIcon>
+                                <rect x="2" y="7" width="20" height="14" rx="2" />
+                                <path d="M16 7V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v2" />
+                                <path d="M2 13h20" />
+                            </NavIcon>
+                            Career
+                            <svg
+                                style={{
+                                    marginLeft: 'auto',
+                                    width: 14,
+                                    height: 14,
+                                    transition: 'transform 0.25s',
+                                    transform: openMenus['career']
+                                        ? 'rotate(90deg)'
+                                        : 'none',
+                                }}
+                                viewBox="0 0 24 24"
+                                fill="none"
+                                stroke="currentColor"
+                                strokeWidth="2"
+                            >
+                                <path d="M9 18l6-6-6-6" />
+                            </svg>
+                        </button>
+                        <div
+                            className={`submenu ${openMenus['career'] ? 'open' : ''}`}
+                        >
+                            <Link
+                                href={route('career-settings')}
+                                className={`submenu-link ${currentRoute('career-settings') ? 'submenu-link-active' : ''}`}
+                            >
+                                Page Settings
+                            </Link>
+                            <Link
+                                href={route('career-jobs')}
+                                className={`submenu-link ${currentRoute('career-jobs') ? 'submenu-link-active' : ''}`}
+                            >
+                                Job Posts
+                            </Link>
+                            <Link
+                                href={route('career-applications')}
+                                className={`submenu-link ${currentRoute('career-applications') ? 'submenu-link-active' : ''}`}
+                            >
+                                Applications
                             </Link>
                         </div>
                     </div>

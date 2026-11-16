@@ -7,15 +7,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 Laravel 12 + Inertia.js + React 19 (TypeScript) site for Alliance Builders Limited, built on the `laravel/react-starter-kit`. It serves two distinct front ends from one app:
 
 - **Public marketing site** — pages, properties, directors, media, contact form, chatbot.
-- **CMS admin** (`/dashboard`, `/cms/...`, auth-gated) — manages carousels, projects, media coverage, galleries, popups, and config (facilities, tags).
+- **CMS admin** (`/dashboard`, `/cms/...`, auth-gated) — manages carousels, projects, media coverage, galleries, popups, testimonials, contact submissions, and config (facilities, tags).
 
 ## Commands
 
 ### PHP / Laravel
+- `composer setup` — first-time install: composer/npm install, copy `.env`, key:generate, migrate, build.
 - `composer dev` — runs the full local dev stack concurrently: `php artisan serve`, queue listener, `php artisan pail` (logs), and `npm run dev` (Vite). This is the normal way to run the app locally.
 - `composer dev:ssr` — same, but builds and serves with Inertia SSR.
 - `composer test` — clears config, runs Pint in check mode (`test:lint`), then `php artisan test`.
-- `php artisan test --filter=TestName` — run a single test.
+- `php artisan test --filter=TestName` — run a single test. Tests are PHPUnit classes (not Pest) and run against in-memory SQLite (`phpunit.xml`).
 - `php artisan test tests/Feature/Settings/ProfileUpdateTest.php` — run a single test file.
 - `composer lint` / `vendor/bin/pint --parallel` — auto-fix PHP style (Laravel preset, see `pint.json`).
 - `vendor/bin/pint --parallel --test` — check PHP style without fixing.
@@ -38,23 +39,34 @@ Laravel 12 + Inertia.js + React 19 (TypeScript) site for Alliance Builders Limit
 - `routes/console.php` — artisan commands.
 
 ### Inertia page resolution
-`resources/js/app.tsx` resolves Inertia page components from **two** directories via `import.meta.glob`: `resources/js/pages/**/*.tsx` (public site + auth + settings) and `resources/js/cms/pages/**/*.tsx` (CMS admin, referenced from controllers as e.g. `Inertia::render('cms/project/Add')`). When adding a new Inertia-rendered page, place it under the matching directory so the glob resolves it — public pages/components live at the top level of `resources/js/{pages,components,layouts}`, CMS-only code lives under `resources/js/cms/{pages,components,layouts,types}`.
+`resources/js/app.tsx` resolves Inertia page components from **two** directories via `import.meta.glob`: `resources/js/pages/**/*.tsx` (public site + auth + settings) and `resources/js/cms/pages/**/*.tsx` (CMS admin). Lookup tries `./pages/{name}.tsx` first, then `./cms/pages/{name}.tsx`, and CMS render names already start with `cms/` — so `Inertia::render('cms/property/Add')` resolves to `resources/js/cms/pages/cms/property/Add.tsx` (note the doubled `cms`). Pages are globbed eagerly (no code-splitting). When adding a new Inertia-rendered page, place it under the matching directory so the glob resolves it — public pages/components live at the top level of `resources/js/{pages,components,layouts}`, CMS-only code lives under `resources/js/cms/{pages,components,layouts,types}`.
 
 ### Domain models (`app/Models`)
 Organized by domain into subdirectories rather than flat:
 - `Config/` — reference/config data: `Facility`, `Tag`, `Location`, `ProjectType`, `Details`, `Metadata`.
 - `Properties/` — `Project`, the core listing model (route-bound by `slug`, generated via `Str::slug($name)` on save).
-- `Visual/` — `Image`, `Video`, `Gallery`, `Carousel`, `ProjectImage` — mostly polymorphic (`morphOne`/`morphMany`/`morphToMany`) attachments to other models.
+- `Visual/` — `Image`, `Video`, `Gallery`, `Carousel`, `ProjectImage`, `Testimonial` — mostly polymorphic (`morphOne`/`morphMany`/`morphToMany`) attachments to other models.
 - `Inquiry/` — `Contact` (contact form submissions).
 - `Releases/` — `MediaCoverage`, `Popup`.
+- `Career/` — `CareerSetting` (singleton row id 1, via `CareerSetting::current()`), `JobPost` (`open()` scope = active and deadline not passed), `JobApplication`.
 
 Shared relationship/behavior logic is factored into traits under `app/Concerns/` (`HasImage`, `HasImages`, `HasVideo`, `HasVideos`, `HasFacilities`, `HasTags`, `HasDetails`, `HasMetadata`, `HasProjects`, plus Fortify validation rule traits) and composed into models like `Project` — check there before adding a new polymorphic relation, since a suitable trait likely exists already.
 
 ### Controllers
 - `PageController` — all public-facing pages (home, about, services, properties, directors, gallery, media, contact, legal pages). Rendered from `resources/js/pages`.
-- `CMSController` — all admin CRUD for carousels, projects, media, galleries, popups, and config entities (facilities, tags). Rendered from `resources/js/cms/pages`. Also handles feedback export to XLSX via PhpSpreadsheet.
+- `CMSController` — all admin CRUD for carousels, projects, media, galleries, popups, testimonials, and config entities (facilities, tags). Rendered from `resources/js/cms/pages`. Also handles feedback export to XLSX via PhpSpreadsheet.
 - `ChatbotController` — `/chatbot` POST endpoint; proxies to Groq's OpenAI-compatible chat completions API (`llama-3.3-70b-versatile`), keyed via `GROQ_API_KEY` (`config('services.groq.key')`).
+- `CareerController` — the Career feature end to end: public `/career` page + application POST (registered before `PageController`'s `{project:slug}` catch-all so it isn't swallowed), and the CMS Career pages (`cms/career/*`). Kept separate from `CMSController`/`PageController`.
 - `Settings/*Controller` — profile, password, two-factor auth (Fortify-backed).
+
+### File uploads
+CMS uploads are stored on the `public` disk (served via the `public/storage` symlink) under per-feature folders (e.g. `home/carousel/`, `properties/propertyThumbs/`); models store the filename, and `CMSController` deletes the previous file when an image is replaced. Use `App\Services\ImageOptimizer::optimizeAndStore()` for new image uploads — it resizes to a max dimension and re-encodes via GD, falling back to a plain `storeAs` when GD/the format isn't available.
+
+### Career feature specifics
+- CVs are stored on the **private** `local` disk (`storage/app/private/career/cv`), never `public`; admins download them via the auth-gated `career-application-cv` route. Deleting an application deletes its CV file; deleting a job post keeps its applications (`job_post_id` → null, `job_title` snapshot kept).
+- Job descriptions come from a Tiptap editor (`resources/js/cms/components/RichTextEditor.tsx`) and are sanitized server-side by `App\Services\RichTextSanitizer` (symfony/html-sanitizer) before storage — keep the editor's allowed formatting and the sanitizer whitelist in sync.
+- Notification email (`App\Mail\JobApplicationReceived`, CV attached) is sent synchronously after the application is saved: to the job's `notification_email`, or for unlisted/"Other" positions to `CareerSetting.default_email`; no email if unset. Mail failures are logged, never surfaced to the candidate. Production needs real `MAIL_*` SMTP settings.
+- Prettier's Tailwind plugin trims leading spaces inside class-string template literals (`` `foo${x ? ' on' : ''}` `` becomes `fooon`) — write full class strings in ternaries instead.
 
 ### Frontend conventions
 - Path alias `@` → `resources/js`, `@images` → `resources/images` (see `vite.config.ts`).

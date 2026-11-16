@@ -31,7 +31,8 @@ const Footer = () => {
     { label: "Home", href: "/" },
     { label: "About Us", href: "/about" },
     { label: "Gallery", href: "/gallery" },
-    { label: "Contact", href: "/contact" }
+    { label: "Contact", href: "/contact" },
+    { label: "Career", href: "/career" }
   ];
 
   const projectStatus = [

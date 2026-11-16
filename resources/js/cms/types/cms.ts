@@ -140,3 +140,41 @@ export interface Project {
     image?: { path: string };
     project_images?: ProjectImage[];
 }
+
+export interface CareerSettings {
+  id: number;
+  hero_image: string | null;
+  heading: string | null;
+  subtitle: string | null;
+  no_openings_message: string | null;
+  default_email: string | null;
+}
+
+export interface JobPost {
+  id: number;
+  title: string;
+  department: string | null;
+  location: string | null;
+  job_type: string | null;
+  vacancies: number | null;
+  experience: string | null;
+  salary: string | null;
+  deadline: string | null;
+  description: string;
+  notification_email: string | null;
+  is_active: boolean;
+  applications_count?: number;
+  created_at: string;
+}
+
+export interface JobApplication {
+  id: number;
+  job_post_id: number | null;
+  job_title: string;
+  name: string;
+  phone: string;
+  email: string;
+  message: string;
+  cv_original_name: string;
+  created_at: string;
+}

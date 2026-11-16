@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\CareerController;
 use App\Http\Controllers\ChatbotController;
 use App\Http\Controllers\CMSController;
 use App\Http\Controllers\PageController;
@@ -77,7 +78,34 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
 
 });
 
+// ── Career (CMS) ─────────────────────────────────────────────
+Route::controller(CareerController::class)->middleware(['auth', 'verified'])->group(function () {
+
+    Route::get('cms/career/settings', 'settings')->name('career-settings');
+    Route::post('cms/career/settings', 'updateSettings')->name('career-settings-update');
+    Route::post('cms/career/settings/remove-image', 'removeHeroImage')->name('career-settings-remove-image');
+
+    Route::get('cms/career/jobs', 'jobs')->name('career-jobs');
+    Route::post('cms/career/jobs/store', 'storeJob')->name('career-job-store');
+    Route::post('cms/career/jobs/update', 'updateJob')->name('career-job-update');
+    Route::post('cms/career/jobs/toggle', 'toggleJob')->name('career-job-toggle');
+    Route::post('cms/career/jobs/destroy', 'destroyJob')->name('career-job-destroy');
+
+    Route::get('cms/career/applications', 'applications')->name('career-applications');
+    Route::get('cms/career/applications/{application}/cv', 'downloadCv')->name('career-application-cv');
+    Route::post('cms/career/applications/destroy', 'destroyApplication')->name('career-application-destroy');
+
+});
+
 require __DIR__.'/settings.php';
+
+// ── Career (public) ──────────────────────────────────────────
+// Registered before the PageController group so its catch-all
+// `{project:slug}` route can't swallow `/career`.
+Route::controller(CareerController::class)->middleware('web')->group(function () {
+    Route::get('/career', 'index')->name('career');
+    Route::post('/career', 'apply')->name('career.apply');
+});
 
 Route::controller(PageController::class)->middleware('web')->group(function () {
 
