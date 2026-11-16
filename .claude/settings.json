@@ -1,0 +1,13 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(which chromium *)",
+      "Read(//home/saadman/.cache/ms-playwright/**)",
+      "Bash(python3 -c \"import playwright; print\\('py ok'\\)\")",
+      "Bash(npx --no-install playwright --version)",
+      "Read(//home/saadman/.npm/_npx/**)",
+      "Bash(timeout 120 node shoot.cjs)",
+      "Bash(grep -n '\\\\${inputClass}' resources/js/pages/Career.tsx)"
+    ]
+  }
+}
