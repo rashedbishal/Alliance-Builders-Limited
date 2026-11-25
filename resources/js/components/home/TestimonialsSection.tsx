@@ -3,6 +3,7 @@ import { Star, Quote, ChevronLeft, ChevronRight } from "lucide-react";
 import React, { useState, useEffect } from 'react';
 import { Link, usePage } from '@inertiajs/react';
 import { contact } from '@/routes';
+import type { CompanyStats } from '@/types/PageContent';
 import type { Testimonial } from '@/types/Testimonial';
 import { Button } from "@/components/ui/button";
 import { Card, CardContent } from "@/components/ui/card";
@@ -11,7 +12,11 @@ import ScrollAnimation from '../ScrollAnimation';
 const TestimonialsSection = () => {
   const [currentTestimonial, setCurrentTestimonial] = useState(0);
   const [isAutoPlay, setIsAutoPlay] = useState(true);
-  const { testimonials: cmsTestimonials } = usePage<{ testimonials?: Testimonial[] }>().props;
+  const { testimonials: cmsTestimonials, companyStats } = usePage<{
+    testimonials?: Testimonial[];
+    companyStats?: CompanyStats;
+  }>().props;
+  const stats = companyStats?.stats ?? [];
 
   const testimonials = (cmsTestimonials ?? []).map((t) => ({
     id: t.id,
@@ -59,7 +64,7 @@ const TestimonialsSection = () => {
               Client Success Stories
             </h2>
             <p className="text-xl text-gray-800 max-w-3xl mx-auto">
-              Hear from our satisfied clients who have experienced excellence in real estate services with EstateElite
+              Hear from clients who have trusted Alliance Builders Ltd. with their homes
             </p>
           </div>
         </ScrollAnimation>
@@ -155,22 +160,12 @@ const TestimonialsSection = () => {
         {/* Client Logos/Stats */}
         <ScrollAnimation delay={0.4}>
           <div className="grid grid-cols-2 md:grid-cols-4 gap-8 max-w-3xl mx-auto">
-          <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">99%</div>
-            <div className="text-black/80">Client Satisfaction</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">3500+</div>
-            <div className="text-black/80">Happy Clients</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">17+</div>
-            <div className="text-black/80">Years Experience</div>
-          </div>
-          <div className="text-center">
-            <div className="text-4xl font-bold text-accent mb-2">50+</div>
-            <div className="text-black/80">Awards Won</div>
-          </div>
+          {stats.map((stat) => (
+            <div key={stat.label} className="text-center">
+              <div className="text-4xl font-bold text-accent mb-2">{stat.value}</div>
+              <div className="text-black/80">{stat.label}</div>
+            </div>
+          ))}
         </div>
         </ScrollAnimation>
 
