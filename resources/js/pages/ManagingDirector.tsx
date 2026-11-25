@@ -2,7 +2,7 @@ import manager from "@/assets/images/people/manager.webp";
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import AppLayout from '@/layouts/AppLayout';
 
-export default function ManagingDirector() {
+export default function ManagingDirector({ mdName }: { mdName?: string }) {
     return (
         <AppLayout>
             <div className="min-h-screen bg-black">
@@ -37,6 +37,12 @@ export default function ManagingDirector() {
                                 <p className="mt-6 leading-relaxed">
                                     Best regards,
                                     <br />
+                                    {mdName && (
+                                        <>
+                                            <span className="font-semibold">{mdName}</span>
+                                            <br />
+                                        </>
+                                    )}
                                     <span className="font-semibold">Managing Director</span>
                                 </p>
                             </div>
@@ -45,7 +51,7 @@ export default function ManagingDirector() {
                             <div className="lg:order-2 lg:col-span-1">
                                 <img
                                     src={manager} // Replace with actual image path
-                                    alt="Managing Director"
+                                    alt={mdName ? `${mdName}, Managing Director` : 'Managing Director'}
                                     className="h-auto w-full rounded-lg shadow-lg"
                                 />
                             </div>

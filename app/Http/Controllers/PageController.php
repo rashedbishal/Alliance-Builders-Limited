@@ -69,7 +69,9 @@ class PageController extends Controller
 
     public function managingDirector()
     {
-        return Inertia::render('ManagingDirector');
+        return Inertia::render('ManagingDirector', [
+            'mdName' => PageContent::get('about_page')['md_name'] ?? '',
+        ]);
     }
 
     public function media()
