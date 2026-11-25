@@ -169,8 +169,6 @@ const Footer = () => {
           </div>
         </div>
 
-        <Separator className="bg-white/20" />
-
         {/* SSLCOMMERZ payment banner */}
         <div className="py-8">
           <PaymentBanner />

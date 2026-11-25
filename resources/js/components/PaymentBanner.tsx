@@ -1,5 +1,5 @@
 import { Maximize2 } from 'lucide-react';
-import payWithDesktop from '@/assets/images/sslcommerz/pay-with-desktop.webp';
+import payWithDesktop from '@/assets/images/sslcommerz/pay-with-desktop-single-row.webp';
 import payWithMobile from '@/assets/images/sslcommerz/pay-with-mobile.webp';
 import payWithTablet from '@/assets/images/sslcommerz/pay-with-tablet.webp';
 import paymentChannels from '@/assets/images/sslcommerz/payment-channels.webp';
@@ -29,7 +29,7 @@ const PaymentBanner = () => {
                             media="(min-width: 1024px)"
                             srcSet={payWithDesktop}
                             width={1600}
-                            height={179}
+                            height={52}
                         />
                         <source
                             media="(min-width: 640px)"
