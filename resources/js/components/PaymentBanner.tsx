@@ -16,17 +16,18 @@ import {
  * SSLCOMMERZ "Pay With" banner (required by SSLCOMMERZ). Each breakpoint
  * loads only its own image; clicking opens the full categorized list.
  * On very wide screens the single-row image is shown at its native
- * 1600px in a full-width white band (never scaled down); the breakpoint
- * leaves room for the scrollbar so its edges aren't clipped.
+ * 1600px (never scaled down) in a card sized to the image, which extends
+ * past the footer container; the breakpoint leaves room for the
+ * 1632px card plus the scrollbar.
  */
 const PaymentBanner = () => {
     return (
         <Dialog>
-            <div className="min-[1640px]:relative min-[1640px]:left-1/2 min-[1640px]:w-screen min-[1640px]:-translate-x-1/2">
+            <div className="min-[1680px]:relative min-[1680px]:left-1/2 min-[1680px]:w-[1632px] min-[1680px]:-translate-x-1/2">
                 <DialogTrigger asChild>
                     <button
                         type="button"
-                        className="group shadow-elegant-xl mx-auto block w-full max-w-5xl cursor-zoom-in rounded-2xl bg-white p-3 transition-transform duration-300 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent min-[1640px]:max-w-none min-[1640px]:rounded-none min-[1640px]:px-0 min-[1640px]:hover:translate-y-0 sm:p-4"
+                        className="group shadow-elegant-xl mx-auto block w-full max-w-5xl cursor-zoom-in rounded-2xl bg-white p-3 transition-transform duration-300 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent min-[1680px]:max-w-none sm:p-4"
                         aria-label="View all payment channels"
                     >
                         <span className="mb-3 flex items-center justify-center gap-2 text-sm font-semibold text-slate-800 sm:text-base">
@@ -35,7 +36,7 @@ const PaymentBanner = () => {
                         </span>
                         <picture>
                             <source
-                                media="(min-width: 1640px)"
+                                media="(min-width: 1680px)"
                                 srcSet={payWithWide}
                                 width={1600}
                                 height={52}
@@ -59,7 +60,7 @@ const PaymentBanner = () => {
                                 height={1600}
                                 loading="lazy"
                                 decoding="async"
-                                className="mx-auto h-auto w-full max-w-xs min-[1640px]:w-[1600px] sm:max-w-none"
+                                className="mx-auto h-auto w-full max-w-xs min-[1680px]:w-[1600px] sm:max-w-none"
                             />
                         </picture>
                         <span className="mt-2 flex items-center justify-center gap-1.5 text-xs font-medium text-slate-500 transition-colors group-hover:text-slate-800">
