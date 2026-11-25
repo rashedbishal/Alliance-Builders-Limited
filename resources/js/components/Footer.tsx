@@ -16,6 +16,7 @@ import { Link, usePage } from '@inertiajs/react';
 import { route } from 'ziggy-js';
 import abstractBg2 from "@/assets/images/backgrounds/city-7.webp";
 import logo from "@/assets/images/logo/alliance logo.webp";
+import PaymentBanner from "@/components/PaymentBanner";
 import { Separator } from "@/components/ui/separator";
 import type { SiteSetting } from '@/types/SiteSetting';
 
@@ -166,6 +167,13 @@ const Footer = () => {
               </ul>
             </div>
           </div>
+        </div>
+
+        <Separator className="bg-white/20" />
+
+        {/* SSLCOMMERZ payment banner */}
+        <div className="py-8">
+          <PaymentBanner />
         </div>
 
         <Separator className="bg-white/20" />
