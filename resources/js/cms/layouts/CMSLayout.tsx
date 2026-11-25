@@ -553,6 +553,20 @@ export default function CMSLayout({
                         </Link>
                     </div>
 
+                    {/* Page Content */}
+                    <div>
+                        <Link
+                            href={route('page-content-index')}
+                            className={`nav-link-base ${currentRoute('page-content-index') ? 'nav-link-active' : ''}`}
+                        >
+                            <NavIcon>
+                                <path d="M4 4h16v16H4z" />
+                                <path d="M8 8h8M8 12h8M8 16h5" />
+                            </NavIcon>
+                            Page Content
+                        </Link>
+                    </div>
+
                     {/* Legal Pages */}
                     <div>
                         <Link

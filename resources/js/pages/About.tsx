@@ -1,43 +1,41 @@
-import { Award, Users, Building, TrendingUp, Target, Eye, Heart } from 'lucide-react';
-import bg3 from "@/assets/images/backgrounds/bg3.webp";
+import { Link } from '@inertiajs/react';
+import { ArrowRight, BadgeCheck, Building, CalendarClock, Eye, HardHat, Heart, KeyRound, Target } from 'lucide-react';
 import collage6 from "@/assets/images/collage/collage-6.webp";
+import manager from "@/assets/images/people/manager.webp";
 import property3 from "@/assets/images/properties/property-3.webp";
 import PageBreadcrumb from '@/components/PageBreadcrumb';
 import { Badge } from "@/components/ui/badge";
 import { Card, CardContent } from "@/components/ui/card";
 
-import { SplittingText } from '@/components/ui/shadcn-io/splitting-text';
-import { WritingText } from '@/components/ui/shadcn-io/writing-text';
 import AppLayout from '@/layouts/AppLayout';
+import type { AboutPageContent, CompanyStats } from '@/types/PageContent';
 import ScrollAnimation from '../components/ScrollAnimation';
 import TradeLicenseBadge from '../components/TradeLicenseBadge';
 
+interface Props {
+    content: AboutPageContent;
+    companyStats: CompanyStats;
+}
 
-const About = () => {
-    const stats = [
-        { icon: Building, value: "120+", label: "Properties Sold" },
-        { icon: Users, value: "3,500+", label: "Happy Clients" },
-        { icon: Award, value: "50+", label: "Awards Won" },
-        { icon: TrendingUp, value: "99%", label: "Client Satisfaction" }
-    ];
+/** Icons stay tied to each slot; the text comes from the CMS. */
+const STAT_ICONS = [CalendarClock, KeyRound, HardHat, Building];
+const VALUE_ICONS = [Target, Eye, Heart];
 
-    const values = [
-        {
-            icon: Target,
-            title: "Excellence",
-            description: "We strive for excellence in every transaction, ensuring the highest standards of service and professionalism."
-        },
-        {
-            icon: Eye,
-            title: "Transparency",
-            description: "Complete honesty and openness in all our dealings, building trust through transparent communication."
-        },
-        {
-            icon: Heart,
-            title: "Integrity",
-            description: "We uphold the highest ethical standards, putting our clients' interests first in every decision."
-        }
-    ];
+const About = ({ content, companyStats }: Props) => {
+    const stats = (companyStats?.stats ?? []).map((stat, index) => ({
+        ...stat,
+        icon: STAT_ICONS[index] ?? Building,
+    }));
+
+    const values = (content?.values ?? []).map((value, index) => ({
+        ...value,
+        icon: VALUE_ICONS[index] ?? Target,
+    }));
+
+    const credentials = (content?.hero_credentials ?? '')
+        .split('·')
+        .map((item) => item.trim())
+        .filter(Boolean);
 
     return (
         <AppLayout>
@@ -51,36 +49,56 @@ const About = () => {
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
                     }}
-                    className="relative h-screen overflow-hidden pt-32 pb-20"
+                    className="relative flex min-h-[70vh] items-center overflow-hidden pt-32 pb-20"
                 >
-                    <div className="bg-black absolute inset-0 opacity-80"></div>
+                    {/* Darker on the text side so the copy stays readable */}
+                    <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/50"></div>
                     <div className="relative z-10 container mx-auto px-4">
                         <PageBreadcrumb
                             items={[{ label: 'About Us' }]}
                             className="mb-6"
                         />
-                        <ScrollAnimation delay={0.1} className="md:w-[80%] lg:w-[75%]">
-                            <SplittingText
-                                className="lg:9xl mb-6 text-3xl sm:text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
-                                text="Building Dreams,"
-                                type="words"
-                            />
+                        <ScrollAnimation delay={0.1} className="max-w-4xl">
+                            <h1 className="mb-6 text-4xl font-semibold leading-tight text-white sm:text-5xl md:text-6xl">
+                                {content?.hero_title}
+                            </h1>
                         </ScrollAnimation>
-                        <ScrollAnimation delay={0.2} className="mb-6 md:w-[75%] lg:w-[55%]">
-                            <SplittingText
-                                className="lg:9xl mb-6 text-3xl sm:text-5xl font-semibold text-white text-blue-shadow md:text-7xl"
-                                text="One Home At A Time"
-                                type="words"
-                            />
-                        </ScrollAnimation>
-                        <ScrollAnimation delay={0.2} className="md:w-[80%] lg:w-[60%]">
-                            <p>
-                                <WritingText
-                                    className="max-w-3xl text-2xl sm:text-3xl text-black text-white-shadow   "
-                                    text="Founded in 2003, EstateElite began with a simple mission: to revolutionize the real estate experience by putting people first. What started as a small team of passionate realtors has grown into one of the most trusted names in luxury real estate."
-                                    spacing={4}
-                                />
+                        <ScrollAnimation delay={0.2} className="max-w-2xl">
+                            <p className="mb-8 text-lg leading-relaxed text-white/90 sm:text-xl">
+                                {content?.hero_subtitle}
                             </p>
+                        </ScrollAnimation>
+                        {credentials.length > 0 && (
+                            <ScrollAnimation delay={0.3}>
+                                <ul className="mb-10 flex flex-wrap gap-3">
+                                    {credentials.map((item) => (
+                                        <li
+                                            key={item}
+                                            className="inline-flex items-center gap-2 rounded-full border border-white/20 bg-white/10 px-4 py-2 text-sm font-medium text-white backdrop-blur-sm"
+                                        >
+                                            <BadgeCheck className="h-4 w-4 text-accent" />
+                                            {item}
+                                        </li>
+                                    ))}
+                                </ul>
+                            </ScrollAnimation>
+                        )}
+                        <ScrollAnimation delay={0.4}>
+                            <div className="flex flex-col gap-4 sm:flex-row">
+                                <Link
+                                    href="/properties"
+                                    className="inline-flex items-center justify-center gap-2 rounded-lg bg-accent px-8 py-4 font-semibold text-accent-foreground shadow-lg transition-transform duration-300 hover:scale-105"
+                                >
+                                    View Projects
+                                    <ArrowRight className="h-4 w-4" />
+                                </Link>
+                                <Link
+                                    href="/contact"
+                                    className="inline-flex items-center justify-center rounded-lg border-2 border-white/70 px-8 py-4 font-semibold text-white transition-colors duration-300 hover:bg-white hover:text-black"
+                                >
+                                    Contact Us
+                                </Link>
+                            </div>
                         </ScrollAnimation>
                     </div>
                 </section>
@@ -183,31 +201,62 @@ const About = () => {
                             <ScrollAnimation>
                                 <div>
                                     <Badge className="text-lg bg-gradient-accent mb-6 text-accent-foreground">Our Story</Badge>
-                                    <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">Two Decades of Excellence in Real Estate</h2>
-                                    <p className="mb-6 leading-relaxed text-white">
-                                        <WritingText
-                                            text="Founded in 2003, EstateElite began with a simple mission: to revolutionize the real estate experience by putting people first. What started as a small team of passionate realtors has grown into one of the most trusted names in luxury real estate."
-                                            spacing={5}
-                                        />
-                                    </p>
-                                    <p className="leading-relaxed text-white">
-                                        <WritingText
-                                            text="Our success is built on understanding that buying or selling a property is more than a transaction—it's a life-changing decision. That's why we take the time to understand your unique needs, aspirations, and dreams, ensuring every step of your journey is smooth and rewarding."
-                                            spacing={5}
-                                        />
-                                    </p>
+                                    <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">{content?.story_heading}</h2>
+                                    {(content?.story_paragraphs ?? []).map((paragraph, index) => (
+                                        <p key={index} className="mb-6 leading-relaxed text-white/90">
+                                            {paragraph}
+                                        </p>
+                                    ))}
                                 </div>
                             </ScrollAnimation>
                             <ScrollAnimation delay={0.2}>
                                 <div className="relative">
-                                    <img src={collage6} alt="Our Office" className="shadow-elegant-xl h-[500px] w-full rounded-2xl object-cover" />
+                                    <img src={collage6} alt="Alliance Builders Ltd. project" className="shadow-elegant-xl h-[500px] w-full rounded-2xl object-cover" />
                                     <div className="animate-float bg-gradient-elegant shadow-elegant-lg absolute -bottom-2 -left-2 md:-bottom-4 md:-left-4 rounded-2xl p-8 text-primary-foreground">
-                                        <div className="mb-2 text-5xl font-bold">20+</div>
-                                        <div className="text-lg">Years of Excellence</div>
+                                        <div className="mb-2 text-5xl font-bold">{content?.years_value}</div>
+                                        <div className="text-lg">{content?.years_label}</div>
                                     </div>
                                 </div>
                             </ScrollAnimation>
                         </div>
+                    </div>
+                </section>
+
+                {/* Management */}
+                <section className="bg-gradient-to-b from-black to-slate-950 py-20">
+                    <div className="container mx-auto px-4">
+                        <ScrollAnimation className="mb-12 text-center">
+                            <Badge className="text-lg bg-gradient-accent mb-6 text-accent-foreground">Management</Badge>
+                            <h2 className="text-4xl font-bold text-white md:text-5xl">Leadership</h2>
+                        </ScrollAnimation>
+                        <ScrollAnimation delay={0.1}>
+                            <div className="mx-auto grid max-w-5xl grid-cols-1 items-center gap-8 overflow-hidden rounded-2xl border border-white/10 bg-white/5 p-6 shadow-elegant-xl backdrop-blur-sm md:grid-cols-5 md:p-8">
+                                <div className="md:col-span-2">
+                                    <img
+                                        src={content?.md_image_url || manager}
+                                        alt={content?.md_name || content?.md_title || 'Managing Director'}
+                                        loading="lazy"
+                                        className="aspect-[4/5] w-full rounded-xl object-cover object-top shadow-lg"
+                                    />
+                                </div>
+                                <div className="md:col-span-3">
+                                    <div className="mb-2 text-sm font-semibold uppercase tracking-wider text-accent">
+                                        {content?.md_title}
+                                    </div>
+                                    {content?.md_name && (
+                                        <h3 className="mb-4 text-3xl font-bold text-white">{content.md_name}</h3>
+                                    )}
+                                    <p className="mb-8 text-lg leading-relaxed text-white/85">{content?.md_summary}</p>
+                                    <Link
+                                        href="/managing-director"
+                                        className="inline-flex items-center gap-2 font-semibold text-white transition-colors hover:text-accent"
+                                    >
+                                        Read MD&apos;s Message
+                                        <ArrowRight className="h-4 w-4" />
+                                    </Link>
+                                </div>
+                            </div>
+                        </ScrollAnimation>
                     </div>
                 </section>
 
@@ -217,9 +266,9 @@ const About = () => {
                         <ScrollAnimation className="mb-16 text-center">
                             <div>
                                 <Badge className="text-lg bg-gradient-accent mb-6 text-accent-foreground">Our Values</Badge>
-                                <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">What Drives Us Forward</h2>
+                                <h2 className="mb-6 text-4xl font-bold text-white md:text-5xl">{content?.values_heading}</h2>
                                 <p className="mx-auto max-w-3xl text-xl text-white">
-                                    Our core values shape everything we do and guide us in serving our clients better every day.
+                                    {content?.values_intro}
                                 </p>
                             </div>
                         </ScrollAnimation>
@@ -284,11 +333,11 @@ const About = () => {
                 <section className="bg-black py-20 text-primary-foreground">
                     <div className="container mx-auto px-4 text-center">
                         <ScrollAnimation>
-                            <h2 className="mb-6 text-4xl font-bold md:text-5xl">Ready to Start Your Journey?</h2>
+                            <h2 className="mb-6 text-4xl font-bold md:text-5xl">{content?.cta_heading}</h2>
                         </ScrollAnimation>
                         <ScrollAnimation delay={0.1}>
                             <p className="mx-auto mb-8 max-w-2xl text-xl opacity-90">
-                                Let's find your dream property together. Our team is ready to help you every step of the way.
+                                {content?.cta_text}
                             </p>
                         </ScrollAnimation>
                         <ScrollAnimation delay={0.2}>

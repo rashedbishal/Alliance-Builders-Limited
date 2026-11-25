@@ -1,5 +1,6 @@
+import { usePage } from '@inertiajs/react';
 import React from 'react';
-import { ArrowUpRight, Globe, Layers, Award, Users } from 'lucide-react';
+import { ArrowUpRight, HardHat, Layers, Award, Users } from 'lucide-react';
 import ScrollAnimation from '../ScrollAnimation';
 
 // Import logo images
@@ -9,6 +10,7 @@ import construction from "@/assets/images/logo/alliance-construction.svg";
 import success from "@/assets/images/logo/alliance-success-builders.svg";
 import jana from "@/assets/images/logo/jana.webp";
 import opticore from "@/assets/images/logo/opticore-solutions.svg";
+import type { CompanyStats } from '@/types/PageContent';
 
 interface Company {
   id: number;
@@ -71,12 +73,14 @@ const SisterCompanies: React.FC = () => {
     },
   ];
 
-  const stats = [
-    { label: 'Sister Companies', value: '6', icon: Layers },
-    { label: 'Projects Executed', value: '124+', icon: Award },
-    { label: 'Cities Served', value: '3+', icon: Globe },
-    { label: 'Dedicated Team', value: '300+', icon: Users },
-  ];
+  const { companyStats } = usePage<{ companyStats?: CompanyStats }>().props;
+
+  // Icons stay tied to each slot; the values come from the CMS.
+  const statIcons = [Layers, Award, HardHat, Users];
+  const stats = (companyStats?.group_stats ?? []).map((stat, index) => ({
+    ...stat,
+    icon: statIcons[index] ?? Award,
+  }));
 
   return (
     <section className="relative bg-gradient-to-b from-slate-100 via-slate-50 to-white py-24 text-slate-900 overflow-hidden">

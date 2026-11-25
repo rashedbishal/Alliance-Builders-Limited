@@ -51,6 +51,10 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::get('cms/legal-pages', 'legalPagesIndex')->name('legal-pages-index');
     Route::post('cms/legal-pages/{slug}', 'updateLegalPage')->name('legal-pages-update');
 
+    // ── Page Content (About / Home text & stats) ────────────────
+    Route::get('cms/page-content', 'pageContentIndex')->name('page-content-index');
+    Route::post('cms/page-content/{key}', 'updatePageContent')->name('page-content-update');
+
     // ── Testimonial Settings ─────────────────────────────────────
     Route::get('cms/testimonials', 'testimonialIndex')->name('testimonial-index');
     Route::post('testimonial/store', 'storeTestimonial')->name('testimonial-store');

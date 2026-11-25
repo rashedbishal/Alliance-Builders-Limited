@@ -1,14 +1,18 @@
 import AboutBackground from '@images/home/about-section.webp';
-import {Link} from "@inertiajs/react";
+import {Link, usePage} from "@inertiajs/react";
 import {
+  Building,
   Building2,
   Users,
   Award,
-  TrendingUp,
+  Handshake,
   Shield,
   Clock,
-  Target,
-  Sparkles
+  CalendarClock,
+  HardHat,
+  KeyRound,
+  BadgeCheck,
+  Layers
 } from "lucide-react";
 import React from 'react';
 import { Button } from "@/components/ui/button";
@@ -16,65 +20,43 @@ import { Card, CardContent } from "@/components/ui/card";
 
 import { WritingText } from '@/components/ui/shadcn-io/writing-text';
 import {contact, properties} from "@/routes";
+import type { CompanyStats, HomeAboutContent } from '@/types/PageContent';
 import ScrollAnimation from '../ScrollAnimation';
 import ScrollSlideIn from '../ScrollSlideIn';
 import TradeLicenseBadge from '../TradeLicenseBadge';
 import LineMeet from '../ui/line-meet';
 
 const AboutSection = () => {
-  const services = [
-    {
-      icon: Building2,
-      title: "Property Development",
-      description: "End-to-end development solutions from concept to completion with innovative architectural designs.",
-      color: "text-accent"
-    },
-    {
-      icon: Users,
-      title: "Client Relations",
-      description: "Personalized service with dedicated relationship managers ensuring exceptional customer experience.",
-      color: "text-primary"
-    },
-    {
-      icon: TrendingUp,
-      title: "Investment Advisory",
-      description: "Expert market analysis and investment strategies to maximize your real estate portfolio returns.",
-      color: "text-accent"
-    },
-    {
-      icon: Shield,
-      title: "Legal Compliance",
-      description: "Complete legal support and documentation ensuring transparent and secure property transactions.",
-      color: "text-primary"
-    }
-  ];
+  const { homeAbout, companyStats } = usePage<{
+    homeAbout?: HomeAboutContent;
+    companyStats?: CompanyStats;
+  }>().props;
 
-  const features = [
-    {
-      icon: Award,
-      title: "Award-Winning Excellence",
-      stats: "50+ Awards",
-      description: "Recognized industry leader with multiple prestigious real estate awards and certifications."
-    },
-    {
-      icon: Clock,
-      title: "15+ Years Experience",
-      stats: "1000+ Projects",
-      description: "Proven track record with over a decade of successful project deliveries and satisfied clients."
-    },
-    {
-      icon: Target,
-      title: "100% Client Satisfaction",
-      stats: "Zero Disputes",
-      description: "Commitment to excellence with transparent processes and timely project delivery guarantees."
-    },
-    {
-      icon: Sparkles,
-      title: "Innovation Leader",
-      stats: "Smart Homes",
-      description: "Pioneering smart home technologies and sustainable building practices in every project."
-    }
+  // Icons and colours stay tied to each slot; the text comes from the CMS.
+  const serviceStyles = [
+    { icon: Building2, color: "text-accent" },
+    { icon: Handshake, color: "text-primary" },
+    { icon: Users, color: "text-accent" },
+    { icon: Shield, color: "text-primary" }
   ];
+  const featureIcons = [Award, BadgeCheck, Clock, Layers];
+  const statIcons = [CalendarClock, KeyRound, HardHat, Building];
+
+  const services = (homeAbout?.services ?? []).map((service, index) => ({
+    ...service,
+    ...(serviceStyles[index] ?? serviceStyles[0])
+  }));
+
+  const features = (homeAbout?.features ?? []).map((feature, index) => ({
+    ...feature,
+    stats: feature.stat,
+    icon: featureIcons[index] ?? Award
+  }));
+
+  const stats = (companyStats?.stats ?? []).map((stat, index) => ({
+    ...stat,
+    icon: statIcons[index] ?? Building
+  }));
 
   return (
     <section className="py-20 px-4 relative overflow-hidden">
@@ -91,11 +73,11 @@ const AboutSection = () => {
         {/* Section Header */}
         <ScrollAnimation className="mx-auto md:w-[65%] text-center mb-16 bg-white/50 backdrop-blur-lg p-8 rounded-2xl shadow-elegant-xl">
           <h2 className="text-4xl lg:text-5xl font-semibold text-black mb-6">
-            About Alliance Builders Ltd.
+            {homeAbout?.heading}
           </h2>
           <p className="text-lg bg-black rounded-2xl p-4 text-white shadow-xl max-w-3xl mx-auto leading-relaxed">
             <WritingText
-              text="We are a premier real estate company dedicated to delivering exceptional properties and unmatched service. Our expertise spans across residential, commercial, and luxury developments, setting new standards in the industry."
+              text={homeAbout?.intro ?? ''}
               spacing={5}
             />
           </p>
@@ -126,15 +108,28 @@ const AboutSection = () => {
           ))}
         </div>
 
+        {/* Company Stats (shared with the About page) */}
+        {stats.length > 0 && (
+          <ScrollAnimation className="mb-20 grid grid-cols-2 gap-4 rounded-2xl bg-black/85 p-6 shadow-elegant-xl backdrop-blur-lg md:grid-cols-4 md:p-8">
+            {stats.map((stat) => (
+              <div key={stat.label} className="flex flex-col items-center text-center">
+                <stat.icon className="mb-3 h-7 w-7 text-accent" />
+                <div className="text-3xl font-bold text-white md:text-4xl">{stat.value}</div>
+                <div className="mt-1 text-sm text-white/70 md:text-base">{stat.label}</div>
+              </div>
+            ))}
+          </ScrollAnimation>
+        )}
+
         {/* Features Section */}
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-12 items-center">
           <ScrollSlideIn className="bg-white/50 rounded-2xl p-8 shadow-elegant-xl text-center backdrop-blur-lg">
             <h3 className="text-3xl lg:text-4xl font-semibold text-black mb-6">
-              Why Choose Alliance Builders Ltd.?
+              {homeAbout?.why_heading}
             </h3>
             <p className="bg-black rounded-2xl p-4 text-lg text-white mb-8 leading-relaxed">
               <WritingText
-                text='Our commitment to excellence, innovative approach, and customer-centric philosophy make us the preferred choice for discerning property investors and homebuyers.'
+                text={homeAbout?.why_text ?? ''}
                 spacing={5}
               />
             </p>
@@ -177,10 +172,10 @@ const AboutSection = () => {
 
         {/* Call to Action */}
         <ScrollAnimation delay={0.5} className="md:w-3/4 lg:w-2/4 mx-auto text-center mt-16 bg-white/50 rounded-2xl p-8 m-4 shadow-elegant-xl backdrop-blur-lg">
-          <h3 className="text-3xl font-bold mb-4">Ready to Find Your Dream Property?</h3>
+          <h3 className="text-3xl font-bold mb-4">{homeAbout?.cta_heading}</h3>
           <div className="mx-auto p-8 bg-black/90 rounded-2xl p-12 shadow-elegant-xl text-white">
             <p className="text-xl opacity-90 mb-8 max-w-2xl mx-auto">
-              Join thousands of satisfied clients who have found their perfect properties with EstateElite
+              {homeAbout?.cta_text}
             </p>
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button size="lg" asChild className="bg-accent text-accent-foreground hover:bg-accent/90 shadow-lg px-8 py-3 font-semibold transition-all duration-300">

@@ -6,6 +6,7 @@ use App\Models\Config\Details;
 use App\Models\Config\Facility;
 use App\Models\Config\LegalPage;
 use App\Models\Config\Location;
+use App\Models\Config\PageContent;
 use App\Models\Config\ProjectType;
 use App\Models\Config\SiteSetting;
 use App\Models\Config\Tag;
@@ -929,6 +930,103 @@ class CMSController extends Controller
             ['slug' => $slug],
             ['title' => $request->input('title'), 'content' => $content]
         );
+
+        return redirect()->back()->with('success', 'Operation Successful');
+    }
+
+    public function pageContentIndex()
+    {
+        $sections = [];
+
+        foreach (PageContent::KEYS as $key) {
+            $sections[$key] = PageContent::get($key);
+        }
+
+        $mdImage = $sections['about_page']['md_image'] ?? null;
+        $sections['about_page']['md_image_url'] = $mdImage ? asset('storage/about/'.$mdImage) : null;
+
+        return Inertia::render('cms/page-content/Index', ['sections' => $sections]);
+    }
+
+    public function updatePageContent(Request $request, string $key)
+    {
+        abort_unless(in_array($key, PageContent::KEYS, true), 404);
+
+        $text = ['required', 'string', 'max:255'];
+        $long = ['required', 'string', 'max:2000'];
+
+        $rules = match ($key) {
+            'company_stats' => [
+                'stats' => ['required', 'array', 'size:4'],
+                'stats.*.value' => ['required', 'string', 'max:20'],
+                'stats.*.label' => ['required', 'string', 'max:60'],
+                'group_stats' => ['required', 'array', 'size:4'],
+                'group_stats.*.value' => ['required', 'string', 'max:20'],
+                'group_stats.*.label' => ['required', 'string', 'max:60'],
+            ],
+            'about_page' => [
+                'hero_title' => $text,
+                'hero_subtitle' => $long,
+                'hero_credentials' => ['nullable', 'string', 'max:255'],
+                'story_heading' => $text,
+                'story_paragraphs' => ['required', 'array', 'size:2'],
+                'story_paragraphs.*' => $long,
+                'years_value' => ['required', 'string', 'max:20'],
+                'years_label' => ['required', 'string', 'max:60'],
+                'values_heading' => $text,
+                'values_intro' => $long,
+                'values' => ['required', 'array', 'size:3'],
+                'values.*.title' => $text,
+                'values.*.description' => $long,
+                'md_title' => $text,
+                'md_name' => ['nullable', 'string', 'max:255'],
+                'md_summary' => $long,
+                'md_image_file' => ['nullable', 'image', 'mimes:jpeg,jpg,png,webp', 'max:4096'],
+                'cta_heading' => $text,
+                'cta_text' => $long,
+            ],
+            'home_about' => [
+                'heading' => $text,
+                'intro' => $long,
+                'services' => ['required', 'array', 'size:4'],
+                'services.*.title' => $text,
+                'services.*.description' => $long,
+                'why_heading' => $text,
+                'why_text' => $long,
+                'features' => ['required', 'array', 'size:4'],
+                'features.*.stat' => ['required', 'string', 'max:30'],
+                'features.*.title' => $text,
+                'features.*.description' => $long,
+                'cta_heading' => $text,
+                'cta_text' => $long,
+            ],
+        };
+
+        $validated = $request->validate($rules);
+        unset($validated['md_image_file']);
+
+        $section = PageContent::firstOrNew(['key' => $key]);
+
+        if ($key === 'about_page') {
+            $previousImage = $section->content['md_image'] ?? null;
+            $validated['md_name'] = $validated['md_name'] ?? '';
+            $validated['hero_credentials'] = $validated['hero_credentials'] ?? '';
+            $validated['md_image'] = $previousImage;
+
+            if ($request->hasFile('md_image_file')) {
+                $file = $request->file('md_image_file');
+                $filename = 'md-'.time().'.'.$file->getClientOriginalExtension();
+                ImageOptimizer::optimizeAndStore($file, 'about', $filename, 'public', 1200);
+                $validated['md_image'] = $filename;
+
+                if ($previousImage) {
+                    Storage::disk('public')->delete('about/'.$previousImage);
+                }
+            }
+        }
+
+        $section->content = $validated;
+        $section->save();
 
         return redirect()->back()->with('success', 'Operation Successful');
     }
