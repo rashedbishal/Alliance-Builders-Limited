@@ -12,7 +12,14 @@
       "Bash(vendor/bin/pint --test app/Http/Controllers/CareerController.php app/Mail database/migrations/2026_11_16_120000_make_job_applications_email_nullable.php tests/Feature/CareerTest.php)",
       "Bash(grep -o 'data-page=\"[^\"]\\\\{0,400\\\\}')",
       "Bash(vendor/bin/pint --test app/Http/Controllers/CMSController.php)",
-      "Bash(timeout 60 google-chrome --headless=new --disable-gpu --window-size=1400,900 --virtual-time-budget=10000 --dump-dom http://127.0.0.1:8000/)"
+      "Bash(timeout 60 google-chrome --headless=new --disable-gpu --window-size=1400,900 --virtual-time-budget=10000 --dump-dom http://127.0.0.1:8000/)",
+      "Bash(grep -rnoiE \"\\(managing director|chairman|md\\)[^\\\\\"<]{0,80}\" resources/js/pages/Directors.tsx resources/js/pages/DirectorDetails.tsx resources/js/components/Navbar.tsx)",
+      "Bash(grep -n 'storeAs\\\\|imagewebp\\\\|imagejpeg\\\\|path\\\\b\\\\|$path')",
+      "Bash(sed -i '/^              key={homeAbout?.intro}$/d; /^                key={homeAbout?.why_text}$/d' resources/js/components/home/AboutSection.tsx && grep -c \"key={homeAbout\" resources/js/components/home/AboutSection.tsx; grep -rn \"<textarea\" resources/js/cms/pages | head -3; grep -rn \"type=\\\\\"file\\\\\"\" -A3 resources/js/cms/pages/cms/career/Settings.tsx | head -8)",
+      "Bash(vendor/bin/pint --test app/Models/Config/PageContent.php database/migrations/2026_11_25_140000_create_page_contents_table.php app/Http/Controllers/PageController.php)",
+      "Bash(vendor/bin/pint --test app/Http/Controllers/PageController.php app/Http/Controllers/CMSController.php)",
+      "Bash(vendor/bin/pint --test -v --format=txt app/Http/Controllers/PageController.php)",
+      "Bash(python3 -c \"import json;json.load\\(open\\('.claude/settings.json'\\)\\)\")"
     ]
   }
 }
