@@ -1,4 +1,4 @@
-import { Maximize2, ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from 'lucide-react';
 import payWithWide from '@/assets/images/sslcommerz/pay-with-desktop-single-row.webp';
 import payWithDesktop from '@/assets/images/sslcommerz/pay-with-desktop.webp';
 import payWithMobile from '@/assets/images/sslcommerz/pay-with-mobile.webp';
@@ -13,27 +13,27 @@ import {
 } from '@/components/ui/dialog';
 
 /**
- * SSLCOMMERZ "Pay With" banner (required by SSLCOMMERZ). Each breakpoint
- * loads only its own image; clicking opens the full categorized list.
+ * SSLCOMMERZ "Pay With" banner (required by SSLCOMMERZ): a footer-style
+ * heading plus the bare image, with no card around it. Each breakpoint
+ * loads only its own image; clicking it opens the full categorized list.
  * On very wide screens the single-row image is shown at its native
- * 1600px (never scaled down) in a card sized to the image, which extends
- * past the footer container; the breakpoint leaves room for the
- * 1632px card plus the scrollbar.
+ * 1600px (never scaled down), centred and extending past the footer
+ * container; the breakpoint leaves room for it plus the scrollbar.
  */
 const PaymentBanner = () => {
     return (
         <Dialog>
-            <div className="min-[1680px]:relative min-[1680px]:left-1/2 min-[1680px]:w-[1632px] min-[1680px]:-translate-x-1/2">
+            <h3 className="mb-6 flex items-center gap-2 text-xl font-bold text-white">
+                <ShieldCheck className="h-6 w-6 text-green-400" />
+                Secure payment by SSLCommerz
+            </h3>
+            <div className="min-[1680px]:relative min-[1680px]:left-1/2 min-[1680px]:w-[1600px] min-[1680px]:-translate-x-1/2">
                 <DialogTrigger asChild>
                     <button
                         type="button"
-                        className="group shadow-elegant-xl mx-auto block w-full max-w-5xl cursor-zoom-in rounded-2xl bg-white p-3 transition-transform duration-300 hover:-translate-y-1 focus:outline-none focus-visible:ring-2 focus-visible:ring-accent min-[1680px]:max-w-none sm:p-4"
+                        className="block w-full cursor-zoom-in focus:outline-none focus-visible:ring-2 focus-visible:ring-accent"
                         aria-label="View all payment channels"
                     >
-                        <span className="mb-3 flex items-center justify-center gap-2 text-sm font-semibold text-slate-800 sm:text-base">
-                            <ShieldCheck className="h-5 w-5 text-green-600" />
-                            Secure payment by SSLCommerz
-                        </span>
                         <picture>
                             <source
                                 media="(min-width: 1680px)"
@@ -60,13 +60,9 @@ const PaymentBanner = () => {
                                 height={1600}
                                 loading="lazy"
                                 decoding="async"
-                                className="mx-auto h-auto w-full max-w-xs min-[1680px]:w-[1600px] sm:max-w-none"
+                                className="block h-auto w-full max-w-xs sm:max-w-none"
                             />
                         </picture>
-                        <span className="mt-2 flex items-center justify-center gap-1.5 text-xs font-medium text-slate-500 transition-colors group-hover:text-slate-800">
-                            <Maximize2 className="h-3.5 w-3.5" />
-                            View all payment channels
-                        </span>
                     </button>
                 </DialogTrigger>
             </div>
