@@ -21,7 +21,9 @@
       "Bash(vendor/bin/pint --test -v --format=txt app/Http/Controllers/PageController.php)",
       "Bash(python3 -c \"import json;json.load\\(open\\('.claude/settings.json'\\)\\)\")",
       "Bash(vendor/bin/pint --test app/Http/Controllers/PageController.php)",
-      "WebSearch"
+      "WebSearch",
+      "Bash(php -l database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)",
+      "Bash(vendor/bin/pint --test database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)"
     ]
   }
 }
