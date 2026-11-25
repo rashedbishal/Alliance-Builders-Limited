@@ -20,7 +20,8 @@
       "Bash(vendor/bin/pint --test app/Http/Controllers/PageController.php app/Http/Controllers/CMSController.php)",
       "Bash(vendor/bin/pint --test -v --format=txt app/Http/Controllers/PageController.php)",
       "Bash(python3 -c \"import json;json.load\\(open\\('.claude/settings.json'\\)\\)\")",
-      "Bash(vendor/bin/pint --test app/Http/Controllers/PageController.php)"
+      "Bash(vendor/bin/pint --test app/Http/Controllers/PageController.php)",
+      "WebSearch"
     ]
   }
 }
