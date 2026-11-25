@@ -47,6 +47,10 @@ Route::controller(CMSController::class)->middleware(['auth', 'verified'])->group
     Route::post('cms/settings', 'updateSettings')->name('update-settings');
     Route::post('cms/settings/credentials', 'updateAdminCredentials')->name('update-admin-credentials');
 
+    // ── Legal Pages ──────────────────────────────────────────────
+    Route::get('cms/legal-pages', 'legalPagesIndex')->name('legal-pages-index');
+    Route::post('cms/legal-pages/{slug}', 'updateLegalPage')->name('legal-pages-update');
+
     // ── Testimonial Settings ─────────────────────────────────────
     Route::get('cms/testimonials', 'testimonialIndex')->name('testimonial-index');
     Route::post('testimonial/store', 'storeTestimonial')->name('testimonial-store');
@@ -125,6 +129,7 @@ Route::controller(PageController::class)->middleware('web')->group(function () {
     Route::get('/hotels-resorts/{project:slug}', 'hotelDetails')->name('hotel-details');
     Route::get('/privacy-policy', 'privacyPolicy')->name('privacy-policy');
     Route::get('/terms-of-service', 'termsOfService')->name('terms-of-service');
+    Route::get('/refund-policy', 'refundPolicy')->name('refund-policy');
     Route::post('/contact', 'storeContact')->name('contact.store');
     Route::get('{project:slug}', 'propertyDetails')->name('propertyDetails');
 

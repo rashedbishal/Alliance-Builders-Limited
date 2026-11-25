@@ -177,7 +177,8 @@ const Footer = () => {
               <p className="text-white/90 drop-shadow-sm">
                 © 2024 Alliance Builders Ltd. All rights reserved. |
                 <Link href="/privacy-policy" className="text-white hover:text-accent-light ml-1">Privacy Policy</Link> |
-                <Link href="/terms-of-service" className="text-white hover:text-accent-light ml-1">Terms of Service</Link>
+                <Link href="/terms-of-service" className="text-white hover:text-accent-light ml-1">Terms of Service</Link> |
+                <Link href="/refund-policy" className="text-white hover:text-accent-light ml-1">Refund Policy</Link>
               </p>
               <p className="text-sm text-white/70 mt-1 drop-shadow-sm">
                 A proud member of REHAB | ISO 9001 : 2015 QMS Certified

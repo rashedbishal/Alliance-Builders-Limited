@@ -55,6 +55,13 @@ export interface Popup {
   imagePath?: string;
 }
 
+export interface LegalPage {
+  id: number;
+  slug: string;
+  title: string;
+  content: string;
+}
+
 export interface SiteSetting {
   id: number;
   header_phone?: string | null;

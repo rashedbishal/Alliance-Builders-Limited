@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Models\Config\Facility;
+use App\Models\Config\LegalPage;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\Tag;
@@ -127,11 +128,26 @@ class PageController extends Controller
 
     public function privacyPolicy()
     {
-        return Inertia::render('PrivacyPolicy');
+        return $this->legalPage('privacy-policy', 'PrivacyPolicy');
     }
 
     public function termsOfService()
     {
-        return Inertia::render('TermsOfService');
+        return $this->legalPage('terms-of-service', 'TermsOfService');
+    }
+
+    public function refundPolicy()
+    {
+        return $this->legalPage('refund-policy', 'RefundPolicy');
+    }
+
+    private function legalPage(string $slug, string $component)
+    {
+        $page = LegalPage::where('slug', $slug)->firstOrFail();
+
+        return Inertia::render($component, [
+            'title' => $page->title,
+            'content' => $page->content,
+        ]);
     }
 }

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Config\Details;
 use App\Models\Config\Facility;
+use App\Models\Config\LegalPage;
 use App\Models\Config\Location;
 use App\Models\Config\ProjectType;
 use App\Models\Config\SiteSetting;
@@ -19,6 +20,7 @@ use App\Models\Visual\ProjectImage;
 use App\Models\Visual\Testimonial;
 use App\Models\Visual\Video;
 use App\Services\ImageOptimizer;
+use App\Services\RichTextSanitizer;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -26,6 +28,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Validation\Rules\Password;
+use Illuminate\Validation\ValidationException;
 use Inertia\Inertia;
 use PhpOffice\PhpSpreadsheet\Spreadsheet;
 use PhpOffice\PhpSpreadsheet\Writer\Xlsx;
@@ -891,6 +894,41 @@ class CMSController extends Controller
         $user->save();
 
         return redirect()->route('settings-index')->with('success', 'Login credentials updated successfully.');
+    }
+
+    public function legalPagesIndex()
+    {
+        return Inertia::render('cms/legal/Index', [
+            'pages' => LegalPage::whereIn('slug', LegalPage::SLUGS)
+                ->get()
+                ->sortBy(fn ($page) => array_search($page->slug, LegalPage::SLUGS))
+                ->values(),
+        ]);
+    }
+
+    public function updateLegalPage(Request $request, string $slug)
+    {
+        abort_unless(in_array($slug, LegalPage::SLUGS, true), 404);
+
+        $request->validate([
+            'title' => ['required', 'string', 'max:255'],
+            'content' => ['required', 'string', 'max:100000'],
+        ]);
+
+        $content = RichTextSanitizer::clean($request->input('content'));
+
+        if (RichTextSanitizer::isBlank($content)) {
+            throw ValidationException::withMessages([
+                'content' => 'The content field is required.',
+            ]);
+        }
+
+        LegalPage::updateOrCreate(
+            ['slug' => $slug],
+            ['title' => $request->input('title'), 'content' => $content]
+        );
+
+        return redirect()->back()->with('success', 'Operation Successful');
     }
 
     public function testimonialIndex()
