@@ -10,6 +10,7 @@ import { SplittingText } from '@/components/ui/shadcn-io/splitting-text';
 import { WritingText } from '@/components/ui/shadcn-io/writing-text';
 import AppLayout from '@/layouts/AppLayout';
 import ScrollAnimation from '../components/ScrollAnimation';
+import TradeLicenseBadge from '../components/TradeLicenseBadge';
 
 
 const About = () => {
@@ -170,6 +171,9 @@ const About = () => {
                                 </ScrollAnimation>
                             ))}
                         </div>
+                        <ScrollAnimation className="mt-10">
+                            <TradeLicenseBadge />
+                        </ScrollAnimation>
                 </section>
 
                 {/* Our Story */}

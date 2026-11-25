@@ -17,6 +17,7 @@ export default function SettingsIndex({ settings, admin }: Props) {
         footer_email: settings.footer_email ?? '',
         whatsapp_number: settings.whatsapp_number ?? '',
         messenger_link: settings.messenger_link ?? '',
+        trade_license_number: settings.trade_license_number ?? '',
     });
 
     const handleSubmit = (e: React.FormEvent) => {
@@ -238,6 +239,56 @@ export default function SettingsIndex({ settings, admin }: Props) {
                                 with http.
                             </p>
                         </div>
+                    </div>
+                </div>
+
+                <div className="section-card">
+                    <div className="section-title">
+                        <svg
+                            viewBox="0 0 24 24"
+                            fill="none"
+                            stroke="currentColor"
+                            strokeWidth="1.8"
+                        >
+                            <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z" />
+                            <path d="M9 12l2 2 4-4" />
+                        </svg>
+                        Trade License
+                    </div>
+
+                    <div className="form-group">
+                        <label>Trade License Number</label>
+                        <input
+                            type="text"
+                            value={data.trade_license_number}
+                            onChange={(e) => {
+                                clearErrors('trade_license_number');
+                                setData('trade_license_number', e.target.value);
+                            }}
+                            placeholder="e.g. TRAD/DNCC/060686/2022"
+                        />
+                        {errors.trade_license_number && (
+                            <span
+                                style={{
+                                    marginTop: 4,
+                                    display: 'block',
+                                    color: '#FF8080',
+                                    fontSize: '0.78rem',
+                                }}
+                            >
+                                {errors.trade_license_number}
+                            </span>
+                        )}
+                        <p
+                            style={{
+                                marginTop: 6,
+                                fontSize: '0.72rem',
+                                color: 'var(--muted)',
+                            }}
+                        >
+                            Shown in the website footer, the home About section
+                            and the About page. Leave empty to hide it.
+                        </p>
                     </div>
                 </div>
 

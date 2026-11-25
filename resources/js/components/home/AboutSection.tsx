@@ -18,6 +18,7 @@ import { WritingText } from '@/components/ui/shadcn-io/writing-text';
 import {contact, properties} from "@/routes";
 import ScrollAnimation from '../ScrollAnimation';
 import ScrollSlideIn from '../ScrollSlideIn';
+import TradeLicenseBadge from '../TradeLicenseBadge';
 import LineMeet from '../ui/line-meet';
 
 const AboutSection = () => {
@@ -167,6 +168,10 @@ const AboutSection = () => {
             ))}
           </div>
         </div>
+
+        <ScrollAnimation className="mt-16">
+          <TradeLicenseBadge />
+        </ScrollAnimation>
 
         <LineMeet lineColor="bg-white" width="w-3/4" lineHeight="h-1" className="mt-16 mb-32 items-center mx-auto" />
 

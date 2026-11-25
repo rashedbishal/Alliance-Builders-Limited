@@ -861,6 +861,7 @@ class CMSController extends Controller
             'footer_email' => 'nullable|email|max:255',
             'whatsapp_number' => 'nullable|string|max:30',
             'messenger_link' => 'nullable|string|max:255',
+            'trade_license_number' => 'nullable|string|max:100',
         ]);
 
         $settings = SiteSetting::firstOrCreate(['id' => 1]);
@@ -870,6 +871,7 @@ class CMSController extends Controller
             'footer_email',
             'whatsapp_number',
             'messenger_link',
+            'trade_license_number',
         ]));
 
         return redirect()->route('settings-index')->with('success', 'Operation Successful');

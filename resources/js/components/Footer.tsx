@@ -26,6 +26,7 @@ const Footer = () => {
   const { siteSettings } = usePage<{ siteSettings?: SiteSetting }>().props;
   const footerPhone = siteSettings?.footer_phone || DEFAULT_FOOTER_PHONE;
   const footerEmail = siteSettings?.footer_email || DEFAULT_FOOTER_EMAIL;
+  const tradeLicenseNumber = siteSettings?.trade_license_number;
 
   const quickLinks = [
     { label: "Home", href: "/" },
@@ -183,6 +184,11 @@ const Footer = () => {
               <p className="text-sm text-white/70 mt-1 drop-shadow-sm">
                 A proud member of REHAB | ISO 9001 : 2015 QMS Certified
               </p>
+              {tradeLicenseNumber && (
+                <p className="text-sm text-white/70 mt-1 drop-shadow-sm">
+                  Trade License No: {tradeLicenseNumber}
+                </p>
+              )}
             </div>
 
             {/* Social Links */}

@@ -69,6 +69,7 @@ export interface SiteSetting {
   footer_email?: string | null;
   whatsapp_number?: string | null;
   messenger_link?: string | null;
+  trade_license_number?: string | null;
 }
 
 export interface Testimonial {

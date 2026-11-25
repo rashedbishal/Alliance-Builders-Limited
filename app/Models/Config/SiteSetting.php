@@ -15,5 +15,6 @@ class SiteSetting extends Model
         'footer_email',
         'whatsapp_number',
         'messenger_link',
+        'trade_license_number',
     ];
 }
