@@ -23,7 +23,8 @@
       "Bash(vendor/bin/pint --test app/Http/Controllers/PageController.php)",
       "WebSearch",
       "Bash(php -l database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)",
-      "Bash(vendor/bin/pint --test database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)"
+      "Bash(vendor/bin/pint --test database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)",
+      "Bash(python3 -I - \"/media/saadman/data3/Projects/Alliance assets/sslcommerz/WhatsApp Unknown 2026-11-25 at 12.37.17 PM/WhatsApp Image 2026-11-25 at 12.15.01 PM.jpeg\" resources/js/assets/images/sslcommerz/pay-with-desktop-single-row.webp)"
     ]
   }
 }
