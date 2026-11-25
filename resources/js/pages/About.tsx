@@ -10,7 +10,6 @@ import { Card, CardContent } from "@/components/ui/card";
 import AppLayout from '@/layouts/AppLayout';
 import type { AboutPageContent, CompanyStats } from '@/types/PageContent';
 import ScrollAnimation from '../components/ScrollAnimation';
-import TradeLicenseBadge from '../components/TradeLicenseBadge';
 
 interface Props {
     content: AboutPageContent;
@@ -189,9 +188,6 @@ const About = ({ content, companyStats }: Props) => {
                                 </ScrollAnimation>
                             ))}
                         </div>
-                        <ScrollAnimation className="mt-10">
-                            <TradeLicenseBadge />
-                        </ScrollAnimation>
                 </section>
 
                 {/* Our Story */}

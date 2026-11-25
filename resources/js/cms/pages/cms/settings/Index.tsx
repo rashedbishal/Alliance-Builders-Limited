@@ -286,8 +286,7 @@ export default function SettingsIndex({ settings, admin }: Props) {
                                 color: 'var(--muted)',
                             }}
                         >
-                            Shown in the website footer, the home About section
-                            and the About page. Leave empty to hide it.
+                            Shown in the website footer. Leave empty to hide it.
                         </p>
                     </div>
                 </div>
