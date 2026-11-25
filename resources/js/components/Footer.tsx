@@ -66,7 +66,7 @@ const Footer = () => {
             {/* Company Info */}
             <div className="lg:col-span-1 space-y-6">
               <div className="flex items-center space-x-3">
-                <img src={logo} alt="EstateElite Logo" className="h-12 w-12" />
+                <img src={logo} alt="Alliance Builders Ltd. Logo" className="h-12 w-12" />
                 <span className="text-xl font-bold text-white">Alliance Builders Ltd.</span>
               </div>
               <p className="text-white/90 leading-relaxed drop-shadow-md">
