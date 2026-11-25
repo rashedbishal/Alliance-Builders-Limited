@@ -259,7 +259,7 @@ const Properties = () => {
                 <section
                     className={`relative flex w-full items-center justify-center overflow-hidden transition-all duration-[1200ms] ease-in-out ${
                         isSqueezed
-                            ? 'min-h-[42vh] pt-28 pb-10'
+                            ? 'min-h-[42vh] pt-48 pb-10'
                             : 'min-h-screen pt-16 pb-16'
                     }`}
                     style={{
@@ -271,11 +271,10 @@ const Properties = () => {
                     }}
                 >
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
+                    <div className="absolute top-36 right-0 left-0 z-10 container mx-auto px-4 sm:px-6 md:px-8 lg:px-12">
+                        <PageBreadcrumb items={[{ label: 'Properties' }]} />
+                    </div>
                     <div className="relative z-10 container mx-auto flex h-full w-full flex-col items-center justify-center px-4 sm:px-6 md:px-8 lg:px-12 transition-all duration-[1200ms] ease-in-out">
-                        <PageBreadcrumb
-                            items={[{ label: 'Properties' }]}
-                            className="mb-4 justify-center"
-                        />
                         <h1 className={`animate-fade-in text-magenta text-white-shadow px-2 text-center font-bold transition-all duration-[1200ms] ease-in-out ${
                             isSqueezed ? 'text-2xl sm:text-3xl md:text-4xl lg:text-5xl' : 'text-2xl sm:text-3xl md:text-5xl lg:text-7xl'
                         }`}>

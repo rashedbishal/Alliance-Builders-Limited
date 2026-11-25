@@ -92,7 +92,7 @@ const Services = () => {
         <AppLayout>
             <div className="min-h-screen bg-background">
                 {/* Hero Section */}
-                <section className="relative overflow-hidden pt-32 pb-20">
+                <section className="relative overflow-hidden pt-36 pb-20">
                     <div className="bg-gradient-hero absolute inset-0 opacity-20"></div>
                     <div className="relative z-10 container mx-auto px-4">
                         <PageBreadcrumb

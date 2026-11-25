@@ -224,7 +224,7 @@ const HotelDetails = () => {
                             />
                             <div className="absolute inset-0 bg-gradient-to-b from-black/70 via-transparent to-[#0a0a0a]" />
                         </motion.div>
-                        <div className="absolute top-24 right-0 left-0 z-10 container mx-auto px-4 lg:top-28">
+                        <div className="absolute top-36 right-0 left-0 z-10 container mx-auto px-4">
                             <PageBreadcrumb
                                 items={[
                                     {

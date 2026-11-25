@@ -15,18 +15,22 @@ interface PageBreadcrumbProps {
     variant?: 'dark' | 'light';
 }
 
+// `pill` is a translucent backdrop so the trail stays readable over
+// photo heroes.
 const VARIANT_STYLES = {
     dark: {
-        base: 'text-white/40',
-        link: 'hover:text-primary',
-        current: 'text-white/70',
-        chevron: 'text-white/20',
+        base: 'text-white/70',
+        link: 'hover:text-white',
+        current: 'text-white font-medium',
+        chevron: 'text-white/40',
+        pill: 'border border-white/15 bg-black/40 backdrop-blur-sm',
     },
     light: {
         base: 'text-muted-foreground',
         link: 'hover:text-primary',
-        current: 'text-foreground',
+        current: 'text-foreground font-medium',
         chevron: 'text-muted-foreground/50',
+        pill: 'border border-black/10 bg-white/70 backdrop-blur-sm',
     },
 } as const;
 
@@ -41,7 +45,7 @@ const PageBreadcrumb = ({
     return (
         <nav
             aria-label="Breadcrumb"
-            className={`flex flex-wrap items-center gap-1.5 text-xs sm:text-sm ${styles.base} ${className}`}
+            className={`flex w-fit max-w-full flex-wrap items-center gap-1.5 rounded-full px-3 py-1.5 text-xs sm:text-sm ${styles.pill} ${styles.base} ${className}`}
         >
             <Link
                 href="/"

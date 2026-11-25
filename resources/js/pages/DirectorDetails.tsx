@@ -107,7 +107,7 @@ const DirectorDetail = () => {
         <AppLayout>
             <div className="min-h-screen bg-gradient-to-b from-background via-background/95 to-background">
                 {/* Back Button */}
-                <section className="px-4 pt-32">
+                <section className="px-4 pt-36">
                     <div className="container mx-auto max-w-7xl">
                         <PageBreadcrumb
                             items={[

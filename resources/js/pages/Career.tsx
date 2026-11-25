@@ -627,7 +627,7 @@ const Career = ({ settings, jobs }: Props) => {
 
                 {/* ── Hero ── */}
                 <section
-                    className="relative min-h-screen overflow-hidden pt-58 pb-24"
+                    className="relative min-h-screen overflow-hidden pt-[276px] pb-24"
                     style={{
                         backgroundImage: `url(${settings.hero_image || DEFAULT_HERO})`,
                         backgroundSize: 'cover',
@@ -639,11 +639,11 @@ const Career = ({ settings, jobs }: Props) => {
                     <div className="absolute -top-40 -left-40 h-96 w-96 rounded-full bg-primary/10 blur-[120px]" />
                     <div className="absolute -top-20 right-0 h-72 w-72 rounded-full bg-secondary/10 blur-[100px]" />
 
+                    <div className="absolute top-36 right-0 left-0 z-10 container mx-auto px-4">
+                        <PageBreadcrumb items={[{ label: 'Career' }]} />
+                    </div>
+
                     <div className="relative z-10 container mx-auto px-4">
-                        <PageBreadcrumb
-                            items={[{ label: 'Career' }]}
-                            className="mb-6"
-                        />
                         <ScrollAnimation delay={0.1}>
                             <h1 className="mb-6 text-5xl leading-tight font-bold text-white md:text-7xl">
                                 {heading.lead && <>{heading.lead} </>}

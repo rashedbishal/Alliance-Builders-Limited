@@ -1241,8 +1241,10 @@ const Navbar = () => {
             }
         }
 
+        /* Padding lives on .dropdown-link (not the item) so the whole
+           highlighted row is the clickable link. */
         .dropdown-item-premium {
-            padding: 10px 14px !important;
+            padding: 0 !important;
             border-radius: 10px !important;
             transition: all 0.2s ease;
         }
@@ -1256,6 +1258,8 @@ const Navbar = () => {
             align-items: center;
             gap: 10px;
             width: 100%;
+            padding: 10px 14px;
+            border-radius: 10px;
             color: rgba(255, 255, 255, 0.9) !important;
             font-size: 14px;
             font-weight: 500;

@@ -186,7 +186,7 @@ const PropertyDetail = () => {
             <SavedAnimation show={showSaved} />
             <AppLayout>
                 <div className="bg-[#0a0a0a] text-white selection:bg-primary/30">
-                    <div className="container mx-auto max-w-7xl px-4 pt-24 sm:px-6 lg:px-8 lg:pt-28">
+                    <div className="container mx-auto max-w-7xl px-4 pt-36 sm:px-6 lg:px-8">
                         <PageBreadcrumb
                             items={[
                                 { label: 'Properties', href: '/properties' },

@@ -7,11 +7,11 @@ export default function ManagingDirector({ mdName }: { mdName?: string }) {
         <AppLayout>
             <div className="min-h-screen bg-black">
                 {/* Header */}
-                <div className="bg-black pt-24 shadow-sm">
+                <div className="bg-black pt-30 shadow-sm">
                     <div className="mx-auto max-w-7xl px-4 py-6 text-center sm:px-6 lg:px-8">
                         <PageBreadcrumb
                             items={[{ label: 'Managing Director' }]}
-                            className="mb-4 justify-center"
+                            className="mb-4"
                         />
                         <h1 className="text-3xl font-bold text-white">Message from MD</h1>
                     </div>

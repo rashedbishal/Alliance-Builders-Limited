@@ -76,11 +76,11 @@ const Directors = () => {
         <AppLayout>
             <div className="min-h-screen bg-black">
                 {/* Hero Section */}
-                <section className="relative px-4 pt-32 pb-20">
+                <section className="relative px-4 pt-36 pb-20">
                     <div className="container mx-auto max-w-7xl">
                         <PageBreadcrumb
                             items={[{ label: 'Directors' }]}
-                            className="mb-6 justify-center"
+                            className="mb-6"
                         />
                         <ScrollAnimation>
                             <h1 className="mb-6 bg-gradient-to-r from-primary via-accent to-primary bg-clip-text text-center text-5xl font-bold text-white md:text-6xl lg:text-7xl">

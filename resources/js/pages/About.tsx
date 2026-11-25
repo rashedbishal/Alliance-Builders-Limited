@@ -49,7 +49,7 @@ const About = ({ content, companyStats }: Props) => {
                         backgroundPosition: 'center',
                         backgroundRepeat: 'no-repeat',
                     }}
-                    className="relative flex min-h-[70vh] items-center overflow-hidden pt-32 pb-20"
+                    className="relative flex min-h-[70vh] items-center overflow-hidden pt-36 pb-20"
                 >
                     {/* Darker on the text side so the copy stays readable */}
                     <div className="absolute inset-0 bg-gradient-to-r from-black/95 via-black/80 to-black/50"></div>

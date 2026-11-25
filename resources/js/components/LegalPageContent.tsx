@@ -25,7 +25,7 @@ export default function LegalPageContent({ title, content }: Props) {
                 .legal-content strong, .legal-content b { color: #fff; }
                 .legal-content hr { border-color: rgba(255,255,255,0.2); margin-top: 3rem; }
             `}</style>
-            <div className="min-h-screen bg-black py-20">
+            <div className="min-h-screen bg-black pt-36 pb-20">
                 <div className="container mx-auto px-4 lg:px-8">
                     <div className="mx-auto max-w-4xl">
                         <PageBreadcrumb
