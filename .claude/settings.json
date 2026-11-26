@@ -25,7 +25,20 @@
       "Bash(php -l database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)",
       "Bash(vendor/bin/pint --test database/migrations/2026_11_25_170000_seed_media_coverage_and_gallery.php)",
       "Bash(python3 -I - \"/media/saadman/data3/Projects/Alliance assets/sslcommerz/WhatsApp Unknown 2026-11-25 at 12.37.17 PM/WhatsApp Image 2026-11-25 at 12.15.01 PM.jpeg\" resources/js/assets/images/sslcommerz/pay-with-desktop-single-row.webp)",
-      "Bash(grep -vE \"^\\\\S+-[0-9]+-\\\\s*$\")"
+      "Bash(grep -vE \"^\\\\S+-[0-9]+-\\\\s*$\")",
+      "Bash(grep -v \"^use\\\\|^<?php\\\\|^$\")",
+      "Bash(grep -v \"^use\\\\|^$\")",
+      "ClaudeInChromeDomain(invest.alliancebuildersltd.org)",
+      "Bash(ffmpeg -loglevel error -y -i sample-hotel-0.webp -i sample-hotel-1.webp -i sample-hotel-2.webp -i sample-hotel-3.webp -i sample-hotel-2-0.webp -i sample-hotel-2-1.webp -i sample-hotel-2-2.webp -i sample-hotel-2-3.webp -filter_complex \"[0]scale=400:260[a];[1]scale=400:260[b];[2]scale=400:260[c];[3]scale=400:260[d];[4]scale=400:260[e];[5]scale=400:260[f];[6]scale=400:260[g];[7]scale=400:260[h];[a][b][c][d]hstack=4[top];[e][f][g][h]hstack=4[bot];[top][bot]vstack\" grid.jpg)",
+      "Bash(file *)",
+      "Bash(unset DB_CONNECTION DB_DATABASE)",
+      "Bash(vendor/bin/pint --test database/migrations/2026_11_26_120000_fill_project_and_hotel_details.php)",
+      "Bash(composer test *)",
+      "Bash(rm -f storage/app/public/properties/hotelsResorts/seed-hotel-* storage/app/public/properties/propertyThumbs/seed-hotel-*; curl -s -o /dev/null -w \"server:%{http_code}\\\\n\" http://127.0.0.1:8765/ ; git status --short; git diff .claude/settings.json | head -20)",
+      "Bash(gh run *)"
+    ],
+    "additionalDirectories": [
+      "/media/saadman/data3/Projects/alliance-builders-limited/storage/app/public/properties/hotelsResorts"
     ]
   }
 }
