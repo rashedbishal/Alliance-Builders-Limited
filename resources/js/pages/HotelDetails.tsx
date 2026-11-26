@@ -24,6 +24,9 @@ import { Card, CardContent } from '@/components/ui/card';
 import AppLayout from '@/layouts/AppLayout';
 import type { Project } from '@/types/Project';
 
+// Share selection section of the Hotel Jana investment site.
+const BUY_SHARE_URL = 'https://invest.alliancebuildersltd.org/#invest';
+
 const OceanBackdrop = () => {
     const bubbles = [
         { left: '8%', size: 10, duration: 16, delay: 0 },
@@ -250,6 +253,19 @@ const HotelDetails = () => {
                                     {projectDetails.address},{' '}
                                     {projectDetails.location?.name}
                                 </div>
+                                <Button
+                                    asChild
+                                    size="lg"
+                                    className="bg-cyan-500/90 hover:bg-cyan-500 md:mr-auto"
+                                >
+                                    <a
+                                        href={BUY_SHARE_URL}
+                                        target="_blank"
+                                        rel="noopener noreferrer"
+                                    >
+                                        Buy Share Now
+                                    </a>
+                                </Button>
                                 {/*<div className="text-3xl font-light md:text-5xl">*/}
                                 {/*    {formatCurrency(projectDetails.price)}*/}
                                 {/*</div>*/}
@@ -289,6 +305,18 @@ const HotelDetails = () => {
                                                     </p>
                                                 )}
                                             </div>
+                                            <Button
+                                                asChild
+                                                className="mt-2 w-full bg-cyan-500/90 hover:bg-cyan-500"
+                                            >
+                                                <a
+                                                    href={BUY_SHARE_URL}
+                                                    target="_blank"
+                                                    rel="noopener noreferrer"
+                                                >
+                                                    Buy Share Now
+                                                </a>
+                                            </Button>
                                             <Button className="mt-2 w-full bg-cyan-500/90 hover:bg-cyan-500">
                                                 Enquire About This Hotel
                                             </Button>
